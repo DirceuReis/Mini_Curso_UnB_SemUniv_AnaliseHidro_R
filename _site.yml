@@ -1,7 +1,7 @@
 name: "Mini_Curso_UnB_SemUniv_AnaliseHidro_R"
 title: "Análise Hidrológica com R: primeiros passos"
 description: |
-  MiniCurso
+  MiniCurso para a Semana Universitária da Universidade de Brasília de 2022.
 output_dir: "docs"
 navbar:
   right:
