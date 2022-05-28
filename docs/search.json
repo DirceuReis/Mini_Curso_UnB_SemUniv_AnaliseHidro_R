@@ -1,0 +1,21 @@
+{
+  "articles": [
+    {
+      "path": "about.html",
+      "title": "About this site",
+      "description": "Some additional details about the website",
+      "author": [],
+      "contents": "\r\n\r\n\r\n\r\n",
+      "last_modified": "2022-05-28T10:22:36-03:00"
+    },
+    {
+      "path": "index.html",
+      "title": "Análise hidrológica com R: primeiros passos",
+      "description": "Welcome to the website. I hope you enjoy it!\n",
+      "author": [],
+      "contents": "\r\n\r\n\r\n\r\n",
+      "last_modified": "2022-05-28T10:22:37-03:00"
+    }
+  ],
+  "collections": []
+}
