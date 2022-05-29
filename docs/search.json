@@ -6,7 +6,7 @@
       "description": "Some additional details about the website",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-05-29T13:02:30-03:00"
+      "last_modified": "2022-05-29T13:40:09-03:00"
     },
     {
       "path": "colaboradores.html",
@@ -14,7 +14,7 @@
       "description": "Exclusivo para a Semana Universitária",
       "author": [],
       "contents": "\r\n\r\nContents\r\nThiago Lappicy\r\nSaulo Aires de Souza\r\n\r\nApesar deste curso ser uma iniciativa do grupo Água e Modelagem, contamos com a participação exclusiva para a Semana Universtária da UnB de dois integrantes:\r\nThiago Lappicy\r\nThiago Lappicy é aluno de mestrado do Programa de Engneharia Civil e Ambiental da Universidade de Brasília (PTARH/UnB).\r\nSaulo Aires de Souza\r\nSaulo é Coordenador de Estudos Hidrológicos da Agência Nacioonal de Águas\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-05-29T13:02:31-03:00"
+      "last_modified": "2022-05-29T13:40:10-03:00"
     },
     {
       "path": "conc_basic_R.html",
@@ -22,15 +22,15 @@
       "description": "Conceitos básicos",
       "author": [],
       "contents": "\r\n\r\nContents\r\nVisão geral\r\nFunções\r\nPacotes\r\n\r\nVisão geral\r\nFunções\r\nPacotes\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-05-29T13:02:32-03:00"
+      "last_modified": "2022-05-29T13:40:12-03:00"
     },
     {
       "path": "data_explore.html",
-      "title": "Exploração dos dados",
+      "title": "Análise exploratória dos dados",
       "description": "Como obter uma visão geral dos dados",
       "author": [],
       "contents": "\r\n\r\nContents\r\nPacotes\r\nCarcaterização numérica\r\nCaracterização gráfica\r\n\r\nPacotes\r\nCarcaterização numérica\r\nCaracterização gráfica\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-05-29T13:02:33-03:00"
+      "last_modified": "2022-05-29T13:40:13-03:00"
     },
     {
       "path": "data_manip.html",
@@ -38,7 +38,7 @@
       "description": "Como organizar para facilitar as análises",
       "author": [],
       "contents": "\r\n\r\nContents\r\nPacotes\r\nBla bla bla\r\n\r\nPacotes\r\nBla bla bla\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-05-29T13:02:34-03:00"
+      "last_modified": "2022-05-29T13:40:14-03:00"
     },
     {
       "path": "frequency_analysis.html",
@@ -46,15 +46,15 @@
       "description": "Exemplo com dados reais",
       "author": [],
       "contents": "\r\n\r\nContents\r\nConceitos básicos\r\nDistribuição de probabilidades\r\nAjuste dos parâmetros\r\nEstimativa dos quantis de cheia\r\nDescrição das incertezas\r\n\r\nConceitos básicos\r\nDistribuição de probabilidades\r\nAjuste dos parâmetros\r\nEstimativa dos quantis de cheia\r\nDescrição das incertezas\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-05-29T13:02:36-03:00"
+      "last_modified": "2022-05-29T13:40:15-03:00"
     },
     {
       "path": "get_data.html",
-      "title": "Linguagem R",
+      "title": "Obtenção de dados na web",
       "description": "Conceitos básicos",
       "author": [],
       "contents": "\r\n\r\nContents\r\nRepositório de dados\r\nObtenção via webservice\r\nOutras formas\r\n\r\nRepositório de dados\r\nObtenção via webservice\r\nOutras formas\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-05-29T13:02:37-03:00"
+      "last_modified": "2022-05-29T13:40:16-03:00"
     },
     {
       "path": "index.html",
@@ -86,8 +86,8 @@
           "url": {}
         }
       ],
-      "contents": "\r\n\r\nContents\r\nApresentação\r\nCarga horária\r\nTópicos das aulas\r\n\r\nApresentação\r\nEste é um curso introdutório sobre a linguagem R para aqueles interessados em realizar análises hidrológicas. Será oferecido pela primeira vez durante a Semana Universitária da Universidade de Brasília, que acontecerá entre os dias 28/08 e 02/09 de 2022.\r\nDurante o curso, os alunos irão aprender como utilizar a linguagem R para executar um conjunto de atividades que permitirão realizar uma análise de frequência de cheias para uma estação fluviométrica, cujos dados serão automaticamente obtidos do webservice da Agência Nacional de Águas. Ao final do curso, os alunos terão finalizado um estudo que permitirá relacionar a magnitude das vazões máximas anuais com sua probabilidade de excedência, relação primoridal para dimensionameno de diversas estrutaras de engenharia, gestão do risco de cheias e para o oredenamento do uso e ocupação do solo.\r\nEste curso é o primeiro de um conjunto maior de cursos que estão sendo elaborados pelos seguintes professores do blog Água e Modelagem:\r\nDirceu S. Reis Jr.\r\nFrancisco Eustáquio\r\nPedro Chaffe\r\nWilson Fernandes\r\nCarga horária\r\nO curso será dividido em 5 aulas de 2 horas cada, totalizando 10 horas.\r\nTópicos das aulas\r\nNoções da linguagem R\r\nObtenção de dados hidrológicos via webservice\r\nManipulação de dados\r\nExploração de dados\r\nAnálise de frequência de cheias\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-05-29T13:02:38-03:00"
+      "contents": "\r\n\r\nContents\r\nApresentação\r\nCarga horária\r\nTópicos das aulas\r\n\r\nApresentação\r\nEste é um curso introdutório sobre a linguagem R para aqueles interessados em realizar análises hidrológicas. Será oferecido pela primeira vez durante a Semana Universitária da Universidade de Brasília, que acontecerá entre os dias 28/08 e 02/09 de 2022.\r\nDurante o curso, os alunos irão aprender como utilizar a linguagem R para executar um conjunto de atividades que permitirão realizar uma análise de frequência de cheias para uma estação fluviométrica, cujos dados serão automaticamente obtidos do webservice da Agência Nacional de Águas. Ao final do curso, os alunos terão finalizado um estudo que permitirá relacionar a magnitude das vazões máximas anuais com sua probabilidade de excedência, relação primoridal para dimensionameno de diversas estrutaras de engenharia, gestão do risco de cheias e para o oredenamento do uso e ocupação do solo.\r\nEste curso é o primeiro de um conjunto maior de cursos que estão sendo elaborados pelos seguintes professores do blog Água e Modelagem:\r\nDirceu S. Reis Jr.\r\nFrancisco Eustáquio\r\nPedro Chaffe\r\nWilson Fernandes\r\nCarga horária\r\nO curso será dividido em 5 aulas de 2 horas cada, totalizando 10 horas.\r\nTópicos das aulas\r\nNoções da linguagem R\r\nObtenção de dados hidrológicos via webservice\r\nManipulação de dados\r\nAnálise explorat[oria dos dados\r\nAnálise de frequência de cheias\r\n\r\n\r\n\r\n",
+      "last_modified": "2022-05-29T13:40:18-03:00"
     }
   ],
   "collections": []

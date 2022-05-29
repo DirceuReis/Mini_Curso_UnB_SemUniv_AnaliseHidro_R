@@ -74,7 +74,7 @@ O curso será dividido em 5 aulas de 2 horas cada, totalizando 10 horas.
 
 3. Manipulação de dados
 
-4. Exploração de dados
+4. Análise explorat[oria dos dados
 
 5. Análise de frequência de cheias
 

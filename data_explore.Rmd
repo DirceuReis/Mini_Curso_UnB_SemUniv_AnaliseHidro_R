@@ -1,5 +1,5 @@
 ---
-title: "Exploração dos dados"
+title: "Análise exploratória dos dados"
 description: Como obter uma visão geral dos dados
 ---
 

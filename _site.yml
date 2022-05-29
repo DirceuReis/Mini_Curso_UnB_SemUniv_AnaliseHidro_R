@@ -18,7 +18,7 @@ navbar:
           href: get_data.html
         - text: "Manipulação de dados"
           href: data_manip.html
-        - text: "Exploração de dados"
+        - text: "Análise exploratória"
           href: data_explore.html
         - text: "Análise de frequência"
           href: frequency_analysis.html
