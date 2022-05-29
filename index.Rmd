@@ -1,8 +1,41 @@
 ---
 title: "Análise hidrológica com R: primeiros passos"
 description: |
-  Welcome to the website. I hope you enjoy it!
+  Uma iniciativa do grupo [Água e Modelagem](https://aguaemodelagem.wordpress.com) para a Semana Universitária da Universidade de Brasília de 2022
+author:
+  - name: "Dirceu S. Reis Jr."
+    url: https://github.com/DirceuReis
+    affiliation: Professor Universidade de Brasília (UnB) 
+    affiliation_url: https://www.unb.br
+    orcid_id: 0000-0003-1787-9763
+  - name: "Francisco Eustáquio Oliveira e Silva"
+    url: https://github.com/fcoeustaquio
+    affiliation: Professor Universidade Federal de Minas Gerais (UFMG) 
+    affiliation_url: https://www.smarh.eng.ufmg.br/
+    orcid_id: 0000-0003-4304-8998  
+  - name: "Pedro Luis Borges Chaffe"
+    url: https://github.com/fcoeustaquio
+    affiliation: Professor Universidade Federal de Santa Catarina (UFSC) 
+    affiliation_url: https://www.labhidro.ufsc.br/pt/pedro-chaffe
+    orcid_id: 0000-0003-1787-9763
+  - name: "Wilson dos Santos Fernandes"
+    url: https://github.com/wsf-ehr
+    affiliation: Professor Universidade Federal de Minas Gerais (UFMG) 
+    affiliation_url: https://www.smarh.eng.ufmg.br/
+    orcid_id: 0000-0002-9731-2320      
+  - name: "Thiago Lappicy"
+    url: https://github.com/rich-iannone
+    affiliation: Mestrando PTARH/UnB
+    affiliation_url: http://ptarh.unb.br/
+  - name: "Saulo AIres de Souza"
+    affiliation: Agência Nacional de Águas e Saneamento Básico (ANA)
+    affiliation_url: https://www.gov.br/ana/pt-br
+    orcid_id: 0000-0002-8082-1890
+output:
+  distill::distill_article:
+    toc: true
 site: distill::distill_website
+
 ---
 
 ```{r setup, include=FALSE}
@@ -15,4 +48,33 @@ knitr::opts_chunk$set(echo = FALSE)
 # https://rstudio.github.io/distill/publish_website.html#github-pages
 
 ```
+
+## Apresentação
+
+Este é um curso introdutório sobre a linguagem R para aqueles interessados em realizar análises hidrológicas. Será oferecido pela primeira vez durante a [Semana Universitária da Universidade de Brasília](http://dex.unb.br/semanaunb2022), que acontecerá entre os dias 28/08 e 02/09 de 2022.
+
+Durante o curso, os alunos irão aprender como utilizar a linguagem R para executar um conjunto de atividades que permitirão realizar uma análise de frequência de cheias para uma estação fluviométrica, cujos dados serão automaticamente obtidos do webservice da Agência Nacional de Águas. Ao final do curso, os alunos terão finalizado um estudo que permitirá relacionar a magnitude das vazões máximas anuais com sua probabilidade de excedência, relação primoridal para dimensionameno de diversas estrutaras de engenharia, gestão do risco de cheias e para o oredenamento do uso e ocupação do solo.   
+
+Este curso é o primeiro de um conjunto maior de cursos que estão sendo elaborados pelos seguintes professores do blog [Água e Modelagem](https://aguaemodelagem.wordpress.com):
+
+- Dirceu S. Reis Jr.
+- Francisco Eustáquio
+- Pedro Chaffe
+- Wilson Fernandes
+
+## Carga horária
+
+O curso será dividido em 5 aulas de 2 horas cada, totalizando 10 horas.
+
+## Tópicos das aulas
+
+1. Noções da linguagem R
+
+2. Obtenção de dados hidrológicos via webservice
+
+3. Manipulação de dados
+
+4. Exploração de dados
+
+5. Análise de frequência de cheias
 

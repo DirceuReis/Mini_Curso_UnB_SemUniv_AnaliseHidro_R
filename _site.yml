@@ -2,11 +2,30 @@ name: "Mini_Curso_UnB_SemUniv_AnaliseHidro_R"
 title: "Análise Hidrológica com R: primeiros passos"
 description: |
   MiniCurso para a Semana Universitária da Universidade de Brasília de 2022.
+repository_url: https://github.com/DirceuReis/Mini_Curso_UnB_SemUniv_AnaliseHidro_R
+creative_commons: CC BY  
 output_dir: "docs"
 navbar:
+  source_url: true
   right:
     - text: "Home"
       href: index.html
-    - text: "About"
-      href: about.html
-output: distill::distill_article
+    - text: "Aulas"
+      menu:
+        - text: "Conceitos básicos R"
+          href: conc_basic_R.html
+        - text: "Obtenção de dados"
+          href: get_data.html
+        - text: "Manipulação de dados"
+          href: data_manip.html
+        - text: "Exploração de dados"
+          href: data_explore.html
+        - text: "Análise de frequência"
+          href: frequency_analysis.html
+    - text: "Colaboradores"
+      href: colaboradores.html
+output:
+  distill::distill_article:
+    toc: true
+  
+

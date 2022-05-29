@@ -1,0 +1,14 @@
+---
+title: "Linguagem R"
+description: Conceitos básicos
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+```
+
+## Repositório de dados
+
+## Obtenção via webservice
+
+## Outras formas

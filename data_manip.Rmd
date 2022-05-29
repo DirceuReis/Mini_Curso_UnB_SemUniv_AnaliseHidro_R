@@ -1,0 +1,12 @@
+---
+title: "Maniplação dos dados"
+description: Como organizar para facilitar as análises
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+```
+
+## Pacotes
+
+## Bla bla bla

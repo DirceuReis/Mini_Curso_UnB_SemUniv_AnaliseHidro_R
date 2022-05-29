@@ -1,0 +1,14 @@
+---
+title: "Exploração dos dados"
+description: Como obter uma visão geral dos dados
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+```
+
+## Pacotes
+
+## Carcaterização numérica
+
+## Caracterização gráfica
