@@ -2132,7 +2132,15 @@ Aulas
 <ul>
 <li><a href="#apresentação">Apresentação</a></li>
 <li><a href="#carga-horária">Carga horária</a></li>
-<li><a href="#tópicos-das-aulas">Tópicos das aulas</a></li>
+<li><a href="#antes-do-curso">Antes do curso</a></li>
+<li><a href="#tópicos-em-construção">Tópicos (em construção)</a>
+<ul>
+<li><a href="#noções-de-r">Noções de R</a></li>
+<li><a href="#obtenção-dos-dados">Obtenção dos dados</a></li>
+<li><a href="#manipulação-dos-dados">Manipulação dos dados</a></li>
+<li><a href="#análise-exploratória-dos-dados">Análise exploratória dos dados</a></li>
+<li><a href="#análise-de-frequência-de-cheias">Análise de frequência de cheias</a></li>
+</ul></li>
 </ul>
 </nav>
 </div>
@@ -2148,14 +2156,84 @@ Aulas
 </ul>
 <h2 id="carga-horária">Carga horária</h2>
 <p>O curso será dividido em 5 aulas de 2 horas cada, totalizando 10 horas.</p>
-<h2 id="tópicos-das-aulas">Tópicos das aulas</h2>
-<ol type="1">
-<li><p>Noções da linguagem R</p></li>
-<li><p>Obtenção de dados hidrológicos via webservice</p></li>
-<li><p>Manipulação de dados</p></li>
-<li><p>Análise explorat[oria dos dados</p></li>
-<li><p>Análise de frequência de cheias</p></li>
-</ol>
+<h2 id="antes-do-curso">Antes do curso</h2>
+<p>Incluiremos aqui um tutorial de como instalar o R, RStudio e os diversos pacotes que serão utilizados no curso.</p>
+<ul>
+<li>R e RStudio</li>
+<li>Pacotes
+<ul>
+<li>tydiverse</li>
+</ul></li>
+</ul>
+<h2 id="tópicos-em-construção">Tópicos (em construção)</h2>
+<h3 id="noções-de-r">Noções de R</h3>
+<ul>
+<li>Criação de objetos e operações matemáticas básicas</li>
+<li>Abertura de arquivos de várias fontes (csv, excel, binário etc)</li>
+<li>Discussão de Como lidar com a presença de “NA” no R com exemplos de operações</li>
+<li>Apresentação de alguns pacotes (tidyverse: dplyr, ggplot2, lubridate)</li>
+</ul>
+<h3 id="obtenção-dos-dados">Obtenção dos dados</h3>
+<ul>
+<li>Obtenção a partir de diversas fontes de informação
+<ul>
+<li>AGência Nacional de Águas e Saneamento Básico (ANA)</li>
+<li>Operador Nacional do Sistema Elétrico (ONS)</li>
+<li>Bases da dados internacionais</li>
+</ul></li>
+<li>Procedimentos para pré-selecionar estações
+<ul>
+<li>com base num Shapefile de uma bacia</li>
+<li>(IMPORTANTE: ir atrá disso) código Thiago: lat-lon -&gt; trecho de rio -&gt; trechos de montante -&gt; estações flu</li>
+</ul></li>
+<li>Obtenção de informações com bae em diferentes forms de filtros
+<ul>
+<li>% falhas no ano</li>
+<li>número mínimo de anos sem falhas]</li>
+<li>número mínimo de anos sem falhas consecutivas</li>
+<li>outros</li>
+</ul></li>
+</ul>
+<h3 id="manipulação-dos-dados">Manipulação dos dados</h3>
+<ul>
+<li>Reorganizar dados dependendo das especificidades do que se quer fazer</li>
+<li>Gerar séries diárias, mensais e anuais (considerando ano hidrológico)</li>
+<li>Gerar séries de Q7</li>
+<li>Gerar séries de máximos anuais</li>
+<li>Gerar séries acima de um determinado threshold (para análise PDS)</li>
+<li>Determinação de veranicos (extensão e frequência) nos dados de chuva</li>
+<li>outros?</li>
+</ul>
+<h3 id="análise-exploratória-dos-dados">Análise exploratória dos dados</h3>
+<ul>
+<li>Representação gráfica oriundas de um conjunto de estações
+<ul>
+<li>em um mapa</li>
+<li>em um gráfico (e.g., boxplot)</li>
+</ul></li>
+<li>Representação gráfica de uma única estação</li>
+<li>Representação numérica
+<ul>
+<li>Média</li>
+<li>desvio-padrão</li>
+<li>correlação temporal</li>
+<li>correlação espacial</li>
+</ul></li>
+</ul>
+<h3 id="análise-de-frequência-de-cheias">Análise de frequência de cheias</h3>
+<ul>
+<li>Posição de plotagem</li>
+<li>A distribuição de probabilidades</li>
+<li>Ajuste da distribuição</li>
+<li>Valores dos parâmetros</li>
+<li>Determinação dos quantis de cheia</li>
+<li>Determinação dos intervalos que descevem as incertezas na estimativa</li>
+<li>Plotagem
+<ul>
+<li>curva de frequência (Tr vs Q)</li>
+</ul></li>
+<li>Tabelas com resutados</li>
+</ul>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

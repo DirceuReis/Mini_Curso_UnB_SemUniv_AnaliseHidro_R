@@ -66,15 +66,73 @@ Este curso é o primeiro de um conjunto maior de cursos que estão sendo elabora
 
 O curso será dividido em 5 aulas de 2 horas cada, totalizando 10 horas.
 
-## Tópicos das aulas
+## Antes do curso
 
-1. Noções da linguagem R
+Incluiremos aqui um tutorial de como instalar o R, RStudio e os diversos pacotes que serão utilizados no curso.
 
-2. Obtenção de dados hidrológicos via webservice
+- R e RStudio
+- Pacotes
+   - tydiverse
+   
+## Tópicos (em construção)
 
-3. Manipulação de dados
+### Noções de R
 
-4. Análise explorat[oria dos dados
+- Criação de objetos e operações matemáticas básicas
+- Abertura de arquivos de várias fontes (csv, excel, binário etc)
+- Discussão de Como lidar com a presença de "NA" no R com exemplos de operações
+- Apresentação de alguns pacotes (tidyverse: dplyr, ggplot2, lubridate)
 
-5. Análise de frequência de cheias
+### Obtenção dos dados
+
+- Obtenção a partir de diversas fontes de informação
+  - AGência Nacional de Águas e Saneamento Básico (ANA)
+  - Operador Nacional do Sistema Elétrico (ONS)
+  - Bases da dados internacionais
+- Procedimentos para pré-selecionar estações 
+   - com base num Shapefile de uma bacia
+   - (IMPORTANTE: ir atrá disso) código Thiago: lat-lon -> trecho de rio -> trechos de montante -> estações flu
+- Obtenção de informações com bae em diferentes forms de filtros
+  - % falhas no ano
+  - número mínimo de anos sem falhas]
+  - número mínimo de anos sem falhas consecutivas
+  - outros
+
+### Manipulação dos dados
+
+- Reorganizar dados dependendo das especificidades do que se quer fazer
+- Gerar séries diárias, mensais e anuais (considerando ano hidrológico)
+- Gerar séries de Q7
+- Gerar séries de máximos anuais
+- Gerar séries acima de um determinado threshold (para análise PDS)
+- Determinação de veranicos (extensão e frequência) nos dados de chuva
+- outros?
+
+
+### Análise exploratória dos dados
+
+- Representação gráfica oriundas de um conjunto de estações
+  - em um mapa
+  - em um gráfico (e.g., boxplot)
+- Representação gráfica de uma única estação
+- Representação numérica
+  - Média
+  - desvio-padrão
+  - correlação temporal
+  - correlação espacial
+
+### Análise de frequência de cheias
+
+- Posição de plotagem
+- A distribuição de probabilidades
+- Ajuste da distribuição
+- Valores dos parâmetros
+- Determinação dos quantis de cheia
+- Determinação dos intervalos que descevem as incertezas na estimativa
+- Plotagem
+   - curva de frequência (Tr vs Q)
+- Tabelas com resutados
+
+   
+
 
