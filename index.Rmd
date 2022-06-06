@@ -31,6 +31,10 @@ author:
     affiliation: Agência Nacional de Águas e Saneamento Básico (ANA)
     affiliation_url: https://www.gov.br/ana/pt-br
     orcid_id: 0000-0002-8082-1890
+  - name: "Luiz Felipe Pereira de Brito"
+    affiliation: Aluno da Universidade de Brasília (UnB)
+    affiliation_url: https://www.unb.br
+    orcid_id:
 output:
   distill::distill_article:
     toc: true

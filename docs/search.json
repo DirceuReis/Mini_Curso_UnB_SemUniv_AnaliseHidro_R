@@ -6,7 +6,7 @@
       "description": "Some additional details about the website",
       "author": [],
       "contents": "\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-06-02T08:27:00-03:00"
+      "last_modified": "2022-06-06T10:22:27-03:00"
     },
     {
       "path": "colaboradores.html",
@@ -14,7 +14,7 @@
       "description": "Exclusivo para a Semana Universitária",
       "author": [],
       "contents": "\r\n\r\nContents\r\nThiago Lappicy\r\nSaulo Aires de Souza\r\n\r\nApesar deste curso ser uma iniciativa do grupo Água e Modelagem, contamos com a participação exclusiva para a Semana Universtária da UnB de dois integrantes:\r\nThiago Lappicy\r\nThiago Lappicy é aluno de mestrado do Programa de Engneharia Civil e Ambiental da Universidade de Brasília (PTARH/UnB).\r\nSaulo Aires de Souza\r\nSaulo é Coordenador de Estudos Hidrológicos da Agência Nacioonal de Águas\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-06-02T08:27:01-03:00"
+      "last_modified": "2022-06-06T10:22:27-03:00"
     },
     {
       "path": "conc_basic_R.html",
@@ -22,7 +22,7 @@
       "description": "Conceitos básicos",
       "author": [],
       "contents": "\r\n\r\nContents\r\nVisão geral\r\nFunções\r\nPacotes\r\n\r\nVisão geral\r\nFunções\r\nPacotes\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-06-02T08:27:01-03:00"
+      "last_modified": "2022-06-06T10:22:28-03:00"
     },
     {
       "path": "data_explore.html",
@@ -30,7 +30,7 @@
       "description": "Como obter uma visão geral dos dados",
       "author": [],
       "contents": "\r\n\r\nContents\r\nPacotes\r\nCarcaterização numérica\r\nCaracterização gráfica\r\n\r\nPacotes\r\nCarcaterização numérica\r\nCaracterização gráfica\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-06-02T08:27:02-03:00"
+      "last_modified": "2022-06-06T10:22:29-03:00"
     },
     {
       "path": "data_manip.html",
@@ -38,7 +38,7 @@
       "description": "Como organizar para facilitar as análises",
       "author": [],
       "contents": "\r\n\r\nContents\r\nPacotes\r\nBla bla bla\r\n\r\nPacotes\r\nBla bla bla\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-06-02T08:27:03-03:00"
+      "last_modified": "2022-06-06T10:22:30-03:00"
     },
     {
       "path": "frequency_analysis.html",
@@ -46,7 +46,7 @@
       "description": "Exemplo com dados reais",
       "author": [],
       "contents": "\r\n\r\nContents\r\nConceitos básicos\r\nDistribuição de probabilidades\r\nAjuste dos parâmetros\r\nEstimativa dos quantis de cheia\r\nDescrição das incertezas\r\n\r\nConceitos básicos\r\nDistribuição de probabilidades\r\nAjuste dos parâmetros\r\nEstimativa dos quantis de cheia\r\nDescrição das incertezas\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-06-02T08:27:03-03:00"
+      "last_modified": "2022-06-06T10:22:30-03:00"
     },
     {
       "path": "get_data.html",
@@ -54,7 +54,7 @@
       "description": "Conceitos básicos",
       "author": [],
       "contents": "\r\n\r\nContents\r\nRepositório de dados\r\nObtenção via webservice\r\nOutras formas\r\n\r\nRepositório de dados\r\nObtenção via webservice\r\nOutras formas\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-06-02T08:27:04-03:00"
+      "last_modified": "2022-06-06T10:22:31-03:00"
     },
     {
       "path": "index.html",
@@ -84,10 +84,14 @@
         {
           "name": "Saulo AIres de Souza",
           "url": {}
+        },
+        {
+          "name": "Luiz Felipe Pereira de Brito",
+          "url": {}
         }
       ],
       "contents": "\r\n\r\nContents\r\nApresentação\r\nCarga horária\r\nAntes do curso\r\nTópicos (em construção)\r\nNoções de R\r\nObtenção dos dados\r\nManipulação dos dados\r\nAnálise exploratória dos dados\r\nAnálise de frequência de cheias\r\n\r\n\r\nApresentação\r\nEste é um curso introdutório sobre a linguagem R para aqueles interessados em realizar análises hidrológicas. Será oferecido pela primeira vez durante a Semana Universitária da Universidade de Brasília, que acontecerá entre os dias 28/08 e 02/09 de 2022.\r\nDurante o curso, os alunos irão aprender como utilizar a linguagem R para executar um conjunto de atividades que permitirão realizar uma análise de frequência de cheias para uma estação fluviométrica, cujos dados serão automaticamente obtidos do webservice da Agência Nacional de Águas. Ao final do curso, os alunos terão finalizado um estudo que permitirá relacionar a magnitude das vazões máximas anuais com sua probabilidade de excedência, relação primoridal para dimensionameno de diversas estrutaras de engenharia, gestão do risco de cheias e para o oredenamento do uso e ocupação do solo.\r\nEste curso é o primeiro de um conjunto maior de cursos que estão sendo elaborados pelos seguintes professores do blog Água e Modelagem:\r\nDirceu S. Reis Jr.\r\nFrancisco Eustáquio\r\nPedro Chaffe\r\nWilson Fernandes\r\nCarga horária\r\nO curso será dividido em 5 aulas de 2 horas cada, totalizando 10 horas.\r\nAntes do curso\r\nIncluiremos aqui um tutorial de como instalar o R, RStudio e os diversos pacotes que serão utilizados no curso.\r\nR e RStudio\r\nPacotes\r\ntydiverse\r\n\r\nTópicos (em construção)\r\nNoções de R\r\nCriação de objetos e operações matemáticas básicas\r\nAbertura de arquivos de várias fontes (csv, excel, binário etc)\r\nDiscussão de Como lidar com a presença de “NA” no R com exemplos de operações\r\nApresentação de alguns pacotes (tidyverse: dplyr, ggplot2, lubridate)\r\nObtenção dos dados\r\nObtenção a partir de diversas fontes de informação\r\nAGência Nacional de Águas e Saneamento Básico (ANA)\r\nOperador Nacional do Sistema Elétrico (ONS)\r\nBases da dados internacionais\r\n\r\nProcedimentos para pré-selecionar estações\r\ncom base num Shapefile de uma bacia\r\n(IMPORTANTE: ir atrá disso) código Thiago: lat-lon -> trecho de rio -> trechos de montante -> estações flu\r\n\r\nObtenção de informações com bae em diferentes forms de filtros\r\n% falhas no ano\r\nnúmero mínimo de anos sem falhas]\r\nnúmero mínimo de anos sem falhas consecutivas\r\noutros\r\n\r\nManipulação dos dados\r\nReorganizar dados dependendo das especificidades do que se quer fazer\r\nGerar séries diárias, mensais e anuais (considerando ano hidrológico)\r\nGerar séries de Q7\r\nGerar séries de máximos anuais\r\nGerar séries acima de um determinado threshold (para análise PDS)\r\nDeterminação de veranicos (extensão e frequência) nos dados de chuva\r\noutros?\r\nAnálise exploratória dos dados\r\nRepresentação gráfica oriundas de um conjunto de estações\r\nem um mapa\r\nem um gráfico (e.g., boxplot)\r\n\r\nRepresentação gráfica de uma única estação\r\nRepresentação numérica\r\nMédia\r\ndesvio-padrão\r\ncorrelação temporal\r\ncorrelação espacial\r\n\r\nAnálise de frequência de cheias\r\nPosição de plotagem\r\nA distribuição de probabilidades\r\nAjuste da distribuição\r\nValores dos parâmetros\r\nDeterminação dos quantis de cheia\r\nDeterminação dos intervalos que descevem as incertezas na estimativa\r\nPlotagem\r\ncurva de frequência (Tr vs Q)\r\n\r\nTabelas com resutados\r\n\r\n\r\n\r\n",
-      "last_modified": "2022-06-02T08:27:05-03:00"
+      "last_modified": "2022-06-06T10:22:32-03:00"
     }
   ],
   "collections": []
