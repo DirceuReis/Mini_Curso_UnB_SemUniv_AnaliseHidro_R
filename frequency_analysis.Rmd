@@ -7,11 +7,51 @@ description: Exemplo com dados reais
 library(knitr)
 ```
 
-## Conceitos básicos
+## Objetivos da atividade
+
+O objetivo desta atividade é realizar uma análise de frequência de cheias a nível local. Isso significa que iremos relacionar a magnitude das vazões máximas anuais com a probabilidade da mesma ser excedida.  A análise a nível local siginifca que utilizaremos apenas as informações de vazão observadas na estação fluviométrica de interesse, sem fazer uso de informações de vaões que teham acontecido na região. Além da relação entre a magnitude da vazão e a probabilidade de excedência, é importante saber estimar também o grau de incertezas nessas estimativas. As incertezas são usualmente reprsentadas por intervalos de confiança. 
+
+Além de calcular essas quantidades, normalmente a curva de frequência, e suas respectivas incertezas, são representadas graficamente, como apresentado na figura abaixo, que mostra os resultados para um estudo de cheias numa seção do Rio Salado, localizada na província de Santa Fé, na Argentina, onde em 2003 ocorreu o rompimento de um dique que resultou em mortes e elevados prejuízos.  
+
+Contruiremos aqui uma figura semephante, onde no eixo-x temos o tempo de recorrência e no eixo-y a magnitude das vazões máximas anuais. A linha cheia em vermelho representa o valor esperado dos valores de vazão em função do tempo de recorrência, enquanto a linhas tracejadas representam os intervalos de confiança de 95%, ilustrando as incertezas envolvidas nessas estimativas. Os círculos azuis escuros representam as vazões máximas anunias registradas no passado, enquanto o círculo azul claro mostra a cheia destruidora de 2003. 
+
+```{r curva_freq,echo=FALSE, fig.align = 'center', out.width = "90%", fig.cap = "Curva de frequência do cheias do Rio Salado, na Argentina."}
+knitr::include_graphics("images/curva_freq_salado.png")
+```
+
+## Passos a serem executados
+
+- Visualizar os dados
+   - Escolha da estação fluviométrica
+   - Obtenção da série de máximos anuais
+   - Cálculo das posições de plotagem 
+   - Construção de figura utilizando valores amostrais apenas
+- Inferência   
+   - Cálculo dos momentos-L para fins de verificação da distribuição teórica de probabilidades
+   - Plotagem do diagrama de momentos-L das distribuições teóricas
+   - Ajuste dos parâmetros da distribuição teórica de probabilidades
+      - Lognormal
+      - Generalizada de valores extremos
+   - Cálculo dos quantis de cheia  
+- Curva de frequência sem incertezas
+- Estimativa dos intervalos de confiança para a distribuição Lognormal
+- Curva de frequência com intervalos de confiança 
 
 ## Distribuição de probabilidades
 
-## Ajuste dos parâmetros
+### Para que servem?
+
+O uso de uma distribuição teórica de probabilidades se justifica por três motivos,
+
+- permite a extrapolação da curva, ou seja, torna possível a estimativa de uma vazão com 50 anos tempo de retorno mesmo quando temos apenas 20 anos de dados;
+- pode ser utilizada como um interpolador de quantis de cheia, já que o uso da frequência amostral só permite estimar quantis para um número discreto, e nem sempre desejado, de períodos de retorno.
+- é uma maneira de armazenar as infomações relevantes da série de máximos de maneira compacta, visto que basta guardar o valor dos parâmetro da distribuição para obter qualquer quantil de cheia que se tenha interesse.
+
+### Quais são as distribuições mais usadas?
+  
+### Como avaliar a distribuição mais indicada?
+
+## Ajuste dos parâmetros d distribuição
 
 ## Estimativa dos quantis de cheia
 

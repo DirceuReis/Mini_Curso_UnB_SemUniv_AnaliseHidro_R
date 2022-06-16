@@ -1,5 +1,5 @@
 ---
-title: "Análise hidrológica com R: primeiros passos"
+title: "Obtenção, manipulação e análise de dados hidrológicos com R: uma introdução para iniciantes"
 description: |
   Uma iniciativa do grupo [Água e Modelagem](https://aguaemodelagem.wordpress.com) para a Semana Universitária da Universidade de Brasília de 2022
 author:
@@ -55,7 +55,7 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Apresentação
 
-Este é um curso introdutório sobre a linguagem R para aqueles interessados em realizar análises hidrológicas. Será oferecido pela primeira vez durante a [Semana Universitária da Universidade de Brasília](http://dex.unb.br/semanaunb2022), que acontecerá entre os dias 28/08 e 02/09 de 2022.
+Este é um curso introdutório sobre a linguagem R para aqueles interessados em realizar análises hidrológicas. Será oferecido pela primeira vez durante a [Semana Universitária da Universidade de Brasília](http://dex.unb.br/semanaunb2022), que acontecerá entre os dias 29/08 e 02/09 de 2022.
 
 Durante o curso, os alunos irão aprender como utilizar a linguagem R para executar um conjunto de atividades que permitirão realizar uma análise de frequência de cheias para uma estação fluviométrica, cujos dados serão automaticamente obtidos do webservice da Agência Nacional de Águas. Ao final do curso, os alunos terão finalizado um estudo que permitirá relacionar a magnitude das vazões máximas anuais com sua probabilidade de excedência, relação primoridal para dimensionameno de diversas estrutaras de engenharia, gestão do risco de cheias e para o oredenamento do uso e ocupação do solo.   
 
@@ -66,9 +66,15 @@ Este curso é o primeiro de um conjunto maior de cursos que estão sendo elabora
 - Pedro Chaffe
 - Wilson Fernandes
 
-## Carga horária
+## Datas e local do curso
 
-O curso será dividido em 5 aulas de 2 horas cada, totalizando 10 horas.
+O curso será dado na Sala 5 do Laboratório Central de Computação Científica da Faculdade de Tecnologia da Universidade de Brasília (LCCC ULEG-FT), que fica localizado no prédio da Unidade de Laboratórios de Ensino de Graduação da Faculdade de Tecnologia (ULEG/FT).
+
+O curso será dividido em 5 aulas de 2 horas cada, totalizando 10 horas. As aulas
+serão dadas  nos seguintes horários:
+
+- 29/08 a 01/09 das 8h00 às 10h00
+- 02/09 das 12h00 às 14h00. 
 
 ## Antes do curso
 
