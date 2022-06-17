@@ -5,6 +5,7 @@ description: Exemplo com dados reais
 
 ```{r setup, include=FALSE}
 library(knitr)
+library(tidyverse)
 ```
 
 ## Objetivos da atividade
@@ -37,9 +38,78 @@ knitr::include_graphics("images/curva_freq_salado.png")
 - Estimativa dos intervalos de confiança para a distribuição Lognormal
 - Curva de frequência com intervalos de confiança 
 
-## Distribuição de probabilidades
+## Visualização dos dados observados
 
-### Para que servem?
+### Escolha da estação fluviométrica
+
+
+
+### Seleção das vazões máximas anuais
+
+Aqui, nós faremos uso de uma banco de dados criado pelo Saulo Aires de Souza em sua tese de doutorado. Utilizaremos um arquivo que contém as séries de máximos anuais de 124 estações fluvométricas localizadas na bacia do Rio São Francisco (https://doi.org/10.5281/zenodo.6551909).  
+
+O código abaixo lê o arquivo e armazena os anos e os valores das vazões máximas anuais da primeira estação do banco de dados num `dataframe` chamado `flows`. Nós usamos a função `tibble` para mostrar uma parte das informações contidas nesse `dataframe`.
+
+```{r tidy_data,echo=FALSE}
+meta_data <- read.delim("dados/qx1d_RH SFR.dat",sep=";",header=FALSE,na.strings = "null",nrows=7)
+metadata_var <- meta_data[,1]
+i = seq(2,284,2)
+meta_data_station <- as_tibble(meta_data[,i])
+meta_data_station[1,] <- as.list(seq(1,284/2))
+```
+
+
+```{r obtencao_dados,echo=TRUE}
+data <- read.delim("dados/qx1d_RH SFR.dat",sep=";",header=FALSE,na.strings = "null",skip=12)
+#as.Date(df$Date, format =  "%m/%d/%Y %H:%M:%S")
+#year <- as.Date(data[-1,1], format="%Y")
+year <- as.numeric(data[-1,1])
+Q <- as.numeric(data[-1,2])
+df <- data.frame(year, Q)
+
+# find NA's and remove from dataframe
+flows <- na.omit(df) 
+tibble(flows)
+```
+
+É sempre importante visualizar a série de máximos anuais. Para isso, utilizamos 
+
+```{r plot_serie}
+library(ggplot2)
+ ggplot(flows,aes(x=year, y=Q)) +
+    geom_point() +
+    geom_line()
+ 
+
+#lines(pressure$temperature, pressure$pressure/2, col = "red")
+
+```
+
+### Cálculo das posições de plotagem
+
+### Construção da curva de frequência amostral
+
+## Inferência
+
+### Cálculo dos momentos-L
+
+### Diagrama de momentos-L
+
+### Estimativa dos parâmetros da distribuição
+
+### Cálculo dos quantis de cheia
+
+## Construção da curva de frequência
+
+## Descrição das incertezas (intervalo de confiança)
+
+## Curva de frequência final
+
+## Detalhes técnicos
+
+### Distribuição de probabilidades
+
+#### Para que servem?
 
 O uso de uma distribuição teórica de probabilidades se justifica por três motivos,
 
@@ -47,12 +117,12 @@ O uso de uma distribuição teórica de probabilidades se justifica por três mo
 - pode ser utilizada como um interpolador de quantis de cheia, já que o uso da frequência amostral só permite estimar quantis para um número discreto, e nem sempre desejado, de períodos de retorno.
 - é uma maneira de armazenar as infomações relevantes da série de máximos de maneira compacta, visto que basta guardar o valor dos parâmetro da distribuição para obter qualquer quantil de cheia que se tenha interesse.
 
-### Quais são as distribuições mais usadas?
+#### Quais são as distribuições mais usadas?
   
-### Como avaliar a distribuição mais indicada?
+#### Como avaliar a distribuição mais indicada?
 
-## Ajuste dos parâmetros d distribuição
+#### Ajuste dos parâmetros da distribuição
 
-## Estimativa dos quantis de cheia
+#### Estimativa dos quantis de cheia
 
-## Descrição das incertezas
+#### Descrição das incertezas

@@ -2142,21 +2142,38 @@ Aulas
 <li><a href="#objetivos-da-atividade">Objetivos da atividade</a></li>
 <li><a href="#passos-a-serem-executados">Passos a serem
 executados</a></li>
-<li><a href="#distribuição-de-probabilidades">Distribuição de
-probabilidades</a>
+<li><a href="#visualização-dos-dados-observados">Visualização dos dados
+observados</a>
 <ul>
-<li><a href="#para-que-servem">Para que servem?</a></li>
-<li><a href="#quais-são-as-distribuições-mais-usadas">Quais são as
-distribuições mais usadas?</a></li>
-<li><a href="#como-avaliar-a-distribuição-mais-indicada">Como avaliar a
-distribuição mais indicada?</a></li>
+<li><a href="#escolha-da-estação-fluviométrica">Escolha da estação
+fluviométrica</a></li>
+<li><a href="#seleção-das-vazões-máximas-anuais">Seleção das vazões
+máximas anuais</a></li>
+<li><a href="#cálculo-das-posições-de-plotagem">Cálculo das posições de
+plotagem</a></li>
+<li><a href="#construção-da-curva-de-frequência-amostral">Construção da
+curva de frequência amostral</a></li>
 </ul></li>
-<li><a href="#ajuste-dos-parâmetros-d-distribuição">Ajuste dos
-parâmetros d distribuição</a></li>
-<li><a href="#estimativa-dos-quantis-de-cheia">Estimativa dos quantis de
+<li><a href="#inferência">Inferência</a>
+<ul>
+<li><a href="#cálculo-dos-momentos-l">Cálculo dos momentos-L</a></li>
+<li><a href="#diagrama-de-momentos-l">Diagrama de momentos-L</a></li>
+<li><a href="#estimativa-dos-parâmetros-da-distribuição">Estimativa dos
+parâmetros da distribuição</a></li>
+<li><a href="#cálculo-dos-quantis-de-cheia">Cálculo dos quantis de
 cheia</a></li>
-<li><a href="#descrição-das-incertezas">Descrição das
-incertezas</a></li>
+</ul></li>
+<li><a href="#construção-da-curva-de-frequência">Construção da curva de
+frequência</a></li>
+<li><a href="#descrição-das-incertezas-intervalo-de-confiança">Descrição
+das incertezas (intervalo de confiança)</a></li>
+<li><a href="#curva-de-frequência-final">Curva de frequência
+final</a></li>
+<li><a href="#detalhes-técnicos">Detalhes técnicos</a>
+<ul>
+<li><a href="#distribuição-de-probabilidades">Distribuição de
+probabilidades</a></li>
+</ul></li>
 </ul>
 </nav>
 </div>
@@ -2220,9 +2237,87 @@ teórica de probabilidades</li>
 Lognormal</li>
 <li>Curva de frequência com intervalos de confiança</li>
 </ul>
-<h2 id="distribuição-de-probabilidades">Distribuição de
-probabilidades</h2>
-<h3 id="para-que-servem">Para que servem?</h3>
+<h2 id="visualização-dos-dados-observados">Visualização dos dados
+observados</h2>
+<h3 id="escolha-da-estação-fluviométrica">Escolha da estação
+fluviométrica</h3>
+<h3 id="seleção-das-vazões-máximas-anuais">Seleção das vazões máximas
+anuais</h3>
+<p>Aqui, nós faremos uso de uma banco de dados criado pelo Saulo Aires
+de Souza em sua tese de doutorado. Utilizaremos um arquivo que contém as
+séries de máximos anuais de 124 estações fluvométricas localizadas na
+bacia do Rio São Francisco (<a
+href="https://doi.org/10.5281/zenodo.6551909"
+class="uri">https://doi.org/10.5281/zenodo.6551909</a>).</p>
+<p>O código abaixo lê o arquivo e armazena os anos e os valores das
+vazões máximas anuais da primeira estação do banco de dados num
+<code>dataframe</code> chamado <code>flows</code>. Nós usamos a função
+<code>tibble</code> para mostrar uma parte das informações contidas
+nesse <code>dataframe</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.delim</a></span><span class='op'>(</span><span class='st'>"dados/qx1d_RH SFR.dat"</span>,sep<span class='op'>=</span><span class='st'>";"</span>,header<span class='op'>=</span><span class='cn'>FALSE</span>,na.strings <span class='op'>=</span> <span class='st'>"null"</span>,skip<span class='op'>=</span><span class='fl'>12</span><span class='op'>)</span>
+<span class='co'>#as.Date(df$Date, format =  "%m/%d/%Y %H:%M:%S")</span>
+<span class='co'>#year &lt;- as.Date(data[-1,1], format="%Y")</span>
+<span class='va'>year</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>[</span><span class='op'>-</span><span class='fl'>1</span>,<span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span>
+<span class='va'>Q</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>[</span><span class='op'>-</span><span class='fl'>1</span>,<span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span>
+<span class='va'>df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='va'>year</span>, <span class='va'>Q</span><span class='op'>)</span>
+
+<span class='co'># find NA's and remove from dataframe</span>
+<span class='va'>flows</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>df</span><span class='op'>)</span> 
+<span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>flows</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code># A tibble: 70 × 2
+    year     Q
+   &lt;dbl&gt; &lt;dbl&gt;
+ 1  1939 112. 
+ 2  1940  34.2
+ 3  1941 107. 
+ 4  1942 102. 
+ 5  1951 159. 
+ 6  1952  44.0
+ 7  1953  59.2
+ 8  1954  50.3
+ 9  1955  96.2
+10  1956 107. 
+# … with 60 more rows</code></pre>
+</div>
+<p>É sempre importante visualizar a série de máximos anuais. Para isso,
+utilizamos</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span>
+ <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>flows</span>,<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x<span class='op'>=</span><span class='va'>year</span>, y<span class='op'>=</span><span class='va'>Q</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span>
+    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span><span class='op'>)</span>
+</code></pre>
+</div>
+<img src="frequency_analysis_files/figure-html5/plot_serie-1.png" width="624" />
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'>#lines(pressure$temperature, pressure$pressure/2, col = "red")</span>
+</code></pre>
+</div>
+</div>
+<h3 id="cálculo-das-posições-de-plotagem">Cálculo das posições de
+plotagem</h3>
+<h3 id="construção-da-curva-de-frequência-amostral">Construção da curva
+de frequência amostral</h3>
+<h2 id="inferência">Inferência</h2>
+<h3 id="cálculo-dos-momentos-l">Cálculo dos momentos-L</h3>
+<h3 id="diagrama-de-momentos-l">Diagrama de momentos-L</h3>
+<h3 id="estimativa-dos-parâmetros-da-distribuição">Estimativa dos
+parâmetros da distribuição</h3>
+<h3 id="cálculo-dos-quantis-de-cheia">Cálculo dos quantis de cheia</h3>
+<h2 id="construção-da-curva-de-frequência">Construção da curva de
+frequência</h2>
+<h2 id="descrição-das-incertezas-intervalo-de-confiança">Descrição das
+incertezas (intervalo de confiança)</h2>
+<h2 id="curva-de-frequência-final">Curva de frequência final</h2>
+<h2 id="detalhes-técnicos">Detalhes técnicos</h2>
+<h3 id="distribuição-de-probabilidades">Distribuição de
+probabilidades</h3>
+<h4 id="para-que-servem">Para que servem?</h4>
 <p>O uso de uma distribuição teórica de probabilidades se justifica por
 três motivos,</p>
 <ul>
@@ -2237,16 +2332,16 @@ máximos de maneira compacta, visto que basta guardar o valor dos
 parâmetro da distribuição para obter qualquer quantil de cheia que se
 tenha interesse.</li>
 </ul>
-<h3 id="quais-são-as-distribuições-mais-usadas">Quais são as
-distribuições mais usadas?</h3>
-<h3 id="como-avaliar-a-distribuição-mais-indicada">Como avaliar a
-distribuição mais indicada?</h3>
-<h2 id="ajuste-dos-parâmetros-d-distribuição">Ajuste dos parâmetros d
-distribuição</h2>
-<h2 id="estimativa-dos-quantis-de-cheia">Estimativa dos quantis de
-cheia</h2>
-<h2 id="descrição-das-incertezas">Descrição das incertezas</h2>
-<div class="sourceCode" id="cb1"><pre
+<h4 id="quais-são-as-distribuições-mais-usadas">Quais são as
+distribuições mais usadas?</h4>
+<h4 id="como-avaliar-a-distribuição-mais-indicada">Como avaliar a
+distribuição mais indicada?</h4>
+<h4 id="ajuste-dos-parâmetros-da-distribuição">Ajuste dos parâmetros da
+distribuição</h4>
+<h4 id="estimativa-dos-quantis-de-cheia">Estimativa dos quantis de
+cheia</h4>
+<h4 id="descrição-das-incertezas">Descrição das incertezas</h4>
+<div class="sourceCode" id="cb2"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
