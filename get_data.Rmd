@@ -63,7 +63,7 @@ Lembrando que isso tudo nos dá apenas a lista com informações sobre as estaç
 
 Idealmente, se a gente quiser ficar sempre puxando diferentes informações e não ficar precisando rodar linha por linha de código, podemos juntar tudo isso em uma função. Para a nossa função, deixaremos o processo um pouco melhor. Primeiro definiremos que a função precisa de 3 parâmetros (o status da estação, a origem e qual Unidade Federativa do Brasil queremos). Após puxar os dados em XML e transformar tudo em um dataframe, fazemos aqui algo novo - criamos uma coluna chamada "UF" contendo apenas as últimas duas letras do Município (isos porque no arquivo original, as duas últimas letras são as siglas da UF).
 
-```{r Funcao_puxar_info_ANA, , echo= TRUE,eval=FALSE}
+```{r Funcao_puxar_info_ANA}
 ANA_info <- function(status_codigo = "",
                      origem_codigo = "",
                      UF_fun = "DF"){
@@ -88,6 +88,7 @@ ANA_info <- function(status_codigo = "",
 ```
 
 Podemos simplesmente testar essa função criada chamando a função e atribuindo para um objeto qualquer (chamamos aqui de "teste") seu resultado. Em seguida falamos para o R printar as colunas desse dataframe.
+
 ```{r teste_fun_puxad_info_ANA}
 # Testar a função feita!
 teste <- ANA_info()
@@ -95,9 +96,10 @@ colnames(teste)
 ```
 
 ## Dados Hidrometeorológicos da ANA
+
 Para acessar os dados hidrometeorológicos nesse webservice, temos outro url: <http://telemetriaws1.ana.gov.br/ServiceANA.asmx?op=DadosHidrometeorologicos>. Nele, vemos que são necessárias agora três parâmetros para fazermos uma busca: o “codEstacao” (que a gente pegou na parte anterior!), a “dataInicio” e a “dataFim”. Do mesmo jeito de antes, vamos definir um objeto para cada parâmetro e depois criar um url baseado nesses parâmetros. Em seguida fazemos um xmlParse() e pegamos as informações contidas nos nodes com o getNodeSet(). Por último, transformamos isso em um dataframe. Dessa vez, podemos fazer a função direto ja!
 
-```{r dados_hidro_ANA_1,, echo= TRUE,eval=FALSE}
+```{r dados_hidro_ANA_1}
 dados_ANA <- function(cod_estacao = "",
                       data_inicio = "01/01/2020",
                       data_fim = Sys.Date()){
@@ -124,7 +126,7 @@ head(dados_FAL)
 
 Percebemos aqui um "problema". A data e a hora estão na mesma coluna e idealmente queremos deixar em colunas separadas (uma contendo a data e outra contendo as horas). Então iremos adicionar dentro da nossa função, mais um comando para fazer essa separação. Um jeito simples (mas não o único) de fazer isso é selecionando os primeiros 10 caracteres como sendo os de data e os últimos 8 como sendo de hora - porque a data sempre vai estar no formato "dia/mes/ano" e o horário em "hora:minuto:segundo". Podemos também reorganizar as colunas do jeito que quisermos. Abaixo está essa nova função mais organizada. 
 
-```{r dados_hidro_ANA_2, , echo= TRUE,eval=FALSE}
+```{r dados_hidro_ANA_2}
 dados_ANA <- function(cod_estacao = "",
                       data_inicio = "01/01/2020",
                       data_fim = Sys.Date()){
@@ -150,6 +152,7 @@ dados_ANA <- function(cod_estacao = "",
 ```
 
 Chamamos novamente essa função (agora atualizada) para rodar a estação da FAL. Em seguida printamos no R apenas as primeiras 6 linhas desse dataframe.
+
 ```{r dados_FAL_2}
 # Rodar a função para a estação da FAL
 dados_FAL <- dados_ANA(cod_estacao = 60478482)

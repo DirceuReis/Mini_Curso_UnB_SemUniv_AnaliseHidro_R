@@ -2145,6 +2145,7 @@ Aulas
 Telemétricas da ANA</a></li>
 <li><a href="#dados-hidrometeorológicos-da-ana">Dados
 Hidrometeorológicos da ANA</a></li>
+<li><a href="#outras-formas">Outras formas</a></li>
 </ul>
 </nav>
 </div>
@@ -2158,18 +2159,18 @@ Isso, no fundo, é apenas um site contendo esses dados. Porém isso tudo é
 organizados de uma maneira bem específica. Portanto, a primeira coisa
 que precisa-se saber para utilizar um webservice é saber como essa
 organização é feita!</p>
-<p>No caso do webservice da ANA, tudo isso está disponível no url: <a
+<p>No caso do webservice da ANA, tudo isso está disponível no url <a
 href="http://telemetriaws1.ana.gov.br/ServiceANA.asmx"
-class="uri">http://telemetriaws1.ana.gov.br/ServiceANA.asmx</a> Nele
-vemos todas as informações disponíveis, tais como “dados
+class="uri">http://telemetriaws1.ana.gov.br/ServiceANA.asmx</a>.</p>
+<p>Nele vemos todas as informações disponíveis, tais como “dados
 hidrometeorológicos”, “dados hidrometeorológicos gerais”, “lista de
 estações telemétricas”, “Cotas”, “inventário”, “rios”, “série histórica”
 e outros. Existe nesse site inclusive um arquivo em .pdf que fala melhor
-sobre o sistema como um todo e o que pode-se achar dentro dele! Isso
-está no url abaixo. Esse arquivo é essencial para entendermos como os
-dados estão disponíveis e como podemos acessar eles. <a
+sobre o sistema como um todo e o que pode-se achar dentro dele <a
 href="http://telemetriaws1.ana.gov.br/Telemetria1ws.pdf"
-class="uri">http://telemetriaws1.ana.gov.br/Telemetria1ws.pdf</a></p>
+class="uri">http://telemetriaws1.ana.gov.br/Telemetria1ws.pdf</a>! Esse
+arquivo é essencial para entendermos como os dados estão disponíveis e
+como podemos acessar eles.</p>
 <p>Descobrimos então que os dados da ANA estão disponibilizados no
 formato XML (“Extended Markup Language”) e com isso faremos os próximos
 passos. Não entraremos muito a fundo nesse formato e suas
@@ -2189,18 +2190,8 @@ href="http://telemetriaws1.ana.gov.br/ServiceANA.asmx/ListaEstacoesTelemetricas?
 class="uri">http://telemetriaws1.ana.gov.br/ServiceANA.asmx/ListaEstacoesTelemetricas?statusEstacoes=&amp;origem=</a>,
 teremos acesso ao arquivo XML com a informação de todas as estações
 telemétricas.</p>
-<p>(queria botar uma foto aqui de como fica o site, depois eu vejo como
-fazer certinho no rmarkdown)</p>
-<p>Exemplo abaixo de como incluir uma Figura. Há várias maneras de fazer
-isso, essa de baixo é apenas uma delas.</p>
 <div class="layout-chunk" data-layout="l-body">
-<div class="figure" style="text-align: center">
-<img src="images/curva_freq_salado.png" alt="Curva de frequência do cheias do Rio Salado, na Argentina." width="90%" />
-<p class="caption">
-(#fig:curva_freq)Curva de frequência do cheias do Rio Salado, na
-Argentina.
-</p>
-</div>
+<p><img src="images/XML_ANA_info_1.png" width="90%" style="display: block; margin: auto;" /></p>
 </div>
 <p>Para abrirmos esse mesmo formato no RStudio, utilizamos uma função do
 pacote “XML” chamada xmlParse(). Essa função irá apenas ler um arquivo
@@ -2213,10 +2204,11 @@ que essa parte é um outro mundo no R e não entraremos com maiores
 detalhamentos).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>status_codigo</span> <span class='op'>&lt;-</span> <span class='st'>"1"</span>
-<span class='va'>origem_codigo</span> <span class='op'>&lt;-</span> <span class='st'>"78000000"</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>status_codigo</span> <span class='op'>&lt;-</span> <span class='st'>""</span>
+<span class='va'>origem_codigo</span> <span class='op'>&lt;-</span> <span class='st'>""</span>
 
-<span class='va'>url_base</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"http://telemetriaws1.ana.gov.br/ServiceANA.asmx/ListaEstacoesTelemetricas?statusEstacoes="</span>, <span class='va'>status_codigo</span>, <span class='st'>"&amp;origem="</span>, <span class='va'>origem_codigo</span><span class='op'>)</span>
+<span class='va'>url_base</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"http://telemetriaws1.ana.gov.br/ServiceANA.asmx/ListaEstacoesTelemetricas?"</span>,
+                   <span class='st'>"statusEstacoes="</span>, <span class='va'>status_codigo</span>, <span class='st'>"&amp;origem="</span>, <span class='va'>origem_codigo</span><span class='op'>)</span>
 <span class='va'>url_parse</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlTreeParse.html'>xmlParse</a></span><span class='op'>(</span><span class='va'>url_base</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span>
 </code></pre>
 </div>
@@ -2235,9 +2227,12 @@ no formato XML ou HTML possuem estruturas que são definidas entre “&lt;
 todos os dados de cada estação são precedidos por um elemento chamado
 “Table” (dentro do “&lt;&gt;”). Porém, queremos os nodes que estão
 associados a esses “Tables” (tabelas). Para isso, samos a função
-getNodeSet(). Com os argumentos sendo o objeto depois de ter feito um
-xmlParse() e o “//Table” (lembrar de colocar essas duas barras)</p>
-<p>(aqui depois vou botar outra imagem, mostrando isso melhor).</p>
+getNodeSet(). Com os argumentos dessa função sendo primeiro o objeto
+criado no R depois de ter feito um xmlParse() e o segundo argumento
+sendo “//Table” (lembrar de colocar essas duas barras)</p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="images/XML_ANA_info_2.png" width="90%" style="display: block; margin: auto;" /></p>
+</div>
 <p>A próxima etapa agora é transformar esse arquivo em algo que estamos
 mais acostumados a mexer dentro do R. Boas opções são dataframes e
 listas. Como não aprendemos a mexer muito com listas, vamos transformar
@@ -2245,7 +2240,8 @@ nosso objeto em um dataframe. Para isso utilizamos a função
 xmlToDataFrame().</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>cadastro_estacoes</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlToDataFrame.html'>xmlToDataFrame</a></span><span class='op'>(</span>nodes <span class='op'>=</span> <span class='va'>nodes_doc</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>nodes_doc</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/getNodeSet.html'>getNodeSet</a></span><span class='op'>(</span><span class='va'>url_parse</span>, <span class='st'>"//Table"</span><span class='op'>)</span>
+<span class='va'>cadastro_estacoes</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlToDataFrame.html'>xmlToDataFrame</a></span><span class='op'>(</span>nodes <span class='op'>=</span> <span class='va'>nodes_doc</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
@@ -2256,7 +2252,7 @@ apenas as estações de Brasília, escrevemos o código abaixo. O
 com base em qualquer outra também.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>estacoes_bsb</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>cadastro_estacoes</span>, <span class='va'>`Municipio-UF`</span> <span class='op'>==</span> <span class='st'>"BRASÍLIA-DF"</span><span class='op'>)</span>
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>estacoes_bsb</span> <span class='op'>&lt;-</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>cadastro_estacoes</span>, <span class='va'>`Municipio-UF`</span> <span class='op'>==</span> <span class='st'>"BRASÍLIA-DF"</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
@@ -2298,6 +2294,22 @@ arquivo original, as duas últimas letras são as siglas da UF).</p>
 </code></pre>
 </div>
 </div>
+<p>Podemos simplesmente testar essa função criada chamando a função e
+atribuindo para um objeto qualquer (chamamos aqui de “teste”) seu
+resultado. Em seguida falamos para o R printar as colunas desse
+dataframe.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Testar a função feita!</span>
+<span class='va'>teste</span> <span class='op'>&lt;-</span> <span class='fu'>ANA_info</span><span class='op'>(</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>teste</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code> [1] &quot;NomeEstacao&quot;   &quot;CodEstacao&quot;    &quot;Bacia&quot;         &quot;SubBacia&quot;     
+ [5] &quot;Operadora&quot;     &quot;Responsavel&quot;   &quot;Municipio-UF&quot;  &quot;Latitude&quot;     
+ [9] &quot;Longitude&quot;     &quot;Altitude&quot;      &quot;CodRio&quot;        &quot;NomeRio&quot;      
+[13] &quot;Origem&quot;        &quot;StatusEstacao&quot; &quot;UF&quot;           </code></pre>
+</div>
 <h2 id="dados-hidrometeorológicos-da-ana">Dados Hidrometeorológicos da
 ANA</h2>
 <p>Para acessar os dados hidrometeorológicos nesse webservice, temos
@@ -2324,27 +2336,41 @@ um dataframe. Dessa vez, podemos fazer a função direto ja!</p>
                      <span class='st'>"&amp;dataFim="</span>, <span class='va'>data_fim</span><span class='op'>)</span>
   <span class='va'>url_parse</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlTreeParse.html'>xmlParse</a></span><span class='op'>(</span><span class='va'>url_base</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span>
   <span class='va'>node_doc</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/getNodeSet.html'>getNodeSet</a></span><span class='op'>(</span><span class='va'>url_parse</span>, <span class='st'>"//DadosHidrometereologicos"</span><span class='op'>)</span>
-  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlToDataFrame.html'>xmlToDataFrame</a></span><span class='op'>(</span>nodes <span class='op'>=</span> <span class='va'>node_doc</span><span class='op'>)</span>
+  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlToDataFrame.html'>xmlToDataFrame</a></span><span class='op'>(</span>nodes <span class='op'>=</span> <span class='va'>node_doc</span><span class='op'>)</span>
   
   <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>)</span>
 <span class='op'>}</span>
-
-<span class='co'># Rodar a função para a estação da FAL</span>
-<span class='va'>dados_FAL</span> <span class='op'>&lt;-</span> <span class='fu'>fun_puxad_dados_ANA</span><span class='op'>(</span>cod_estacao <span class='op'>=</span> <span class='fl'>60478482</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
-<p>Ao abrir esses dados_FAL, a gente percebe um “problema”. A data e a
-hora estão na mesma coluna e idealmente queremos deixar em colunas
-separadas (uma contendo a data e outra contendo as horas). Então iremos
-adicionar dentro da nossa função, mais um comando para fazer essa
-separação. Um jeito simples (mas não o único) de fazer isso é
-selecionando os primeiros 10 caracteres como sendo os de data e os
-últimos 8 como sendo de hora - porque a data sempre vai estar no formato
-“dia/mes/ano” e o horário em “hora:minuto:segundo”. Podemos também
-reorganizar as colunas do jeito que quisermos. Abaixo está essa nova
-função mais organizada. Chamamos novamente ela para rodar a estação da
-FAL.</p>
+<p>A partir da função que criamos anteriormente, para puxar as
+informações das estações, podemos ver os códigos de todas as estações.
+Um exemplo é a FAL, da própria UnB. Seu código é 60478482 - podemos usar
+ele na nossa nova função “dados_ANA”. Para ver o que essa função criada
+retorna, podemos pedir ao R as primeiras 6 linhas desse dataframe.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='va'>dados_FAL</span> <span class='op'>&lt;-</span> <span class='fu'>dados_ANA</span><span class='op'>(</span>cod_estacao <span class='op'>=</span> <span class='fl'>60478482</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>dados_FAL</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code>  CodEstacao             DataHora Vazao Nivel Chuva
+1   60478482 2022-06-24 15:00:00        29.00  0.00
+2   60478482 2022-06-24 14:45:00        29.00  0.00
+3   60478482 2022-06-24 14:30:00        29.00  0.00
+4   60478482 2022-06-24 14:15:00        29.00  0.00
+5   60478482 2022-06-24 14:00:00        29.00  0.00
+6   60478482 2022-06-24 13:45:00        29.00  0.00</code></pre>
+</div>
+<p>Percebemos aqui um “problema”. A data e a hora estão na mesma coluna
+e idealmente queremos deixar em colunas separadas (uma contendo a data e
+outra contendo as horas). Então iremos adicionar dentro da nossa função,
+mais um comando para fazer essa separação. Um jeito simples (mas não o
+único) de fazer isso é selecionando os primeiros 10 caracteres como
+sendo os de data e os últimos 8 como sendo de hora - porque a data
+sempre vai estar no formato “dia/mes/ano” e o horário em
+“hora:minuto:segundo”. Podemos também reorganizar as colunas do jeito
+que quisermos. Abaixo está essa nova função mais organizada.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>dados_ANA</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>cod_estacao</span> <span class='op'>=</span> <span class='st'>""</span>,
@@ -2369,16 +2395,32 @@ FAL.</p>
   
   <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>)</span>
 <span class='op'>}</span>
-
-<span class='co'># Rodar a função para a estação da FAL</span>
-<span class='va'>dados_FAL</span> <span class='op'>&lt;-</span> <span class='fu'>dados_ANA</span><span class='op'>(</span>cod_estacao <span class='op'>=</span> <span class='fl'>60478482</span><span class='op'>)</span>
 </code></pre>
 </div>
 </div>
+<p>Chamamos novamente essa função (agora atualizada) para rodar a
+estação da FAL. Em seguida printamos no R apenas as primeiras 6 linhas
+desse dataframe.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span class='co'># Rodar a função para a estação da FAL</span>
+<span class='va'>dados_FAL</span> <span class='op'>&lt;-</span> <span class='fu'>dados_ANA</span><span class='op'>(</span>cod_estacao <span class='op'>=</span> <span class='fl'>60478482</span><span class='op'>)</span>
+<span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>dados_FAL</span><span class='op'>)</span>
+</code></pre>
+</div>
+<pre><code>  CodEstacao       Data     Hora Vazao Nivel Chuva
+1   60478482 2022-06-24 15:00:00       29.00  0.00
+2   60478482 2022-06-24 14:45:00       29.00  0.00
+3   60478482 2022-06-24 14:30:00       29.00  0.00
+4   60478482 2022-06-24 14:15:00       29.00  0.00
+5   60478482 2022-06-24 14:00:00       29.00  0.00
+6   60478482 2022-06-24 13:45:00       29.00  0.00</code></pre>
+</div>
 <p>Aqui rodamos a função apenas para uma estação. Mas se quisermos rodar
 para várias estações, basta utilizar um loop (for) ou até mesmo a função
-lapply do R (mais rápido!). ## Outras formas</p>
-<div class="sourceCode" id="cb1"><pre
+lapply do R (mais rápido!).</p>
+<h2 id="outras-formas">Outras formas</h2>
+<div class="sourceCode" id="cb4"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
