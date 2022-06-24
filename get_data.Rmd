@@ -26,11 +26,17 @@ Começaremos acessando os dados das estações telemétricas desse sistema. No p
 
 (queria botar uma foto aqui de como fica o site, depois eu vejo como fazer certinho no rmarkdown)
 
+Exemplo abaixo de como incluir uma Figura. Há várias maneras de fazer isso, essa de baixo é apenas uma delas.
+
+```{r curva_freq,echo=FALSE, fig.align = 'center', out.width = "90%", fig.cap = "Curva de frequência do cheias do Rio Salado, na Argentina."}
+knitr::include_graphics("images/curva_freq_salado.png")
+```
+
 Para abrirmos esse mesmo formato no RStudio, utilizamos uma função do pacote "XML" chamada xmlParse(). Essa função irá apenas ler um arquivo do tipo XML e vai gerar uma estrutura no R similar ao que aparece na imagem acima (formato de “árvore”). A função toma como argumento obrigatório o url a ser utilizado e um argumento opcional é a codificação do arquivo (do inglês encoding). Usualmente no Brasil utilizamos o “UTF-8” para poder utilizar nossos acentos (mas lembre-se que essa parte é um outro mundo no R e não entraremos com maiores detalhamentos).
 
 ```{r XML_no_R_ANA}
-status_codigo <- ""
-origem_codigo <- ""
+status_codigo <- "1"
+origem_codigo <- "78000000"
 
 url_base <- paste0("http://telemetriaws1.ana.gov.br/ServiceANA.asmx/ListaEstacoesTelemetricas?statusEstacoes=", status_codigo, "&origem=", origem_codigo)
 url_parse <- XML::xmlParse(url_base, encoding = "UTF-8")
@@ -44,13 +50,13 @@ Para puxar agora as informações dessas estações, precisamos entender melhor 
 
 A próxima etapa agora é transformar esse arquivo em algo que estamos mais acostumados a mexer dentro do R. Boas opções são dataframes e listas. Como não aprendemos a mexer muito com listas, vamos transformar nosso objeto em um dataframe. Para isso utilizamos a função xmlToDataFrame().
 
-```{r XML_to_DF_ANA}
+```{r XML_to_DF_ANA, echo= TRUE,eval=FALSE}
 cadastro_estacoes <- xmlToDataFrame(nodes = nodes_doc)
 ```
 
 Agora podemos fazer as manipulações que já aprendemos anteriormente (com dataframe ficou fácil!). Por exemplo, se quisermos selecionar apenas as estações de Brasília, escrevemos o código abaixo. O "Municipio-UF" é apenas uma das colunas do dataframe, podemos filtrar com base em qualquer outra também.
 
-```{r Filtrar_cadastro_estacoes_ANA}
+```{r Filtrar_cadastro_estacoes_ANA,, echo= TRUE,eval=FALSE}
 estacoes_bsb <- filter(cadastro_estacoes, `Municipio-UF` == "BRASÍLIA-DF")
 ```
  
@@ -58,7 +64,7 @@ Lembrando que isso tudo nos dá apenas a lista com informações sobre as estaç
 
 Idealmente, se a gente quiser ficar sempre puxando diferentes informações e não ficar precisando rodar linha por linha de código, podemos juntar tudo isso em uma função. Para a nossa função, deixaremos o processo um pouco melhor. Primeiro definiremos que a função precisa de 3 parâmetros (o status da estação, a origem e qual Unidade Federativa do Brasil queremos). Após puxar os dados em XML e transformar tudo em um dataframe, fazemos aqui algo novo - criamos uma coluna chamada "UF" contendo apenas as últimas duas letras do Município (isos porque no arquivo original, as duas últimas letras são as siglas da UF).
 
-```{r Funcao_puxar_info_ANA}
+```{r Funcao_puxar_info_ANA, , echo= TRUE,eval=FALSE}
 ANA_info <- function(status_codigo = "",
                      origem_codigo = "",
                      UF_fun = "DF"){
@@ -85,7 +91,7 @@ ANA_info <- function(status_codigo = "",
 ## Dados Hidrometeorológicos da ANA
 Para acessar os dados hidrometeorológicos nesse webservice, temos outro url: <http://telemetriaws1.ana.gov.br/ServiceANA.asmx?op=DadosHidrometeorologicos>. Nele, vemos que são necessárias agora três parâmetros para fazermos uma busca: o “codEstacao” (que a gente pegou na parte anterior!), a “dataInicio” e a “dataFim”. Do mesmo jeito de antes, vamos definir um objeto para cada parâmetro e depois criar um url baseado nesses parâmetros. Em seguida fazemos um xmlParse() e pegamos as informações contidas nos nodes com o getNodeSet(). Por último, transformamos isso em um dataframe. Dessa vez, podemos fazer a função direto ja!
 
-```{r dados_hidro_ANA_1}
+```{r dados_hidro_ANA_1,, echo= TRUE,eval=FALSE}
 dados_ANA <- function(cod_estacao = "",
                       data_inicio = "01/01/2020",
                       data_fim = Sys.Date()){
@@ -108,7 +114,7 @@ dados_FAL <- fun_puxad_dados_ANA(cod_estacao = 60478482)
 
 Ao abrir esses dados_FAL, a gente percebe um "problema". A data e a hora estão na mesma coluna e idealmente queremos deixar em colunas separadas (uma contendo a data e outra contendo as horas). Então iremos adicionar dentro da nossa função, mais um comando para fazer essa separação. Um jeito simples (mas não o único) de fazer isso é selecionando os primeiros 10 caracteres como sendo os de data e os últimos 8 como sendo de hora - porque a data sempre vai estar no formato "dia/mes/ano" e o horário em "hora:minuto:segundo". Podemos também reorganizar as colunas do jeito que quisermos. Abaixo está essa nova função mais organizada. Chamamos novamente ela para rodar a estação da FAL.
 
-```{r dados_hidro_ANA_2}
+```{r dados_hidro_ANA_2, , echo= TRUE,eval=FALSE}
 dados_ANA <- function(cod_estacao = "",
                       data_inicio = "01/01/2020",
                       data_fim = Sys.Date()){

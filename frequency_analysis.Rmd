@@ -51,11 +51,12 @@ Aqui, nós faremos uso de uma banco de dados criado pelo Saulo Aires de Souza em
 O código abaixo lê o arquivo e armazena os anos e os valores das vazões máximas anuais da primeira estação do banco de dados num `dataframe` chamado `flows`. Nós usamos a função `tibble` para mostrar uma parte das informações contidas nesse `dataframe`.
 
 ```{r tidy_data,echo=FALSE}
-meta_data <- read.delim("dados/qx1d_RH SFR.dat",sep=";",header=FALSE,na.strings = "null",nrows=7)
+meta_data <- read.delim("dados/qx1d_RH SFR.dat",sep=";",header=FALSE,na.strings = "null",nrows=5)
 metadata_var <- meta_data[,1]
-i = seq(2,284,2)
-meta_data_station <- as_tibble(meta_data[,i])
-meta_data_station[1,] <- as.list(seq(1,284/2))
+#i = seq(2,284,2)
+#meta_data_station <- as_tibble(meta_data[,i])
+#meta_data_station %>%
+#  add_row(c(seq(1,142)))
 ```
 
 
