@@ -27,17 +27,11 @@ Começaremos acessando os dados das estações telemétricas desse sistema. No p
 knitr::include_graphics("images/XML_ANA_info_1.png")
 ```
 
-Exemplo abaixo de como incluir uma Figura. Há várias maneras de fazer isso, essa de baixo é apenas uma delas.
-
-```{r curva_freq,echo=FALSE, fig.align = 'center', out.width = "90%", fig.cap = "Curva de frequência do cheias do Rio Salado, na Argentina."}
-knitr::include_graphics("images/curva_freq_salado.png")
-```
-
 Para abrirmos esse mesmo formato no RStudio, utilizamos uma função do pacote "XML" chamada xmlParse(). Essa função irá apenas ler um arquivo do tipo XML e vai gerar uma estrutura no R similar ao que aparece na imagem acima (formato de “árvore”). A função toma como argumento obrigatório o url a ser utilizado e um argumento opcional é a codificação do arquivo (do inglês encoding). Usualmente no Brasil utilizamos o “UTF-8” para poder utilizar nossos acentos (mas lembre-se que essa parte é um outro mundo no R e não entraremos com maiores detalhamentos).
 
 ```{r XML_no_R_ANA}
-status_codigo <- "1"
-origem_codigo <- "78000000"
+status_codigo <- ""
+origem_codigo <- ""
 
 url_base <- paste0("http://telemetriaws1.ana.gov.br/ServiceANA.asmx/ListaEstacoesTelemetricas?",
                    "statusEstacoes=", status_codigo, "&origem=", origem_codigo)
@@ -54,25 +48,15 @@ knitr::include_graphics("images/XML_ANA_info_2.png")
 
 A próxima etapa agora é transformar esse arquivo em algo que estamos mais acostumados a mexer dentro do R. Boas opções são dataframes e listas. Como não aprendemos a mexer muito com listas, vamos transformar nosso objeto em um dataframe. Para isso utilizamos a função xmlToDataFrame().
 
-<<<<<<< HEAD
-```{r XML_to_DF_ANA, echo= TRUE,eval=FALSE}
-cadastro_estacoes <- xmlToDataFrame(nodes = nodes_doc)
-=======
 ```{r XML_to_DF_ANA}
 nodes_doc <- XML::getNodeSet(url_parse, "//Table")
 cadastro_estacoes <- XML::xmlToDataFrame(nodes = nodes_doc)
->>>>>>> 95ea008e3411c5e8e650e737df677e8ee49dbca7
 ```
 
 Agora podemos fazer as manipulações que já aprendemos anteriormente (com dataframe ficou fácil!). Por exemplo, se quisermos selecionar apenas as estações de Brasília, escrevemos o código abaixo. O "Municipio-UF" é apenas uma das colunas do dataframe, podemos filtrar com base em qualquer outra também.
 
-<<<<<<< HEAD
-```{r Filtrar_cadastro_estacoes_ANA,, echo= TRUE,eval=FALSE}
-estacoes_bsb <- filter(cadastro_estacoes, `Municipio-UF` == "BRASÍLIA-DF")
-=======
 ```{r Filtrar_cadastro_estacoes_ANA}
 estacoes_bsb <- dplyr::filter(cadastro_estacoes, `Municipio-UF` == "BRASÍLIA-DF")
->>>>>>> 95ea008e3411c5e8e650e737df677e8ee49dbca7
 ```
  
 Lembrando que isso tudo nos dá apenas a lista com informações sobre as estações telemétricas. Para de fato termos acesso aos dados dessas estações, precisamos acessar outro url e fazer mais alguns códigos!
