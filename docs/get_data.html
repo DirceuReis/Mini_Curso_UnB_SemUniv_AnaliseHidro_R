@@ -88,7 +88,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 
   <!--radix_placeholder_meta_tags-->
-  <title>Análise Hidrológica com R: uma introdução para iniciantes: Obtenção de dados na web</title>
+  <title>Análise Hidrológica com R: uma introdução para iniciantes: Obtenção de dados hidrológicos na web</title>
 
   <meta property="description" itemprop="description" content="Conceitos básicos"/>
 
@@ -96,7 +96,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
 
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
-  <meta property="og:title" content="Análise Hidrológica com R: uma introdução para iniciantes: Obtenção de dados na web"/>
+  <meta property="og:title" content="Análise Hidrológica com R: uma introdução para iniciantes: Obtenção de dados hidrológicos na web"/>
   <meta property="og:type" content="article"/>
   <meta property="og:description" content="Conceitos básicos"/>
   <meta property="og:locale" content="en_US"/>
@@ -104,14 +104,14 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
-  <meta property="twitter:title" content="Análise Hidrológica com R: uma introdução para iniciantes: Obtenção de dados na web"/>
+  <meta property="twitter:title" content="Análise Hidrológica com R: uma introdução para iniciantes: Obtenção de dados hidrológicos na web"/>
   <meta property="twitter:description" content="Conceitos básicos"/>
 
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description"]}},"value":[{"type":"character","attributes":{},"value":["Obtenção de dados na web"]},{"type":"character","attributes":{},"value":["Conceitos básicos"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description"]}},"value":[{"type":"character","attributes":{},"value":["Obtenção de dados hidrológicos na web"]},{"type":"character","attributes":{},"value":["Conceitos básicos"]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2088,7 +2088,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Obtenção de dados na web","description":"Conceitos básicos","authors":[]}
+{"title":"Obtenção de dados hidrológicos na web","description":"Conceitos básicos","authors":[]}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2127,7 +2127,7 @@ Aulas
 <!--/radix_placeholder_site_before_body-->
 
 <div class="d-title">
-<h1>Obtenção de dados na web</h1>
+<h1>Obtenção de dados hidrológicos na web</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
 <p>Conceitos básicos</p>
@@ -2151,41 +2151,57 @@ Hidrometeorológicos da ANA</a></li>
 </div>
 <h2 id="repositório-de-dados">Repositório de dados</h2>
 <h2 id="obtenção-via-webservice">Obtenção via webservice</h2>
-<p>Coletar informação da internet, também conhecido como “webscraping”,
-é algo muito comum hoje em dia. A ANA (Agência Nacional de Águas e
-Saneamento Básico), o ONS (Operador Nacional do Sistema Elétrico) e
-muitos outros disponibilizam alguns de seus dados via o webservice.
-Isso, no fundo, é apenas um site contendo esses dados. Porém isso tudo é
-organizados de uma maneira bem específica. Portanto, a primeira coisa
-que precisa-se saber para utilizar um webservice é saber como essa
-organização é feita!</p>
-<p>No caso do webservice da ANA, tudo isso está disponível no url <a
+<p>Ser capaz de obter informação hidrológica, de forma gratuita,
+diretamente da internet, algo conhecido como “webscraping”, representa
+um ganho significativo de eficiência no desenvolvimento de estudos e
+projetos de hidrologia, recursos hídricos, e áreas afins. E essa
+possibilidade vem se tornando cada vez mais comum hoje em dia. A ANA
+(Agência Nacional de Águas e Saneamento Básico), o ONS (Operador
+Nacional do Sistema Elétrico) e muitas outras instituições no exterior
+disponibilizam alguns de seus dados via webservice.</p>
+<p>Em essência, o webservice é apenas um site que contém os dados.
+Porém, esses dados estão organizados de uma maneira bem específica, de
+forma que para que seja possível obtê-los de forma eficiente, é
+imprescindível que essa organização seja bem entedida. Aqui neste curso,
+vamos focar nossa atividades no webservice da ANA, que se encontra
+disponível por meio do url <a
 href="http://telemetriaws1.ana.gov.br/ServiceANA.asmx"
 class="uri">http://telemetriaws1.ana.gov.br/ServiceANA.asmx</a>.</p>
-<p>Nele vemos todas as informações disponíveis, tais como “dados
+<p>Quando acessamos esse endereço, somos levados para a página
+abaixo,</p>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="images/webservice_ANA.png" width="90%" style="display: block; margin: auto;" /></p>
+</div>
+<p>Se dermos um zoom na figura, podemos verificar todas as informações
+que estão disponíveis no webservice, tais como “dados
 hidrometeorológicos”, “dados hidrometeorológicos gerais”, “lista de
-estações telemétricas”, “Cotas”, “inventário”, “rios”, “série histórica”
-e outros. Existe nesse site inclusive um arquivo em .pdf que fala melhor
-sobre o sistema como um todo e o que pode-se achar dentro dele <a
+estações telemétricas”, “Cotas”, “inventário”, “rios”, “série
+histórica”, entre outras. Nesse mesmo site, pode-se acessar um arquivo
+em formato pdf com detalhes sobre o sistema como um todo, e com o que se
+pode obter dentro dele <a
 href="http://telemetriaws1.ana.gov.br/Telemetria1ws.pdf"
 class="uri">http://telemetriaws1.ana.gov.br/Telemetria1ws.pdf</a>! Esse
 arquivo é essencial para entendermos como os dados estão disponíveis e
-como podemos acessar eles.</p>
-<p>Descobrimos então que os dados da ANA estão disponibilizados no
-formato XML (“Extended Markup Language”) e com isso faremos os próximos
-passos. Não entraremos muito a fundo nesse formato e suas
-características, porém para quem quiser aprender mais sobre webscraping
-vale a pena dar uma olhada.</p>
+como podemos acessá-los.</p>
+<p>Esse documento nos mostra que os dados hidrológicos da ANA estão
+disponibilizados no formato XML (“Extended Markup Language”), de forma
+que gastaremos um tempo aqui entendendo como acessar e manipular os dads
+nesse formato. Entretanto, aqui no curso, não nos apronfundaremos nos
+detalhes de características desse formato, porém se você deseja saber
+mais sobre webscraping, sugerimos que você procure se aprofundar mais
+nesse tema.</p>
 <h2 id="lista-das-estações-telemétricas-da-ana">Lista das Estações
 Telemétricas da ANA</h2>
-<p>Começaremos acessando os dados das estações telemétricas desse
-sistema. No próprio site é mostrado que é preciso de dois parâmetros
-para pesquisas as estações, um chamado de “statusEstacoes” que pode ser
-0 (ativo) ou 1 (manutenção) e outro parâmetro chamado de “Origem” que
-pode variar entre 0 e 5. No arquivo .pdf citado acima, é comentado que
-se deixarmos o “statusEstacoes” em branco, serão retornadas as
-informações de todas as estações do sistema (o que queremos!). Assim, se
-colocarmos no nosso navegador o seguinte url: <a
+<p>Começaremos nossas atividades acessando os dados das estações
+telemétricas desse sistema. Pode-se perceber olhando para o próprio
+site, que são necessários dois parâmetros para pesquisar as estações. O
+primiero chama-se “statusEstacoes”, que pode ser 0, que significa
+estação ativa, ou 1, que representa estação em manutenção. O segundo
+parâmetro é chamado de “Origem”, podendo variar entre 0 e 5. Se olharmos
+o arquivo em formato pdf mencioando acima, vamos ver que se deixarmos o
+“statusEstacoes” em branco, serão retornadas as informações de todas as
+estações do sistema (o que queremos!).</p>
+<p>Sendo assim, se colocarmos no nosso navegador o seguinte url: <a
 href="http://telemetriaws1.ana.gov.br/ServiceANA.asmx/ListaEstacoesTelemetricas?statusEstacoes=&amp;origem="
 class="uri">http://telemetriaws1.ana.gov.br/ServiceANA.asmx/ListaEstacoesTelemetricas?statusEstacoes=&amp;origem=</a>,
 teremos acesso ao arquivo XML com a informação de todas as estações
@@ -2193,15 +2209,16 @@ telemétricas.</p>
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="images/XML_ANA_info_1.png" width="90%" style="display: block; margin: auto;" /></p>
 </div>
-<p>Para abrirmos esse mesmo formato no RStudio, utilizamos uma função do
-pacote “XML” chamada xmlParse(). Essa função irá apenas ler um arquivo
-do tipo XML e vai gerar uma estrutura no R similar ao que aparece na
-imagem acima (formato de “árvore”). A função toma como argumento
-obrigatório o url a ser utilizado e um argumento opcional é a
-codificação do arquivo (do inglês encoding). Usualmente no Brasil
-utilizamos o “UTF-8” para poder utilizar nossos acentos (mas lembre-se
-que essa parte é um outro mundo no R e não entraremos com maiores
-detalhamentos).</p>
+<p>Para que tenhamos cesso a essas informações nesse mesmo formato no
+RStudio, teremos que fazer uso de um pacote chamado “XML”, que contém a
+função denominada xmlParse(). Essa função é capaz de ler um arquivo do
+tipo XML e gerar uma estrutura no R similar ao que aparece na imagem
+acima (formato de “árvore”). A função exige que informemos um argumento
+obrigatório, que é o url a ser utilizado, e permite ainda que passemos
+um argumento opcional, que é a codificação do arquivo (do inglês
+encoding). Usualmente no Brasil, utilizamos o “UTF-8” para poder
+utilizar nossos acentos (mas lembre-se que essa parte é um outro mundo
+no R e não entraremos com maiores detalhamentos).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span class='va'>status_codigo</span> <span class='op'>&lt;-</span> <span class='st'>""</span>
@@ -2355,12 +2372,12 @@ retorna, podemos pedir ao R as primeiras 6 linhas desse dataframe.</p>
 </code></pre>
 </div>
 <pre><code>  CodEstacao             DataHora Vazao Nivel Chuva
-1   60478482 2022-06-24 15:00:00        29.00  0.00
-2   60478482 2022-06-24 14:45:00        29.00  0.00
-3   60478482 2022-06-24 14:30:00        29.00  0.00
-4   60478482 2022-06-24 14:15:00        29.00  0.00
-5   60478482 2022-06-24 14:00:00        29.00  0.00
-6   60478482 2022-06-24 13:45:00        29.00  0.00</code></pre>
+1   60478482 2022-06-25 12:00:00        29.00  0.00
+2   60478482 2022-06-25 11:45:00        29.00  0.00
+3   60478482 2022-06-25 11:30:00        29.00  0.00
+4   60478482 2022-06-25 11:15:00        29.00  0.00
+5   60478482 2022-06-25 11:00:00        29.00  0.00
+6   60478482 2022-06-25 10:45:00        29.00  0.00</code></pre>
 </div>
 <p>Percebemos aqui um “problema”. A data e a hora estão na mesma coluna
 e idealmente queremos deixar em colunas separadas (uma contendo a data e
@@ -2409,12 +2426,12 @@ desse dataframe.</p>
 </code></pre>
 </div>
 <pre><code>  CodEstacao       Data     Hora Vazao Nivel Chuva
-1   60478482 2022-06-24 15:00:00       29.00  0.00
-2   60478482 2022-06-24 14:45:00       29.00  0.00
-3   60478482 2022-06-24 14:30:00       29.00  0.00
-4   60478482 2022-06-24 14:15:00       29.00  0.00
-5   60478482 2022-06-24 14:00:00       29.00  0.00
-6   60478482 2022-06-24 13:45:00       29.00  0.00</code></pre>
+1   60478482 2022-06-25 12:00:00       29.00  0.00
+2   60478482 2022-06-25 11:45:00       29.00  0.00
+3   60478482 2022-06-25 11:30:00       29.00  0.00
+4   60478482 2022-06-25 11:15:00       29.00  0.00
+5   60478482 2022-06-25 11:00:00       29.00  0.00
+6   60478482 2022-06-25 10:45:00       29.00  0.00</code></pre>
 </div>
 <p>Aqui rodamos a função apenas para uma estação. Mas se quisermos rodar
 para várias estações, basta utilizar um loop (for) ou até mesmo a função

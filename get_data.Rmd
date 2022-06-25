@@ -1,5 +1,5 @@
 ---
-title: "Obtenção de dados na web"
+title: "Obtenção de dados hidrológicos na web"
 description: Conceitos básicos
 ---
 
@@ -12,22 +12,31 @@ library(dplyr)
 ## Repositório de dados
 
 ## Obtenção via webservice
-Coletar informação da internet, também conhecido como "webscraping", é algo muito comum hoje em dia. A ANA (Agência Nacional de Águas e Saneamento Básico), o ONS (Operador Nacional do Sistema Elétrico) e muitos outros disponibilizam alguns de seus dados via o webservice. Isso, no fundo, é apenas um site contendo esses dados. Porém isso tudo é organizados de uma maneira bem específica. Portanto, a primeira coisa que precisa-se saber para utilizar um webservice é saber como essa organização é feita!
+Ser capaz de obter informação hidrológica, de forma gratuita, diretamente da internet, algo conhecido como "webscraping", representa um ganho significativo de eficiência no desenvolvimento de estudos e projetos de hidrologia, recursos hídricos, e áreas afins. E essa possibilidade vem se tornando cada vez mais comum hoje em dia. A ANA (Agência Nacional de Águas e Saneamento Básico), o ONS (Operador Nacional do Sistema Elétrico) e muitas outras instituições no exterior disponibilizam alguns de seus dados via webservice. 
 
-No caso do webservice da ANA, tudo isso está disponível no url <http://telemetriaws1.ana.gov.br/ServiceANA.asmx>.
+Em essência, o webservice é apenas um site que contém os dados. Porém, esses dados estão organizados de uma maneira bem específica, de forma que para que seja possível obtê-los de forma eficiente, é imprescindível que essa organização seja bem entedida. Aqui neste curso, vamos focar nossa atividades no webservice da ANA, que se encontra disponível por meio do  url <http://telemetriaws1.ana.gov.br/ServiceANA.asmx>.
 
-Nele vemos todas as informações disponíveis, tais como "dados hidrometeorológicos", "dados hidrometeorológicos gerais", "lista de estações telemétricas", "Cotas", "inventário", "rios", "série histórica" e outros. Existe nesse site inclusive um arquivo em .pdf que fala melhor sobre o sistema como um todo e o que pode-se achar dentro dele <http://telemetriaws1.ana.gov.br/Telemetria1ws.pdf>! Esse arquivo é essencial para entendermos como os dados estão disponíveis e como podemos acessar eles.
+Quando acessamos esse endereço, somos levados para a página abaixo,
 
-Descobrimos então que os dados da ANA estão disponibilizados no formato XML ("Extended Markup Language") e com isso faremos os próximos passos. Não entraremos muito a fundo nesse formato e suas características, porém para quem quiser aprender mais sobre webscraping vale a pena dar uma olhada.
+```{r webservice_ANA, echo=FALSE, fig.align = 'center', out.width = "90%", fig.cap = ""}
+knitr::include_graphics("images/webservice_ANA.png")
+```
+
+Se dermos um zoom na figura, podemos verificar todas as informações que estão disponíveis no webservice, tais como "dados hidrometeorológicos", "dados hidrometeorológicos gerais", "lista de estações telemétricas", "Cotas", "inventário", "rios", "série histórica", entre outras. Nesse mesmo site, pode-se acessar um arquivo em formato pdf com detalhes sobre o sistema como um todo, e com o que se pode obter dentro dele <http://telemetriaws1.ana.gov.br/Telemetria1ws.pdf>! Esse arquivo é essencial para entendermos como os dados estão disponíveis e como podemos acessá-los.
+
+Esse documento nos mostra que os dados hidrológicos da ANA estão disponibilizados no formato XML ("Extended Markup Language"), de forma que gastaremos um tempo aqui entendendo como acessar e manipular os dads nesse formato. Entretanto, aqui no curso, não nos apronfundaremos nos detalhes de características desse formato, porém se você deseja saber mais sobre webscraping, sugerimos que você procure se aprofundar mais nesse tema.
 
 ## Lista das Estações Telemétricas da ANA
-Começaremos acessando os dados das estações telemétricas desse sistema. No próprio site é mostrado que é preciso de dois parâmetros para pesquisas as estações, um chamado de “statusEstacoes” que pode ser 0 (ativo) ou 1 (manutenção) e outro parâmetro chamado de “Origem” que pode variar entre 0 e 5. No arquivo .pdf citado acima, é comentado que se deixarmos o “statusEstacoes” em branco, serão retornadas as informações de todas as estações do sistema (o que queremos!). Assim, se colocarmos no nosso navegador o seguinte url: <http://telemetriaws1.ana.gov.br/ServiceANA.asmx/ListaEstacoesTelemetricas?statusEstacoes=&origem=>, teremos acesso ao arquivo XML com a informação de todas as estações telemétricas.
+
+Começaremos nossas atividades acessando os dados das estações telemétricas desse sistema. Pode-se perceber olhando para o próprio site, que são necessários dois parâmetros para pesquisar as estações. O primiero chama-se “statusEstacoes”, que pode ser 0, que significa estação ativa, ou 1, que representa estação em manutenção. O segundo parâmetro é chamado de “Origem”, podendo variar entre 0 e 5. Se olharmos o arquivo em formato pdf mencioando acima, vamos ver que se deixarmos o “statusEstacoes” em branco, serão retornadas as informações de todas as estações do sistema (o que queremos!). 
+
+Sendo assim, se colocarmos no nosso navegador o seguinte url: <http://telemetriaws1.ana.gov.br/ServiceANA.asmx/ListaEstacoesTelemetricas?statusEstacoes=&origem=>, teremos acesso ao arquivo XML com a informação de todas as estações telemétricas.
 
 ```{r XML_ANA_info_1, echo=FALSE, fig.align = 'center', out.width = "90%", fig.cap = ""}
 knitr::include_graphics("images/XML_ANA_info_1.png")
 ```
 
-Para abrirmos esse mesmo formato no RStudio, utilizamos uma função do pacote "XML" chamada xmlParse(). Essa função irá apenas ler um arquivo do tipo XML e vai gerar uma estrutura no R similar ao que aparece na imagem acima (formato de “árvore”). A função toma como argumento obrigatório o url a ser utilizado e um argumento opcional é a codificação do arquivo (do inglês encoding). Usualmente no Brasil utilizamos o “UTF-8” para poder utilizar nossos acentos (mas lembre-se que essa parte é um outro mundo no R e não entraremos com maiores detalhamentos).
+Para que tenhamos cesso a essas informações nesse mesmo formato no RStudio, teremos que fazer uso de um pacote chamado "XML", que contém a função denominada xmlParse(). Essa função é capaz de ler um arquivo do tipo XML e gerar uma estrutura no R similar ao que aparece na imagem acima (formato de “árvore”). A função exige que informemos um argumento obrigatório, que é o url a ser utilizado, e permite ainda que passemos um argumento opcional, que é a codificação do arquivo (do inglês encoding). Usualmente no Brasil, utilizamos o “UTF-8” para poder utilizar nossos acentos (mas lembre-se que essa parte é um outro mundo no R e não entraremos com maiores detalhamentos).
 
 ```{r XML_no_R_ANA}
 status_codigo <- ""
