@@ -12,23 +12,27 @@ library(dplyr)
 ## Repositório de dados
 
 ## Obtenção via webservice
-Ser capaz de obter informação hidrológica, de forma gratuita, diretamente da internet, algo conhecido como "webscraping", representa um ganho significativo de eficiência no desenvolvimento de estudos e projetos de hidrologia, recursos hídricos, e áreas afins. E essa possibilidade vem se tornando cada vez mais comum hoje em dia. A ANA (Agência Nacional de Águas e Saneamento Básico), o ONS (Operador Nacional do Sistema Elétrico) e muitas outras instituições no exterior disponibilizam alguns de seus dados via webservice. 
+Ser capaz de obter informações hidrológicas de forma gratuita diretamente da internet, algo conhecido como "webscraping", representa um ganho significativo de eficiência no desenvolvimento de estudos e projetos de hidrologia, recursos hídricos, e áreas afins.
 
-Em essência, o webservice é apenas um site que contém os dados. Porém, esses dados estão organizados de uma maneira bem específica, de forma que para que seja possível obtê-los de forma eficiente, é imprescindível que essa organização seja bem entedida. Aqui neste curso, vamos focar nossa atividades no webservice da ANA, que se encontra disponível por meio do  url <http://telemetriaws1.ana.gov.br/ServiceANA.asmx>.
+Essa possibilidade vem se tornando cada vez mais comum nos dias de hoje. Por exemplo, a Agência Nacional de Águas e Saneamento Básico (ANA), o Operador Nacional do Sistema Elétrico (ONS), e outras instituições no Brasil e no exterior disponibilizam alguns de seus dados por meio do chamado webservice. 
+
+Em essência, o webservice é apenas um site que contém os dados. Porém, esses dados estão organizados de uma maneira bem específica, de forma que para que seja possível obtê-los de forma eficiente, é imprescindível que essa organização seja bem entedida. Aqui neste curso introdutório, vamos focar nossas atividades no webservice da ANA, que se encontra disponível por meio do  url <http://telemetriaws1.ana.gov.br/ServiceANA.asmx>.
 
 Quando acessamos esse endereço, somos levados para a página abaixo,
 
-```{r webservice_ANA, echo=FALSE, fig.align = 'center', out.width = "90%", fig.cap = ""}
+```{r webservice_ANA, echo=FALSE,layout="l-body-outset", fig.align = 'center', out.width = "100%", fig.cap = ""}
 knitr::include_graphics("images/webservice_ANA.png")
 ```
 
-Se dermos um zoom na figura, podemos verificar todas as informações que estão disponíveis no webservice, tais como "dados hidrometeorológicos", "dados hidrometeorológicos gerais", "lista de estações telemétricas", "Cotas", "inventário", "rios", "série histórica", entre outras. Nesse mesmo site, pode-se acessar um arquivo em formato pdf com detalhes sobre o sistema como um todo, e com o que se pode obter dentro dele <http://telemetriaws1.ana.gov.br/Telemetria1ws.pdf>! Esse arquivo é essencial para entendermos como os dados estão disponíveis e como podemos acessá-los.
+Se dermos um zoom na figura, podemos verificar todas as informações que estão disponíveis no webservice, tais como "dados hidrometeorológicos", "dados hidrometeorológicos gerais", "lista de estações telemétricas", "Cotas", "inventário", "rios", "série histórica", entre outras. 
 
-Esse documento nos mostra que os dados hidrológicos da ANA estão disponibilizados no formato XML ("Extended Markup Language"), de forma que gastaremos um tempo aqui entendendo como acessar e manipular os dads nesse formato. Entretanto, aqui no curso, não nos apronfundaremos nos detalhes de características desse formato, porém se você deseja saber mais sobre webscraping, sugerimos que você procure se aprofundar mais nesse tema.
+Nesse mesmo site, pode-se acessar um arquivo em formato pdf com detalhes sobre o sistema como um todo, e com o que se pode obter dentro dele <http://telemetriaws1.ana.gov.br/Telemetria1ws.pdf>! Esse arquivo é essencial para entendermos como os dados estão disponíveis e como podemos acessá-los.
+
+Esse documento nos informa que os dados hidrológicos da ANA estão disponibilizados no formato XML ("Extended Markup Language"), de forma que precisamos aprender como acessar e manipular as informações disponibilizados nesse formato. Mas discutiremos apenas o básico neste curso, sem nos profundarmos muito. Porém se você deseja saber mais sobre webscraping e usufruir de várias de suas possibilidade, sugerimos que procure se aprofundar mais nesse tema.
 
 ## Lista das Estações Telemétricas da ANA
 
-Começaremos nossas atividades acessando os dados das estações telemétricas desse sistema. Pode-se perceber olhando para o próprio site, que são necessários dois parâmetros para pesquisar as estações. O primiero chama-se “statusEstacoes”, que pode ser 0, que significa estação ativa, ou 1, que representa estação em manutenção. O segundo parâmetro é chamado de “Origem”, podendo variar entre 0 e 5. Se olharmos o arquivo em formato pdf mencioando acima, vamos ver que se deixarmos o “statusEstacoes” em branco, serão retornadas as informações de todas as estações do sistema (o que queremos!). 
+Começaremos nossas atividades acessando os dados das estações telemétricas desse sistema. Pode-se perceber olhando para o próprio site, que são necessários dois parâmetros para pesquisar as estações. O primiero chama-se “statusEstacoes”, que pode ser 0, que significa estação ativa, ou 1, que representa estação em manutenção. O segundo parâmetro é chamado de “Origem”, podendo variar entre 0 e 5. Se olharmos o arquivo em formato pdf mencioando acima, vamos ver que se deixarmos o “statusEstacoes” em branco, serão retornadas as informações de todas as estações do sistema, que é exatamente o que queremos agora. 
 
 Sendo assim, se colocarmos no nosso navegador o seguinte url: <http://telemetriaws1.ana.gov.br/ServiceANA.asmx/ListaEstacoesTelemetricas?statusEstacoes=&origem=>, teremos acesso ao arquivo XML com a informação de todas as estações telemétricas.
 
@@ -65,7 +69,7 @@ cadastro_estacoes <- XML::xmlToDataFrame(nodes = nodes_doc)
 Agora podemos fazer as manipulações que já aprendemos anteriormente (com dataframe ficou fácil!). Por exemplo, se quisermos selecionar apenas as estações de Brasília, escrevemos o código abaixo. O "Municipio-UF" é apenas uma das colunas do dataframe, podemos filtrar com base em qualquer outra também.
 
 ```{r Filtrar_cadastro_estacoes_ANA}
-estacoes_bsb <- dplyr::filter(cadastro_estacoes, `Municipio-UF` == "BRASÍLIA-DF")
+(estacoes_bsb <- dplyr::filter(cadastro_estacoes, `Municipio-UF` == "BRASÍLIA-DF"))
 ```
  
 Lembrando que isso tudo nos dá apenas a lista com informações sobre as estações telemétricas. Para de fato termos acesso aos dados dessas estações, precisamos acessar outro url e fazer mais alguns códigos!
