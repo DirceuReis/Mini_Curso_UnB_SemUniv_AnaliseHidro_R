@@ -26,7 +26,7 @@ O curso é de 10 horas
 ## Ementa
 
 - Noções báscias de R
-- Obtenção automática de dados hidrológicos do webservice da Agência Nacional de Águas e outors repositórios
+- Obtenção automática de dados hidrológicos do webservice da Agência Nacional de Águas e outros repositórios
 - Manipulação dos dados obtidos para facilitar a análise
 - Exploração de dados
 - Projeto de análise de frequência de cheias
