@@ -88,6 +88,53 @@ library(ggplot2)
 
 ### Cálculo das posições de plotagem
 
+O primeiro passo de estudo de análise de frequência consiste em determinar a distribuição empírica de frequência das vazões máximas anuais observadas, que apresenta a frequência relativa acumulada das observações de uma amostra, e pode ser visto como a versão acumulada do histograma. 
+
+A distribuição empírica de frequência relaciona o valor de cada observação com sua probablidade de não ser excedida, ou seja, 
+
+$$\hat{F}_X(x_i) = P(X \le x_i)$$
+
+em que $\hat{F}_X$ é a estimativa da frequência relativa acumulada da variável aleatória $X$ baseada na amostra, enquanto $x_i$ reprenta o valor de uma dada observação $i$. Existem diversas formas de se determinar $\hat{F}_X(x_i)$ com base com base numa amostra. 
+
+Para entender os motivos pelos quais diversas formas são possíveis, cada uma com a sua motivação e justificativa, precisamos entender que a probabilidade de não excedência de uma esatística de ordem qualquer numa amostra é na verdade uma variável aleatória, já que a mesma é função da amostra que se tem em mãos.
+
+Suponha que fosse possível obter diversas amostras independentes da variável de interesse, todas de tamanho $n$ e oriundas de uma mesma distribuição de probabilidades. Vale lembrar que na prática apenas uma amostra está disponível. Embora não seja apresentado aqui o porquê, é possível mostrar que a probabilidade de não-excedência da estatística de ordem $X_{(i)}, $Q_i = P(X \gt x_{(i)})$ é também uma variável aleatória, pois depende da amostra. A distribuição de $Q_i$  é uma Beta (i.e., possui uma distribuição Beta) com valor esperado
+
+$$E[Q_i] = \frac{i}{n + 1}$$
+
+e variância
+
+$$V[Q_i] = \frac{n-i+1}{(n+1)^2(n+2)}$$
+independetente da dsitribuiçao da variável de interesse. 
+
+Isso significa, por exemplo, que numa amostra com 19 observações, o valor esperado da probabilididade da variável de interesse ser maior do que a segunda maior observação da referida amostra, $Q_{(2)}$, é igual a 
+
+$$E[Q_{(2)}]=\frac{2}{20}=0.10$$
+
+da mesma forma que o valor esperado da probabilididade da variável de interesse ser maior do que a maior observação da referida amostra, $Q_{(1)}$, é igual a
+
+$$E[Q_{(1)}]=\frac{1}{20}=0.05$$
+
+Podemos concluir, portanto, que se estimarmos $F_X(x_{(i)})$ utilizando a expressão $i/(n+1)$, em média, utilizando várias amostras, a média das estimativas de $F_X(x_{(i)})$ seria bem próxima do valor populacional, e o grau de proximidade aumenta com o tamanho da amostra. 
+
+Porém, é importanter deixar claro que quando há apenas uma amostra, não é possível ter certeza de que a estimativa é correta, mas é  intuitivo pensar que um estimador, que em média está correto, é de fato um bom estimador. Mais a frente na aula, retornaremos à discussão sobre estimadores e suas características. Mas vale introduzir o conceito de estimador não tendencioso, que é aquele que na média, ao longo de várias amostras, seu valor é igual ao valor populacional.
+
+Portanto, por se tratar de um estimador não-tendencioso da probabilidade de não-excedência da estatística de ordem de uma amostra, a expressão apresentada anteriormente é uma forte candidata a ser utilizada na construção da curva de distribuição empírica de frequência. Porém, como já mencionado anteriormente, há outras formas de se estimar $F_X(x_{(i)})$, sendo que todas seguem a seguinte expressão, com diferença apenas para o valor do parâmetro $a$.
+
+$$P(X \lt x_{(i)}) = \frac{i-a}{n+1-2a}$$
+
+A Tabela abaixo apresenta diversas expressões para o estimador de $F_X(x_{(i)})$, incluindo a motivação de cada alternativa.
+
+Nome | Fórmula | $a$ | $T_n$ | Motivação
+-----|---------|-----|-------|------------
+Weibull | $\frac{i}{n+1}$ | 0 | $n+1$ | Est. não-tendenciosa da Prob. de não-excedência para qualquer distribuição teórica
+Mediana | $\frac{i-0.3175}{n+0.365}$ | 0.3175 | $1.47n+0.5$ | Mediana das probabilidades
+APL | $\frac{i-0.35}{n}$ | $~0.35$ | $1.54n$ | Estimador baseado em momentos probabilísticos
+Blom |  $\frac{i-3/8}{n+1/4}$ | 0.375 | $1.60n+0.4$ | Quantis normais não-tendenciosos
+Cunnane | $\frac{i-0.40}{n+0.2}$ | 0.40 | $1.67n+0.3$ | Quantis aproximadamente não-tendenciosos
+Grigorten | $\frac{i-0.44}{n+0.12}$ | 0.44 | $1.79n+0.2$ | Otimizada para distribuição Gumbel
+Hazen | $\frac{i-0.5}{n}$ | 0.50 | $2n$ | Escolha tradicional
+
 ### Construção da curva de frequência amostral
 
 ## Inferência

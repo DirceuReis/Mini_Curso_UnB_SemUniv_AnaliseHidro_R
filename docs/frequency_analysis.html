@@ -2139,39 +2139,53 @@ Aulas
 <nav class="l-text toc figcaption" id="TOC">
 <h3>Contents</h3>
 <ul>
-<li><a href="#objetivos-da-atividade">Objetivos da atividade</a></li>
-<li><a href="#passos-a-serem-executados">Passos a serem
-executados</a></li>
-<li><a href="#visualização-dos-dados-observados">Visualização dos dados
+<li><a href="#objetivos-da-atividade"
+id="toc-objetivos-da-atividade">Objetivos da atividade</a></li>
+<li><a href="#passos-a-serem-executados"
+id="toc-passos-a-serem-executados">Passos a serem executados</a></li>
+<li><a href="#visualização-dos-dados-observados"
+id="toc-visualização-dos-dados-observados">Visualização dos dados
 observados</a>
 <ul>
-<li><a href="#escolha-da-estação-fluviométrica">Escolha da estação
+<li><a href="#escolha-da-estação-fluviométrica"
+id="toc-escolha-da-estação-fluviométrica">Escolha da estação
 fluviométrica</a></li>
-<li><a href="#seleção-das-vazões-máximas-anuais">Seleção das vazões
-máximas anuais</a></li>
-<li><a href="#cálculo-das-posições-de-plotagem">Cálculo das posições de
+<li><a href="#seleção-das-vazões-máximas-anuais"
+id="toc-seleção-das-vazões-máximas-anuais">Seleção das vazões máximas
+anuais</a></li>
+<li><a href="#cálculo-das-posições-de-plotagem"
+id="toc-cálculo-das-posições-de-plotagem">Cálculo das posições de
 plotagem</a></li>
-<li><a href="#construção-da-curva-de-frequência-amostral">Construção da
-curva de frequência amostral</a></li>
+<li><a href="#construção-da-curva-de-frequência-amostral"
+id="toc-construção-da-curva-de-frequência-amostral">Construção da curva
+de frequência amostral</a></li>
 </ul></li>
-<li><a href="#inferência">Inferência</a>
+<li><a href="#inferência" id="toc-inferência">Inferência</a>
 <ul>
-<li><a href="#cálculo-dos-momentos-l">Cálculo dos momentos-L</a></li>
-<li><a href="#diagrama-de-momentos-l">Diagrama de momentos-L</a></li>
-<li><a href="#estimativa-dos-parâmetros-da-distribuição">Estimativa dos
+<li><a href="#cálculo-dos-momentos-l"
+id="toc-cálculo-dos-momentos-l">Cálculo dos momentos-L</a></li>
+<li><a href="#diagrama-de-momentos-l"
+id="toc-diagrama-de-momentos-l">Diagrama de momentos-L</a></li>
+<li><a href="#estimativa-dos-parâmetros-da-distribuição"
+id="toc-estimativa-dos-parâmetros-da-distribuição">Estimativa dos
 parâmetros da distribuição</a></li>
-<li><a href="#cálculo-dos-quantis-de-cheia">Cálculo dos quantis de
+<li><a href="#cálculo-dos-quantis-de-cheia"
+id="toc-cálculo-dos-quantis-de-cheia">Cálculo dos quantis de
 cheia</a></li>
 </ul></li>
-<li><a href="#construção-da-curva-de-frequência">Construção da curva de
+<li><a href="#construção-da-curva-de-frequência"
+id="toc-construção-da-curva-de-frequência">Construção da curva de
 frequência</a></li>
-<li><a href="#descrição-das-incertezas-intervalo-de-confiança">Descrição
-das incertezas (intervalo de confiança)</a></li>
-<li><a href="#curva-de-frequência-final">Curva de frequência
-final</a></li>
-<li><a href="#detalhes-técnicos">Detalhes técnicos</a>
+<li><a href="#descrição-das-incertezas-intervalo-de-confiança"
+id="toc-descrição-das-incertezas-intervalo-de-confiança">Descrição das
+incertezas (intervalo de confiança)</a></li>
+<li><a href="#curva-de-frequência-final"
+id="toc-curva-de-frequência-final">Curva de frequência final</a></li>
+<li><a href="#detalhes-técnicos" id="toc-detalhes-técnicos">Detalhes
+técnicos</a>
 <ul>
-<li><a href="#distribuição-de-probabilidades">Distribuição de
+<li><a href="#distribuição-de-probabilidades"
+id="toc-distribuição-de-probabilidades">Distribuição de
 probabilidades</a></li>
 </ul></li>
 </ul>
@@ -2301,6 +2315,151 @@ utilizamos</p>
 </div>
 <h3 id="cálculo-das-posições-de-plotagem">Cálculo das posições de
 plotagem</h3>
+<p>O primeiro passo de estudo de análise de frequência consiste em
+determinar a distribuição empírica de frequência das vazões máximas
+anuais observadas, que apresenta a frequência relativa acumulada das
+observações de uma amostra, e pode ser visto como a versão acumulada do
+histograma.</p>
+<p>A distribuição empírica de frequência relaciona o valor de cada
+observação com sua probablidade de não ser excedida, ou seja,</p>
+<p><span class="math display">\[\hat{F}_X(x_i) = P(X \le
+x_i)\]</span></p>
+<p>em que <span class="math inline">\(\hat{F}_X\)</span> é a estimativa
+da frequência relativa acumulada da variável aleatória <span
+class="math inline">\(X\)</span> baseada na amostra, enquanto <span
+class="math inline">\(x_i\)</span> reprenta o valor de uma dada
+observação <span class="math inline">\(i\)</span>. Existem diversas
+formas de se determinar <span
+class="math inline">\(\hat{F}_X(x_i)\)</span> com base com base numa
+amostra.</p>
+<p>Para entender os motivos pelos quais diversas formas são possíveis,
+cada uma com a sua motivação e justificativa, precisamos entender que a
+probabilidade de não excedência de uma esatística de ordem qualquer numa
+amostra é na verdade uma variável aleatória, já que a mesma é função da
+amostra que se tem em mãos.</p>
+<p>Suponha que fosse possível obter diversas amostras independentes da
+variável de interesse, todas de tamanho <span
+class="math inline">\(n\)</span> e oriundas de uma mesma distribuição de
+probabilidades. Vale lembrar que na prática apenas uma amostra está
+disponível. Embora não seja apresentado aqui o porquê, é possível
+mostrar que a probabilidade de não-excedência da estatística de ordem
+$X_{(i)}, <span class="math inline">\(Q_i = P(X \gt x_{(i)})\)</span> é
+também uma variável aleatória, pois depende da amostra. A distribuição
+de <span class="math inline">\(Q_i\)</span> é uma Beta (i.e., possui uma
+distribuição Beta) com valor esperado</p>
+<p><span class="math display">\[E[Q_i] = \frac{i}{n + 1}\]</span></p>
+<p>e variância</p>
+<p><span class="math display">\[V[Q_i] =
+\frac{n-i+1}{(n+1)^2(n+2)}\]</span> independetente da dsitribuiçao da
+variável de interesse.</p>
+<p>Isso significa, por exemplo, que numa amostra com 19 observações, o
+valor esperado da probabilididade da variável de interesse ser maior do
+que a segunda maior observação da referida amostra, <span
+class="math inline">\(Q_{(2)}\)</span>, é igual a</p>
+<p><span
+class="math display">\[E[Q_{(2)}]=\frac{2}{20}=0.10\]</span></p>
+<p>da mesma forma que o valor esperado da probabilididade da variável de
+interesse ser maior do que a maior observação da referida amostra, <span
+class="math inline">\(Q_{(1)}\)</span>, é igual a</p>
+<p><span
+class="math display">\[E[Q_{(1)}]=\frac{1}{20}=0.05\]</span></p>
+<p>Podemos concluir, portanto, que se estimarmos <span
+class="math inline">\(F_X(x_{(i)})\)</span> utilizando a expressão <span
+class="math inline">\(i/(n+1)\)</span>, em média, utilizando várias
+amostras, a média das estimativas de <span
+class="math inline">\(F_X(x_{(i)})\)</span> seria bem próxima do valor
+populacional, e o grau de proximidade aumenta com o tamanho da
+amostra.</p>
+<p>Porém, é importanter deixar claro que quando há apenas uma amostra,
+não é possível ter certeza de que a estimativa é correta, mas é
+intuitivo pensar que um estimador, que em média está correto, é de fato
+um bom estimador. Mais a frente na aula, retornaremos à discussão sobre
+estimadores e suas características. Mas vale introduzir o conceito de
+estimador não tendencioso, que é aquele que na média, ao longo de várias
+amostras, seu valor é igual ao valor populacional.</p>
+<p>Portanto, por se tratar de um estimador não-tendencioso da
+probabilidade de não-excedência da estatística de ordem de uma amostra,
+a expressão apresentada anteriormente é uma forte candidata a ser
+utilizada na construção da curva de distribuição empírica de frequência.
+Porém, como já mencionado anteriormente, há outras formas de se estimar
+<span class="math inline">\(F_X(x_{(i)})\)</span>, sendo que todas
+seguem a seguinte expressão, com diferença apenas para o valor do
+parâmetro <span class="math inline">\(a\)</span>.</p>
+<p><span class="math display">\[P(X \lt x_{(i)}) =
+\frac{i-a}{n+1-2a}\]</span></p>
+<p>A Tabela abaixo apresenta diversas expressões para o estimador de
+<span class="math inline">\(F_X(x_{(i)})\)</span>, incluindo a motivação
+de cada alternativa.</p>
+<table>
+<colgroup>
+<col style="width: 13%" />
+<col style="width: 23%" />
+<col style="width: 13%" />
+<col style="width: 18%" />
+<col style="width: 31%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Nome</th>
+<th>Fórmula</th>
+<th><span class="math inline">\(a\)</span></th>
+<th><span class="math inline">\(T_n\)</span></th>
+<th>Motivação</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Weibull</td>
+<td><span class="math inline">\(\frac{i}{n+1}\)</span></td>
+<td>0</td>
+<td><span class="math inline">\(n+1\)</span></td>
+<td>Est. não-tendenciosa da Prob. de não-excedência para qualquer
+distribuição teórica</td>
+</tr>
+<tr class="even">
+<td>Mediana</td>
+<td><span class="math inline">\(\frac{i-0.3175}{n+0.365}\)</span></td>
+<td>0.3175</td>
+<td><span class="math inline">\(1.47n+0.5\)</span></td>
+<td>Mediana das probabilidades</td>
+</tr>
+<tr class="odd">
+<td>APL</td>
+<td><span class="math inline">\(\frac{i-0.35}{n}\)</span></td>
+<td><span class="math inline">\(~0.35\)</span></td>
+<td><span class="math inline">\(1.54n\)</span></td>
+<td>Estimador baseado em momentos probabilísticos</td>
+</tr>
+<tr class="even">
+<td>Blom</td>
+<td><span class="math inline">\(\frac{i-3/8}{n+1/4}\)</span></td>
+<td>0.375</td>
+<td><span class="math inline">\(1.60n+0.4\)</span></td>
+<td>Quantis normais não-tendenciosos</td>
+</tr>
+<tr class="odd">
+<td>Cunnane</td>
+<td><span class="math inline">\(\frac{i-0.40}{n+0.2}\)</span></td>
+<td>0.40</td>
+<td><span class="math inline">\(1.67n+0.3\)</span></td>
+<td>Quantis aproximadamente não-tendenciosos</td>
+</tr>
+<tr class="even">
+<td>Grigorten</td>
+<td><span class="math inline">\(\frac{i-0.44}{n+0.12}\)</span></td>
+<td>0.44</td>
+<td><span class="math inline">\(1.79n+0.2\)</span></td>
+<td>Otimizada para distribuição Gumbel</td>
+</tr>
+<tr class="odd">
+<td>Hazen</td>
+<td><span class="math inline">\(\frac{i-0.5}{n}\)</span></td>
+<td>0.50</td>
+<td><span class="math inline">\(2n\)</span></td>
+<td>Escolha tradicional</td>
+</tr>
+</tbody>
+</table>
 <h3 id="construção-da-curva-de-frequência-amostral">Construção da curva
 de frequência amostral</h3>
 <h2 id="inferência">Inferência</h2>
@@ -2350,6 +2509,15 @@ class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"><
 <div class="d-appendix">
 </div>
 
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
 
 <!--radix_placeholder_site_after_body-->
 <!--/radix_placeholder_site_after_body-->
