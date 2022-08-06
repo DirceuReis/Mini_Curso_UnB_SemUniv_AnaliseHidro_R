@@ -1,6 +1,6 @@
 ---
 title: "Linguagem R"
-description: Conceitos básicos
+description: Conceitos básicos para o curso
 ---
 
 ```{r setup, include=FALSE}
