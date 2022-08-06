@@ -90,7 +90,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--radix_placeholder_meta_tags-->
   <title>Análise Hidrológica com R: uma introdução para iniciantes: Análise de frequência de cheias</title>
 
-  <meta property="description" itemprop="description" content="Exemplo com dados reais"/>
+  <meta property="description" itemprop="description" content="Exemplo de análise local com dados reais"/>
 
   <link rel="license" href="https://creativecommons.org/licenses/by/4.0/"/>
 
@@ -98,20 +98,20 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
   <meta property="og:title" content="Análise Hidrológica com R: uma introdução para iniciantes: Análise de frequência de cheias"/>
   <meta property="og:type" content="article"/>
-  <meta property="og:description" content="Exemplo com dados reais"/>
+  <meta property="og:description" content="Exemplo de análise local com dados reais"/>
   <meta property="og:locale" content="en_US"/>
   <meta property="og:site_name" content="Análise Hidrológica com R: uma introdução para iniciantes"/>
 
   <!--  https://dev.twitter.com/cards/types/summary -->
   <meta property="twitter:card" content="summary"/>
   <meta property="twitter:title" content="Análise Hidrológica com R: uma introdução para iniciantes: Análise de frequência de cheias"/>
-  <meta property="twitter:description" content="Exemplo com dados reais"/>
+  <meta property="twitter:description" content="Exemplo de análise local com dados reais"/>
 
   <!--/radix_placeholder_meta_tags-->
   <!--radix_placeholder_rmarkdown_metadata-->
 
   <script type="text/json" id="radix-rmarkdown-metadata">
-  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description"]}},"value":[{"type":"character","attributes":{},"value":["Análise de frequência de cheias"]},{"type":"character","attributes":{},"value":["Exemplo com dados reais"]}]}
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description"]}},"value":[{"type":"character","attributes":{},"value":["Análise de frequência de cheias"]},{"type":"character","attributes":{},"value":["Exemplo de análise local com dados reais"]}]}
   </script>
   <!--/radix_placeholder_rmarkdown_metadata-->
   <!--radix_placeholder_navigation_in_header-->
@@ -2088,7 +2088,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 <!--radix_placeholder_front_matter-->
 
 <script id="distill-front-matter" type="text/json">
-{"title":"Análise de frequência de cheias","description":"Exemplo com dados reais","authors":[]}
+{"title":"Análise de frequência de cheias","description":"Exemplo de análise local com dados reais","authors":[]}
 </script>
 
 <!--/radix_placeholder_front_matter-->
@@ -2130,7 +2130,7 @@ Aulas
 <h1>Análise de frequência de cheias</h1>
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
-<p>Exemplo com dados reais</p>
+<p>Exemplo de análise local com dados reais</p>
 </div>
 
 
@@ -2153,11 +2153,8 @@ fluviométrica</a></li>
 <li><a href="#seleção-das-vazões-máximas-anuais"
 id="toc-seleção-das-vazões-máximas-anuais">Seleção das vazões máximas
 anuais</a></li>
-<li><a href="#cálculo-das-posições-de-plotagem"
-id="toc-cálculo-das-posições-de-plotagem">Cálculo das posições de
-plotagem</a></li>
-<li><a href="#construção-da-curva-de-frequência-amostral"
-id="toc-construção-da-curva-de-frequência-amostral">Construção da curva
+<li><a href="#construção-de-curva-de-frequência-amostral"
+id="toc-construção-de-curva-de-frequência-amostral">Construção de curva
 de frequência amostral</a></li>
 </ul></li>
 <li><a href="#inferência" id="toc-inferência">Inferência</a>
@@ -2197,23 +2194,28 @@ cheias a nível local. Isso significa que iremos relacionar a magnitude
 das vazões máximas anuais com a probabilidade da mesma ser excedida. A
 análise a nível local siginifca que utilizaremos apenas as informações
 de vazão observadas na estação fluviométrica de interesse, sem fazer uso
-de informações de vaões que teham acontecido na região. Além da relação
-entre a magnitude da vazão e a probabilidade de excedência, é importante
-saber estimar também o grau de incertezas nessas estimativas. As
-incertezas são usualmente reprsentadas por intervalos de confiança.</p>
+de informações sobre as vazões máximas anuais que teham acontecido em
+outras estações fluviométricas localizadas na região.</p>
+<p>Além de construirmos a relação entre a magnitude das vazões máximas
+anuais e a respectiva probabilidade de excedência, é importante saber
+estimar também o grau de incerteza nessas estimativas. Essas incertezas
+são usualmente reprsentadas por intervalos de confiança, como veremos
+mais adianate.</p>
 <p>Além de calcular essas quantidades, normalmente a curva de
 frequência, e suas respectivas incertezas, são representadas
-graficamente, como apresentado na figura abaixo, que mostra os
-resultados para um estudo de cheias numa seção do Rio Salado, localizada
-na província de Santa Fé, na Argentina, onde em 2003 ocorreu o
-rompimento de um dique que resultou em mortes e elevados prejuízos.</p>
-<p>Contruiremos aqui uma figura semephante, onde no eixo-x temos o tempo
-de recorrência e no eixo-y a magnitude das vazões máximas anuais. A
-linha cheia em vermelho representa o valor esperado dos valores de vazão
-em função do tempo de recorrência, enquanto a linhas tracejadas
+graficamente, como na figura abaixo, que mostra os resultados para um
+estudo de cheias numa seção do Rio Salado, localizada na província de
+Santa Fé, na Argentina, onde em 2003 ocorreu o rompimento de um dique
+que resultou em mortes e elevados prejuízos.</p>
+<p>Contruiremos aqui no curso uma figura semelhante a esta, onde no
+eixo-x temos o tempo de recorrência e no eixo-y a magnitude das vazões
+máximas anuais. O tempo de recorrência apresentado no eixo-x é uma
+maneira de representar a probabilidade de excedência. A linha cheia em
+vermelho representa o valor esperado dos valores da vazão máxima anual
+em função do tempo de recorrência, enquanto as linhas tracejadas
 representam os intervalos de confiança de 95%, ilustrando as incertezas
 envolvidas nessas estimativas. Os círculos azuis escuros representam as
-vazões máximas anunias registradas no passado, enquanto o círculo azul
+vazões máximas anuais registradas no passado, enquanto o círculo azul
 claro mostra a cheia destruidora de 2003.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="figure" style="text-align: center">
@@ -2273,70 +2275,110 @@ nesse <code>dataframe</code>.</p>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.delim</a></span><span class='op'>(</span><span class='st'>"dados/qx1d_RH SFR.dat"</span>,sep<span class='op'>=</span><span class='st'>";"</span>,header<span class='op'>=</span><span class='cn'>FALSE</span>,na.strings <span class='op'>=</span> <span class='st'>"null"</span>,skip<span class='op'>=</span><span class='fl'>12</span><span class='op'>)</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>#data &lt;- read.delim("dados/qx1d_RH SFR.dat",sep=";",header=FALSE,na.strings = "null",skip=12)</span></span>
 <span><span class='co'>#as.Date(df$Date, format =  "%m/%d/%Y %H:%M:%S")</span></span>
 <span><span class='co'>#year &lt;- as.Date(data[-1,1], format="%Y")</span></span>
-<span><span class='va'>year</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>[</span><span class='op'>-</span><span class='fl'>1</span>,<span class='fl'>1</span><span class='op'>]</span><span class='op'>)</span></span>
-<span><span class='va'>Q</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>data</span><span class='op'>[</span><span class='op'>-</span><span class='fl'>1</span>,<span class='fl'>2</span><span class='op'>]</span><span class='op'>)</span></span>
-<span><span class='va'>df</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='va'>year</span>, <span class='va'>Q</span><span class='op'>)</span></span>
+<span><span class='co'>#year &lt;- as.numeric(data[-1,1])</span></span>
+<span><span class='co'>#Q &lt;- as.numeric(data[-1,2])</span></span>
+<span><span class='co'>#df &lt;- data.frame(year, Q)</span></span>
 <span></span>
 <span><span class='co'># find NA's and remove from dataframe</span></span>
-<span><span class='va'>flows</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>df</span><span class='op'>)</span> </span>
-<span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>flows</span><span class='op'>)</span></span></code></pre>
+<span><span class='co'>#flows &lt;- na.omit(df) </span></span>
+<span><span class='co'>#tibble(flows)</span></span></code></pre>
 </div>
-<pre><code># A tibble: 70 × 2
-    year     Q
-   &lt;dbl&gt; &lt;dbl&gt;
- 1  1939 112. 
- 2  1940  34.2
- 3  1941 107. 
- 4  1942 102. 
- 5  1951 159. 
- 6  1952  44.0
- 7  1953  59.2
- 8  1954  50.3
- 9  1955  96.2
-10  1956 107. 
-# … with 60 more rows</code></pre>
 </div>
 <p>É sempre importante visualizar a série de máximos anuais. Para isso,
 utilizamos</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://ggplot2.tidyverse.org'>ggplot2</a></span><span class='op'>)</span></span>
-<span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>flows</span>,<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x<span class='op'>=</span><span class='va'>year</span>, y<span class='op'>=</span><span class='va'>Q</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
-<span>    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
-<span>    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>#library(ggplot2)</span></span>
+<span><span class='co'># ggplot(flows,aes(x=year, y=Q)) +</span></span>
+<span><span class='co'>#    geom_point() +</span></span>
+<span><span class='co'>#    geom_line()</span></span>
+<span> </span>
+<span></span>
+<span><span class='co'>#lines(pressure$temperature, pressure$pressure/2, col = "red")</span></span></code></pre>
 </div>
-<img src="frequency_analysis_files/figure-html5/plot_serie-1.png" width="624" />
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>#lines(pressure$temperature, pressure$pressure/2, col = "red")</span></span></code></pre>
 </div>
-</div>
-<h3 id="cálculo-das-posições-de-plotagem">Cálculo das posições de
-plotagem</h3>
-<p>O primeiro passo de estudo de análise de frequência consiste em
-determinar a distribuição empírica de frequência das vazões máximas
-anuais observadas, que apresenta a frequência relativa acumulada das
-observações de uma amostra, e pode ser visto como a versão acumulada do
-histograma.</p>
-<p>A distribuição empírica de frequência relaciona o valor de cada
-observação com sua probablidade de não ser excedida, ou seja,</p>
-<p><span class="math display">\[\hat{F}_X(x_i) = P(X \le
-x_i)\]</span></p>
-<p>em que <span class="math inline">\(\hat{F}_X\)</span> é a estimativa
+<h3 id="construção-de-curva-de-frequência-amostral">Construção de curva
+de frequência amostral</h3>
+<p>Para que possamos plotar os círculos azuis escuros da Figura
+apresentada anteriormente para o caso do Rio Salado, que representam as
+vazões máximas anuais observadas na série histórica, precisamos
+determinar o tempo de recorrência para cada um desses valores.</p>
+<p>O tempo de recorrência associado a uma determinada magnitude de
+vazão, <span class="math inline">\(T_r(q)\)</span>, é um conceito
+hidrológico bastante conhecido, de forma que não dedicaremos muito tempo
+para discutí-lo aqui. Por definição, o tempo de recorrência de um evento
+cuja magnitude vale <span class="math inline">\(q\)</span> é igual ao
+inverso da probabilidade da vazão máxima anual exceder esse valor,</p>
+<p><span class="math display">\[T_r(q) =
+\frac{1}{P(Q&gt;q)}\]</span></p>
+<p>Por exemplo, se a probabilidade da vazão máxima anual ultrapassar um
+dado valor <span class="math inline">\(q\)</span> for igual a 0.10,
+dizemos que o tempo de recorrência dessa vazão <span
+class="math inline">\(q\)</span> é de 10 anos. Da mesma forma, se <span
+class="math inline">\(P(Q&gt;q)=0.01\)</span>, dizemos que o tempo de
+recorrência de <span class="math inline">\(q\)</span> vale 100 anos.</p>
+<p>Portanto, para que possamos incluir as vazões observadas na nossa
+curva de frequência, será preciso determinar a probabilidade de
+excedência de cada uma das observações contidas na série de vazões
+máximas anuais da localidade de interesse. Isso é feito com base na
+chamada distribuição empírica de frequência.</p>
+<p>A distribuição empírica de frequência relaciona cada valor de vazão
+máxima observada na série histórica, denominada aqui de <span
+class="math inline">\(q_i\)</span>, com sua frequência relativa
+acumulada, <span class="math inline">\(\hat{F}_Q(q_i)\)</span>, que
+representa a nossa estimativa para a probabilidade da variável de
+interesse, <span class="math inline">\(X\)</span>, ser menor ou igual ao
+valor amostral, <span class="math inline">\(q_i\)</span>,</p>
+<p><span class="math display">\[\hat{F}_Q(q_i) = \hat{P}(Q \le
+q_i)\]</span></p>
+<p>em que <span class="math inline">\(\hat{F}_Q\)</span> é a estimativa
 da frequência relativa acumulada da variável aleatória <span
-class="math inline">\(X\)</span> baseada na amostra, enquanto <span
-class="math inline">\(x_i\)</span> reprenta o valor de uma dada
-observação <span class="math inline">\(i\)</span>. Existem diversas
-formas de se determinar <span
-class="math inline">\(\hat{F}_X(x_i)\)</span> com base com base numa
-amostra.</p>
-<p>Para entender os motivos pelos quais diversas formas são possíveis,
-cada uma com a sua motivação e justificativa, precisamos entender que a
-probabilidade de não excedência de uma esatística de ordem qualquer numa
-amostra é na verdade uma variável aleatória, já que a mesma é função da
-amostra que se tem em mãos.</p>
+class="math inline">\(Q\)</span> baseada na amostra, enquanto <span
+class="math inline">\(q_i\)</span> reprenta o valor de uma dada
+observação <span class="math inline">\(i\)</span>. O uso do acento
+circunflexo na equação acima é uma convenção utilizada em estatística
+para mostrar que estamos nos referindo a uma estimativa da grandeza em
+questão baseada na amostra que se tem em mãos.</p>
+<p>Bem, quando falamos em <span class="math inline">\(T_r(q)\)</span>,
+nos referimos à probabilidade de excedência, que é na verdade o
+complemento de <span class="math inline">\(\hat{F}_Q(q_i)\)</span>, ou
+seja,</p>
+<p><span class="math display">\[\hat{P}(Q \gt q_i) = 1 - \hat{P}(Q \le
+q_i)\]</span> de forma que</p>
+<p><span class="math display">\[\hat{T}_r(q_i) = \frac{1}{1-\hat{P}(Q
+\le q_i)}\]</span></p>
+<p>Pode parecer estranho se você estiver vendo isso pela primeira vez,
+mas a verdade é que há diferentes maneiras de se estimar a distribuição
+empírica de frequência das observações de uma amostra,<span
+class="math inline">\(\hat{P}(Q\le q_i)\)</span>, ou seu complemento,
+<span class="math inline">\(\hat{P}(Q\le q_i)\)</span>.</p>
+<p>Uma maneira bem comum de estimar tais probabilidades quando se tem
+uma amostra de tamanho <span class="math inline">\(n\)</span> consiste
+em ordenar a série em ordem decrescente determinar a probabilidade de
+excedência utilizando a seguinte fórmula,</p>
+<p><span class="math display">\[P(Q &gt; q_{(i)}) = 1 -
+\hat{F}_Q(q_{(i)}) = \frac{i}{n+1}\]</span></p>
+<p>em que <span class="math inline">\(q_{(i)}\)</span> representa a
+chamada estatística de ordem <span class="math inline">\(i\)</span>, em
+que <span class="math inline">\(q_{(1)}\gt q_{(2)}\gt \ldots \gt
+q_{(n)}\)</span>, de forma que <span
+class="math inline">\(q_{(1)}\)</span> e <span
+class="math inline">\(q_{(n)}\)</span> são, respectivamente, a maior e a
+menor observações da amostra. De acordo com essa expressão, por exemplo,
+numa amostra de tamanho 49, a probabilidade da vazão mázima anual ser
+maior do que a maior observação da amostra vale <span
+class="math inline">\(P(Q&gt;q_{(1)})=0.02\)</span>), o que resulta num
+tempo de recorrência de <span
+class="math inline">\(T_r(q_{(1)})=50\)</span> anos.</p>
+<p>Embora não seja o objetivo aqui deste curso entender os detalhes
+deste procedimento, mas vale a pena dizer o seguinte: como a
+distribuição empírica de frequência depende da amostra que se tem em
+mãos, ela é na verdade uma variável aleatória, ou seja, ela pode variar
+de amostra para amostra, de modo que é razoável imaginar que ela possui
+uma distribuição de probabilidades.</p>
 <p>Suponha que fosse possível obter diversas amostras independentes da
 variável de interesse, todas de tamanho <span
 class="math inline">\(n\)</span> e oriundas de uma mesma distribuição de
@@ -2460,8 +2502,6 @@ distribuição teórica</td>
 </tr>
 </tbody>
 </table>
-<h3 id="construção-da-curva-de-frequência-amostral">Construção da curva
-de frequência amostral</h3>
 <h2 id="inferência">Inferência</h2>
 <h3 id="cálculo-dos-momentos-l">Cálculo dos momentos-L</h3>
 <h3 id="diagrama-de-momentos-l">Diagrama de momentos-L</h3>
@@ -2500,7 +2540,7 @@ distribuição</h4>
 <h4 id="estimativa-dos-quantis-de-cheia">Estimativa dos quantis de
 cheia</h4>
 <h4 id="descrição-das-incertezas">Descrição das incertezas</h4>
-<div class="sourceCode" id="cb2"><pre
+<div class="sourceCode" id="cb1"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

@@ -1,6 +1,6 @@
 ---
 title: "Análise de frequência de cheias"
-description: Exemplo com dados reais
+description: Exemplo de análise local com dados reais
 ---
 
 ```{r setup, include=FALSE}
@@ -10,11 +10,13 @@ library(tidyverse)
 
 ## Objetivos da atividade
 
-O objetivo desta atividade é realizar uma análise de frequência de cheias a nível local. Isso significa que iremos relacionar a magnitude das vazões máximas anuais com a probabilidade da mesma ser excedida.  A análise a nível local siginifca que utilizaremos apenas as informações de vazão observadas na estação fluviométrica de interesse, sem fazer uso de informações de vaões que teham acontecido na região. Além da relação entre a magnitude da vazão e a probabilidade de excedência, é importante saber estimar também o grau de incertezas nessas estimativas. As incertezas são usualmente reprsentadas por intervalos de confiança. 
+O objetivo desta atividade é realizar uma análise de frequência de cheias a nível local. Isso significa que iremos relacionar a magnitude das vazões máximas anuais com a probabilidade da mesma ser excedida.  A análise a nível local siginifca que utilizaremos apenas as informações de vazão observadas na estação fluviométrica de interesse, sem fazer uso de informações sobre as vazões máximas anuais que teham acontecido em outras estações fluviométricas localizadas na região. 
 
-Além de calcular essas quantidades, normalmente a curva de frequência, e suas respectivas incertezas, são representadas graficamente, como apresentado na figura abaixo, que mostra os resultados para um estudo de cheias numa seção do Rio Salado, localizada na província de Santa Fé, na Argentina, onde em 2003 ocorreu o rompimento de um dique que resultou em mortes e elevados prejuízos.  
+Além de construirmos a relação entre a magnitude das vazões máximas anuais e a respectiva probabilidade de excedência, é importante saber estimar também o grau de incerteza nessas estimativas. Essas incertezas são usualmente reprsentadas por intervalos de confiança, como veremos mais adianate. 
 
-Contruiremos aqui uma figura semephante, onde no eixo-x temos o tempo de recorrência e no eixo-y a magnitude das vazões máximas anuais. A linha cheia em vermelho representa o valor esperado dos valores de vazão em função do tempo de recorrência, enquanto a linhas tracejadas representam os intervalos de confiança de 95%, ilustrando as incertezas envolvidas nessas estimativas. Os círculos azuis escuros representam as vazões máximas anunias registradas no passado, enquanto o círculo azul claro mostra a cheia destruidora de 2003. 
+Além de calcular essas quantidades, normalmente a curva de frequência, e suas respectivas incertezas, são representadas graficamente, como na figura abaixo, que mostra os resultados para um estudo de cheias numa seção do Rio Salado, localizada na província de Santa Fé, na Argentina, onde em 2003 ocorreu o rompimento de um dique que resultou em mortes e elevados prejuízos.  
+
+Contruiremos aqui no curso uma figura semelhante a esta, onde no eixo-x temos o tempo de recorrência e no eixo-y a magnitude das vazões máximas anuais. O tempo de recorrência apresentado no eixo-x é uma maneira de representar a probabilidade de excedência. A linha cheia em vermelho representa o valor esperado dos valores da vazão máxima anual em função do tempo de recorrência, enquanto as linhas tracejadas representam os intervalos de confiança de 95%, ilustrando as incertezas envolvidas nessas estimativas. Os círculos azuis escuros representam as vazões máximas anuais registradas no passado, enquanto o círculo azul claro mostra a cheia destruidora de 2003. 
 
 ```{r curva_freq,echo=FALSE, fig.align = 'center', out.width = "90%", fig.cap = "Curva de frequência do cheias do Rio Salado, na Argentina."}
 knitr::include_graphics("images/curva_freq_salado.png")
@@ -51,8 +53,8 @@ Aqui, nós faremos uso de uma banco de dados criado pelo Saulo Aires de Souza em
 O código abaixo lê o arquivo e armazena os anos e os valores das vazões máximas anuais da primeira estação do banco de dados num `dataframe` chamado `flows`. Nós usamos a função `tibble` para mostrar uma parte das informações contidas nesse `dataframe`.
 
 ```{r tidy_data,echo=FALSE}
-meta_data <- read.delim("dados/qx1d_RH SFR.dat",sep=";",header=FALSE,na.strings = "null",nrows=5)
-metadata_var <- meta_data[,1]
+#meta_data <- read.delim("dados/qx1d_RH SFR.dat",sep=";",header=FALSE,na.strings = "null",nrows=5)
+#metadata_var <- meta_data[,1]
 #i = seq(2,284,2)
 #meta_data_station <- as_tibble(meta_data[,i])
 #meta_data_station %>%
@@ -61,42 +63,65 @@ metadata_var <- meta_data[,1]
 
 
 ```{r obtencao_dados,echo=TRUE}
-data <- read.delim("dados/qx1d_RH SFR.dat",sep=";",header=FALSE,na.strings = "null",skip=12)
+#data <- read.delim("dados/qx1d_RH SFR.dat",sep=";",header=FALSE,na.strings = "null",skip=12)
 #as.Date(df$Date, format =  "%m/%d/%Y %H:%M:%S")
 #year <- as.Date(data[-1,1], format="%Y")
-year <- as.numeric(data[-1,1])
-Q <- as.numeric(data[-1,2])
-df <- data.frame(year, Q)
+#year <- as.numeric(data[-1,1])
+#Q <- as.numeric(data[-1,2])
+#df <- data.frame(year, Q)
 
 # find NA's and remove from dataframe
-flows <- na.omit(df) 
-tibble(flows)
+#flows <- na.omit(df) 
+#tibble(flows)
 ```
 
 É sempre importante visualizar a série de máximos anuais. Para isso, utilizamos 
 
 ```{r plot_serie}
-library(ggplot2)
- ggplot(flows,aes(x=year, y=Q)) +
-    geom_point() +
-    geom_line()
+#library(ggplot2)
+# ggplot(flows,aes(x=year, y=Q)) +
+#    geom_point() +
+#    geom_line()
  
 
 #lines(pressure$temperature, pressure$pressure/2, col = "red")
 
 ```
 
-### Cálculo das posições de plotagem
+### Construção de curva de frequência amostral
 
-O primeiro passo de estudo de análise de frequência consiste em determinar a distribuição empírica de frequência das vazões máximas anuais observadas, que apresenta a frequência relativa acumulada das observações de uma amostra, e pode ser visto como a versão acumulada do histograma. 
+Para que possamos plotar os círculos azuis escuros da Figura apresentada anteriormente para o caso do Rio Salado, que representam as vazões máximas anuais observadas na série histórica, precisamos determinar o tempo de recorrência para cada um desses valores.
 
-A distribuição empírica de frequência relaciona o valor de cada observação com sua probablidade de não ser excedida, ou seja, 
+O tempo de recorrência associado a uma determinada magnitude de vazão, $T_r(q)$, é um conceito hidrológico bastante conhecido, de forma que não dedicaremos muito tempo para discutí-lo aqui. Por definição, o tempo de recorrência de um evento cuja magnitude vale $q$ é igual ao inverso da probabilidade da vazão máxima anual exceder esse valor,
 
-$$\hat{F}_X(x_i) = P(X \le x_i)$$
+$$T_r(q) = \frac{1}{P(Q>q)}$$
 
-em que $\hat{F}_X$ é a estimativa da frequência relativa acumulada da variável aleatória $X$ baseada na amostra, enquanto $x_i$ reprenta o valor de uma dada observação $i$. Existem diversas formas de se determinar $\hat{F}_X(x_i)$ com base com base numa amostra. 
+Por exemplo, se a probabilidade da vazão máxima anual ultrapassar um dado valor $q$ for igual a 0.10, dizemos que o tempo de recorrência dessa vazão $q$ é de 10 anos. Da mesma forma, se $P(Q>q)=0.01$, dizemos que o tempo de recorrência de $q$ vale 100 anos.
 
-Para entender os motivos pelos quais diversas formas são possíveis, cada uma com a sua motivação e justificativa, precisamos entender que a probabilidade de não excedência de uma esatística de ordem qualquer numa amostra é na verdade uma variável aleatória, já que a mesma é função da amostra que se tem em mãos.
+Portanto, para que possamos incluir as vazões observadas na nossa curva de frequência, será preciso determinar a probabilidade de excedência de cada uma das observações contidas na série de vazões máximas anuais da localidade de interesse. Isso é feito com base na chamada distribuição empírica de frequência. 
+
+A distribuição empírica de frequência relaciona cada valor de vazão máxima observada na série histórica, denominada aqui de $q_i$, com sua frequência relativa acumulada, $\hat{F}_Q(q_i)$, que representa a nossa estimativa para a probabilidade da variável de interesse, $X$, ser menor ou igual ao valor amostral, $q_i$,
+
+$$\hat{F}_Q(q_i) = \hat{P}(Q \le q_i)$$
+
+em que $\hat{F}_Q$ é a estimativa da frequência relativa acumulada da variável aleatória $Q$ baseada na amostra, enquanto $q_i$ reprenta o valor de uma dada observação $i$. O uso do acento circunflexo na equação acima é uma convenção utilizada em estatística para mostrar que estamos nos referindo a uma estimativa da grandeza em questão baseada na amostra que se tem em mãos.
+
+Bem, quando falamos em $T_r(q)$, nos referimos à probabilidade de excedência, que é na verdade o complemento de $\hat{F}_Q(q_i)$, ou seja,
+
+$$\hat{P}(Q \gt q_i) = 1 - \hat{P}(Q \le q_i)$$
+de forma que 
+
+$$\hat{T}_r(q_i) = \frac{1}{1-\hat{P}(Q \le q_i)}$$
+
+Pode parecer estranho se você estiver vendo isso pela primeira vez, mas a verdade é que há diferentes maneiras de se estimar a distribuição empírica de frequência das observações de uma amostra,$\hat{P}(Q\le q_i)$, ou seu complemento, $\hat{P}(Q\le q_i)$.
+
+Uma maneira bem comum de estimar tais probabilidades quando se tem uma amostra de tamanho $n$ consiste em ordenar a série em ordem decrescente determinar a probabilidade de excedência utilizando a seguinte fórmula,
+
+$$\hat{P}(Q > q_{(i)}) = 1 - \hat{F}_Q(q_{(i)}) = \frac{i}{n+1}$$ 
+
+em que $q_{(i)}$ representa a chamada estatística de ordem $i$, em que $q_{(1)}\gt q_{(2)}\gt \ldots \gt q_{(n)}$, de forma que $q_{(1)}$ e $q_{(n)}$ são, respectivamente, a maior e a menor observações da amostra. De acordo com essa expressão, por exemplo, numa amostra de tamanho 49, a probabilidade da vazão mázima anual ser maior do que a maior observação da amostra vale $P(Q>q_{(1)})=0.02$), o que resulta num tempo de recorrência de $T_r(q_{(1)})=50$ anos.
+
+Embora não seja o objetivo aqui deste curso entender os detalhes deste procedimento, mas vale a pena dizer o seguinte: como a distribuição empírica de frequência depende da amostra que se tem em mãos, ela é na verdade uma variável aleatória, ou seja, ela pode variar de amostra para amostra, de modo que é razoável imaginar que ela possui uma distribuição de probabilidades.
 
 Suponha que fosse possível obter diversas amostras independentes da variável de interesse, todas de tamanho $n$ e oriundas de uma mesma distribuição de probabilidades. Vale lembrar que na prática apenas uma amostra está disponível. Embora não seja apresentado aqui o porquê, é possível mostrar que a probabilidade de não-excedência da estatística de ordem $X_{(i)}, $Q_i = P(X \gt x_{(i)})$ é também uma variável aleatória, pois depende da amostra. A distribuição de $Q_i$  é uma Beta (i.e., possui uma distribuição Beta) com valor esperado
 
@@ -135,7 +160,7 @@ Cunnane | $\frac{i-0.40}{n+0.2}$ | 0.40 | $1.67n+0.3$ | Quantis aproximadamente 
 Grigorten | $\frac{i-0.44}{n+0.12}$ | 0.44 | $1.79n+0.2$ | Otimizada para distribuição Gumbel
 Hazen | $\frac{i-0.5}{n}$ | 0.50 | $2n$ | Escolha tradicional
 
-### Construção da curva de frequência amostral
+
 
 ## Inferência
 
