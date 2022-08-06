@@ -7,9 +7,23 @@ description: Conceitos básicos
 library(knitr)
 ```
 
-## Visão geral
+## Visão geral do R e RStudio
 
-## Funções
+## Primeiros passos
 
-## Pacotes
+### Input/output
+
+É imprescindível que a gente entenda como ler informações hidrológicas dos mais diversos tipos de arquivo, assim como aprender como escrever os resultados de nossas análises de forma organizada em aruivos de diferentes formatos para que possamos comunicar nossos resultados e para que outros possam avaliar e/ou continuar nossas análises.
+
+Para isso, investiremos um tempo discutindo algumas maneiras de ler e escrever em arquivos fazendo uso de funções do R.
+
+### Classes na linguagem R
+
+### Criação de variáveis e atribuição de valores
+
+### Dataframes
+
+### COntrução de gráficos
+
+## Alguns pacotes
 
