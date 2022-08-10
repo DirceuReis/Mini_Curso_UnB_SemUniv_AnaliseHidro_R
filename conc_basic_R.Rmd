@@ -17,6 +17,9 @@ library(knitr)
 
 Para isso, investiremos um tempo discutindo algumas maneiras de ler e escrever em arquivos fazendo uso de funções do R.
 
+### Vetores
+
+
 ### Classes na linguagem R
 
 ### Criação de variáveis e atribuição de valores
