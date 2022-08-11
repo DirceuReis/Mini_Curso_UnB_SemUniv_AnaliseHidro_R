@@ -9,6 +9,19 @@ library(knitr)
 
 ## Visão geral do R e RStudio
 
+### **Porque usar o R em Hidrologia? **
+- Simplicidade da linguagem
+
+- Excelente desempenho na manipulação de grandes bancos de dados
+
+- Acesso a métodos estatísticos consolidados
+
+- Acesso a diversas ferramentas de visualização de dados
+
+- Acesso a métodos analíticos de ponta e ferramentas compartilhadas internacionalmente - não só pelo uso de pacotes, mas sobretudo, usando fóruns e tutoriais.
+
+- <a href="https://hess.copernicus.org/articles/23/2939/2019/hess-23-2939-2019.pdf"> R in Hydrology </a>, Slater, et al., Hydrol. Earth Syst. Sci., 23, 2939–2963, 2019.
+
 ## Primeiros passos
 
 ### Input/output
