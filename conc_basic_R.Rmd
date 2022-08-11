@@ -26,7 +26,7 @@ Para isso, investiremos um tempo discutindo algumas maneiras de ler e escrever e
 
 ### Dataframes
 
-### COntrução de gráficos
+### Construção de gráficos
 
 ## Alguns pacotes
 
