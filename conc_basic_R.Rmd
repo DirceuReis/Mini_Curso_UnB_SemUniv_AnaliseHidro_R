@@ -172,7 +172,83 @@ x >= 2
 ```
 
 ## Classes na linguagem R
+## Objetos do R
 
+São cinco os tipos básicos de **Classes** de objetos do R:
+
+- Caracter
+- Número (real)
+- Inteiro
+- Complexo
+- Lógico (`TRUE/FALSE`)
+
+A forma mais básica de armazenar objetos dessas classes é na forma de vetor e os vetores podem ser criados, com a função `c()`. A regra geral é que os vetores só armazenam objetos de mesma classe, a única exceção é são objetos do tipo `list`, como veremos mais à frente.
+
+## Objetos do R
+
+Via de regra, o R enverga números quando se utiliza um valor numérico. Para se criar uma variável do tipo `integer`, deve-se acrescentar a letra `L` ao final:
+
+```{r, echo=TRUE}
+x <- 2L
+class(x)
+```
+
+## Objetos do R - coerção de variáveis
+
+Vetores só podem conter variáveis de um tipo:
+
+```{r, echo=TRUE}
+x <- c(1,2,3,4)
+class(x)
+```
+
+```{r, echo=TRUE}
+y <- c(FALSE,TRUE,T,F)
+print(y)
+class(y)
+```
+
+## Objetos do R - coerção de variáveis
+
+Vetores só podem conter variáveis de um tipo:
+
+```{r, echo=TRUE}
+x <- c("olá","bom","dia","pessoal")
+x
+class(x)
+```
+
+## Objetos do R - coerção de variáveis
+
+Vetores só podem conter variáveis de um tipo:
+
+```{r, echo=TRUE}
+x <- c("olá",1,"dia",2)
+x
+class(x)
+```
+
+**COERÇÃO IMPLÍCITA**
+
+## Objetos do R - coerção de variáveis
+
+Coerção explícita:
+
+```{r, echo=TRUE}
+x <- as.character(c("olá",1,"dia",2))
+x
+class(x)
+```
+
+## Objetos do R - coerção de variáveis
+
+Coerção explícita - às vezes o R não sabe o que fazer e retorna `NA` (Non-Available):
+
+```{r, echo=TRUE}
+x <- as.numeric(c("olá",1,"dia",2))
+x
+class(x)
+```
 
 ### Input/output
 
