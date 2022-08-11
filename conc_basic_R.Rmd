@@ -141,8 +141,38 @@ Ao atribuir x a um novo valor, o valor anterior é apagado, implicitamente. Outr
 rm(x)
 ```
 
+## Criação de variáveis e atribuição de valores
+
+Todos esses operadores existem no R: `<-`, `=` e `==`.
+Os operadores `<-` e `=` são equivalentes, mas `==` funciona para avaliar uma igualdade e não de atribuir um valor a um elemento do R e retorna uma variável lógica `TRUE` ou `FALSE`. Por exemplo:
+
+```{r, echo = TRUE}
+x = 2
+x == 2
+```
+
+```{r, echo = TRUE}
+x == 3
+```
+
+## Criação de variáveis e atribuição de valores
+
+Outros operadores que resultam em lógicos são:
+
+```{r, echo = TRUE}
+x != 2
+```
+
+```{r, echo = TRUE}
+x < 3
+```
+
+```{r, echo = TRUE}
+x >= 2
+```
 
 ## Classes na linguagem R
+
 
 ### Input/output
 
