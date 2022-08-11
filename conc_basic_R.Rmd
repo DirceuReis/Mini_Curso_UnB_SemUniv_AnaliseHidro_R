@@ -63,6 +63,40 @@ O layout é ajustável em `view -> Panes -> Pane Layout`
 
 ## Primeiros passos
 
+### **Comandos no R **
+
+Antes de tudo, é importante saber onde se está trabalhando!
+
+```{r, echo = TRUE}
+getwd();setwd("C:/cursoR")
+dir()
+source("soma.R")
+```
+
+## Comandos no R
+
+R é utilizável como uma calculadora
+```{r, echo = TRUE}
+setwd("C:/cursoR/Basico")
+1 + 2
+```
+
+```{r, echo = TRUE}
+12 * 5
+```
+
+```{r, echo = TRUE}
+2 / 2
+```
+
+```{r, echo = TRUE}
+12 ** 4
+```
+
+```{r, echo = TRUE}
+12 ^ 4
+```
+
 ### Input/output
 
 É imprescindível que a gente entenda como ler informações hidrológicas dos mais diversos tipos de arquivo, assim como aprender como escrever os resultados de nossas análises de forma organizada em aruivos de diferentes formatos para que possamos comunicar nossos resultados e para que outros possam avaliar e/ou continuar nossas análises.
