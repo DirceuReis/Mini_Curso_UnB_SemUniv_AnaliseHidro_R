@@ -171,7 +171,6 @@ x < 3
 x >= 2
 ```
 
-## Classes na linguagem R
 ## Objetos do R
 
 São cinco os tipos básicos de **Classes** de objetos do R:
@@ -242,7 +241,7 @@ class(x)
 
 ## Objetos do R - coerção de variáveis
 
-Coerção explícita - às vezes o R não sabe o que fazer e retorna `NA` (Non-Available):
+Coerção explícita: às vezes o R não sabe o que fazer e retorna `NA` (Non-Available):
 
 ```{r, echo=TRUE}
 x <- as.numeric(c("olá",1,"dia",2))
@@ -250,13 +249,147 @@ x
 class(x)
 ```
 
-### Input/output
+## Objetos do R - Vetores
+
+Para criar vetores:
+
+```{r, echo=TRUE}
+x <- c(1,2,3,4,5,6,7,8,9,10)
+x
+
+```
+
+```{r, echo=TRUE}
+x <- c(1:10)
+x
+```
+
+```{r, echo=TRUE}
+x <- vector("numeric", length = 10)
+x
+```
+
+## Objetos do R - Vetores
+
+Para criar vetores:
+
+```{r, echo=TRUE}
+x <- c(11:20)
+x
+x[c(1,5,10)]
+x[c(4,8,11)]
+dim(x)
+```
+## Objetos do R - Matrizes
+
+Matrizes são objetos objetos semelhantes a vetores, entretanto, com o atributo dimensão `dim`.
+
+```{r, echo = TRUE}
+m <- matrix(nrow = 2, ncol = 3); m
+attributes(m)
+```
+
+## Objetos do R - Matrizes
+
+Matrizes podem ser criadas a partir de vetores, adicionando o atribuito dimensão.
+
+```{r, echo = TRUE}
+m <- matrix(x, nrow = 2, ncol = 5); m
+m <- matrix(x, nrow = 2, ncol = 5, byrow = TRUE); m
+```
+
+## Objetos do R - Matrizes
+
+Para selecionar elementos de uma matriz, é necessário especificar as duas dimensões:
+
+```{r, echo = TRUE}
+m <- matrix(1:4, nrow = 2); m
+m[2,2]
+```
+
+## Objetos do R - Matrizes
+
+Selecionar elementos de matrizes quadradas:
+
+```{r, echo = TRUE}
+lower.tri(m)
+upper.tri(m)
+```
+
+## Objetos do R - Matrizes
+
+Selecionar elementos de matrizes quadradas:
+
+```{r, echo = TRUE}
+m[lower.tri(m)] <- NA; m
+diag(m) <- NA; m
+```
+## Objetos do R - Matrizes
+
+Vetores podem ser unidos a fim de criar uma matriz:
+
+```{r, echo = TRUE}
+x <- c(1:10)
+y <- rnorm(10, 10, 5)
+uniao <- cbind(x, y)
+uniao
+dim(uniao)
+```
+
+A função `cbind()` adiciona colunas as matrizes.
+
+## Objetos do R - Matrizes
+
+Vetores podem ser unidos a fim de criar uma matriz:
+
+```{r, echo = TRUE}
+x <- c(1:10)
+y <- rnorm(10, 20, 5)
+uniao <- rbind(x, y)
+uniao
+dim(uniao)
+```
+
+A função `rbind()` adiciona linhas as matrizes.
+
+## Operações em ou com vetores
+
+```{r, echo=TRUE}
+x <- c(1:10)
+sqrt(2*x/2)
+```
+
+```{r, echo=TRUE}
+x <- c(1:5)
+y <- c(1:4)
+x+y
+```
+
+## Operações em ou com vetores
+
+```{r, echo=TRUE}
+x <- c(1:12); names(x) <- month.abb
+x
+```
+
+```{r, echo=TRUE}
+x[1]
+x["Jan"]
+```
+
+## Operações em ou com vetores
+
+```{r, echo=TRUE}
+x > 6
+x[x > 6]
+sum(x > 6)
+```
+
+## Input/output
 
 É imprescindível que a gente entenda como ler informações hidrológicas dos mais diversos tipos de arquivo, assim como aprender como escrever os resultados de nossas análises de forma organizada em aruivos de diferentes formatos para que possamos comunicar nossos resultados e para que outros possam avaliar e/ou continuar nossas análises.
 
 Para isso, investiremos um tempo discutindo algumas maneiras de ler e escrever em arquivos fazendo uso de funções do R.
-
-
 
 
 ### Dataframes
