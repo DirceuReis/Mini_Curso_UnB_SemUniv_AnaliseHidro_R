@@ -97,18 +97,43 @@ setwd("C:/cursoR/Basico")
 12 ^ 4
 ```
 
+## Comandos no R
+
+O R trabalha igualmente com vetores e escalares
+```{r, echo = TRUE}
+c(1,3,5,7,9) + c(2,4,6,8,10)
+```
+
+<font size="5">A função c() é usada para concatenar valores, criando vetores de valores da mesma classe.</font>
+
+## Comandos no R
+
+<font size="5">Ao usar o operador multiplicativo `*` o R entende que será feita a operação elemento a elemento. Para multiplicação de matrizes, o operador correto é `%*%`. Importante na vetorização!</font>
+
+```{r, echo = TRUE}
+as.vector(c(1,3,5,7)) %*% t(as.vector(c(2,4,6,8)))
+```
+
+## Criação de variáveis e atribuição de valores
+
+<font size="5">A forma de se atribuir um valor a um eleento é utilizando o operador `<-` ou `=`, ou seja, os dois operadores são equivalentes. Destaca-se que a forma usual de se atribuir é usando o operador `<-`.</font>
+
+```{r, echo = TRUE}
+x <- 2
+x
+```
+
+
+## Classes na linguagem R
+
 ### Input/output
 
 É imprescindível que a gente entenda como ler informações hidrológicas dos mais diversos tipos de arquivo, assim como aprender como escrever os resultados de nossas análises de forma organizada em aruivos de diferentes formatos para que possamos comunicar nossos resultados e para que outros possam avaliar e/ou continuar nossas análises.
 
 Para isso, investiremos um tempo discutindo algumas maneiras de ler e escrever em arquivos fazendo uso de funções do R.
 
-### Vetores
 
 
-### Classes na linguagem R
-
-### Criação de variáveis e atribuição de valores
 
 ### Dataframes
 
