@@ -121,6 +121,24 @@ as.vector(c(1,3,5,7)) %*% t(as.vector(c(2,4,6,8)))
 ```{r, echo = TRUE}
 x <- 2
 x
+print(x)
+class(x)
+```
+
+## Criação de variáveis e atribuição de valores
+
+Pode-se atribuir, por exemplo, um valor não numérico a `x`.
+
+```{r, echo = TRUE}
+x <- "test"
+print(x)
+class(x)
+```
+
+Ao atribuir x a um novo valor, o valor anterior é apagado, implicitamente. Outra forma de remover valores de uma variável é usando a função `rm()`.
+
+```{r, echo = TRUE}
+rm(x)
 ```
 
 
