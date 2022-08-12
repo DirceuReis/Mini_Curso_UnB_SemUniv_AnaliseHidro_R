@@ -181,7 +181,7 @@ São cinco os tipos básicos de **Classes** de objetos do R:
 - Complexo
 - Lógico (`TRUE/FALSE`)
 
-A forma mais básica de armazenar objetos dessas classes é na forma de vetor e os vetores podem ser criados, com a função `c()`. A regra geral é que os vetores só armazenam objetos de mesma classe, a única exceção é são objetos do tipo `list`, como veremos mais à frente.
+A forma mais básica de armazenar objetos dessas classes é na forma de vetor e os vetores podem ser criados, com a função `c()`. A regra geral é que os vetores só armazenam objetos de mesma classe, a única exceção são objetos do tipo `list`, como veremos mais à frente.
 
 ## Objetos do R
 
@@ -212,7 +212,7 @@ class(y)
 Vetores só podem conter variáveis de um tipo:
 
 ```{r, echo=TRUE}
-x <- c("olá","bom","dia","pessoal")
+x <- c("ola","bom","dia","programadores")
 x
 class(x)
 ```
@@ -222,7 +222,7 @@ class(x)
 Vetores só podem conter variáveis de um tipo:
 
 ```{r, echo=TRUE}
-x <- c("olá",1,"dia",2)
+x <- c("ola",1,"dia",2)
 x
 class(x)
 ```
@@ -234,7 +234,7 @@ class(x)
 Coerção explícita:
 
 ```{r, echo=TRUE}
-x <- as.character(c("olá",1,"dia",2))
+x <- as.character(c("ola",1,"dia",2))
 x
 class(x)
 ```
@@ -244,7 +244,7 @@ class(x)
 Coerção explícita: às vezes o R não sabe o que fazer e retorna `NA` (Non-Available):
 
 ```{r, echo=TRUE}
-x <- as.numeric(c("olá",1,"dia",2))
+x <- as.numeric(c("ola",1,"dia",2))
 x
 class(x)
 ```
@@ -356,7 +356,7 @@ A função `rbind()` adiciona linhas as matrizes.
 
 ```{r, echo=TRUE}
 x <- c(1:10)
-sqrt(2*x/2)
+sqrt(2*x/4)
 ```
 
 ```{r, echo=TRUE}
@@ -384,15 +384,82 @@ x > 6
 x[x > 6]
 sum(x > 6)
 ```
+## Objetos do R - Listas
+
+Listas são elementos importantes na programação em R. Uma das vantagens de se saber utilizar bem esse tipo de elemento é que nelas é possível armazenar elementos de diferentes tipos (caracter, número real, inteiro, complexo, lógico).
+
+Elas são diferentes dos vetores que, via de regra, só armazenam objetos de mesma classe.
+
+## Objetos do R - Listas
+
+Para criar uma lista:
+
+```{r, echo=TRUE}
+x <- list(1, "Ola", 1+5i, TRUE, 4L)
+x
+```
+
+## Objetos do R - Listas
+
+Para selecionar dados de listas, utiliza-se o duplo cochete `[[]]`:
+
+```{r, echo=TRUE}
+x <- list(c(1,2,3), c("Ola", "Mundo"), 1+5i, TRUE, 4L)
+x[[1]]
+x[[2]][2]
+x[[5]] + 6
+```
+
+## Objetos do R - Fatores
+
+O `factor` é uma importante classe de elemento no R para definir variáveis categóricas. São úteis em modelos de regressão linear com variáveis categóricas de entrada (estações do ano, classes de solo, cotas de alerta hidrológico etc.):
+
+```{r, echo=TRUE}
+x <- factor(c("normal","atenção","alerta","inundação","inundação severa","inundação","atenção","normal","inundação","normal","alerta","atenção"))
+x
+table(x)
+```
+
+## Objetos do R - Data Frames
+
+A classe de `data.frame` é muito utilizada em R. É o que se utiliza para dados tabulados. Além disso, todos os elementos do `data.frame` têm o mesmo comprimento.
+
+```{r, echo=TRUE}
+DF <- data.frame(x = c(1:3), y = rnorm(3))
+DF
+class(DF)
+```
+
+## Objetos do R - Data Frames
+
+- `matrix`: todos os elementos são da mesma classe;
+- `data.frame`: dentro de cada coluna, os objetos pertencem à mesma classe, mas diferentes colunas podem pertencer a diferentes classes;
+- `list`: cada elemento pode pertencer a uma classe diferente.
+
+Quando são lidos objetos externos (planilhas excel, arquivos .txt ou .csv), usando as funções do R `read.table()` ou `read.csv()`, por exemplo, o objeto criado é um `data.frame`.
+
+## Objetos do R - Data Frames
+
+Coerção de classe para `data.frame`.
+
+```{r, echo=TRUE}
+m <- matrix(c(1:9), nrow = 3)
+as.data.frame(m)
+```
+## Objetos do R - Atributos
+
+Coerção de classe para `data.frame`.
+
+```{r, echo=TRUE}
+m <- matrix(c(1:9), nrow = 3); attributes(m)
+attributes(as.data.frame(m))
+```
 
 ## Input/output
 
 É imprescindível que a gente entenda como ler informações hidrológicas dos mais diversos tipos de arquivo, assim como aprender como escrever os resultados de nossas análises de forma organizada em aruivos de diferentes formatos para que possamos comunicar nossos resultados e para que outros possam avaliar e/ou continuar nossas análises.
 
 Para isso, investiremos um tempo discutindo algumas maneiras de ler e escrever em arquivos fazendo uso de funções do R.
-
-
-### Dataframes
 
 ### Construção de gráficos
 
