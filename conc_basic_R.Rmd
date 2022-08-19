@@ -9,24 +9,459 @@ library(knitr)
 
 ## Visão geral do R e RStudio
 
+### **O que é a linguagem R **
+
+- <a href="https://bookdown.org/rdpeng/rprogdatascience/">R Programming for Data Science</a>, Roger D. Peng, 2019. Johns Hopkins Bloomberg School of Public Health.
+
+## Porque usar o R em Hidrologia?
+
+- Simplicidade da linguagem
+
+- Excelente desempenho na manipulação de grandes bancos de dados
+
+- Acesso a métodos estatísticos consolidados
+
+- Acesso a diversas ferramentas de visualização de dados
+
+- Acesso a métodos analíticos de ponta e ferramentas compartilhadas internacionalmente - não só pelo uso de pacotes, mas sobretudo, usando fóruns e tutoriais.
+
+- <a href="https://hess.copernicus.org/articles/23/2939/2019/hess-23-2939-2019.pdf"> R in Hydrology </a>, Slater, et al., Hydrol. Earth Syst. Sci., 23, 2939–2963, 2019.
+
+## Instalação do programa
+
+```{r, echo=FALSE}
+# Define variable containing url
+urlR <- "https://www.r-project.org/logo/Rlogo.png"
+urlRstudio <- "https://rstudio.com/wp-content/uploads/2018/10/RStudio-Logo-Flat.png"
+```
+
+Download de 2 programas: R e RStudio
+
+- <a href="https://cran.r-project.org/bin/windows/base/"> R </a>
+
+<center><img src="`r urlR`" height="100"></center>
+
+- <a href="https://rstudio.com/products/rstudio/download/"> R Studio </a>
+
+<center><img src="`r urlRstudio`" height="100"></center>
+
+*<font size="5">RStudio é uma plataforma com inúmeras ferramentas úteis e que roda a linguagem R. É possível usar só o R por sua interface, mas só é possível usar o RStudio com o R instalado na máquina.</font>*
+
+## Interface do R e RStudio
+
+<left><img src="www/JanelaR.png" height="400"></left>
+
+## Interface do R e RStudio
+
+<left><img src="www/JanelaRStudio.png" height="400"></left>
+
+## Interface do R e RStudio
+
+O layout é ajustável em `view -> Panes -> Pane Layout`
+
+<left><img src="www/layoutConfig.png" height="400"></left>
+
 ## Primeiros passos
 
-### Input/output
+### **Comandos no R **
+
+Antes de tudo, é importante saber onde se está trabalhando!
+
+```{r, echo = TRUE}
+getwd();setwd("C:/cursoR")
+dir()
+source("soma.R")
+```
+
+## Comandos no R
+
+R é utilizável como uma calculadora
+```{r, echo = TRUE}
+setwd("C:/cursoR/Basico")
+1 + 2
+```
+
+```{r, echo = TRUE}
+12 * 5
+```
+
+```{r, echo = TRUE}
+2 / 2
+```
+
+```{r, echo = TRUE}
+12 ** 4
+```
+
+```{r, echo = TRUE}
+12 ^ 4
+```
+
+## Comandos no R
+
+O R trabalha igualmente com vetores e escalares
+```{r, echo = TRUE}
+c(1,3,5,7,9) + c(2,4,6,8,10)
+```
+
+<font size="5">A função c() é usada para concatenar valores, criando vetores de valores da mesma classe.</font>
+
+## Comandos no R
+
+<font size="5">Ao usar o operador multiplicativo `*` o R entende que será feita a operação elemento a elemento. Para multiplicação de matrizes, o operador correto é `%*%`. Importante na vetorização!</font>
+
+```{r, echo = TRUE}
+as.vector(c(1,3,5,7)) %*% t(as.vector(c(2,4,6,8)))
+```
+
+## Criação de variáveis e atribuição de valores
+
+<font size="5">A forma de se atribuir um valor a um eleento é utilizando o operador `<-` ou `=`, ou seja, os dois operadores são equivalentes. Destaca-se que a forma usual de se atribuir é usando o operador `<-`.</font>
+
+```{r, echo = TRUE}
+x <- 2
+x
+print(x)
+class(x)
+```
+
+## Criação de variáveis e atribuição de valores
+
+Pode-se atribuir, por exemplo, um valor não numérico a `x`.
+
+```{r, echo = TRUE}
+x <- "test"
+print(x)
+class(x)
+```
+
+Ao atribuir x a um novo valor, o valor anterior é apagado, implicitamente. Outra forma de remover valores de uma variável é usando a função `rm()`.
+
+```{r, echo = TRUE}
+rm(x)
+```
+
+## Criação de variáveis e atribuição de valores
+
+Todos esses operadores existem no R: `<-`, `=` e `==`.
+Os operadores `<-` e `=` são equivalentes, mas `==` funciona para avaliar uma igualdade e não de atribuir um valor a um elemento do R e retorna uma variável lógica `TRUE` ou `FALSE`. Por exemplo:
+
+```{r, echo = TRUE}
+x = 2
+x == 2
+```
+
+```{r, echo = TRUE}
+x == 3
+```
+
+## Criação de variáveis e atribuição de valores
+
+Outros operadores que resultam em lógicos são:
+
+```{r, echo = TRUE}
+x != 2
+```
+
+```{r, echo = TRUE}
+x < 3
+```
+
+```{r, echo = TRUE}
+x >= 2
+```
+
+## Objetos do R
+
+São cinco os tipos básicos de **Classes** de objetos do R:
+
+- Caracter
+- Número (real)
+- Inteiro
+- Complexo
+- Lógico (`TRUE/FALSE`)
+
+A forma mais básica de armazenar objetos dessas classes é na forma de vetor e os vetores podem ser criados, com a função `c()`. A regra geral é que os vetores só armazenam objetos de mesma classe, a única exceção são objetos do tipo `list`, como veremos mais à frente.
+
+## Objetos do R
+
+Via de regra, o R enverga números quando se utiliza um valor numérico. Para se criar uma variável do tipo `integer`, deve-se acrescentar a letra `L` ao final:
+
+```{r, echo=TRUE}
+x <- 2L
+class(x)
+```
+
+## Objetos do R - coerção de variáveis
+
+Vetores só podem conter variáveis de um tipo:
+
+```{r, echo=TRUE}
+x <- c(1,2,3,4)
+class(x)
+```
+
+```{r, echo=TRUE}
+y <- c(FALSE,TRUE,T,F)
+print(y)
+class(y)
+```
+
+## Objetos do R - coerção de variáveis
+
+Vetores só podem conter variáveis de um tipo:
+
+```{r, echo=TRUE}
+x <- c("ola","bom","dia","programadores")
+x
+class(x)
+```
+
+## Objetos do R - coerção de variáveis
+
+Vetores só podem conter variáveis de um tipo:
+
+```{r, echo=TRUE}
+x <- c("ola",1,"dia",2)
+x
+class(x)
+```
+
+**COERÇÃO IMPLÍCITA**
+
+## Objetos do R - coerção de variáveis
+
+Coerção explícita:
+
+```{r, echo=TRUE}
+x <- as.character(c("ola",1,"dia",2))
+x
+class(x)
+```
+
+## Objetos do R - coerção de variáveis
+
+Coerção explícita: às vezes o R não sabe o que fazer e retorna `NA` (Non-Available):
+
+```{r, echo=TRUE}
+x <- as.numeric(c("ola",1,"dia",2))
+x
+class(x)
+```
+
+## Objetos do R - Vetores
+
+Para criar vetores:
+
+```{r, echo=TRUE}
+x <- c(1,2,3,4,5,6,7,8,9,10)
+x
+
+```
+
+```{r, echo=TRUE}
+x <- c(1:10)
+x
+```
+
+```{r, echo=TRUE}
+x <- vector("numeric", length = 10)
+x
+```
+
+## Objetos do R - Vetores
+
+Para criar vetores:
+
+```{r, echo=TRUE}
+x <- c(11:20)
+x
+x[c(1,5,10)]
+x[c(4,8,11)]
+dim(x)
+```
+## Objetos do R - Matrizes
+
+Matrizes são objetos objetos semelhantes a vetores, entretanto, com o atributo dimensão `dim`.
+
+```{r, echo = TRUE}
+m <- matrix(nrow = 2, ncol = 3); m
+attributes(m)
+```
+
+## Objetos do R - Matrizes
+
+Matrizes podem ser criadas a partir de vetores, adicionando o atribuito dimensão.
+
+```{r, echo = TRUE}
+m <- matrix(x, nrow = 2, ncol = 5); m
+m <- matrix(x, nrow = 2, ncol = 5, byrow = TRUE); m
+```
+
+## Objetos do R - Matrizes
+
+Para selecionar elementos de uma matriz, é necessário especificar as duas dimensões:
+
+```{r, echo = TRUE}
+m <- matrix(1:4, nrow = 2); m
+m[2,2]
+```
+
+## Objetos do R - Matrizes
+
+Selecionar elementos de matrizes quadradas:
+
+```{r, echo = TRUE}
+lower.tri(m)
+upper.tri(m)
+```
+
+## Objetos do R - Matrizes
+
+Selecionar elementos de matrizes quadradas:
+
+```{r, echo = TRUE}
+m[lower.tri(m)] <- NA; m
+diag(m) <- NA; m
+```
+## Objetos do R - Matrizes
+
+Vetores podem ser unidos a fim de criar uma matriz:
+
+```{r, echo = TRUE}
+x <- c(1:10)
+y <- rnorm(10, 10, 5)
+uniao <- cbind(x, y)
+uniao
+dim(uniao)
+```
+
+A função `cbind()` adiciona colunas as matrizes.
+
+## Objetos do R - Matrizes
+
+Vetores podem ser unidos a fim de criar uma matriz:
+
+```{r, echo = TRUE}
+x <- c(1:10)
+y <- rnorm(10, 20, 5)
+uniao <- rbind(x, y)
+uniao
+dim(uniao)
+```
+
+A função `rbind()` adiciona linhas as matrizes.
+
+## Operações em ou com vetores
+
+```{r, echo=TRUE}
+x <- c(1:10)
+sqrt(2*x/4)
+```
+
+```{r, echo=TRUE}
+x <- c(1:5)
+y <- c(1:4)
+x+y
+```
+
+## Operações em ou com vetores
+
+```{r, echo=TRUE}
+x <- c(1:12); names(x) <- month.abb
+x
+```
+
+```{r, echo=TRUE}
+x[1]
+x["Jan"]
+```
+
+## Operações em ou com vetores
+
+```{r, echo=TRUE}
+x > 6
+x[x > 6]
+sum(x > 6)
+```
+## Objetos do R - Listas
+
+Listas são elementos importantes na programação em R. Uma das vantagens de se saber utilizar bem esse tipo de elemento é que nelas é possível armazenar elementos de diferentes tipos (caracter, número real, inteiro, complexo, lógico).
+
+Elas são diferentes dos vetores que, via de regra, só armazenam objetos de mesma classe.
+
+## Objetos do R - Listas
+
+Para criar uma lista:
+
+```{r, echo=TRUE}
+x <- list(1, "Ola", 1+5i, TRUE, 4L)
+x
+```
+
+## Objetos do R - Listas
+
+Para selecionar dados de listas, utiliza-se o duplo cochete `[[]]`:
+
+```{r, echo=TRUE}
+x <- list(c(1,2,3), c("Ola", "Mundo"), 1+5i, TRUE, 4L)
+x[[1]]
+x[[2]][2]
+x[[5]] + 6
+```
+
+## Objetos do R - Fatores
+
+O `factor` é uma importante classe de elemento no R para definir variáveis categóricas. São úteis em modelos de regressão linear com variáveis categóricas de entrada (estações do ano, classes de solo, cotas de alerta hidrológico etc.):
+
+```{r, echo=TRUE}
+x <- factor(c("normal","atenção","alerta","inundação","inundação severa","inundação","atenção","normal","inundação","normal","alerta","atenção"))
+x
+table(x)
+```
+
+## Objetos do R - Data Frames
+
+A classe de `data.frame` é muito utilizada em R. É o que se utiliza para dados tabulados. Além disso, todos os elementos do `data.frame` têm o mesmo comprimento.
+
+```{r, echo=TRUE}
+DF <- data.frame(x = c(1:3), y = rnorm(3))
+DF
+class(DF)
+```
+
+## Objetos do R - Data Frames
+
+- `matrix`: todos os elementos são da mesma classe;
+- `data.frame`: dentro de cada coluna, os objetos pertencem à mesma classe, mas diferentes colunas podem pertencer a diferentes classes;
+- `list`: cada elemento pode pertencer a uma classe diferente.
+
+Quando são lidos objetos externos (planilhas excel, arquivos .txt ou .csv), usando as funções do R `read.table()` ou `read.csv()`, por exemplo, o objeto criado é um `data.frame`.
+
+## Objetos do R - Data Frames
+
+Coerção de classe para `data.frame`.
+
+```{r, echo=TRUE}
+m <- matrix(c(1:9), nrow = 3)
+as.data.frame(m)
+```
+## Objetos do R - Atributos
+
+Coerção de classe para `data.frame`.
+
+```{r, echo=TRUE}
+m <- matrix(c(1:9), nrow = 3); attributes(m)
+attributes(as.data.frame(m))
+```
+
+## Input/output
 
 É imprescindível que a gente entenda como ler informações hidrológicas dos mais diversos tipos de arquivo, assim como aprender como escrever os resultados de nossas análises de forma organizada em aruivos de diferentes formatos para que possamos comunicar nossos resultados e para que outros possam avaliar e/ou continuar nossas análises.
 
 Para isso, investiremos um tempo discutindo algumas maneiras de ler e escrever em arquivos fazendo uso de funções do R.
 
-### Vetores
-
-
-### Classes na linguagem R
-
-### Criação de variáveis e atribuição de valores
-
-### Dataframes
-
-### COntrução de gráficos
+### Construção de gráficos
 
 ## Alguns pacotes
 
