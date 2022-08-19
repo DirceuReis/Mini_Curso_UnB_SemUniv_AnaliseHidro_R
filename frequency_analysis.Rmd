@@ -6,6 +6,9 @@ description: Exemplo de análise local com dados reais
 ```{r setup, include=FALSE}
 library(knitr)
 library(tidyverse)
+library(dplyr)
+library(XML)
+library(lubridate)
 ```
 
 ## Objetivos da atividade
@@ -48,45 +51,112 @@ knitr::include_graphics("images/curva_freq_salado.png")
 
 ### Seleção das vazões máximas anuais
 
-Aqui, nós faremos uso de uma banco de dados criado pelo Saulo Aires de Souza em sua tese de doutorado. Utilizaremos um arquivo que contém as séries de máximos anuais de 124 estações fluvométricas localizadas na bacia do Rio São Francisco (https://doi.org/10.5281/zenodo.6551909).  
+Nós utilizaremos aqui a mesma função que utilizamos na segunda aula do curso para obter os dados de vazão. No nosso caso, vamos focar num primeiro momento na estação "60435000", localizada na bacia do Rio Descoberto, que drena uma área de $113.2$ km^2.
 
-O código abaixo lê o arquivo e armazena os anos e os valores das vazões máximas anuais da primeira estação do banco de dados num `dataframe` chamado `flows`. Nós usamos a função `tibble` para mostrar uma parte das informações contidas nesse `dataframe`.
+```{r dados_hidro_ANA_2}
+# Função para obter série histórica de vazão de uma determinada estação ####
+dados_serie_ANA <- function(cod_estacao = NA,
+                            data_inicio = "01/01/1800",
+                            data_fim = Sys.Date(),
+                            tipo_dados = 3,
+                            nivel_consist = 1){
+  
+  # Pegar dados a partir do url e transformar em um dataframe
+  url_base <-
+    paste0("http://telemetriaws1.ana.gov.br/ServiceANA.asmx/",
+           "HidroSerieHistorica?",
+           "codEstacao=", cod_estacao,
+           "&dataInicio=", data_inicio,
+           "&dataFim=", data_fim,
+           "&tipoDados=", tipo_dados,
+           "&nivelConsistencia=", nivel_consist)
+  
+  url_parse <- XML::xmlParse(url_base, encoding = "UTF-8")
+  node_doc <- XML::getNodeSet(url_parse, "//SerieHistorica")
+  dados_estacao <- XML::xmlToDataFrame(nodes = node_doc)
+  
+  # Por algum motivo o hidroweb não está filtrando os dados pela consistencia
+  dados_estacao <- filter(dados_estacao, NivelConsistencia == nivel_consist)
+  
+  # Separar data e hora
+  dados_estacao$Data <- as.Date(substr(dados_estacao$DataHora, 1, 10))
+  dados_estacao$Hora <- substr(dados_estacao$DataHora, 12, 19)
+  
+  # Fazer um dataframe só com datas e valores de vazão
+  datas_dia <- seq.Date(from = min(dados_estacao$Data),
+                        to = max(dados_estacao$Data) %m+% months(1) - 1,
+                        by = "day")
+  
+  tabela_final <- data.frame(Cod_estacao = dados_estacao$EstacaoCodigo[1],
+                             Data = as.character(datas_dia),
+                             Vazao = as.numeric(NA))
+  
+  
+  for(i in 1:nrow(tabela_final)){
+    # Dia em análise
+    dia <- as.numeric(substr(tabela_final$Data[i], 9, 10))
+    
+    # Mês e ano em análise
+    mes_ano <- as.Date(paste0(substr(tabela_final$Data[i], 1, 8), "01"))
+    
+    # Olhar a linha do mes e ano e escolher a coluna pelo dia + 15
+    linha_dado <- which(dados_estacao$Data == mes_ano)
+    
+    # Se não tiver o mês nos dados da estação, colocar valor NA
+    ifelse(length(linha_dado) == 0,
+           tabela_final$Vazao[i] <- NA,
+           tabela_final$Vazao[i] <-
+             as.numeric(dados_estacao[linha_dado, (dia + 15)]))
+    
+  }
+  
+  return(tabela_final)
+}
 
-```{r tidy_data,echo=FALSE}
-#meta_data <- read.delim("dados/qx1d_RH SFR.dat",sep=";",header=FALSE,na.strings = "null",nrows=5)
-#metadata_var <- meta_data[,1]
-#i = seq(2,284,2)
-#meta_data_station <- as_tibble(meta_data[,i])
-#meta_data_station %>%
-#  add_row(c(seq(1,142)))
+
+
 ```
 
+Chamamos novamente essa função (agora atualizada) para rodar a estação da FAL. Em seguida printamos no R apenas as primeiras 6 linhas desse dataframe.
 
-```{r obtencao_dados,echo=TRUE}
-#data <- read.delim("dados/qx1d_RH SFR.dat",sep=";",header=FALSE,na.strings = "null",skip=12)
-#as.Date(df$Date, format =  "%m/%d/%Y %H:%M:%S")
-#year <- as.Date(data[-1,1], format="%Y")
-#year <- as.numeric(data[-1,1])
-#Q <- as.numeric(data[-1,2])
-#df <- data.frame(year, Q)
-
-# find NA's and remove from dataframe
-#flows <- na.omit(df) 
-#tibble(flows)
+```{r dados_FAL_2}
+dados_60435000 <- dados_serie_ANA(cod_estacao = 60435000)
+head(dados_60435000)
 ```
 
-É sempre importante visualizar a série de máximos anuais. Para isso, utilizamos 
+Depois de obter a séries de vazões diárias da estação desejada, precisamos agora construir a série de máximos anuais com base no ano hidrológico da estação. Para isso, utilizaremos a função aprsentada abaixo,
 
-```{r plot_serie}
-#library(ggplot2)
-# ggplot(flows,aes(x=year, y=Q)) +
-#    geom_point() +
-#    geom_line()
- 
-
-#lines(pressure$temperature, pressure$pressure/2, col = "red")
+```{r}
+# Contrução da série de máximos anuais a partir de um ano hidrológico ####
+fun_max_ano <- function(tabela = NA,
+                        comeco_ano_hidro = 8){
+  
+  # Transformar a coluna Data em "Dates" (caso esteja em character)
+  tabela$Data <- as.Date(tabela$Data)
+  
+  # Definir se o mês em questão entra no ano atual ou no próximo ano
+  desloc_ano <- ifelse(month(tabela$Data) < comeco_ano_hidro, 0, 1)
+  
+  # Ano Hidro
+  tabela$ano_hidro <- year(tabela$Data) + desloc_ano
+  
+  # Fazer uma tabela final apenas com os máximos anuais
+  max_anuais <-
+    tabela %>%
+    group_by(Cod_estacao, ano_hidro) %>%
+    summarise(maxima = max(Vazao))
+}
 
 ```
+
+Basta chamar a função fornecendo o arquivo que contém as séries diárias de vazão.
+
+```{r}
+# Teste da função
+serie_600435000 <- fun_max_ano(dados_60435000)
+
+```
+
 
 ### Construção de curva de frequência amostral
 
