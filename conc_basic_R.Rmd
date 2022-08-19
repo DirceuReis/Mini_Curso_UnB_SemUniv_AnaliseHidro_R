@@ -68,16 +68,17 @@ O layout é ajustável em `view -> Panes -> Pane Layout`
 Antes de tudo, é importante saber onde se está trabalhando!
 
 ```{r, echo = TRUE}
-getwd();setwd("C:/cursoR")
-dir()
-source("soma.R")
+#getwd();setwd("C:/cursoR")
+#dir()
+#source("soma.R")
 ```
 
 ## Comandos no R
 
 R é utilizável como uma calculadora
+
 ```{r, echo = TRUE}
-setwd("C:/cursoR/Basico")
+#setwd("C:/cursoR/Basico")
 1 + 2
 ```
 
@@ -100,6 +101,7 @@ setwd("C:/cursoR/Basico")
 ## Comandos no R
 
 O R trabalha igualmente com vetores e escalares
+
 ```{r, echo = TRUE}
 c(1,3,5,7,9) + c(2,4,6,8,10)
 ```
