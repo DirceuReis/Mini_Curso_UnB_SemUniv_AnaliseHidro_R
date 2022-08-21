@@ -2229,15 +2229,18 @@ Argentina.
 <h2 id="seleção-das-vazões-máximas-anuais">Seleção das vazões máximas
 anuais</h2>
 <p>O primeiro passo de nossa atividade consiste em obter a série de
-máximos anuais que desejamos analisar. Para isso, utilizaremos a mesma
-função de obtenção de séries diárias de vazão que aprendemos na segunda
-aula desta curso. Com a série diária em mãos, identificaremos a série de
-máximos de cada ano hidrológico.</p>
-<p>Vamos focar, num primeiro momento, na estação
-<strong>60435000</strong>, localizada na bacia do Rio Descoberto, que
-drena uma área de <span class="math inline">\(113.2\)</span> km^2.</p>
+máximos anuais que desejamos analisar. A obtenção da série de máximos
+anuais será realizada em duas etapas. Primeiro vamos obter a séries de
+vazões diárias, e para isso utilizaremos a mesma função de obtenção de
+séries diárias de vazão que aprendemos na segunda aula deste curso. Com
+a série de vazões diárias em mãos, passaremos para a segunda etapa, que
+é a de extrair a vazão máxima de cada ano hidrológico.</p>
 <p>A função abaixo permite obter a série de vazões diárias de uma
-estação fluviométrica na forma de um dataframe.</p>
+estação fluviométrica. O único argumento desta função é o código da
+estação. Quando chamamos esta função, ela retorna um dataframe com 3
+colunas: o código da estação, a data, e o valor da vazão diária.</p>
+<p>Como já estudamos esta função anteriormente, a uitlizaremos aqui sem
+entrar em qualqer detalhes sobre seu funcionamento.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Função para obter série histórica de vazão de uma determinada estação ####</span></span>
@@ -2300,11 +2303,19 @@ estação fluviométrica na forma de um dataframe.</p>
 <span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
-<p>Chamamos a função função acima passando o código do posto desejado. A
-função devolve um dataframe com a série de máximos anuais. Para fins de
-visualização, utilizamos a função <code>head(dataframe name)</code> do
-R, como mostrado abaixo, que nos mostra as primeiras 6 linhas do
-dataframe.</p>
+<p>Precisamos escolher uma estação fluviométrica para realizar nossa
+análise. SUgiro utilizar a estação <strong>60435000</strong>, localizada
+na bacia do Rio Descoberto, que drena uma área de <span
+class="math inline">\(113.2 km^2\)</span>, mas vocês têm a indepedência
+de escolhar qualquer outras estação que esteja no banco de dados da
+Agência Nacional de Águas.</p>
+<p>Para obter a série diária da estação escolhida, basta chamar a função
+acima passando o argumento necessário, que é simplesmente o código da
+estação desejada. A função devolve um dataframe com a série de máximos
+anuais.</p>
+<p>Para fins de visualização, utilizamos a função
+<code>head(nome_do_dataframe)</code> do R, como mostrado abaixo, que nos
+mostra as primeiras 6 linhas do dataframe.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_60435000</span> <span class='op'>&lt;-</span> <span class='fu'>dados_serie_ANA</span><span class='op'>(</span>cod_estacao <span class='op'>=</span> <span class='fl'>60435000</span><span class='op'>)</span></span>
@@ -2318,12 +2329,21 @@ dataframe.</p>
 5    60435000 1978-05-05    NA
 6    60435000 1978-05-06    NA</code></pre>
 </div>
-<p>Pode-se notar que nos seis primieros dias dos dados, que se inicia em
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-3-1.png" width="624" /></p>
+</div>
+<p>Pode-se notar que nos seis primeiros dias dos dados, que se inicia em
 maio de 1978, não temos valores registrados de vazão.</p>
-<p>Depois de obter a séries de vazões diárias da estação desejada,
-precisamos agora construir a série de máximos anuais com base no ano
-hidrológico da estação. Para isso, utilizaremos a função aprsentada
-abaixo,</p>
+<p>Com a série de vazões diárias, passamos ao segundo passo que é o de
+construir a série de máximos anuais com base no ano hidrológico. Para
+isso, utilizaremos uma outra função, que é apresentada abaixo. Veja que
+a função internamente considera o ano hidrológico com início no mês de
+agosto. O mês de início do ano hidrológico pode ser facilmente alterado,
+se for o desejo do analista. Uma outra solução seria reesecrever a
+função incluindo como argumento o mês de início do ano hidrológico.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Contrução da série de máximos anuais a partir de um ano hidrológico ####</span></span>
@@ -2347,16 +2367,102 @@ abaixo,</p>
 <span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
-<p>Basta chamar a função fornecendo o arquivo que contém as séries
-diárias de vazão.</p>
+<p>Para finalmente obtermos a série de máximos anuais, basta chamar a
+função fornecendo o arquivo que contém as séries diárias de vazão, que
+no nosso caso é o <code>dados_60435000</code>. Mais uma vez, podemos
+utilizar a função <code>head</code> para dar uma leve espiada nas
+informoações contidas no dataframe.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Teste da função</span></span>
-<span><span class='va'>serie_600435000</span> <span class='op'>&lt;-</span> <span class='fu'>fun_max_ano</span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>Q_max</span> <span class='op'>&lt;-</span> <span class='fu'>fun_max_ano</span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>)</span></span></code></pre>
 </div>
+<pre><code># A tibble: 6 × 3
+# Groups:   Cod_estacao [1]
+  Cod_estacao ano_hidro maxima
+  &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt;
+1 60435000         1978   NA  
+2 60435000         1979   16.1
+3 60435000         1980   28.9
+4 60435000         1981   11.1
+5 60435000         1982   12.8
+6 60435000         1983   25.3</code></pre>
 </div>
+<p>A função <code>fun_max_ano</code> foi escrita de forma que qualquer
+falha na série de vazões diárias num dado ano hidrológico resulta numa
+falha na série de máximos anuais. Isso nem semrpe é necessário, já que
+falhas no período de estiagem não indicam falhas nas séries de máximos,
+mas creio que a função nos serve bem para este curso.</p>
+<p>Podemos notar a presença de um <code>NA</code> na nossa plotagem
+acima. É interessante verificar o número total de anos disponíveis com
+dados diários de vazão, bem como o número de anos com falaha na série de
+máximos anuais.</p>
+<p>O número de anos com dados de vazões diárias pode ser obtidos
+simplemente identificando o número de linhas no dataframe
+<code>Q_max</code>, e para isso utilizamos o código abaixo,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>n_anos</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>)</span></span>
+<span><span class='va'>n_anos</span></span></code></pre>
+</div>
+<pre><code>[1] 45</code></pre>
+</div>
+<p>Mas já sabemos que o ano de 1978 não contém o valor de vazão máxima
+porque a série de vazões diárias não estava complete. Será que há outros
+anos no histórico com esse problema. Para identificar se há falha em
+outros anos, utilizaremos duas funções do R de forma conjunta,
+<code>is.na</code> e <code>which</code>. A função <code>is.na</code>
+identifica se o elemento é um <code>NA</code> ou não, retornando um
+valor lógico, <code>TRUE</code> ou <code>FALSE</code>, enquanto a função
+<code>which</code> permite identificar a posição de uma dada condição. O
+código abaixo permite identificar em quais anos ocorrem falhas na série
+de máximos anuais,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>index</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>[</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>==</span><span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='va'>anos_falha</span> <span class='op'>&lt;-</span> <span class='va'>Q_max</span><span class='op'>[</span><span class='va'>index</span>,<span class='fl'>2</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span></span>
+<span><span class='va'>anos_falha</span></span></code></pre>
+</div>
+<pre><code># A tibble: 3 × 2
+  ano_hidro maxima
+      &lt;dbl&gt;  &lt;dbl&gt;
+1      1978     NA
+2      2009     NA
+3      2020     NA</code></pre>
+</div>
+<p>A primeira linha de código identifica as posições em que há a
+presença de <code>NA</code> na terceira coluna do dataframe, que é a
+coluna com as informações sobre as vazões máximas de cada ano
+hidrológico, e associa à variável <code>index</code>. Na linha seguinte,
+criamos um novo dataframe com a informação dos anos em que temos falhas
+nos dados.</p>
+<p>É verdade que poderíamos ter escrito o código acima de uma forma mais
+compacta, porém ficaria mais difícil de entender. Veja o que vocÊ
+acha?</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>anos_falha</span> <span class='op'>&lt;-</span> <span class='va'>Q_max</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>[</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>==</span><span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>,<span class='fl'>2</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span></span>
+<span><span class='va'>anos_falha</span></span></code></pre>
+</div>
+<pre><code># A tibble: 3 × 2
+  ano_hidro maxima
+      &lt;dbl&gt;  &lt;dbl&gt;
+1      1978     NA
+2      2009     NA
+3      2020     NA</code></pre>
+</div>
+<p>Mais à frente, quando tivermos que fazer os cálculos necessários para
+realizar a naálise de frequência, teremos que nos livrar desses anos com
+falhas. Mas por enquanto vamos deixá-los ocmo estão, e passemos a etapa
+seguinte que é a de visualizar a série de máximos anuais.</p>
 <h2 id="visualização-dos-dados-observados">Visualização dos dados
 observados</h2>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>$</span><span class='va'>ano_hidro</span>,<span class='va'>Q_max</span><span class='op'>$</span><span class='va'>maxima</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-9-1.png" width="624" /></p>
+</div>
 <h3 id="escolha-da-estação-fluviométrica">Escolha da estação
 fluviométrica</h3>
 <h3 id="construção-de-curva-de-frequência-amostral">Construção de curva
@@ -2626,7 +2732,7 @@ teórica de probabilidades</li>
 Lognormal</li>
 <li>Curva de frequência com intervalos de confiança</li>
 </ul>
-<div class="sourceCode" id="cb2"><pre
+<div class="sourceCode" id="cb6"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

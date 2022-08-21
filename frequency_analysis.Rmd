@@ -27,9 +27,11 @@ knitr::include_graphics("images/curva_freq_salado.png")
 
 ## Seleção das vazões máximas anuais
 
-O primeiro passo de nossa atividade consiste em obter a série de máximos anuais que desejamos analisar. A obtenção da série de máximos anuais será realizada em duas etapas. Primeiro vamos obter a séries de vazões diárias, e para isso utilizaremos a mesma função de obtenção de séries diárias de vazão que aprendemos na segunda aula desta curso. Com a série diária em mãos, passaremos para a segunda etapa,, que é a de extrair a vazão máxima de cada ano hidrológico.
+O primeiro passo de nossa atividade consiste em obter a série de máximos anuais que desejamos analisar. A obtenção da série de máximos anuais será realizada em duas etapas. Primeiro vamos obter a séries de vazões diárias, e para isso utilizaremos a mesma função de obtenção de séries diárias de vazão que aprendemos na segunda aula deste curso. Com a série de vazões diárias em mãos, passaremos para a segunda etapa, que é a de extrair a vazão máxima de cada ano hidrológico.
 
-A função abaixo permite obter a série de vazões diárias de uma estação fluviométrica. A função devolve as informações num dataframe com 3 colunas: o código da estação, a data, e o valor da vazão diária. 
+A função abaixo permite obter a série de vazões diárias de uma estação fluviométrica. O único argumento desta função é o código da estação. Quando chamamos esta função, ela retorna um dataframe com 3 colunas: o código da estação, a data, e o valor da vazão diária. 
+
+Como já estudamos esta função anteriormente, a uitlizaremos aqui sem entrar em qualqer detalhes sobre seu funcionamento.
 
 ```{r dados_hidro_ANA_2}
 # Função para obter série histórica de vazão de uma determinada estação ####
@@ -92,14 +94,21 @@ dados_serie_ANA <- function(cod_estacao = NA,
 }
 ```
 
-Vamos focar nossa análise de frequência na estação **60435000**, localizada na bacia do Rio Descoberto, que drena uma área de $113.2$ km^2.
+Precisamos escolher uma estação fluviométrica para realizar nossa análise. SUgiro utilizar a estação  **60435000**, localizada na bacia do Rio Descoberto, que drena uma área de $113.2 km^2$, mas vocês têm a indepedência de escolhar qualquer outras estação que esteja no banco de dados da Agência Nacional de Águas.
 
-Para obter a série diária, basta chamar a função acima passando o argumento necessário, que é simplesmente o código da estação desejada. A função devolve um dataframe com a série de máximos anuais. Para fins de visualização, utilizamos a função `head(nome_do_dataframe)` do R, como mostrado abaixo, que nos mostra as primeiras 6 linhas do dataframe.
+Para obter a série diária da estação escolhida, basta chamar a função acima passando o argumento necessário, que é simplesmente o código da estação desejada. A função devolve um dataframe com a série de máximos anuais. 
+
+Para fins de visualização, utilizamos a função `head(nome_do_dataframe)` do R, como mostrado abaixo, que nos mostra as primeiras 6 linhas do dataframe.
 
 ```{r dados_FAL_2}
 dados_60435000 <- dados_serie_ANA(cod_estacao = 60435000)
 head(dados_60435000)
 ```
+
+```{r}
+plot(dados_60435000$Vazao)
+```
+
 
 Pode-se notar que nos seis primeiros dias dos dados, que se inicia em maio de 1978, não temos valores registrados de vazão. 
 
@@ -128,16 +137,50 @@ fun_max_ano <- function(tabela = NA,
 
 ```
 
-Para finalmente obtermos a série de máximos anuais, basta chamar a função fornecendo o arquivo que contém as séries diárias de vazão.
+Para finalmente obtermos a série de máximos anuais, basta chamar a função fornecendo o arquivo que contém as séries diárias de vazão, que no nosso caso é o `dados_60435000`. Mais uma vez, podemos utilizar a função `head` para dar uma leve espiada nas informoações contidas no dataframe.
+
+```{r , message=FALSE}
+Q_max <- fun_max_ano(dados_60435000)
+head(Q_max)
+```
+
+A função `fun_max_ano` foi escrita de forma que qualquer falha na série de vazões diárias num dado ano hidrológico resulta numa falha na série de máximos anuais. Isso nem semrpe é necessário, já que falhas no período de estiagem não indicam falhas nas séries de máximos, mas creio que a função nos serve bem para este curso. 
+
+Podemos notar a presença de um `NA` na nossa plotagem acima. É interessante verificar o número total de anos disponíveis com dados diários de vazão, bem como o número de anos com falaha na série de máximos anuais. 
+
+O número de anos com dados de vazões diárias pode ser obtidos simplemente identificando o número de linhas no dataframe `Q_max`, e para isso utilizamos o código abaixo,
 
 ```{r}
-# Teste da função
-Q_max <- fun_max_ano(dados_60435000)
+n_anos <- nrow(Q_max)
+n_anos
+```
+Mas já sabemos que o ano de 1978 não contém o valor de vazão máxima porque a série de vazões diárias não estava complete. Será que há outros anos no histórico com esse problema. Para identificar se há falha em outros anos, utilizaremos duas funções do R de forma conjunta, `is.na` e `which`. A função `is.na` identifica se o elemento é um `NA` ou não, retornando um valor lógico, `TRUE` ou `FALSE`, enquanto a função `which` permite identificar a posição de uma dada condição. O código abaixo permite identificar em quais anos ocorrem falhas na série de máximos anuais,
 
+```{r}
+index <- which(is.na(Q_max[,3]==TRUE))
+anos_falha <- Q_max[index,2:3]
+anos_falha
+```
+A primeira linha de código identifica as posições em que há a presença de `NA` na terceira coluna do dataframe, que é a coluna com as informações sobre as vazões máximas de cada ano hidrológico, e associa à variável `index`. Na linha seguinte, criamos um novo dataframe com a informação dos anos em que temos falhas nos dados.
+
+É verdade que poderíamos ter escrito o código acima de uma forma mais compacta, porém ficaria mais difícil de entender. Veja o que vocÊ acha? 
+
+```{r}
+anos_falha <- Q_max[which(is.na(Q_max[,3]==TRUE)),2:3]
+anos_falha
 ```
 
 
+Mais à frente, quando tivermos que fazer os cálculos necessários para realizar a naálise de frequência, teremos que nos livrar desses anos com falhas. Mas por enquanto vamos deixá-los ocmo estão, e passemos a etapa seguinte que é a de visualizar a série de máximos anuais.
+
 ## Visualização dos dados observados
+
+```{r}
+plot(Q_max$ano_hidro,Q_max$maxima)
+```
+
+
+
 
 ### Escolha da estação fluviométrica
 
