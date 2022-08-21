@@ -15,9 +15,9 @@ library(lubridate)
 
 O objetivo desta atividade é realizar uma análise de frequência de cheias a nível local. Isso significa que iremos relacionar a magnitude das vazões máximas anuais com a probabilidade da mesma ser excedida.  A análise a nível local siginifca que utilizaremos apenas as informações de vazão observadas na estação fluviométrica de interesse, sem fazer uso de informações sobre as vazões máximas anuais que teham acontecido em outras estações fluviométricas localizadas na região. 
 
-Além de construirmos a relação entre a magnitude das vazões máximas anuais e a respectiva probabilidade de excedência, é importante saber estimar também o grau de incerteza nessas estimativas. Essas incertezas são usualmente reprsentadas por intervalos de confiança, como veremos mais adianate. 
+Além de construirmos a relação entre a magnitude das vazões máximas anuais e a respectiva probabilidade de excedência, é importante saber estimar também o grau de incerteza nessas estimativas. Essas incertezas são usualmente representadas por intervalos de confiança, como veremos mais adianate. 
 
-Além de calcular essas quantidades, normalmente a curva de frequência, e suas respectivas incertezas, são representadas graficamente, como na figura abaixo, que mostra os resultados para um estudo de cheias numa seção do Rio Salado, localizada na província de Santa Fé, na Argentina, onde em 2003 ocorreu o rompimento de um dique que resultou em mortes e elevados prejuízos.  
+Além de calcular essas quantidades, a curva de frequência, e suas respectivas incertezas, são representadas graficamente, como na figura abaixo, que mostra os resultados para um estudo de cheias numa seção do Rio Salado, localizada na província de Santa Fé, na Argentina, onde em 2003 ocorreu o rompimento de um dique que resultou em perde de vidas humanas e elevados prejuízos.  
 
 Contruiremos aqui no curso uma figura semelhante a esta, onde no eixo-x temos o tempo de recorrência e no eixo-y a magnitude das vazões máximas anuais. O tempo de recorrência apresentado no eixo-x é uma maneira de representar a probabilidade de excedência. A linha cheia em vermelho representa o valor esperado dos valores da vazão máxima anual em função do tempo de recorrência, enquanto as linhas tracejadas representam os intervalos de confiança de 95%, ilustrando as incertezas envolvidas nessas estimativas. Os círculos azuis escuros representam as vazões máximas anuais registradas no passado, enquanto o círculo azul claro mostra a cheia destruidora de 2003. 
 
@@ -25,33 +25,11 @@ Contruiremos aqui no curso uma figura semelhante a esta, onde no eixo-x temos o 
 knitr::include_graphics("images/curva_freq_salado.png")
 ```
 
-## Passos a serem executados
+## Seleção das vazões máximas anuais
 
-- Visualizar os dados
-   - Escolha da estação fluviométrica
-   - Obtenção da série de máximos anuais
-   - Cálculo das posições de plotagem 
-   - Construção de figura utilizando valores amostrais apenas
-- Inferência   
-   - Cálculo dos momentos-L para fins de verificação da distribuição teórica de probabilidades
-   - Plotagem do diagrama de momentos-L das distribuições teóricas
-   - Ajuste dos parâmetros da distribuição teórica de probabilidades
-      - Lognormal
-      - Generalizada de valores extremos
-   - Cálculo dos quantis de cheia  
-- Curva de frequência sem incertezas
-- Estimativa dos intervalos de confiança para a distribuição Lognormal
-- Curva de frequência com intervalos de confiança 
+O primeiro passo de nossa atividade consiste em obter a série de máximos anuais que desejamos analisar. A obtenção da série de máximos anuais será realizada em duas etapas. Primeiro vamos obter a séries de vazões diárias, e para isso utilizaremos a mesma função de obtenção de séries diárias de vazão que aprendemos na segunda aula desta curso. Com a série diária em mãos, passaremos para a segunda etapa,, que é a de extrair a vazão máxima de cada ano hidrológico.
 
-## Visualização dos dados observados
-
-### Escolha da estação fluviométrica
-
-
-
-### Seleção das vazões máximas anuais
-
-Nós utilizaremos aqui a mesma função que utilizamos na segunda aula do curso para obter os dados de vazão. No nosso caso, vamos focar num primeiro momento na estação "60435000", localizada na bacia do Rio Descoberto, que drena uma área de $113.2$ km^2.
+A função abaixo permite obter a série de vazões diárias de uma estação fluviométrica. A função devolve as informações num dataframe com 3 colunas: o código da estação, a data, e o valor da vazão diária. 
 
 ```{r dados_hidro_ANA_2}
 # Função para obter série histórica de vazão de uma determinada estação ####
@@ -112,19 +90,20 @@ dados_serie_ANA <- function(cod_estacao = NA,
   
   return(tabela_final)
 }
-
-
-
 ```
 
-Chamamos novamente essa função (agora atualizada) para rodar a estação da FAL. Em seguida printamos no R apenas as primeiras 6 linhas desse dataframe.
+Vamos focar nossa análise de frequência na estação **60435000**, localizada na bacia do Rio Descoberto, que drena uma área de $113.2$ km^2.
+
+Para obter a série diária, basta chamar a função acima passando o argumento necessário, que é simplesmente o código da estação desejada. A função devolve um dataframe com a série de máximos anuais. Para fins de visualização, utilizamos a função `head(nome_do_dataframe)` do R, como mostrado abaixo, que nos mostra as primeiras 6 linhas do dataframe.
 
 ```{r dados_FAL_2}
 dados_60435000 <- dados_serie_ANA(cod_estacao = 60435000)
 head(dados_60435000)
 ```
 
-Depois de obter a séries de vazões diárias da estação desejada, precisamos agora construir a série de máximos anuais com base no ano hidrológico da estação. Para isso, utilizaremos a função aprsentada abaixo,
+Pode-se notar que nos seis primeiros dias dos dados, que se inicia em maio de 1978, não temos valores registrados de vazão. 
+
+Com a série de vazões diárias, passamos ao segundo passo que é o de construir a série de máximos anuais com base no ano hidrológico. Para isso, utilizaremos uma outra função, que é apresentada abaixo. Veja que a função internamente considera o ano hidrológico com início no mês de agosto. O mês de início do ano hidrológico pode ser facilmente alterado, se for o desejo do analista. Uma outra solução seria reesecrever a função incluindo como argumento o mês de início do ano hidrológico.
 
 ```{r}
 # Contrução da série de máximos anuais a partir de um ano hidrológico ####
@@ -149,13 +128,22 @@ fun_max_ano <- function(tabela = NA,
 
 ```
 
-Basta chamar a função fornecendo o arquivo que contém as séries diárias de vazão.
+Para finalmente obtermos a série de máximos anuais, basta chamar a função fornecendo o arquivo que contém as séries diárias de vazão.
 
 ```{r}
 # Teste da função
-serie_600435000 <- fun_max_ano(dados_60435000)
+Q_max <- fun_max_ano(dados_60435000)
 
 ```
+
+
+## Visualização dos dados observados
+
+### Escolha da estação fluviométrica
+
+
+
+
 
 
 ### Construção de curva de frequência amostral
@@ -269,3 +257,22 @@ O uso de uma distribuição teórica de probabilidades se justifica por três mo
 #### Estimativa dos quantis de cheia
 
 #### Descrição das incertezas
+
+
+## Passos a serem executados
+
+- Visualizar os dados
+   - Escolha da estação fluviométrica
+   - Obtenção da série de máximos anuais
+   - Cálculo das posições de plotagem 
+   - Construção de figura utilizando valores amostrais apenas
+- Inferência   
+   - Cálculo dos momentos-L para fins de verificação da distribuição teórica de probabilidades
+   - Plotagem do diagrama de momentos-L das distribuições teóricas
+   - Ajuste dos parâmetros da distribuição teórica de probabilidades
+      - Lognormal
+      - Generalizada de valores extremos
+   - Cálculo dos quantis de cheia  
+- Curva de frequência sem incertezas
+- Estimativa dos intervalos de confiança para a distribuição Lognormal
+- Curva de frequência com intervalos de confiança 

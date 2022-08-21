@@ -2141,8 +2141,9 @@ Aulas
 <ul>
 <li><a href="#objetivos-da-atividade"
 id="toc-objetivos-da-atividade">Objetivos da atividade</a></li>
-<li><a href="#passos-a-serem-executados"
-id="toc-passos-a-serem-executados">Passos a serem executados</a></li>
+<li><a href="#seleção-das-vazões-máximas-anuais"
+id="toc-seleção-das-vazões-máximas-anuais">Seleção das vazões máximas
+anuais</a></li>
 <li><a href="#visualização-dos-dados-observados"
 id="toc-visualização-dos-dados-observados">Visualização dos dados
 observados</a>
@@ -2150,9 +2151,6 @@ observados</a>
 <li><a href="#escolha-da-estação-fluviométrica"
 id="toc-escolha-da-estação-fluviométrica">Escolha da estação
 fluviométrica</a></li>
-<li><a href="#seleção-das-vazões-máximas-anuais"
-id="toc-seleção-das-vazões-máximas-anuais">Seleção das vazões máximas
-anuais</a></li>
 <li><a href="#construção-de-curva-de-frequência-amostral"
 id="toc-construção-de-curva-de-frequência-amostral">Construção de curva
 de frequência amostral</a></li>
@@ -2185,6 +2183,8 @@ técnicos</a>
 id="toc-distribuição-de-probabilidades">Distribuição de
 probabilidades</a></li>
 </ul></li>
+<li><a href="#passos-a-serem-executados"
+id="toc-passos-a-serem-executados">Passos a serem executados</a></li>
 </ul>
 </nav>
 </div>
@@ -2199,14 +2199,14 @@ outras estações fluviométricas localizadas na região.</p>
 <p>Além de construirmos a relação entre a magnitude das vazões máximas
 anuais e a respectiva probabilidade de excedência, é importante saber
 estimar também o grau de incerteza nessas estimativas. Essas incertezas
-são usualmente reprsentadas por intervalos de confiança, como veremos
+são usualmente representadas por intervalos de confiança, como veremos
 mais adianate.</p>
-<p>Além de calcular essas quantidades, normalmente a curva de
-frequência, e suas respectivas incertezas, são representadas
-graficamente, como na figura abaixo, que mostra os resultados para um
-estudo de cheias numa seção do Rio Salado, localizada na província de
-Santa Fé, na Argentina, onde em 2003 ocorreu o rompimento de um dique
-que resultou em mortes e elevados prejuízos.</p>
+<p>Além de calcular essas quantidades, a curva de frequência, e suas
+respectivas incertezas, são representadas graficamente, como na figura
+abaixo, que mostra os resultados para um estudo de cheias numa seção do
+Rio Salado, localizada na província de Santa Fé, na Argentina, onde em
+2003 ocorreu o rompimento de um dique que resultou em perde de vidas
+humanas e elevados prejuízos.</p>
 <p>Contruiremos aqui no curso uma figura semelhante a esta, onde no
 eixo-x temos o tempo de recorrência e no eixo-y a magnitude das vazões
 máximas anuais. O tempo de recorrência apresentado no eixo-x é uma
@@ -2226,44 +2226,18 @@ Argentina.
 </p>
 </div>
 </div>
-<h2 id="passos-a-serem-executados">Passos a serem executados</h2>
-<ul>
-<li>Visualizar os dados
-<ul>
-<li>Escolha da estação fluviométrica</li>
-<li>Obtenção da série de máximos anuais</li>
-<li>Cálculo das posições de plotagem</li>
-<li>Construção de figura utilizando valores amostrais apenas</li>
-</ul></li>
-<li>Inferência
-<ul>
-<li>Cálculo dos momentos-L para fins de verificação da distribuição
-teórica de probabilidades</li>
-<li>Plotagem do diagrama de momentos-L das distribuições teóricas</li>
-<li>Ajuste dos parâmetros da distribuição teórica de probabilidades
-<ul>
-<li>Lognormal</li>
-<li>Generalizada de valores extremos</li>
-</ul></li>
-<li>Cálculo dos quantis de cheia<br />
-</li>
-</ul></li>
-<li>Curva de frequência sem incertezas</li>
-<li>Estimativa dos intervalos de confiança para a distribuição
-Lognormal</li>
-<li>Curva de frequência com intervalos de confiança</li>
-</ul>
-<h2 id="visualização-dos-dados-observados">Visualização dos dados
-observados</h2>
-<h3 id="escolha-da-estação-fluviométrica">Escolha da estação
-fluviométrica</h3>
-<h3 id="seleção-das-vazões-máximas-anuais">Seleção das vazões máximas
-anuais</h3>
-<p>Nós utilizaremos aqui a mesma função que utilizamos na segunda aula
-do curso para obter os dados de vazão. No nosso caso, vamos focar num
-primeiro momento na estação “60435000”, localizada na bacia do Rio
-Descoberto, que drena uma área de <span
-class="math inline">\(113.2\)</span> km^2.</p>
+<h2 id="seleção-das-vazões-máximas-anuais">Seleção das vazões máximas
+anuais</h2>
+<p>O primeiro passo de nossa atividade consiste em obter a série de
+máximos anuais que desejamos analisar. Para isso, utilizaremos a mesma
+função de obtenção de séries diárias de vazão que aprendemos na segunda
+aula desta curso. Com a série diária em mãos, identificaremos a série de
+máximos de cada ano hidrológico.</p>
+<p>Vamos focar, num primeiro momento, na estação
+<strong>60435000</strong>, localizada na bacia do Rio Descoberto, que
+drena uma área de <span class="math inline">\(113.2\)</span> km^2.</p>
+<p>A função abaixo permite obter a série de vazões diárias de uma
+estação fluviométrica na forma de um dataframe.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Função para obter série histórica de vazão de uma determinada estação ####</span></span>
@@ -2326,9 +2300,11 @@ class="math inline">\(113.2\)</span> km^2.</p>
 <span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
-<p>Chamamos novamente essa função (agora atualizada) para rodar a
-estação da FAL. Em seguida printamos no R apenas as primeiras 6 linhas
-desse dataframe.</p>
+<p>Chamamos a função função acima passando o código do posto desejado. A
+função devolve um dataframe com a série de máximos anuais. Para fins de
+visualização, utilizamos a função <code>head(dataframe name)</code> do
+R, como mostrado abaixo, que nos mostra as primeiras 6 linhas do
+dataframe.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_60435000</span> <span class='op'>&lt;-</span> <span class='fu'>dados_serie_ANA</span><span class='op'>(</span>cod_estacao <span class='op'>=</span> <span class='fl'>60435000</span><span class='op'>)</span></span>
@@ -2342,6 +2318,8 @@ desse dataframe.</p>
 5    60435000 1978-05-05    NA
 6    60435000 1978-05-06    NA</code></pre>
 </div>
+<p>Pode-se notar que nos seis primieros dias dos dados, que se inicia em
+maio de 1978, não temos valores registrados de vazão.</p>
 <p>Depois de obter a séries de vazões diárias da estação desejada,
 precisamos agora construir a série de máximos anuais com base no ano
 hidrológico da estação. Para isso, utilizaremos a função aprsentada
@@ -2377,6 +2355,10 @@ diárias de vazão.</p>
 <span><span class='va'>serie_600435000</span> <span class='op'>&lt;-</span> <span class='fu'>fun_max_ano</span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
+<h2 id="visualização-dos-dados-observados">Visualização dos dados
+observados</h2>
+<h3 id="escolha-da-estação-fluviométrica">Escolha da estação
+fluviométrica</h3>
 <h3 id="construção-de-curva-de-frequência-amostral">Construção de curva
 de frequência amostral</h3>
 <p>Para que possamos plotar os círculos azuis escuros da Figura
@@ -2617,6 +2599,33 @@ distribuição</h4>
 <h4 id="estimativa-dos-quantis-de-cheia">Estimativa dos quantis de
 cheia</h4>
 <h4 id="descrição-das-incertezas">Descrição das incertezas</h4>
+<h2 id="passos-a-serem-executados">Passos a serem executados</h2>
+<ul>
+<li>Visualizar os dados
+<ul>
+<li>Escolha da estação fluviométrica</li>
+<li>Obtenção da série de máximos anuais</li>
+<li>Cálculo das posições de plotagem</li>
+<li>Construção de figura utilizando valores amostrais apenas</li>
+</ul></li>
+<li>Inferência
+<ul>
+<li>Cálculo dos momentos-L para fins de verificação da distribuição
+teórica de probabilidades</li>
+<li>Plotagem do diagrama de momentos-L das distribuições teóricas</li>
+<li>Ajuste dos parâmetros da distribuição teórica de probabilidades
+<ul>
+<li>Lognormal</li>
+<li>Generalizada de valores extremos</li>
+</ul></li>
+<li>Cálculo dos quantis de cheia<br />
+</li>
+</ul></li>
+<li>Curva de frequência sem incertezas</li>
+<li>Estimativa dos intervalos de confiança para a distribuição
+Lognormal</li>
+<li>Curva de frequência com intervalos de confiança</li>
+</ul>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
