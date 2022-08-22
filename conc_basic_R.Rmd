@@ -29,7 +29,7 @@ library(knitr)
 
 ## Instalação do programa
 
-```{r, echo=FALSE}
+```{r, echo = FALSE}
 # Define variable containing url
 urlR <- "https://www.r-project.org/logo/Rlogo.png"
 urlRstudio <- "https://rstudio.com/wp-content/uploads/2018/10/RStudio-Logo-Flat.png"
@@ -103,28 +103,37 @@ R é utilizável como uma calculadora
 O R trabalha igualmente com vetores e escalares
 
 ```{r, echo = TRUE}
-c(1,3,5,7,9) + c(2,4,6,8,10)
+c(1, 3, 5, 7, 9) + c(2, 4, 6, 8, 10)
 ```
 
 <font size="5">A função c() é usada para concatenar valores, criando vetores de valores da mesma classe.</font>
 
 ## Comandos no R
 
-<font size="5">Ao usar o operador multiplicativo `*` o R entende que será feita a operação elemento a elemento. Para multiplicação de matrizes, o operador correto é `%*%`. Importante na vetorização!</font>
+Ao usar o operador multiplicativo `*` o R entende que será feita a operação elemento a elemento. Para multiplicação de matrizes, o operador correto é `%*%`. Importante na vetorização!
 
 ```{r, echo = TRUE}
-c(1,3,5,7) %*% t(c(2,4,6,8))
+c(1, 3, 5, 7) * t(c(2, 4, 6, 8))
+```
+
+```{r, echo = TRUE}
+c(1, 3, 5, 7) %*% t(c(2, 4, 6, 8))
 ```
 
 ## Criação de variáveis e atribuição de valores
 
-<font size="5">A forma de se atribuir um valor a um eleento é utilizando o operador `<-` ou `=`, ou seja, os dois operadores são equivalentes. Destaca-se que a forma usual de se atribuir é usando o operador `<-`.</font>
+A forma de se atribuir um valor a um elemento/objeto é utilizando o operador `<-`, da forma que deve ester algo dos dois lados dessa seta - de um o nome do objeto que irá receber o valor e do outro lado o próprio valor. Também é possível usar o operador `=` para fazer isso, porém não é recomendado.
 
 ```{r, echo = TRUE}
 x <- 2
 x
-print(x)
-class(x)
+```
+
+Se usarmos novamente o `x` para atribuir algum outro valor, esse será salvo por cima. Também podemos trocar a direção da seta, mas ela sempre deve apontar para o nome do objeto que vai receber o valor.
+
+```{r, echo = TRUE}
+-8 -> x
+x
 ```
 
 ## Criação de variáveis e atribuição de valores
@@ -132,21 +141,14 @@ class(x)
 Pode-se atribuir, por exemplo, um valor não numérico a `x`.
 
 ```{r, echo = TRUE}
-x <- "test"
-print(x)
-class(x)
-```
-
-Ao atribuir x a um novo valor, o valor anterior é apagado, implicitamente. Outra forma de remover valores de uma variável é usando a função `rm()`.
-
-```{r, echo = TRUE}
-rm(x)
+x <- "teste"
+x
 ```
 
 ## Criação de variáveis e atribuição de valores
 
-Todos esses operadores existem no R: `<-`, `=` e `==`.
-Os operadores `<-` e `=` são equivalentes, mas recomendamos utilizar smepre o `<-` porque o `=` também pode servir para outras coisas (falaremos disso mais a frente quando formos criar funções!). Já o símbolo `==` funciona para avaliar uma igualdade e não de atribuir um valor a um elemento do R e retorna uma variável lógica, podendo ser `TRUE` ou `FALSE`. Por exemplo:
+Alguns dos operadores que existem no R são: `<-`, `=` e `==`.
+Como já comentado, os operadores `<-` e `=` podem ser usados para atribuir valores a variáveis/objetos, mas recomendamos utilizar smepre o `<-` porque o `=` também  serve para outras coisas (falaremos disso mais a frente quando formos criar funções!). Já o símbolo `==` funciona para avaliar uma igualdade e não de atribuir um valor a um elemento do R e retorna uma variável lógica, podendo ser `TRUE` ou `FALSE`. Por exemplo:
 
 ```{r, echo = TRUE}
 x = 2
@@ -184,13 +186,26 @@ Existem diversas **Classes** de objetos dentro do R, alguns dos principais tipos
 - Fator (classes)
 - Lógico (`TRUE/FALSE`)
 
-A forma mais básica de armazenar objetos dessas classes é na forma de vetor e os vetores podem ser criados, com a função `c()`. A regra geral é que os vetores só armazenam objetos de mesma classe. Para criarmos um objeto contendo vários tipos de classes diferentes, podemos utilizar objetos do tipo `list` e `dataframe`, como veremos mais à frente.
+Para sabermos qual classe cada objeto é, podemos utilizar uma função interna ao **R** chamada `class()`. Usualmente, as funções vão sempre terminar com um parêntesis `()`, sendo que dentro dele botamos os argumentos da função - o que ela precisa (nesse caso, o objeto). Mais a frente falaremos com maiores detalhes sobre esses argumentos, funções em geral e até como criar uma sua.
+
+```{r, echo = TRUE}
+x <- 2
+class(x)
+
+y <- "oi"
+class(y)
+
+z <- TRUE
+class(z)
+```
+ 
+A forma mais básica de armazenar objetos dessas classes é na forma de vetor e os vetores podem ser criados, com a função `c()` já utilizada antes. A regra geral é que os vetores só armazenam objetos de mesma classe. Para criarmos um objeto contendo vários tipos de classes diferentes, podemos utilizar objetos do tipo `list` e `dataframe`, como veremos mais à frente.
 
 ## Objetos do R
 
-Via de regra, o R enverga números quando se utiliza um valor numérico. Para se criar uma variável do tipo `integer`, deve-se acrescentar a letra `L` ao final:
+Via de regra, o R enverga números quando se utiliza um valor numérico. Para se criar uma variável do tipo inteiro (`integer`), deve-se acrescentar a letra `L` ao final:
 
-```{r, echo=TRUE}
+```{r, echo = TRUE}
 x <- 2L
 class(x)
 ```
@@ -199,13 +214,14 @@ class(x)
 
 Vetores só podem conter variáveis de um tipo:
 
-```{r, echo=TRUE}
-x <- c(1,2,3,4)
+```{r, echo = TRUE}
+x <- c(1, 2, 3, 4)
 class(x)
 ```
 
-```{r, echo=TRUE}
-y <- c(FALSE,TRUE,T,F)
+```{r, echo = TRUE}
+y <- c(FALSE, TRUE, T, F)
+y
 print(y)
 class(y)
 ```
@@ -214,8 +230,8 @@ class(y)
 
 Vetores só podem conter variáveis de um tipo:
 
-```{r, echo=TRUE}
-x <- c("ola","bom","dia","programadores")
+```{r, echo = TRUE}
+x <- c("ola", "bom", "dia", "programadores")
 x
 class(x)
 ```
@@ -224,8 +240,8 @@ class(x)
 
 Quando se tem diferentes tipos de classes dentro de um vetor, é feita uma coerção automática para que tudo fique com a mesma classe. Dessa forma, ao criar um vetor contendo dados do tipo caractere e numérico, o **R** supõe que todas as informações eram para ser do tipo caractere:
 
-```{r, echo=TRUE}
-x <- c("ola",1,"dia",2)
+```{r, echo = TRUE}
+x <- c("ola", 1, "dia", 2)
 x
 class(x)
 ```
@@ -236,8 +252,8 @@ class(x)
 
 Coerção explícita:
 
-```{r, echo=TRUE}
-x <- as.character(c("ola",1,"dia",2))
+```{r, echo = TRUE}
+x <- as.character(c("ola", 1, "dia", 2))
 x
 class(x)
 ```
@@ -247,8 +263,8 @@ class(x)
 Coerção explícita:
 Ao deixarmos explícito para o **R** que o vetor deve ser numérico, ele irá transformar tudo dentro do vetor como numérico. Às vezes o R não consegue fazer essa coerção (como transformar "ola" em um número?) e então retorna `NA` (Not Available):
 
-```{r, echo=TRUE}
-x <- as.numeric(c("ola",1,"dia",2))
+```{r, echo = TRUE}
+x <- as.numeric(c("ola", 1, "dia", 2))
 x
 class(x)
 ```
@@ -257,28 +273,28 @@ class(x)
 
 Para criar vetores sequenciais:
 
-```{r, echo=TRUE}
-x <- c(1,2,3,4,5,6,7,8,9,10)
+```{r, echo = TRUE}
+x <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 x
 
 ```
 
-```{r, echo=TRUE}
+```{r, echo = TRUE}
 x <- c(1:10)
 x
 ```
 
-```{r, echo=TRUE}
+```{r, echo = TRUE}
 x <- seq(1, 10)
 x
 ```
 
-```{r, echo=TRUE}
+```{r, echo = TRUE}
 x <- seq(1, 10, 3)
 x
 ```
 
-```{r, echo=TRUE}
+```{r, echo = TRUE}
 x <- vector("numeric", length = 10)
 x
 ```
@@ -287,7 +303,7 @@ x
 
 Para criar vetores:
 
-```{r, echo=TRUE}
+```{r, echo = TRUE}
 x <- c(11:20)
 x
 x[c(1,5,10)]
@@ -368,15 +384,22 @@ A função `rbind()` adiciona linhas as matrizes.
 
 ## Operações em ou com vetores
 
-```{r, echo=TRUE}
-x <- c(1:10)
-sqrt(2*x/4)
-```
+Podemos fazer operações com vetores igual faziamos com números no começo. Os mesmos operadores são utilizados aqui. Por exemplo, se quisermos dobrar os valores de um vetor, podemos simplesmente fazer `2*` esse vetor. Em geral as operações aritméticas feitas em um vetor são feitas elementos a elementos. Para realizar operações matriciais a notação muda um pouco.
 
 ```{r, echo=TRUE}
 x <- c(1:5)
+2*x
+```
+
+```{r, echo=TRUE}
+sqrt(2*x/4)
+```
+
+É possível inclusive fazer operações entre vetores. Porém, caso os vetores não sejam do mesmo tamanho teremos um problema ao fazer a operação elemento a elemento (vai acabar faltando algum). O **R**, nesse caso, vai fazer a operação até onde ele conseguir e irá retornar uma mensagem de aviso (*Warning*) - mas a conta será feita! Abaixo tentamos somar os vetores `x` e `y`. Como o vetor `y` tem um elemento a menos que `x`, a soma vai ser feita normalmente para os primeiros 4 elementos de `x`, ao fazer o quinto, porém, o **R** vai voltar ao inicio do `y` - somando então o quinto elemento de `x` com o primeiro do `y`.
+
+```{r, echo=TRUE}
 y <- c(1:4)
-x+y
+x + y
 ```
 
 ## Operações em ou com vetores
@@ -446,7 +469,7 @@ Quando são lidos objetos externos (planilhas excel, arquivos .txt ou .csv), usa
 
 A classe de `data.frame` é muito utilizada em R. É o que se utiliza para dados tabulados. Além disso, todos os elementos do `data.frame` têm o mesmo comprimento.
 
-```{r, echo=TRUE}
+```{r, echo = TRUE}
 DF <- data.frame(x = c(1:3), coluna_2 = c("A", "B", "C"))
 DF
 class(DF)
@@ -456,7 +479,7 @@ class(DF)
 
 Coerção de classe para `data.frame`.
 
-```{r, echo=TRUE}
+```{r, echo = TRUE}
 m <- matrix(c(1:9), nrow = 3)
 m <- as.data.frame(m)
 m
@@ -465,11 +488,46 @@ m
 
 Coerção de classe para `data.frame`.
 
-```{r, echo=TRUE}
+```{r, echo = TRUE}
 m <- matrix(c(1:9), nrow = 3); attributes(m)
 attributes(as.data.frame(m))
 ```
 
+## Programação Básica - Criando funções
+
+Uma coisa essencial em qualquer linguagem de programação é a criação e utilização de funções. O **R** (assim como outras linguagens) já vem com diversas funções instaladas nele mesmo - chamamos isso de **R base**. Por exemplo, se quisermos calcular o `log` de algum valor, podemos utilizar a função `log()` colocando dentro do parênteses o valor que queremos.
+
+```{r, echo = TRUE}
+log(10)
+```
+
+
+## Programação Básica - Estruturas condicionais (ifelse)
+
+Em programação, algo extremamente importante e útil são os comandos `if` e `else` (*e* / *se*). Com esses comandos, é possível rodar um código apenas se uma condição for cumprida. Esse comando no **R** funciona similar a uma função, sendo então o `ifelse()` (tudo junto!), e toma três argumentos - um lógico (uma condição), o que fazer se o lógico for `TRUE` e o que fazer se o lógico for `FALSE`. Abaixo fazemos um exemplo utilizando o `ifelse` para verificar se o `X` é maior ou menor do que 100.
+
+```{r, echo = TRUE}
+x <- 10
+ifelse(x < 100, "X é menor que 100", "X é maior ou igual a 100")
+```
+
+```{r, echo = TRUE}
+x <- 1000
+ifelse(x < 100, "X é menor que 100", "X é maior ou igual a 100")
+```
+
+É possível usar também só o `if` como um comando. Em seguida rodamos um código para que, se o X for um número não inteiro, arredondamos ele e em seguida o  transformamos em inteiro. 
+
+```{r, echo = TRUE}
+x <- 3.7
+if(class(x) != "integer") x <- as.integer(round(x))
+class(x)
+```
+
+## Programação Básica - Loops (for e while)
+
+
+ 
 ## Input/output
 
 É imprescindível que a gente entenda como ler informações hidrológicas dos mais diversos tipos de arquivo, assim como aprender como escrever os resultados de nossas análises de forma organizada em aruivos de diferentes formatos para que possamos comunicar nossos resultados e para que outros possam avaliar e/ou continuar nossas análises.
