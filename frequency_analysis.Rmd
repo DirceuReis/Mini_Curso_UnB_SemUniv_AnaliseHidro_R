@@ -283,9 +283,11 @@ Hazen | $\frac{i-0.5}{n}$ | 0.50 | $2n$ | Escolha tradicional
 
 Não se preocupe tanto se esse conceito de posição de plotagem não ficou totalmente claro. Basta saber que plotaremos os valores de máximos anuais da amostra na curva de frequência utilizando a posição de plotagem de Weibull. 
 
-Na verdade, utilizaremos o tempo de recorrência, $T_r$, para plotagem, lembrando que o $T_r$ é simplemenste o inveso da probabilidade de excedência, representada pela posição de plotagem de Weibull.
+Na verdade, utilizaremos o tempo de recorrência, $T_r$, para plotagem, lembrando que o $T_r$ é simplemenste o inverso da probabilidade de excedência, representada pela posição de plotagem de Weibull.
 
-O código para o cálculo do é apresentado no código abaixo, que cria três colunas ao dataframe que contém as séries de máximos anuais.
+O código para o cálculo do $Tr$ é apresentado abaixo. Para facilitar a compreenção de como o cálculo é feito, criaram-se três novas colunas ao dataframe que ontém as vazões máximas anuais. Mas antes disso, efetuou-se o ordenamento das vazões máximas em ordem decrescente, ou seja, o primeiro valor de vazão da nova série ordenada é o maior da amostra.
+
+As três novas colunas são, respectivamente, o índice das vazões, começando de 1 indo até o número total de valores, a posição de plotagem de Weilbull, que expressa a probabilidade de excedência, e por último o tempo de recorrência, $Tr$.
 
 ```{r, fig.width = 8, fig.height = 6}
 # Remoção dos anos com falha
@@ -298,7 +300,7 @@ Q_max_ord$weibull <- Q_max_ord$index/(nrow(Q_max_ord) + 1)
 Q_max_ord$Tr <- 1/Q_max_ord$weibull
 ```
 
-Como já fizemos antes podemos dar uma espiada nesse dataframe utilizando a fnução `head(dataframe_name)`,
+Como já fizemos antes, podemos dar uma espiada nesse novo dataframe com as vazões máximas anuais ordenada utilizando a função `head(dataframe_name)`,
 
 ```{r}
 head(Q_max_ord)
@@ -306,7 +308,7 @@ head(Q_max_ord)
 
 A última coluna de `Q_max_ord` contém o valor do tempo de recorrência de cada uma das observações contidas na amostra. Vale notar que as observações em `Q_max_ord` estão ordenadas em ordem decrescente.
 
-Podemos agora cirar uma Figura, siilar àquela apresentada para o estudo do Rio Salado, porém, nesta etapa de nossa análise, apenas com os valores amostrais.
+Podemos agora criar uma Figura, similar àquela apresentada para o estudo do Rio Salado. Porém, nesta etapa de nossa análise, apenas os valores amostrais das vazões máximas serão apresentados.
 
 ```{r, fig.width = 8, fig.height = 6}
 

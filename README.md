@@ -10,6 +10,7 @@ Este é um curso introdutório sobre como usar a linguagem R para realizar anál
 
 - Thiago Lappicy (aluno de mestrado do PTARH/UnB)
 - Saulo Aires de Souza (aluno de doutorado do PTARH/UnB e Coordenador de Estudos HIdrológicos da Agência Nacional de Águas e Saneamento Básico)
+- Luiz Felipe Pereira de Brito (aluno do curso de Engenharia Ambiental da UnB)
 
 ## Colaboradores no planejamento
 
