@@ -255,7 +255,7 @@ Podemos forçar uma coerção no **R**, a chamada **Coerção explícita**. Faze
 
 Com elas o **R** vai transformar o vetor (ou objeto) em questão no tipo que você definiu. Isso pode ser uma tarefa simples ou complicada pro programa. No exemplo abaixo, transformar tudo em caractere é relativamente fácil, o **R** apenas assume que o número é um *string* (um caractere). Dessa forma não conseguimos fazer operações aritméticas com ele, mas conseguimos fazer alguns tratamentos utilizados em texto.
 
-```{r, echo = TRUE}
+```{r, echo = TRUE, error= FALSE}
 x <- as.character(3)
 x
 class(x)
