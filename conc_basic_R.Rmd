@@ -49,17 +49,17 @@ Download de 2 programas: R e RStudio
 
 ## Interface do R e RStudio
 
-<left><img src="www/JanelaR.png" height="400"></left>
+<left><img src="images/RStudio_organizacao.jpeg" height="400"></left>
 
 ## Interface do R e RStudio
 
-<left><img src="www/JanelaRStudio.png" height="400"></left>
+<left><img src="images/RStudio_console.jpeg" height="400"></left>
 
 ## Interface do R e RStudio
 
 O layout é ajustável em `view -> Panes -> Pane Layout`
 
-<left><img src="www/layoutConfig.png" height="400"></left>
+<left><img src="images/RStudio_panel_layout.jpeg" height="400"></left>
 
 ## Primeiros passos
 

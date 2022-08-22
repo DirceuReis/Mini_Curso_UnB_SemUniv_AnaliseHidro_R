@@ -2244,6 +2244,15 @@ id="toc-objetos-do-r---data-frames-2">Objetos do R - Data
 Frames</a></li>
 <li><a href="#objetos-do-r---atributos"
 id="toc-objetos-do-r---atributos">Objetos do R - Atributos</a></li>
+<li><a href="#programação-básica---criando-funções"
+id="toc-programação-básica---criando-funções">Programação Básica -
+Criando funções</a></li>
+<li><a href="#programação-básica---estruturas-condicionais-ifelse"
+id="toc-programação-básica---estruturas-condicionais-ifelse">Programação
+Básica - Estruturas condicionais (ifelse)</a></li>
+<li><a href="#programação-básica---loops-for-e-while"
+id="toc-programação-básica---loops-for-e-while">Programação Básica -
+Loops (for e while)</a></li>
 <li><a href="#inputoutput" id="toc-inputoutput">Input/output</a>
 <ul>
 <li><a href="#construção-de-gráficos"
@@ -2300,13 +2309,13 @@ R in Hydrology </a>, Slater, et al., Hydrol. Earth Syst. Sci., 23,
 interface, mas só é possível usar o RStudio com o R instalado na
 máquina.</font></em></p>
 <h2 id="interface-do-r-e-rstudio">Interface do R e RStudio</h2>
-<p><left><img src="www/JanelaR.png" height="400"></left></p>
+<p><left><img src="images/RStudio_organizacao.jpeg" height="400"></left></p>
 <h2 id="interface-do-r-e-rstudio-1">Interface do R e RStudio</h2>
-<p><left><img src="www/JanelaRStudio.png" height="400"></left></p>
+<p><left><img src="images/RStudio_console.jpeg" height="400"></left></p>
 <h2 id="interface-do-r-e-rstudio-2">Interface do R e RStudio</h2>
 <p>O layout é ajustável em
 <code>view -&gt; Panes -&gt; Pane Layout</code></p>
-<p><left><img src="www/layoutConfig.png" height="400"></left></p>
+<p><left><img src="images/RStudio_panel_layout.jpeg" height="400"></left></p>
 <h2 id="primeiros-passos">Primeiros passos</h2>
 <h3 id="comandos-no-r"><strong>Comandos no R </strong></h3>
 <p>Antes de tudo, é importante saber onde se está trabalhando!</p>
@@ -2354,20 +2363,26 @@ máquina.</font></em></p>
 <p>O R trabalha igualmente com vetores e escalares</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>3</span>,<span class='fl'>5</span>,<span class='fl'>7</span>,<span class='fl'>9</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>4</span>,<span class='fl'>6</span>,<span class='fl'>8</span>,<span class='fl'>10</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>5</span>, <span class='fl'>7</span>, <span class='fl'>9</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>6</span>, <span class='fl'>8</span>, <span class='fl'>10</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>[1]  3  7 11 15 19</code></pre>
 </div>
 <p><font size="5">A função c() é usada para concatenar valores, criando
 vetores de valores da mesma classe.</font></p>
 <h2 id="comandos-no-r-3">Comandos no R</h2>
-<p><font size="5">Ao usar o operador multiplicativo <code>*</code> o R
-entende que será feita a operação elemento a elemento. Para
-multiplicação de matrizes, o operador correto é <code>%*%</code>.
-Importante na vetorização!</font></p>
+<p>Ao usar o operador multiplicativo <code>*</code> o R entende que será
+feita a operação elemento a elemento. Para multiplicação de matrizes, o
+operador correto é <code>%*%</code>. Importante na vetorização!</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/vector.html'>as.vector</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>3</span>,<span class='fl'>5</span>,<span class='fl'>7</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/r/base/matmult.html'>%*%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/vector.html'>as.vector</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>4</span>,<span class='fl'>6</span>,<span class='fl'>8</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>5</span>, <span class='fl'>7</span><span class='op'>)</span> <span class='op'>*</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>6</span>, <span class='fl'>8</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>     [,1] [,2] [,3] [,4]
+[1,]    2   12   30   56</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>5</span>, <span class='fl'>7</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/r/base/matmult.html'>%*%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>6</span>, <span class='fl'>8</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>     [,1] [,2] [,3] [,4]
 [1,]    2    4    6    8
@@ -2377,24 +2392,28 @@ Importante na vetorização!</font></p>
 </div>
 <h2 id="criação-de-variáveis-e-atribuição-de-valores">Criação de
 variáveis e atribuição de valores</h2>
-<p><font size="5">A forma de se atribuir um valor a um eleento é
-utilizando o operador <code>&lt;-</code> ou <code>=</code>, ou seja, os
-dois operadores são equivalentes. Destaca-se que a forma usual de se
-atribuir é usando o operador <code>&lt;-</code>.</font></p>
+<p>A forma de se atribuir um valor a um elemento/objeto é utilizando o
+operador <code>&lt;-</code>, da forma que deve ester algo dos dois lados
+dessa seta - de um o nome do objeto que irá receber o valor e do outro
+lado o próprio valor. Também é possível usar o operador <code>=</code>
+para fazer isso, porém não é recomendado.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>2</span></span>
 <span><span class='va'>x</span></span></code></pre>
 </div>
 <pre><code>[1] 2</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></span></code></pre>
 </div>
-<pre><code>[1] 2</code></pre>
+<p>Se usarmos novamente o <code>x</code> para atribuir algum outro
+valor, esse será salvo por cima. Também podemos trocar a direção da
+seta, mas ela sempre deve apontar para o nome do objeto que vai receber
+o valor.</p>
+<div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='op'>-</span><span class='fl'>8</span> <span class='op'>-&gt;</span> <span class='va'>x</span></span>
+<span><span class='va'>x</span></span></code></pre>
 </div>
-<pre><code>[1] &quot;numeric&quot;</code></pre>
+<pre><code>[1] -8</code></pre>
 </div>
 <h2 id="criação-de-variáveis-e-atribuição-de-valores-1">Criação de
 variáveis e atribuição de valores</h2>
@@ -2402,31 +2421,22 @@ variáveis e atribuição de valores</h2>
 <code>x</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='st'>"test"</span></span>
-<span><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='st'>"teste"</span></span>
+<span><span class='va'>x</span></span></code></pre>
 </div>
-<pre><code>[1] &quot;test&quot;</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></span></code></pre>
-</div>
-<pre><code>[1] &quot;character&quot;</code></pre>
-</div>
-<p>Ao atribuir x a um novo valor, o valor anterior é apagado,
-implicitamente. Outra forma de remover valores de uma variável é usando
-a função <code>rm()</code>.</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/rm.html'>rm</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></span></code></pre>
-</div>
+<pre><code>[1] &quot;teste&quot;</code></pre>
 </div>
 <h2 id="criação-de-variáveis-e-atribuição-de-valores-2">Criação de
 variáveis e atribuição de valores</h2>
-<p>Todos esses operadores existem no R: <code>&lt;-</code>,
-<code>=</code> e <code>==</code>. Os operadores <code>&lt;-</code> e
-<code>=</code> são equivalentes, mas <code>==</code> funciona para
-avaliar uma igualdade e não de atribuir um valor a um elemento do R e
-retorna uma variável lógica <code>TRUE</code> ou <code>FALSE</code>. Por
-exemplo:</p>
+<p>Alguns dos operadores que existem no R são: <code>&lt;-</code>,
+<code>=</code> e <code>==</code>. Como já comentado, os operadores
+<code>&lt;-</code> e <code>=</code> podem ser usados para atribuir
+valores a variáveis/objetos, mas recomendamos utilizar smepre o
+<code>&lt;-</code> porque o <code>=</code> também serve para outras
+coisas (falaremos disso mais a frente quando formos criar funções!). Já
+o símbolo <code>==</code> funciona para avaliar uma igualdade e não de
+atribuir um valor a um elemento do R e retorna uma variável lógica,
+podendo ser <code>TRUE</code> ou <code>FALSE</code>. Por exemplo:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>=</span> <span class='fl'>2</span></span>
@@ -2462,24 +2472,50 @@ variáveis e atribuição de valores</h2>
 <pre><code>[1] TRUE</code></pre>
 </div>
 <h2 id="objetos-do-r">Objetos do R</h2>
-<p>São cinco os tipos básicos de <strong>Classes</strong> de objetos do
-R:</p>
+<p>Existem diversas <strong>Classes</strong> de objetos dentro do R,
+alguns dos principais tipos são:</p>
 <ul>
-<li>Caracter</li>
-<li>Número (real)</li>
+<li>Caractere (letras)</li>
+<li>Numérico (real)</li>
 <li>Inteiro</li>
 <li>Complexo</li>
+<li>Fator (classes)</li>
 <li>Lógico (<code>TRUE/FALSE</code>)</li>
 </ul>
+<p>Para sabermos qual classe cada objeto é, podemos utilizar uma função
+interna ao <strong>R</strong> chamada <code>class()</code>. Usualmente,
+as funções vão sempre terminar com um parêntesis <code>()</code>, sendo
+que dentro dele botamos os argumentos da função - o que ela precisa
+(nesse caso, o objeto). Mais a frente falaremos com maiores detalhes
+sobre esses argumentos, funções em geral e até como criar uma sua.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>2</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] &quot;numeric&quot;</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>y</span> <span class='op'>&lt;-</span> <span class='st'>"oi"</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] &quot;character&quot;</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>z</span> <span class='op'>&lt;-</span> <span class='cn'>TRUE</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>z</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] &quot;logical&quot;</code></pre>
+</div>
 <p>A forma mais básica de armazenar objetos dessas classes é na forma de
-vetor e os vetores podem ser criados, com a função <code>c()</code>. A
-regra geral é que os vetores só armazenam objetos de mesma classe, a
-única exceção são objetos do tipo <code>list</code>, como veremos mais à
-frente.</p>
+vetor e os vetores podem ser criados, com a função <code>c()</code> já
+utilizada antes. A regra geral é que os vetores só armazenam objetos de
+mesma classe. Para criarmos um objeto contendo vários tipos de classes
+diferentes, podemos utilizar objetos do tipo <code>list</code> e
+<code>dataframe</code>, como veremos mais à frente.</p>
 <h2 id="objetos-do-r-1">Objetos do R</h2>
 <p>Via de regra, o R enverga números quando se utiliza um valor
-numérico. Para se criar uma variável do tipo <code>integer</code>,
-deve-se acrescentar a letra <code>L</code> ao final:</p>
+numérico. Para se criar uma variável do tipo inteiro
+(<code>integer</code>), deve-se acrescentar a letra <code>L</code> ao
+final:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>2L</span></span>
@@ -2492,15 +2528,19 @@ variáveis</h2>
 <p>Vetores só podem conter variáveis de um tipo:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span><span class='op'>)</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span><span class='op'>)</span></span>
 <span><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>[1] &quot;numeric&quot;</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>FALSE</span>,<span class='cn'>TRUE</span>,<span class='cn'>T</span>,<span class='cn'>F</span><span class='op'>)</span></span>
-<span><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>FALSE</span>, <span class='cn'>TRUE</span>, <span class='cn'>T</span>, <span class='cn'>F</span><span class='op'>)</span></span>
+<span><span class='va'>y</span></span></code></pre>
+</div>
+<pre><code>[1] FALSE  TRUE  TRUE FALSE</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/print.html'>print</a></span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>[1] FALSE  TRUE  TRUE FALSE</code></pre>
 <div class="sourceCode">
@@ -2513,7 +2553,7 @@ variáveis</h2>
 <p>Vetores só podem conter variáveis de um tipo:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ola"</span>,<span class='st'>"bom"</span>,<span class='st'>"dia"</span>,<span class='st'>"programadores"</span><span class='op'>)</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ola"</span>, <span class='st'>"bom"</span>, <span class='st'>"dia"</span>, <span class='st'>"programadores"</span><span class='op'>)</span></span>
 <span><span class='va'>x</span></span></code></pre>
 </div>
 <pre><code>[1] &quot;ola&quot;           &quot;bom&quot;           &quot;dia&quot;           &quot;programadores&quot;</code></pre>
@@ -2524,10 +2564,14 @@ variáveis</h2>
 </div>
 <h2 id="objetos-do-r---coerção-de-variáveis-2">Objetos do R - coerção de
 variáveis</h2>
-<p>Vetores só podem conter variáveis de um tipo:</p>
+<p>Quando se tem diferentes tipos de classes dentro de um vetor, é feita
+uma coerção automática para que tudo fique com a mesma classe. Dessa
+forma, ao criar um vetor contendo dados do tipo caractere e numérico, o
+<strong>R</strong> supõe que todas as informações eram para ser do tipo
+caractere:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ola"</span>,<span class='fl'>1</span>,<span class='st'>"dia"</span>,<span class='fl'>2</span><span class='op'>)</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ola"</span>, <span class='fl'>1</span>, <span class='st'>"dia"</span>, <span class='fl'>2</span><span class='op'>)</span></span>
 <span><span class='va'>x</span></span></code></pre>
 </div>
 <pre><code>[1] &quot;ola&quot; &quot;1&quot;   &quot;dia&quot; &quot;2&quot;  </code></pre>
@@ -2542,7 +2586,7 @@ variáveis</h2>
 <p>Coerção explícita:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ola"</span>,<span class='fl'>1</span>,<span class='st'>"dia"</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ola"</span>, <span class='fl'>1</span>, <span class='st'>"dia"</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span></span>
 <span><span class='va'>x</span></span></code></pre>
 </div>
 <pre><code>[1] &quot;ola&quot; &quot;1&quot;   &quot;dia&quot; &quot;2&quot;  </code></pre>
@@ -2553,11 +2597,14 @@ variáveis</h2>
 </div>
 <h2 id="objetos-do-r---coerção-de-variáveis-4">Objetos do R - coerção de
 variáveis</h2>
-<p>Coerção explícita: às vezes o R não sabe o que fazer e retorna
-<code>NA</code> (Non-Available):</p>
+<p>Coerção explícita: Ao deixarmos explícito para o <strong>R</strong>
+que o vetor deve ser numérico, ele irá transformar tudo dentro do vetor
+como numérico. Às vezes o R não consegue fazer essa coerção (como
+transformar “ola” em um número?) e então retorna <code>NA</code> (Not
+Available):</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ola"</span>,<span class='fl'>1</span>,<span class='st'>"dia"</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ola"</span>, <span class='fl'>1</span>, <span class='st'>"dia"</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span></span>
 <span><span class='va'>x</span></span></code></pre>
 </div>
 <pre><code>[1] NA  1 NA  2</code></pre>
@@ -2567,10 +2614,10 @@ variáveis</h2>
 <pre><code>[1] &quot;numeric&quot;</code></pre>
 </div>
 <h2 id="objetos-do-r---vetores">Objetos do R - Vetores</h2>
-<p>Para criar vetores:</p>
+<p>Para criar vetores sequenciais:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span>,<span class='fl'>4</span>,<span class='fl'>5</span>,<span class='fl'>6</span>,<span class='fl'>7</span>,<span class='fl'>8</span>,<span class='fl'>9</span>,<span class='fl'>10</span><span class='op'>)</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>, <span class='fl'>5</span>, <span class='fl'>6</span>, <span class='fl'>7</span>, <span class='fl'>8</span>, <span class='fl'>9</span>, <span class='fl'>10</span><span class='op'>)</span></span>
 <span><span class='va'>x</span></span></code></pre>
 </div>
 <pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
@@ -2581,6 +2628,20 @@ variáveis</h2>
 <span><span class='va'>x</span></span></code></pre>
 </div>
 <pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>10</span><span class='op'>)</span></span>
+<span><span class='va'>x</span></span></code></pre>
+</div>
+<pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>10</span>, <span class='fl'>3</span><span class='op'>)</span></span>
+<span><span class='va'>x</span></span></code></pre>
+</div>
+<pre><code>[1]  1  4  7 10</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2699,17 +2760,17 @@ duas dimensões:</p>
 <span><span class='va'>uniao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span></span>
 <span><span class='va'>uniao</span></span></code></pre>
 </div>
-<pre><code>       x          y
- [1,]  1 13.4688366
- [2,]  2 20.1533192
- [3,]  3 12.2507996
- [4,]  4  7.7916776
- [5,]  5  0.8485384
- [6,]  6  2.8075111
- [7,]  7  3.7134800
- [8,]  8  8.8704693
- [9,]  9 15.9396758
-[10,] 10 12.9275215</code></pre>
+<pre><code>       x         y
+ [1,]  1  9.248542
+ [2,]  2 10.690367
+ [3,]  3  5.298439
+ [4,]  4  8.878841
+ [5,]  5 -1.585945
+ [6,]  6 14.423988
+ [7,]  7 11.927094
+ [8,]  8  7.090067
+ [9,]  9  9.214809
+[10,] 10  8.561903</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>uniao</span><span class='op'>)</span></span></code></pre>
 </div>
@@ -2725,12 +2786,12 @@ duas dimensões:</p>
 <span><span class='va'>uniao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span></span>
 <span><span class='va'>uniao</span></span></code></pre>
 </div>
-<pre><code>      [,1]     [,2]     [,3]     [,4]   [,5]     [,6]     [,7]
-x  1.00000  2.00000  3.00000  4.00000  5.000  6.00000  7.00000
-y 21.72537 19.84388 19.98412 14.38606 25.405 18.83283 18.99161
-      [,8]     [,9]    [,10]
-x  8.00000  9.00000 10.00000
-y 21.78949 17.13077 16.41911</code></pre>
+<pre><code>     [,1]     [,2]     [,3]     [,4]    [,5]    [,6]     [,7]
+x  1.0000  2.00000  3.00000  4.00000  5.0000  6.0000  7.00000
+y 20.8318 18.12089 12.85789 27.05671 25.1451 13.0532 16.87074
+      [,8]     [,9]   [,10]
+x  8.00000  9.00000 10.0000
+y 13.31672 25.43866 20.3759</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>uniao</span><span class='op'>)</span></span></code></pre>
 </div>
@@ -2738,19 +2799,41 @@ y 21.78949 17.13077 16.41911</code></pre>
 </div>
 <p>A função <code>rbind()</code> adiciona linhas as matrizes.</p>
 <h2 id="operações-em-ou-com-vetores">Operações em ou com vetores</h2>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>)</span></span>
-<span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>*</span><span class='va'>x</span><span class='op'>/</span><span class='fl'>4</span><span class='op'>)</span></span></code></pre>
-</div>
-<pre><code> [1] 0.7071068 1.0000000 1.2247449 1.4142136 1.5811388 1.7320508
- [7] 1.8708287 2.0000000 2.1213203 2.2360680</code></pre>
-</div>
+<p>Podemos fazer operações com vetores igual faziamos com números no
+começo. Os mesmos operadores são utilizados aqui. Por exemplo, se
+quisermos dobrar os valores de um vetor, podemos simplesmente fazer
+<code>2*</code> esse vetor. Em geral as operações aritméticas feitas em
+um vetor são feitas elementos a elementos. Para realizar operações
+matriciais a notação muda um pouco.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span></span>
-<span><span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>)</span></span>
-<span><span class='va'>x</span><span class='op'>+</span><span class='va'>y</span></span></code></pre>
+<span><span class='fl'>2</span><span class='op'>*</span><span class='va'>x</span></span></code></pre>
+</div>
+<pre><code>[1]  2  4  6  8 10</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='fl'>2</span><span class='op'>*</span><span class='va'>x</span><span class='op'>/</span><span class='fl'>4</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] 0.7071068 1.0000000 1.2247449 1.4142136 1.5811388</code></pre>
+</div>
+<p>É possível inclusive fazer operações entre vetores. Porém, caso os
+vetores não sejam do mesmo tamanho teremos um problema ao fazer a
+operação elemento a elemento (vai acabar faltando algum). O
+<strong>R</strong>, nesse caso, vai fazer a operação até onde ele
+conseguir e irá retornar uma mensagem de aviso (<em>Warning</em>) - mas
+a conta será feita! Abaixo tentamos somar os vetores <code>x</code> e
+<code>y</code>. Como o vetor <code>y</code> tem um elemento a menos que
+<code>x</code>, a soma vai ser feita normalmente para os primeiros 4
+elementos de <code>x</code>, ao fazer o quinto, porém, o
+<strong>R</strong> vai voltar ao inicio do <code>y</code> - somando
+então o quinto elemento de <code>x</code> com o primeiro do
+<code>y</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>)</span></span>
+<span><span class='va'>x</span> <span class='op'>+</span> <span class='va'>y</span></span></code></pre>
 </div>
 <pre><code>[1] 2 4 6 8 6</code></pre>
 </div>
@@ -2866,42 +2949,43 @@ Levels: alerta atenção inundação inundação severa normal</code></pre>
                3 </code></pre>
 </div>
 <h2 id="objetos-do-r---data-frames">Objetos do R - Data Frames</h2>
-<p>A classe de <code>data.frame</code> é muito utilizada em R. É o que
-se utiliza para dados tabulados. Além disso, todos os elementos do
-<code>data.frame</code> têm o mesmo comprimento.</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>DF</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span>, y <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>rnorm</a></span><span class='op'>(</span><span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span></span>
-<span><span class='va'>DF</span></span></code></pre>
-</div>
-<pre><code>  x          y
-1 1 -0.9408622
-2 2 -0.3816112
-3 3 -0.5677915</code></pre>
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>DF</span><span class='op'>)</span></span></code></pre>
-</div>
-<pre><code>[1] &quot;data.frame&quot;</code></pre>
-</div>
-<h2 id="objetos-do-r---data-frames-1">Objetos do R - Data Frames</h2>
 <ul>
 <li><code>matrix</code>: todos os elementos são da mesma classe;</li>
+<li><code>list</code>: cada elemento pode pertencer a uma classe
+diferente.</li>
 <li><code>data.frame</code>: dentro de cada coluna, os objetos pertencem
 à mesma classe, mas diferentes colunas podem pertencer a diferentes
 classes;</li>
-<li><code>list</code>: cada elemento pode pertencer a uma classe
-diferente.</li>
 </ul>
 <p>Quando são lidos objetos externos (planilhas excel, arquivos .txt ou
 .csv), usando as funções do R <code>read.table()</code> ou
 <code>read.csv()</code>, por exemplo, o objeto criado é um
 <code>data.frame</code>.</p>
+<h2 id="objetos-do-r---data-frames-1">Objetos do R - Data Frames</h2>
+<p>A classe de <code>data.frame</code> é muito utilizada em R. É o que
+se utiliza para dados tabulados. Além disso, todos os elementos do
+<code>data.frame</code> têm o mesmo comprimento.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>DF</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span>, coluna_2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"A"</span>, <span class='st'>"B"</span>, <span class='st'>"C"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='va'>DF</span></span></code></pre>
+</div>
+<pre><code>  x coluna_2
+1 1        A
+2 2        B
+3 3        C</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>DF</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] &quot;data.frame&quot;</code></pre>
+</div>
 <h2 id="objetos-do-r---data-frames-2">Objetos do R - Data Frames</h2>
 <p>Coerção de classe para <code>data.frame</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>9</span><span class='op'>)</span>, nrow <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span></span>
-<span><span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span></span></code></pre>
+<span><span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.data.frame.html'>as.data.frame</a></span><span class='op'>(</span><span class='va'>m</span><span class='op'>)</span></span>
+<span><span class='va'>m</span></span></code></pre>
 </div>
 <pre><code>  V1 V2 V3
 1  1  4  7
@@ -2928,6 +3012,59 @@ $class
 $row.names
 [1] 1 2 3</code></pre>
 </div>
+<h2 id="programação-básica---criando-funções">Programação Básica -
+Criando funções</h2>
+<p>Uma coisa essencial em qualquer linguagem de programação é a criação
+e utilização de funções. O <strong>R</strong> (assim como outras
+linguagens) já vem com diversas funções instaladas nele mesmo - chamamos
+isso de <strong>R base</strong>. Por exemplo, se quisermos calcular o
+<code>log</code> de algum valor, podemos utilizar a função
+<code>log()</code> colocando dentro do parênteses o valor que
+queremos.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] 2.302585</code></pre>
+</div>
+<h2 id="programação-básica---estruturas-condicionais-ifelse">Programação
+Básica - Estruturas condicionais (ifelse)</h2>
+<p>Em programação, algo extremamente importante e útil são os comandos
+<code>if</code> e <code>else</code> (<em>e</em> / <em>se</em>). Com
+esses comandos, é possível rodar um código apenas se uma condição for
+cumprida. Esse comando no <strong>R</strong> funciona similar a uma
+função, sendo então o <code>ifelse()</code> (tudo junto!), e toma três
+argumentos - um lógico (uma condição), o que fazer se o lógico for
+<code>TRUE</code> e o que fazer se o lógico for <code>FALSE</code>.
+Abaixo fazemos um exemplo utilizando o <code>ifelse</code> para
+verificar se o <code>X</code> é maior ou menor do que 100.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>10</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>&lt;</span> <span class='fl'>100</span>, <span class='st'>"X é menor que 100"</span>, <span class='st'>"X é maior ou igual a 100"</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] &quot;X é menor que 100&quot;</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>1000</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>&lt;</span> <span class='fl'>100</span>, <span class='st'>"X é menor que 100"</span>, <span class='st'>"X é maior ou igual a 100"</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] &quot;X é maior ou igual a 100&quot;</code></pre>
+</div>
+<p>É possível usar também só o <code>if</code> como um comando. Em
+seguida rodamos um código para que, se o X for um número não inteiro,
+arredondamos ele e em seguida o transformamos em inteiro.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>3.7</span></span>
+<span><span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>!=</span> <span class='st'>"integer"</span><span class='op'>)</span> <span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/integer.html'>as.integer</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] &quot;integer&quot;</code></pre>
+</div>
+<h2 id="programação-básica---loops-for-e-while">Programação Básica -
+Loops (for e while)</h2>
 <h2 id="inputoutput">Input/output</h2>
 <p>É imprescindível que a gente entenda como ler informações
 hidrológicas dos mais diversos tipos de arquivo, assim como aprender
@@ -2939,7 +3076,7 @@ análises.</p>
 escrever em arquivos fazendo uso de funções do R.</p>
 <h3 id="construção-de-gráficos">Construção de gráficos</h3>
 <h2 id="alguns-pacotes">Alguns pacotes</h2>
-<div class="sourceCode" id="cb70"><pre
+<div class="sourceCode" id="cb80"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
