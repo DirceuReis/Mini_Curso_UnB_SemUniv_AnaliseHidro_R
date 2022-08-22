@@ -252,7 +252,7 @@ Podemos forçar uma coerção no **R**, a chamada **Coerção explícita**. Faze
 
 Com elas o **R** vai transformar o vetor (ou objeto) em questão no tipo que você definiu. Isso pode ser uma tarefa simples ou complicada pro programa. No exemplo abaixo, transformar tudo em caractere é relativamente fácil, o **R** apenas assume que o número é um *string* (um caractere). Dessa forma não conseguimos fazer operações aritméticas com ele, mas conseguimos fazer alguns tratamentos utilizados em texto.
 
-```{r, echo = TRUE}
+```{r, echo = TRUE, error = TRUE}
 x <- as.character(3)
 x
 class(x)
@@ -473,8 +473,8 @@ log(10)
 
 Para saber o que é preciso colocar dentro dos parênteses, ou seja, quais os argumentos (*inputs*) que cada função toma, podemos utilizar a função `args()`. Usando ela com o log (dessa vez sem parênteses) dentro, podemos ver que a função toma dois argumentos: o `x` (valor em que se calcula o logaritmo) e a `base` que já vem com um valor definido de exponencial. Para se ter mais informações sobre alguma função, podemos, além de usar `args()` utilizar uma interrogação anterior ao nome da função (sem parêntesis), ou usar a função `help()`. Essas duas últimas opções são equivalentes e nos mostram a documentação feita para essa função no **R**.
 
-```{r, echo = TRUE}
-args(log))
+```{r, echo = FALSE}
+args(log)
 ?log
 help(log)
 ```
