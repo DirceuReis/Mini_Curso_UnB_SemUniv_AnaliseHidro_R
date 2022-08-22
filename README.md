@@ -22,7 +22,7 @@ Este curso é o primeiro de uma séries de cursos que serão elaborados por um g
 
 ## Duração do curso
 
-O curso é de 10 horas
+O curso é de 10 horas.
 
 ## Ementa
 
