@@ -49,16 +49,13 @@ Download de 2 programas: R e RStudio
 
 ### Interface do R e RStudio
 
-<left><img src="images/RStudio_organizacao.jpeg" height="400"></left>
-
-### Interface do R e RStudio
-
+Abaixo temos a interface do **R** quando o baixamos. Ele é de fato o programa que rodamos e programamos com ele.
 <left><img src="images/RStudio_console.jpeg" height="400"></left>
 
-### Interface do R e RStudio
+Baixamos também o **RStudio**, ele é uma IDE (*Integrated Development Environment)*. Isso nada mais é do que um facilitador para usar o **R**, trazendo uma interface mais amigável para utilização dessa linguagem e algumas facilidades.
+<left><img src="images/RStudio_organizacao.jpeg" height="400"></left>
 
 O layout é ajustável em `view -> Panes -> Pane Layout`
-
 <left><img src="images/RStudio_panel_layout.jpeg" height="400"></left>
 
 ## Primeiros passos, comandos no R
