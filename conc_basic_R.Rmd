@@ -35,7 +35,7 @@ urlR <- "https://www.r-project.org/logo/Rlogo.png"
 urlRstudio <- "https://rstudio.com/wp-content/uploads/2018/10/RStudio-Logo-Flat.png"
 ```
 
-Download de 2 programas: R e RStudio
+Download de 2 programas: **R** e **RStudio**
 
 - <a href="https://cran.r-project.org/bin/windows/base/"> R </a>
 
@@ -49,16 +49,13 @@ Download de 2 programas: R e RStudio
 
 ### Interface do R e RStudio
 
-<left><img src="images/RStudio_organizacao.jpeg" height="400"></left>
-
-### Interface do R e RStudio
-
+Abaixo temos a interface do **R** quando o baixamos. Ele é de fato o programa que rodamos e programamos com ele.
 <left><img src="images/RStudio_console.jpeg" height="400"></left>
 
-### Interface do R e RStudio
+Baixamos também o **RStudio**, ele é uma IDE (*Integrated Development Environment)*. Isso nada mais é do que um facilitador para usar o **R**, trazendo uma interface mais amigável para utilização dessa linguagem e algumas facilidades.
+<left><img src="images/RStudio_organizacao.jpeg" height="400"></left>
 
 O layout é ajustável em `view -> Panes -> Pane Layout`
-
 <left><img src="images/RStudio_panel_layout.jpeg" height="400"></left>
 
 ## Primeiros passos, comandos no R
@@ -76,7 +73,7 @@ Antes de tudo, é importante saber onde se está trabalhando! Para isso o **R** 
 #source("soma.R")
 ```
 
-R é utilizável como uma calculadora, com os operadores aritméticos que se conhece. Para multiplicação utilizamos `*`, para divisão `/`, para expoentes `^` e para raiz quadrada usamos `sqrt()` - do inglês *square root*.
+O **R** é utilizável como uma calculadora, com os operadores aritméticos que se conhece. Para multiplicação utilizamos `*`, para divisão `/`, para expoentes `^` e para raiz quadrada usamos `sqrt()` - do inglês *square root*.
 
 ```{r, echo = TRUE}
 1 + 2
@@ -106,7 +103,7 @@ c(1, 3, 5, 7, 9) + c(2, 4, 6, 8, 10)
 
 <font size="5">A função c() é usada para concatenar valores, criando vetores de valores da mesma classe.</font>
 
-Ao usar o operador multiplicativo `*` o R entende que será feita a operação elemento a elemento. Para multiplicação de matrizes, o operador correto é `%*%`. Importante na vetorização!
+Ao usar o operador multiplicativo `*` o **R** entende que será feita a operação elemento a elemento. Para multiplicação de matrizes, o operador correto é `%*%`. Importante na vetorização!
 
 ```{r, echo = TRUE}
 c(1, 3, 5, 7) * t(c(2, 4, 6, 8))
@@ -173,7 +170,7 @@ x >= 2
 
 ## Objetos do R
 
-Existem diversas **Classes** de objetos dentro do R, alguns dos principais tipos são:
+Existem diversas **classes** de objetos dentro do **R**, alguns dos principais tipos são:
 
 - Caractere (letras)
 - Numérico (real)
@@ -255,7 +252,11 @@ Podemos forçar uma coerção no **R**, a chamada **Coerção explícita**. Faze
 
 Com elas o **R** vai transformar o vetor (ou objeto) em questão no tipo que você definiu. Isso pode ser uma tarefa simples ou complicada pro programa. No exemplo abaixo, transformar tudo em caractere é relativamente fácil, o **R** apenas assume que o número é um *string* (um caractere). Dessa forma não conseguimos fazer operações aritméticas com ele, mas conseguimos fazer alguns tratamentos utilizados em texto.
 
+<<<<<<< HEAD
 ```{r, echo = TRUE, error= FALSE}
+=======
+```{r, echo = TRUE, error = TRUE}
+>>>>>>> c246dd38522f21ae8bcd5a599d44ff5954b4fb8f
 x <- as.character(3)
 x
 class(x)
@@ -476,8 +477,8 @@ log(10)
 
 Para saber o que é preciso colocar dentro dos parênteses, ou seja, quais os argumentos (*inputs*) que cada função toma, podemos utilizar a função `args()`. Usando ela com o log (dessa vez sem parênteses) dentro, podemos ver que a função toma dois argumentos: o `x` (valor em que se calcula o logaritmo) e a `base` que já vem com um valor definido de exponencial. Para se ter mais informações sobre alguma função, podemos, além de usar `args()` utilizar uma interrogação anterior ao nome da função (sem parêntesis), ou usar a função `help()`. Essas duas últimas opções são equivalentes e nos mostram a documentação feita para essa função no **R**.
 
-```{r, echo = TRUE}
-args(log))
+```{r, echo = TRUE, eval = FALSE}
+args(log)
 ?log
 help(log)
 ```
