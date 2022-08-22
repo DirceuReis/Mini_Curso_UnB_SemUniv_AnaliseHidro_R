@@ -35,7 +35,7 @@ urlR <- "https://www.r-project.org/logo/Rlogo.png"
 urlRstudio <- "https://rstudio.com/wp-content/uploads/2018/10/RStudio-Logo-Flat.png"
 ```
 
-Download de 2 programas: R e RStudio
+Download de 2 programas: **R** e **RStudio**
 
 - <a href="https://cran.r-project.org/bin/windows/base/"> R </a>
 
@@ -73,7 +73,7 @@ Antes de tudo, é importante saber onde se está trabalhando! Para isso o **R** 
 #source("soma.R")
 ```
 
-R é utilizável como uma calculadora, com os operadores aritméticos que se conhece. Para multiplicação utilizamos `*`, para divisão `/`, para expoentes `^` e para raiz quadrada usamos `sqrt()` - do inglês *square root*.
+O **R** é utilizável como uma calculadora, com os operadores aritméticos que se conhece. Para multiplicação utilizamos `*`, para divisão `/`, para expoentes `^` e para raiz quadrada usamos `sqrt()` - do inglês *square root*.
 
 ```{r, echo = TRUE}
 1 + 2
@@ -103,7 +103,7 @@ c(1, 3, 5, 7, 9) + c(2, 4, 6, 8, 10)
 
 <font size="5">A função c() é usada para concatenar valores, criando vetores de valores da mesma classe.</font>
 
-Ao usar o operador multiplicativo `*` o R entende que será feita a operação elemento a elemento. Para multiplicação de matrizes, o operador correto é `%*%`. Importante na vetorização!
+Ao usar o operador multiplicativo `*` o **R** entende que será feita a operação elemento a elemento. Para multiplicação de matrizes, o operador correto é `%*%`. Importante na vetorização!
 
 ```{r, echo = TRUE}
 c(1, 3, 5, 7) * t(c(2, 4, 6, 8))
@@ -170,7 +170,7 @@ x >= 2
 
 ## Objetos do R
 
-Existem diversas **Classes** de objetos dentro do R, alguns dos principais tipos são:
+Existem diversas **classes** de objetos dentro do **R**, alguns dos principais tipos são:
 
 - Caractere (letras)
 - Numérico (real)
