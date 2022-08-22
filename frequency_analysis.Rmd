@@ -106,7 +106,8 @@ head(dados_60435000)
 ```
 
 ```{r}
-plot(dados_60435000$Vazao)
+time <- as.Date(dados_60435000$Data)
+plot(time,dados_60435000$Vazao,type="l")
 ```
 
 
