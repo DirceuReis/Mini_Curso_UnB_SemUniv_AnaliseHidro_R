@@ -501,6 +501,32 @@ Uma coisa essencial em qualquer linguagem de programação é a criação e util
 log(10)
 ```
 
+Para saber o que é preciso colocar dentro dos parênteses, ou seja, quais os argumentos (*inputs*) que cada função toma, podemos utilizar a função `args()`. Usando ela com o log (dessa vez sem parênteses) dentro, podemos ver que a função toma dois argumentos: o `x` (valor em que se calcula o logaritmo) e a `base` que já vem com um valor definido de exponencial. Para se ter mais informações sobre alguma função, podemos, além de usar `args()` utilizar uma interrogação anterior ao nome da função (sem parêntesis), ou usar a função `help()`. Essas duas últimas opções são equivalentes e nos mostram a documentação feita para essa função no **R**.
+
+```{r, echo = TRUE}
+args(log))
+?log
+help(log)
+```
+
+O segundo argumento do `log()` pode ser modificado, basta deixar ele explícito ao chamar a função. Não precisamos escrever qual argumento estamos utilizando desde que se siga a ordem da função (mostrada anteriormente). Caso se queira escrever os argumentos em outra ordem, é possível, mas é necessário escrever cada um deles. Veja melhor o exemplo abaixo. O primeiro não definimos a base, portanto é usada a pré definida (exponencial). No segundo log feito, não escrevemos qual a base e qual o número que queremos o logaritmo, portanto o **R** assume que estamos escrevendo na ordem da função, que toma como primeiro argumento o valor e o segundo argumento a base. No terceiro exemplo trocamos as ordens dos argumentos, mas para isso precisamos deixar explícito (escrito) quem é cada um.
+
+```{r, echo = TRUE}
+log(100)
+log(100, 10)
+log(base = 10, x = 100)
+```
+
+Agora vamos fazer nossa própria função dentro do **R**. Para isso, primeiro definimos um nome para ser o nome da função (como fizemos com criação de variáveis / objetos), por exemplo "fun_area_circulo". Em seguida devemos dizer que vamos criar uma função e quais os argumentos que ela toma. Para fazer o exemplo, a área de um círculo, precisamos apenas de uma informação - o raio desse círculo. Podemos fazer quantas operações quisermos dentro da função, no final o último valor será retornado por ela (podemos deixar isso explícito escrevendo `return`) nela. Depois chamamos ela como qualquer outra função!
+
+```{r, echo = TRUE}
+fun_area_circulo <- function(raio){
+  x <- 2*pi*raio
+  return(x)
+}
+
+fun_area_circulo(5)
+```
 
 ## Programação Básica - Estruturas condicionais (ifelse)
 
