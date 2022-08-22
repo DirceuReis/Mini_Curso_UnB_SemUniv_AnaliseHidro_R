@@ -29,6 +29,8 @@ knitr::include_graphics("images/curva_freq_salado.png")
 
 O primeiro passo de nossa atividade consiste em obter a série de máximos anuais que desejamos analisar. A obtenção da série de máximos anuais será realizada em duas etapas. Primeiro vamos obter a séries de vazões diárias, e para isso utilizaremos a mesma função de obtenção de séries diárias de vazão que aprendemos na segunda aula deste curso. Com a série de vazões diárias em mãos, passaremos para a segunda etapa, que é a de extrair a vazão máxima de cada ano hidrológico.
 
+### Obtenção da série de vazões diárias
+
 A função abaixo permite obter a série de vazões diárias de uma estação fluviométrica. O único argumento desta função é o código da estação. Quando chamamos esta função, ela retorna um dataframe com 3 colunas: o código da estação, a data, e o valor da vazão diária. 
 
 Como já estudamos esta função anteriormente, a uitlizaremos aqui sem entrar em qualqer detalhes sobre seu funcionamento.
@@ -102,17 +104,31 @@ Para fins de visualização, utilizamos a função `head(nome_do_dataframe)` do 
 
 ```{r dados_FAL_2}
 dados_60435000 <- dados_serie_ANA(cod_estacao = 60435000)
+index_falha_diario <- which(is.na(dados_60435000[,3]==TRUE))
+dias_falha <- dados_60435000[index_falha_diario,2:3]
 head(dados_60435000)
 ```
 
-```{r}
+Além disso, é sempre importante visualizar os dados para que se teha uma ideia geral da faixa de variação das vazões, sazonalidade e outras padrões que possa ser percebidos num gráfico. 
+
+Aqui, nós plotaremos a série completa das vazões diárias da estação **60435000** utilizando o código abaixo, que emprega o chamado R-base, ao invés de pacote `ggplot2`.
+
+```{r, fig.width = 8, fig.height = 6}
 time <- as.Date(dados_60435000$Data)
-plot(time,dados_60435000$Vazao,type="l",main = "Vazões diárias - estação 60435000",
+plot(time,dados_60435000$Vazao,type="l",
+     main = "Vazões diárias - estação 60435000",
      xlab = "Anos",ylab = "Q (m3/s)")
+# Adiciona grid horizontal apenas
+grid(nx = NA, ny = NULL,
+     lty = 2,      # Grid line type
+     col = "gray", # Grid line color
+     lwd = 2)      # Grid line width
 ```
 
 
 Pode-se notar que nos seis primeiros dias dos dados, que se inicia em maio de 1978, não temos valores registrados de vazão. 
+
+### Extração da série de vazões máximas anuais
 
 Com a série de vazões diárias, passamos ao segundo passo que é o de construir a série de máximos anuais com base no ano hidrológico. Para isso, utilizaremos uma outra função, que é apresentada abaixo. Veja que a função internamente considera o ano hidrológico com início no mês de agosto. O mês de início do ano hidrológico pode ser facilmente alterado, se for o desejo do analista. Uma outra solução seria reesecrever a função incluindo como argumento o mês de início do ano hidrológico.
 
@@ -172,36 +188,38 @@ anos_falha <- Q_max[which(is.na(Q_max[,3]==TRUE)),2:3]
 anos_falha
 ```
 
-
 Mais à frente, quando tivermos que fazer os cálculos necessários para realizar a naálise de frequência, teremos que nos livrar desses anos com falhas. Mas por enquanto vamos deixá-los ocmo estão, e passemos a etapa seguinte que é a de visualizar a série de máximos anuais.
 
-## Visualização dos dados observados
+### Visualização da série de máximos anuais
 
-```{r}
-plot(Q_max$ano_hidro,Q_max$maxima)
+Agora já podemos visualizar a série de máximos anuais que serivirão de base para a nossa análise de frequência. Essa visaulização pode ser feita com o código abaixo, que utiliza apenas o `R-base`.
+
+```{r, fig.width = 8, fig.height = 6}
+plot(Q_max$ano_hidro,Q_max$maxima,type = "o",
+     main = "Máximos anuais - 60435000",
+     xlab = "Anos",ylab = "Q_max (m3/s)",lwd = 2)
+# Adiciona grid
+grid(nx = NULL, ny = NULL,
+     lty = 2,      # Grid line type
+     col = "gray", # Grid line color
+     lwd = 1)      # Grid line width
 ```
 
+## Construção da curva de frequência amostral
 
+### Posição de plotagem
 
+Para que possamos plotar os círculos azuis escuros da Figura apresentada anteriormente, para o caso do Rio Salado, que representam as vazões máximas anuais observadas na série histórica, precisamos determinar as chamadas posição de plotagem, que para a referida Figura é o tempo de recorrência estimado para cada um desses valores.
 
-### Escolha da estação fluviométrica
+Para que seja possível entender esta etapa, vale a pena investir um certo tempo do curso em alguns conceitos básicos.
 
-
-
-
-
-
-### Construção de curva de frequência amostral
-
-Para que possamos plotar os círculos azuis escuros da Figura apresentada anteriormente para o caso do Rio Salado, que representam as vazões máximas anuais observadas na série histórica, precisamos determinar o tempo de recorrência para cada um desses valores.
-
-O tempo de recorrência associado a uma determinada magnitude de vazão, $T_r(q)$, é um conceito hidrológico bastante conhecido, de forma que não dedicaremos muito tempo para discutí-lo aqui. Por definição, o tempo de recorrência de um evento cuja magnitude vale $q$ é igual ao inverso da probabilidade da vazão máxima anual exceder esse valor,
+O tempo de recorrência associado a uma determinada magnitude de vazão, $T_r(q)$, é um conceito hidrológico bastante conhecido, de forma que não dedicaremos muito tempo para discutí-lo aqui. Por definição, o tempo de recorrência de um evento, cuja magnitude vale $q$, é igual ao inverso da probabilidade da vazão máxima anual exceder esse valor,
 
 $$T_r(q) = \frac{1}{P(Q>q)}$$
 
 Por exemplo, se a probabilidade da vazão máxima anual ultrapassar um dado valor $q$ for igual a 0.10, dizemos que o tempo de recorrência dessa vazão $q$ é de 10 anos. Da mesma forma, se $P(Q>q)=0.01$, dizemos que o tempo de recorrência de $q$ vale 100 anos.
 
-Portanto, para que possamos incluir as vazões observadas na nossa curva de frequência, será preciso determinar a probabilidade de excedência de cada uma das observações contidas na série de vazões máximas anuais da localidade de interesse. Isso é feito com base na chamada distribuição empírica de frequência. 
+Portanto, para que possamos incluir as vazões observadas na nossa curva de frequência, será preciso determinar a probabilidade de excedência de cada uma das observações contidas na série de vazões máximas anuais da localidade de interesse. Como o intuito neste primeiro momento é plotar as vazões observadas na curva de frequência, nos basearemos na chamada distribuição empírica de frequência. 
 
 A distribuição empírica de frequência relaciona cada valor de vazão máxima observada na série histórica, denominada aqui de $q_i$, com sua frequência relativa acumulada, $\hat{F}_Q(q_i)$, que representa a nossa estimativa para a probabilidade da variável de interesse, $X$, ser menor ou igual ao valor amostral, $q_i$,
 
@@ -218,11 +236,11 @@ $$\hat{T}_r(q_i) = \frac{1}{1-\hat{P}(Q \le q_i)}$$
 
 Pode parecer estranho se você estiver vendo isso pela primeira vez, mas a verdade é que há diferentes maneiras de se estimar a distribuição empírica de frequência das observações de uma amostra,$\hat{P}(Q\le q_i)$, ou seu complemento, $\hat{P}(Q\le q_i)$.
 
-Uma maneira bem comum de estimar tais probabilidades quando se tem uma amostra de tamanho $n$ consiste em ordenar a série em ordem decrescente determinar a probabilidade de excedência utilizando a seguinte fórmula,
+Uma maneira bem comum de estimar tais probabilidades, quando se tem uma amostra de tamanho $n$, consiste em ordenar a série em ordem decrescente e determinar a probabilidade de excedência utilizando a seguinte fórmula,
 
 $$\hat{P}(Q > q_{(i)}) = 1 - \hat{F}_Q(q_{(i)}) = \frac{i}{n+1}$$ 
 
-em que $q_{(i)}$ representa a chamada estatística de ordem $i$, em que $q_{(1)}\gt q_{(2)}\gt \ldots \gt q_{(n)}$, de forma que $q_{(1)}$ e $q_{(n)}$ são, respectivamente, a maior e a menor observações da amostra. De acordo com essa expressão, por exemplo, numa amostra de tamanho 49, a probabilidade da vazão mázima anual ser maior do que a maior observação da amostra vale $P(Q>q_{(1)})=0.02$), o que resulta num tempo de recorrência de $T_r(q_{(1)})=50$ anos.
+em que $q_{(i)}$ representa a chamada estatística de ordem $i$, em que $q_{(1)}\gt q_{(2)}\gt \ldots \gt q_{(n)}$, de forma que $q_{(1)}$ e $q_{(n)}$ são, respectivamente, a maior e a menor observações da amostra. De acordo com essa expressão, por exemplo, numa amostra de tamanho 49, a probabilidade da vazão máxima anual ser maior do que a maior observação da amostra vale $P(Q>q_{(1)})=0.02$), o que resulta num tempo de recorrência de $T_r(q_{(1)})=50$ anos.
 
 Embora não seja o objetivo aqui deste curso entender os detalhes deste procedimento, mas vale a pena dizer o seguinte: como a distribuição empírica de frequência depende da amostra que se tem em mãos, ela é na verdade uma variável aleatória, ou seja, ela pode variar de amostra para amostra, de modo que é razoável imaginar que ela possui uma distribuição de probabilidades.
 
@@ -245,7 +263,7 @@ $$E[Q_{(1)}]=\frac{1}{20}=0.05$$
 
 Podemos concluir, portanto, que se estimarmos $F_X(x_{(i)})$ utilizando a expressão $i/(n+1)$, em média, utilizando várias amostras, a média das estimativas de $F_X(x_{(i)})$ seria bem próxima do valor populacional, e o grau de proximidade aumenta com o tamanho da amostra. 
 
-Porém, é importanter deixar claro que quando há apenas uma amostra, não é possível ter certeza de que a estimativa é correta, mas é  intuitivo pensar que um estimador, que em média está correto, é de fato um bom estimador. Mais a frente na aula, retornaremos à discussão sobre estimadores e suas características. Mas vale introduzir o conceito de estimador não tendencioso, que é aquele que na média, ao longo de várias amostras, seu valor é igual ao valor populacional.
+Porém, é importanter deixar claro que quando há apenas uma amostra, não é possível ter certeza de que a estimativa é correta, mas é  intuitivo pensar que um estimador, que em média está correto, é de fato um bom estimador. Mais à frente na aula, retornaremos à discussão sobre estimadores e suas características. Mas vale introduzir o conceito de estimador não tendencioso, que é aquele que na média, ao longo de várias amostras, seu valor é igual ao valor populacional.
 
 Portanto, por se tratar de um estimador não-tendencioso da probabilidade de não-excedência da estatística de ordem de uma amostra, a expressão apresentada anteriormente é uma forte candidata a ser utilizada na construção da curva de distribuição empírica de frequência. Porém, como já mencionado anteriormente, há outras formas de se estimar $F_X(x_{(i)})$, sendo que todas seguem a seguinte expressão, com diferença apenas para o valor do parâmetro $a$.
 
@@ -263,6 +281,46 @@ Cunnane | $\frac{i-0.40}{n+0.2}$ | 0.40 | $1.67n+0.3$ | Quantis aproximadamente 
 Grigorten | $\frac{i-0.44}{n+0.12}$ | 0.44 | $1.79n+0.2$ | Otimizada para distribuição Gumbel
 Hazen | $\frac{i-0.5}{n}$ | 0.50 | $2n$ | Escolha tradicional
 
+Não se preocupe tanto se esse conceito de posição de plotagem não ficou totalmente claro. Basta saber que plotaremos os valores de máximos anuais da amostra na curva de frequência utilizando a posição de plotagem de Weibull. 
+
+Na verdade, utilizaremos o tempo de recorrência, $T_r$, para plotagem, lembrando que o $T_r$ é simplemenste o inveso da probabilidade de excedência, representada pela posição de plotagem de Weibull.
+
+O código para o cálculo do é apresentado no código abaixo, que cria três colunas ao dataframe que contém as séries de máximos anuais.
+
+```{r, fig.width = 8, fig.height = 6}
+# Remoção dos anos com falha
+Q_max <- na.omit(Q_max)
+# Ordenamento decrescente do dataframe
+Q_max_ord <- Q_max[order(Q_max$maxima, decreasing = TRUE), ]
+# Inclusão de Três novas colunas: index, posição de plotagem de Weibull, e Tr
+Q_max_ord$index <- seq(from = 1,to = nrow(Q_max_ord))
+Q_max_ord$weibull <- Q_max_ord$index/(nrow(Q_max_ord) + 1)
+Q_max_ord$Tr <- 1/Q_max_ord$weibull
+```
+
+Como já fizemos antes podemos dar uma espiada nesse dataframe utilizando a fnução `head(dataframe_name)`,
+
+```{r}
+head(Q_max_ord)
+```
+
+A última coluna de `Q_max_ord` contém o valor do tempo de recorrência de cada uma das observações contidas na amostra. Vale notar que as observações em `Q_max_ord` estão ordenadas em ordem decrescente.
+
+Podemos agora cirar uma Figura, siilar àquela apresentada para o estudo do Rio Salado, porém, nesta etapa de nossa análise, apenas com os valores amostrais.
+
+```{r, fig.width = 8, fig.height = 6}
+
+plot(Q_max_ord$Tr,Q_max_ord$maxima,type = "p", pch = 19,log = "xy", 
+     main = "Curva de frequência de cheias - 60435000",
+     xlab = "Tr (anos)",ylab = "Q_max (m3/s)",
+     xlim = c(1, 100),   # X-axis limits
+     ylim = c(1, 50))
+# Adiciona grid horizontal
+axis(1, at = c(seq(1,10,by=1),seq(10,100,by=10),seq(200,1000,by=100)),
+     tck = 1, lty = 2, col = "gray")
+# Adiciona grid vertical
+axis(2, tck = 1, lty = 2, col = "gray")
+```
 
 
 ## Inferência

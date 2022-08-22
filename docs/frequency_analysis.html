@@ -2143,17 +2143,24 @@ Aulas
 id="toc-objetivos-da-atividade">Objetivos da atividade</a></li>
 <li><a href="#seleção-das-vazões-máximas-anuais"
 id="toc-seleção-das-vazões-máximas-anuais">Seleção das vazões máximas
-anuais</a></li>
-<li><a href="#visualização-dos-dados-observados"
-id="toc-visualização-dos-dados-observados">Visualização dos dados
-observados</a>
+anuais</a>
 <ul>
-<li><a href="#escolha-da-estação-fluviométrica"
-id="toc-escolha-da-estação-fluviométrica">Escolha da estação
-fluviométrica</a></li>
-<li><a href="#construção-de-curva-de-frequência-amostral"
-id="toc-construção-de-curva-de-frequência-amostral">Construção de curva
-de frequência amostral</a></li>
+<li><a href="#obtenção-da-série-de-vazões-diárias"
+id="toc-obtenção-da-série-de-vazões-diárias">Obtenção da série de vazões
+diárias</a></li>
+<li><a href="#extração-da-série-de-vazões-máximas-anuais"
+id="toc-extração-da-série-de-vazões-máximas-anuais">Extração da série de
+vazões máximas anuais</a></li>
+<li><a href="#visualização-da-série-de-máximos-anuais"
+id="toc-visualização-da-série-de-máximos-anuais">Visualização da série
+de máximos anuais</a></li>
+</ul></li>
+<li><a href="#construção-da-curva-de-frequência-amostral"
+id="toc-construção-da-curva-de-frequência-amostral">Construção da curva
+de frequência amostral</a>
+<ul>
+<li><a href="#posição-de-plotagem" id="toc-posição-de-plotagem">Posição
+de plotagem</a></li>
 </ul></li>
 <li><a href="#inferência" id="toc-inferência">Inferência</a>
 <ul>
@@ -2235,6 +2242,8 @@ vazões diárias, e para isso utilizaremos a mesma função de obtenção de
 séries diárias de vazão que aprendemos na segunda aula deste curso. Com
 a série de vazões diárias em mãos, passaremos para a segunda etapa, que
 é a de extrair a vazão máxima de cada ano hidrológico.</p>
+<h3 id="obtenção-da-série-de-vazões-diárias">Obtenção da série de vazões
+diárias</h3>
 <p>A função abaixo permite obter a série de vazões diárias de uma
 estação fluviométrica. O único argumento desta função é o código da
 estação. Quando chamamos esta função, ela retorna um dataframe com 3
@@ -2319,6 +2328,8 @@ mostra as primeiras 6 linhas do dataframe.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_60435000</span> <span class='op'>&lt;-</span> <span class='fu'>dados_serie_ANA</span><span class='op'>(</span>cod_estacao <span class='op'>=</span> <span class='fl'>60435000</span><span class='op'>)</span></span>
+<span><span class='va'>index_falha_diario</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>[</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>==</span><span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='va'>dias_falha</span> <span class='op'>&lt;-</span> <span class='va'>dados_60435000</span><span class='op'>[</span><span class='va'>index_falha_diario</span>,<span class='fl'>2</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span></span>
 <span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>  Cod_estacao       Data Vazao
@@ -2329,16 +2340,30 @@ mostra as primeiras 6 linhas do dataframe.</p>
 5    60435000 1978-05-05    NA
 6    60435000 1978-05-06    NA</code></pre>
 </div>
+<p>Além disso, é sempre importante visualizar os dados para que se teha
+uma ideia geral da faixa de variação das vazões, sazonalidade e outras
+padrões que possa ser percebidos num gráfico.</p>
+<p>Aqui, nós plotaremos a série completa das vazões diárias da estação
+<strong>60435000</strong> utilizando o código abaixo, que emprega o
+chamado R-base, ao invés de pacote <code>ggplot2</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>time</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span>
-<span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>time</span>,<span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Vazao</span>,type<span class='op'>=</span><span class='st'>"l"</span>,main <span class='op'>=</span> <span class='st'>"Vazões diárias - estação 60435000"</span>,</span>
-<span>     xlab <span class='op'>=</span> <span class='st'>"Anos"</span>,ylab <span class='op'>=</span> <span class='st'>"Q (m3/s)"</span><span class='op'>)</span></span></code></pre>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>time</span>,<span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Vazao</span>,type<span class='op'>=</span><span class='st'>"l"</span>,</span>
+<span>     main <span class='op'>=</span> <span class='st'>"Vazões diárias - estação 60435000"</span>,</span>
+<span>     xlab <span class='op'>=</span> <span class='st'>"Anos"</span>,ylab <span class='op'>=</span> <span class='st'>"Q (m3/s)"</span><span class='op'>)</span></span>
+<span><span class='co'># Adiciona grid horizontal apenas</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/grid.html'>grid</a></span><span class='op'>(</span>nx <span class='op'>=</span> <span class='cn'>NA</span>, ny <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>     lty <span class='op'>=</span> <span class='fl'>2</span>,      <span class='co'># Grid line type</span></span>
+<span>     col <span class='op'>=</span> <span class='st'>"gray"</span>, <span class='co'># Grid line color</span></span>
+<span>     lwd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>      <span class='co'># Grid line width</span></span></code></pre>
 </div>
-<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-6-1.png" width="624" /></p>
+<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-41-1.png" width="768" /></p>
 </div>
 <p>Pode-se notar que nos seis primeiros dias dos dados, que se inicia em
 maio de 1978, não temos valores registrados de vazão.</p>
+<h3 id="extração-da-série-de-vazões-máximas-anuais">Extração da série de
+vazões máximas anuais</h3>
 <p>Com a série de vazões diárias, passamos ao segundo passo que é o de
 construir a série de máximos anuais com base no ano hidrológico. Para
 isso, utilizaremos uma outra função, que é apresentada abaixo. Veja que
@@ -2457,28 +2482,41 @@ acha?</p>
 realizar a naálise de frequência, teremos que nos livrar desses anos com
 falhas. Mas por enquanto vamos deixá-los ocmo estão, e passemos a etapa
 seguinte que é a de visualizar a série de máximos anuais.</p>
-<h2 id="visualização-dos-dados-observados">Visualização dos dados
-observados</h2>
+<h3 id="visualização-da-série-de-máximos-anuais">Visualização da série
+de máximos anuais</h3>
+<p>Agora já podemos visualizar a série de máximos anuais que serivirão
+de base para a nossa análise de frequência. Essa visaulização pode ser
+feita com o código abaixo, que utiliza apenas o <code>R-base</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>$</span><span class='va'>ano_hidro</span>,<span class='va'>Q_max</span><span class='op'>$</span><span class='va'>maxima</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>$</span><span class='va'>ano_hidro</span>,<span class='va'>Q_max</span><span class='op'>$</span><span class='va'>maxima</span>,type <span class='op'>=</span> <span class='st'>"o"</span>,</span>
+<span>     main <span class='op'>=</span> <span class='st'>"Máximos anuais - 60435000"</span>,</span>
+<span>     xlab <span class='op'>=</span> <span class='st'>"Anos"</span>,ylab <span class='op'>=</span> <span class='st'>"Q_max (m3/s)"</span>,lwd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span>
+<span><span class='co'># Adiciona grid</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/grid.html'>grid</a></span><span class='op'>(</span>nx <span class='op'>=</span> <span class='cn'>NULL</span>, ny <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>     lty <span class='op'>=</span> <span class='fl'>2</span>,      <span class='co'># Grid line type</span></span>
+<span>     col <span class='op'>=</span> <span class='st'>"gray"</span>, <span class='co'># Grid line color</span></span>
+<span>     lwd <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>      <span class='co'># Grid line width</span></span></code></pre>
 </div>
-<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-12-1.png" width="624" /></p>
+<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-47-1.png" width="768" /></p>
 </div>
-<h3 id="escolha-da-estação-fluviométrica">Escolha da estação
-fluviométrica</h3>
-<h3 id="construção-de-curva-de-frequência-amostral">Construção de curva
-de frequência amostral</h3>
+<h2 id="construção-da-curva-de-frequência-amostral">Construção da curva
+de frequência amostral</h2>
+<h3 id="posição-de-plotagem">Posição de plotagem</h3>
 <p>Para que possamos plotar os círculos azuis escuros da Figura
-apresentada anteriormente para o caso do Rio Salado, que representam as
+apresentada anteriormente, para o caso do Rio Salado, que representam as
 vazões máximas anuais observadas na série histórica, precisamos
-determinar o tempo de recorrência para cada um desses valores.</p>
+determinar as chamadas posição de plotagem, que para a referida Figura é
+o tempo de recorrência estimado para cada um desses valores.</p>
+<p>Para que seja possível entender esta etapa, vale a pena investir um
+certo tempo do curso em alguns conceitos básicos.</p>
 <p>O tempo de recorrência associado a uma determinada magnitude de
 vazão, <span class="math inline">\(T_r(q)\)</span>, é um conceito
 hidrológico bastante conhecido, de forma que não dedicaremos muito tempo
-para discutí-lo aqui. Por definição, o tempo de recorrência de um evento
-cuja magnitude vale <span class="math inline">\(q\)</span> é igual ao
-inverso da probabilidade da vazão máxima anual exceder esse valor,</p>
+para discutí-lo aqui. Por definição, o tempo de recorrência de um
+evento, cuja magnitude vale <span class="math inline">\(q\)</span>, é
+igual ao inverso da probabilidade da vazão máxima anual exceder esse
+valor,</p>
 <p><span class="math display">\[T_r(q) =
 \frac{1}{P(Q&gt;q)}\]</span></p>
 <p>Por exemplo, se a probabilidade da vazão máxima anual ultrapassar um
@@ -2490,8 +2528,9 @@ recorrência de <span class="math inline">\(q\)</span> vale 100 anos.</p>
 <p>Portanto, para que possamos incluir as vazões observadas na nossa
 curva de frequência, será preciso determinar a probabilidade de
 excedência de cada uma das observações contidas na série de vazões
-máximas anuais da localidade de interesse. Isso é feito com base na
-chamada distribuição empírica de frequência.</p>
+máximas anuais da localidade de interesse. Como o intuito neste primeiro
+momento é plotar as vazões observadas na curva de frequência, nos
+basearemos na chamada distribuição empírica de frequência.</p>
 <p>A distribuição empírica de frequência relaciona cada valor de vazão
 máxima observada na série histórica, denominada aqui de <span
 class="math inline">\(q_i\)</span>, com sua frequência relativa
@@ -2522,9 +2561,9 @@ mas a verdade é que há diferentes maneiras de se estimar a distribuição
 empírica de frequência das observações de uma amostra,<span
 class="math inline">\(\hat{P}(Q\le q_i)\)</span>, ou seu complemento,
 <span class="math inline">\(\hat{P}(Q\le q_i)\)</span>.</p>
-<p>Uma maneira bem comum de estimar tais probabilidades quando se tem
-uma amostra de tamanho <span class="math inline">\(n\)</span> consiste
-em ordenar a série em ordem decrescente determinar a probabilidade de
+<p>Uma maneira bem comum de estimar tais probabilidades, quando se tem
+uma amostra de tamanho <span class="math inline">\(n\)</span>, consiste
+em ordenar a série em ordem decrescente e determinar a probabilidade de
 excedência utilizando a seguinte fórmula,</p>
 <p><span class="math display">\[\hat{P}(Q &gt; q_{(i)}) = 1 -
 \hat{F}_Q(q_{(i)}) = \frac{i}{n+1}\]</span></p>
@@ -2535,7 +2574,7 @@ q_{(n)}\)</span>, de forma que <span
 class="math inline">\(q_{(1)}\)</span> e <span
 class="math inline">\(q_{(n)}\)</span> são, respectivamente, a maior e a
 menor observações da amostra. De acordo com essa expressão, por exemplo,
-numa amostra de tamanho 49, a probabilidade da vazão mázima anual ser
+numa amostra de tamanho 49, a probabilidade da vazão máxima anual ser
 maior do que a maior observação da amostra vale <span
 class="math inline">\(P(Q&gt;q_{(1)})=0.02\)</span>), o que resulta num
 tempo de recorrência de <span
@@ -2582,7 +2621,7 @@ amostra.</p>
 <p>Porém, é importanter deixar claro que quando há apenas uma amostra,
 não é possível ter certeza de que a estimativa é correta, mas é
 intuitivo pensar que um estimador, que em média está correto, é de fato
-um bom estimador. Mais a frente na aula, retornaremos à discussão sobre
+um bom estimador. Mais à frente na aula, retornaremos à discussão sobre
 estimadores e suas características. Mas vale introduzir o conceito de
 estimador não tendencioso, que é aquele que na média, ao longo de várias
 amostras, seu valor é igual ao valor populacional.</p>
@@ -2669,6 +2708,68 @@ distribuição teórica</td>
 </tr>
 </tbody>
 </table>
+<p>Não se preocupe tanto se esse conceito de posição de plotagem não
+ficou totalmente claro. Basta saber que plotaremos os valores de máximos
+anuais da amostra na curva de frequência utilizando a posição de
+plotagem de Weibull.</p>
+<p>Na verdade, utilizaremos o tempo de recorrência, <span
+class="math inline">\(T_r\)</span>, para plotagem, lembrando que o <span
+class="math inline">\(T_r\)</span> é simplemenste o inveso da
+probabilidade de excedência, representada pela posição de plotagem de
+Weibull.</p>
+<p>O código para o cálculo do é apresentado no código abaixo, que cria
+três colunas ao dataframe que contém as séries de máximos anuais.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Remoção dos anos com falha</span></span>
+<span><span class='va'>Q_max</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>)</span></span>
+<span><span class='co'># Ordenamento decrescente do dataframe</span></span>
+<span><span class='va'>Q_max_ord</span> <span class='op'>&lt;-</span> <span class='va'>Q_max</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/order.html'>order</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>$</span><span class='va'>maxima</span>, decreasing <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, <span class='op'>]</span></span>
+<span><span class='co'># Inclusão de Três novas colunas: index, posição de plotagem de Weibull, e Tr</span></span>
+<span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>index</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fl'>1</span>,to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>weibull</span> <span class='op'>&lt;-</span> <span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>index</span><span class='op'>/</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>)</span> <span class='op'>+</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>/</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>weibull</span></span></code></pre>
+</div>
+</div>
+<p>Como já fizemos antes podemos dar uma espiada nesse dataframe
+utilizando a fnução <code>head(dataframe_name)</code>,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code># A tibble: 6 × 6
+# Groups:   Cod_estacao [1]
+  Cod_estacao ano_hidro maxima index weibull    Tr
+  &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;
+1 60435000         2004   37.5     1  0.0233 43   
+2 60435000         1980   28.9     2  0.0465 21.5 
+3 60435000         1983   25.3     3  0.0698 14.3 
+4 60435000         1994   19.3     4  0.0930 10.8 
+5 60435000         2016   17.8     5  0.116   8.6 
+6 60435000         1988   17.1     6  0.140   7.17</code></pre>
+</div>
+<p>A última coluna de <code>Q_max_ord</code> contém o valor do tempo de
+recorrência de cada uma das observações contidas na amostra. Vale notar
+que as observações em <code>Q_max_ord</code> estão ordenadas em ordem
+decrescente.</p>
+<p>Podemos agora cirar uma Figura, siilar àquela apresentada para o
+estudo do Rio Salado, porém, nesta etapa de nossa análise, apenas com os
+valores amostrais.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span>,type <span class='op'>=</span> <span class='st'>"p"</span>, pch <span class='op'>=</span> <span class='fl'>19</span>,log <span class='op'>=</span> <span class='st'>"xy"</span>, </span>
+<span>     main <span class='op'>=</span> <span class='st'>"Curva de frequência de cheias - 60435000"</span>,</span>
+<span>     xlab <span class='op'>=</span> <span class='st'>"Tr (anos)"</span>,ylab <span class='op'>=</span> <span class='st'>"Q_max (m3/s)"</span>,</span>
+<span>     xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>100</span><span class='op'>)</span>,   <span class='co'># X-axis limits</span></span>
+<span>     ylim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='co'># Adiciona grid horizontal</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>1</span>, at <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>10</span>,by<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>10</span>,<span class='fl'>100</span>,by<span class='op'>=</span><span class='fl'>10</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>200</span>,<span class='fl'>1000</span>,by<span class='op'>=</span><span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span>     tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span>
+<span><span class='co'># Adiciona grid vertical</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>2</span>, tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-50-1.png" width="768" /></p>
+</div>
 <h2 id="inferência">Inferência</h2>
 <h3 id="cálculo-dos-momentos-l">Cálculo dos momentos-L</h3>
 <h3 id="diagrama-de-momentos-l">Diagrama de momentos-L</h3>
@@ -2734,7 +2835,7 @@ teórica de probabilidades</li>
 Lognormal</li>
 <li>Curva de frequência com intervalos de confiança</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre
+<div class="sourceCode" id="cb7"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
