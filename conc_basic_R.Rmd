@@ -6,6 +6,56 @@ description: Conceitos básicos para o curso
 ```{r setup, include=FALSE}
 library(knitr)
 ```
+## Visão geral do R e RStudio
+
+### O que é a linguagem R
+
+- <a href="https://bookdown.org/rdpeng/rprogdatascience/">R Programming for Data Science</a>, Roger D. Peng, 2019. Johns Hopkins Bloomberg School of Public Health.
+
+### Porque usar o R em Hidrologia?
+
+- Simplicidade da linguagem
+
+- Excelente desempenho na manipulação de grandes bancos de dados
+
+- Acesso a métodos estatísticos consolidados
+
+- Acesso a diversas ferramentas de visualização de dados
+
+- Acesso a métodos analíticos de ponta e ferramentas compartilhadas internacionalmente - não só pelo uso de pacotes, mas sobretudo, usando fóruns e tutoriais.
+
+- <a href="https://hess.copernicus.org/articles/23/2939/2019/hess-23-2939-2019.pdf"> R in Hydrology </a>, Slater, et al., Hydrol. Earth Syst. Sci., 23, 2939–2963, 2019.
+
+### Instalação do programa
+
+```{r, echo = FALSE}
+# Define variable containing url
+urlR <- "https://www.r-project.org/logo/Rlogo.png"
+urlRstudio <- "https://rstudio.com/wp-content/uploads/2018/10/RStudio-Logo-Flat.png"
+```
+
+Download de 2 programas: **R** e **RStudio**
+
+- <a href="https://cran.r-project.org/bin/windows/base/"> R </a>
+
+<center><img src="`r urlR`" height="100"></center>
+
+- <a href="https://rstudio.com/products/rstudio/download/"> R Studio </a>
+
+<center><img src="`r urlRstudio`" height="100"></center>
+
+*<font size="5">RStudio é uma plataforma com inúmeras ferramentas úteis e que roda a linguagem R. É possível usar só o R por sua interface, mas só é possível usar o RStudio com o R instalado na máquina.</font>*
+
+### Interface do R e RStudio
+
+Abaixo temos a interface do **R** quando o baixamos. Ele é de fato o programa que rodamos e programamos com ele.
+<left><img src="images/RStudio_console.jpeg" height="400"></left>
+
+Baixamos também o **RStudio**, ele é uma IDE (*Integrated Development Environment)*. Isso nada mais é do que um facilitador para usar o **R**, trazendo uma interface mais amigável para utilização dessa linguagem e algumas facilidades.
+<left><img src="images/RStudio_organizacao.jpeg" height="400"></left>
+
+O layout é ajustável em `view -> Panes -> Pane Layout`
+<left><img src="images/RStudio_panel_layout.jpeg" height="400"></left>
 
 ## Primeiros passos, comandos no R
 
