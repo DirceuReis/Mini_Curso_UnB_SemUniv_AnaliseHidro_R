@@ -473,7 +473,7 @@ log(10)
 
 Para saber o que é preciso colocar dentro dos parênteses, ou seja, quais os argumentos (*inputs*) que cada função toma, podemos utilizar a função `args()`. Usando ela com o log (dessa vez sem parênteses) dentro, podemos ver que a função toma dois argumentos: o `x` (valor em que se calcula o logaritmo) e a `base` que já vem com um valor definido de exponencial. Para se ter mais informações sobre alguma função, podemos, além de usar `args()` utilizar uma interrogação anterior ao nome da função (sem parêntesis), ou usar a função `help()`. Essas duas últimas opções são equivalentes e nos mostram a documentação feita para essa função no **R**.
 
-```{r, echo = FALSE}
+```{r, echo = TRUE, eval = FALSE}
 args(log)
 ?log
 help(log)
