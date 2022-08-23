@@ -11,6 +11,38 @@ library(dplyr)
 
 ## Repositório de dados
 
+Existem inúmeros repositórios contendo dados hidrológicos no mundo e no Brasil. Alguns exemplos são:
+- HidroWeb da ANA;
+- Séries históricas do ONS;
+- Dados do CPRM;
+- Dados do INMET.
+
+## Obtenção de dados "tradicional"
+
+Uma maneira de obter dados é simplesmente baixando eles de algum site oficial. Geralmente o arquivo baixado está no formato `.csv`, `.txt` ou `.xls` (excel) - esse último sendo menos comum. No próprio portal da ANA tem a opção de baixar os dados diretamente se souber a estação em questão ou utilizando um mapa dinâmico. Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o arquivo, é importante entender como ele está salvo, para isso podemos abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é mostrado na figura abaixo
+
+```{r obtencao_dados_trad_imagem_1, echo = FALSE, layout = "l-body-outset", fig.align = 'center', out.width = "100%", fig.cap = ""}
+knitr::include_graphics("images/arquivo_vazao_ANA_csv.png")
+```
+
+É possível perceber alguns detalhes importantes. As primeiras 13 linhas contém informações sobre o sistema em sí e a estação, mas os dados medidos começam de fato na linha 14. O separador de cada coluna é um `;` e os decimais são separados por `,`. Agora já temos as informações necessárias para acessar esses dados pelo **R**. Usamos aqui a função `read.table()`, também é possível utilizar a função `read.csv()`, ambas fazem a mesma coisa, apenas alteram os argumentos pré definidos (que podem ser trocados).
+
+```{r obtencao_dados_trad_1}
+dados_ANA <- read.table(file = "dados/vazoes_T_60435000.txt",
+                        skip = 13,
+                        header = T,
+                        sep = ";",
+                        dec = ",")
+```
+
+Agora podemos ver quais colunas existem nesse dataframe dentro do próprio **R** e tentar entender ele melhor também!
+
+```{r obtencao_dados_trad_2}
+colnames(dados_ANA)
+```
+
+A seguir puxaremos o mesmo dado porém diretamente da internet, utilizando o que chamamos de *webservice*. Isso facilita muito a criação de códigos mais automatizados em que não é necessário ficar baixando os dados um a um.
+
 ## Obtenção via webservice
 Ser capaz de obter informações hidrológicas de forma gratuita diretamente da internet, algo conhecido como "webscraping", representa um ganho significativo de eficiência no desenvolvimento de estudos e projetos de hidrologia, recursos hídricos, e áreas afins.
 
@@ -20,7 +52,7 @@ Em essência, o webservice é apenas um site que contém os dados. Porém, esses
 
 Quando acessamos esse endereço, somos levados para a página abaixo,
 
-```{r webservice_ANA, echo=FALSE,layout="l-body-outset", fig.align = 'center', out.width = "100%", fig.cap = ""}
+```{r webservice_ANA, echo = FALSE, layout = "l-body-outset", fig.align = 'center', out.width = "100%", fig.cap = ""}
 knitr::include_graphics("images/webservice_ANA.png")
 ```
 
@@ -36,7 +68,7 @@ Começaremos nossas atividades acessando os dados das estações telemétricas d
 
 Sendo assim, se colocarmos no nosso navegador o seguinte url: <http://telemetriaws1.ana.gov.br/ServiceANA.asmx/ListaEstacoesTelemetricas?statusEstacoes=&origem=>, teremos acesso ao arquivo XML com a informação de todas as estações telemétricas.
 
-```{r XML_ANA_info_1, echo=FALSE, fig.align = 'center', out.width = "90%", fig.cap = ""}
+```{r XML_ANA_info_1, echo = FALSE, fig.align = 'center', out.width = "90%", fig.cap = ""}
 knitr::include_graphics("images/XML_ANA_info_1.png")
 ```
 
@@ -174,4 +206,148 @@ head(dados_FAL)
 
 Aqui rodamos a função apenas para uma estação. Mas se quisermos rodar para várias estações, basta utilizar um loop (for) ou até mesmo a função lapply do R (mais rápido!).
 
-## Outras formas
+## Série Histórica
+
+Outro local do HidroWeb da ANA que possui dados hidrológicos relevantes é na seção de série histórica. Para puxar o arquivo dentro do **R** é possível fazer algo similar ao feito acima. Nessa seção, porém, são necessários 5 argumentos:
+- codEstacao (código da estação);
+- dataInicio (primeira data em que se quer os dados);
+- dataFim (última data em que se quer os dados);
+- tipoDados (podendo ser cotas, 1, chuvas, 2, ou vazões, 3);
+- nivelConsistencia (podendo ser Bruto, 1, ou consistido, 2).
+
+Primeiro então criamos objetos contendo essas informações necessárias para entrar no *url* da série histórica.
+
+```{r serie_historica_1}
+cod_estacao <- 60435000
+data_inicio <- "01/01/1800"
+data_fim <- Sys.Date()
+tipo_dados <- 3
+nivel_consist <- 1
+```
+
+Em seguida, esses objetos são utilizados para criar um *url* para podermos acessar os dados do HidroWeb. Após é feito o mesmo que a cima em outros portais dentro do portal da ANA, fazendo então um `XML::xmlParse()`, seguido por um `XML::getNodeSet()` e `XML::xmlToDataFrame()`. Assim como anteriormente, faz-se também a separação da coluna de data em duas, uma contendo a data e outra contendo a hora.
+
+obs: Por algum motivo o hidroweb não está filtrando os dados pela consistencia, sendo necessária essa etapa abaixo (um filtro).
+
+```{r serie_historica_2}
+# Puxar dados do url e transformar em dataframe
+url_base <-
+  paste0("http://telemetriaws1.ana.gov.br/ServiceANA.asmx/",
+         "HidroSerieHistorica?",
+         "codEstacao=", cod_estacao,
+         "&dataInicio=", data_inicio,
+         "&dataFim=", data_fim,
+         "&tipoDados=", tipo_dados,
+         "&nivelConsistencia=", nivel_consist)
+         
+url_parse <- XML::xmlParse(url_base, encoding = "UTF-8")
+node_doc <- XML::getNodeSet(url_parse, "//SerieHistorica")
+dados_estacao <- XML::xmlToDataFrame(nodes = node_doc)
+
+# Separar data e hora
+dados_estacao$Data <- substr(dados_estacao$DataHora, 1, 10)
+dados_estacao$Hora <- substr(dados_estacao$DataHora, 12, 19)
+```
+
+Nesse arquivo temos a necessidade de uma nova etapa. Ao olhar um pouco como os dados estão oganizados, percebemos que existem 78 colunas. Ao invés dos dados de vazão estarem todos em uma mesma coluna, eles estão espaçados por coluna, contendo 1 mês completo para cada linha do dataframe. Isso é um pouco problemático, pois não podemos simplesmente puxar todas as colunas visto que cada mês vai ter datas diferentes (fevereiro podendo até mudar dependendo do ano bisexto). Para resolver isso, primeiro criamos um vetor/objeto contendo **todas** as datas desde o primeiro mês em questão, até o útimo dia do último mês.
+
+```{r serie_historica_3}
+datas_dia <- seq.Date(from = min(dados_estacao$Data),
+                      to = max(dados_estacao$Data) %m+% months(1) - 1,
+                      by = "day")
+```
+
+Em seguida fazemos um dataframe vazio, contendo 3 colunas. A primeira possui o código da estação sendo avaliado (como repete para todas as linhas, podemos pegar apenas o primeiro valor). A segunda as datas, no formato `caracter` (útil para manipulação de texto), e a última sendo a coluna com os dados de vazão que está, por hora, vazio.
+
+```{r serie_historica_4}
+tabela_final <- data.frame(Cod_estacao = dados_estacao$EstacaoCodigo[1],
+                           Data = as.character(datas_dia),
+                           Vazao = as.numeric(NA))
+```
+
+Agora vamos preencher essa tabela com os dados de vazão do arquivo acessado. Uma maneira de fazer isso é fazendo um *loop* para cada linha dessa tabela. Para cada linha, acessamos o dia em questão (o dia é sempre os últimos 2 caracteres da coluna data). Em seguida obtemos o mês e ano dessa data (os primeiros oito caracteres da coluna de data) e adicionamos o dia "-01" a eles (isso para sabermos em qual linha do arquivo da ANA está o dado) - para isso criamos o objeto *linha_dado*. Por último rodamos um `ifelse()` do tipo: se eu não tiver essa *linha_dado*, ou seja, se não houver medição desse mês na ANA, eu coloco um `NA` (*Not Available*) na tabela final, caso o contrário é pego o valor na linha definida e na coluna do dia + 15 (é somado 15 porque as colunas de dia começam a partir da coluna 16).
+
+```{r serie_historica_5}
+for(i in 1:nrow(tabela_final)){
+  # Dia em análise
+  dia <- as.numeric(substr(tabela_final$Data[i], 9, 10))
+    
+  # Mês e ano em análise
+  mes_ano <- as.Date(paste0(substr(tabela_final$Data[i], 1, 8), "01"))
+  
+  # Olhar a linha do mes e ano e escolher a coluna pelo dia + 15
+  linha_dado <- which(dados_estacao$Data == mes_ano)
+  
+  # Se não tiver o mês nos dados da estação, colocar valor NA
+  ifelse(length(linha_dado) == 0,
+         tabela_final$Vazao[i] <- NA,
+         tabela_final$Vazao[i] <-
+           as.numeric(dados_estacao[linha_dado, (dia + 15)]))
+    
+}
+```
+
+Pronto, agora podemos ver, por exemplo, as primeiras 5 medições que não são `NA`
+
+```{r serie_historica_6}
+head(tabela_final[!is.na(tabela_final$Vazao),])
+```
+
+Assim como feito nas outras etapas, podemos aqui fazer uma função para automatizar tudo que foi feito em várias etapas para deixar o processo mais automatizado e mais fácil quando quiser rodar o mesmo processo para outras estações.
+
+```{r serie_historica_7_funcao}
+dados_serie_ANA <- function(cod_estacao = NA,
+                            data_inicio = "01/01/1800",
+                            data_fim = Sys.Date(),
+                            tipo_dados = 3,
+                            nivel_consist = 1){
+  
+  # Puxar dados do url e transformar em dataframe
+  url_base <-
+    paste0("http://telemetriaws1.ana.gov.br/ServiceANA.asmx/",
+           "HidroSerieHistorica?",
+           "codEstacao=", cod_estacao,
+           "&dataInicio=", data_inicio,
+           "&dataFim=", data_fim,
+           "&tipoDados=", tipo_dados,
+           "&nivelConsistencia=", nivel_consist)
+  
+  url_parse <- XML::xmlParse(url_base, encoding = "UTF-8")
+  node_doc <- XML::getNodeSet(url_parse, "//SerieHistorica")
+  dados_estacao <- XML::xmlToDataFrame(nodes = node_doc)
+  
+  # Por algum motivo o hidroweb não está filtrando os dados pela consistencia
+  dados_estacao <- filter(dados_estacao, NivelConsistencia == nivel_consist)
+  
+  # Separar data e hora
+  dados_estacao$Data <- as.Date(substr(dados_estacao$DataHora, 1, 10))
+  dados_estacao$Hora <- substr(dados_estacao$DataHora, 12, 19)
+  
+  # Fazer um dataframe só com datas e valores de vazão
+  datas_dia <- seq.Date(from = min(dados_estacao$Data),
+                        to = max(dados_estacao$Data) %m+% months(1) - 1,
+                        by = "day")
+  tabela_final <- data.frame(Cod_estacao = dados_estacao$EstacaoCodigo[1],
+                             Data = as.character(datas_dia),
+                             Vazao = as.numeric(NA))
+  
+  
+  for(i in 1:nrow(tabela_final)){
+    dia <- as.numeric(substr(tabela_final$Data[i], 9, 10))
+    mes_ano <- as.Date(paste0(substr(tabela_final$Data[i], 1, 8), "01"))
+    linha_dado <- which(dados_estacao$Data == mes_ano)
+    ifelse(length(linha_dado) == 0,
+           tabela_final$Vazao[i] <- NA,
+           tabela_final$Vazao[i] <-
+             as.numeric(dados_estacao[linha_dado, (dia + 15)])) 
+  } # fim do loop
+  return(tabela_final)
+}
+```
+
+Para testar essa função basta utilizar a linha abaixo.
+
+```{r serie_historica_8_fun}
+dados_60435000 <- dados_serie_ANA(cod_estacao = 60435000)
+dados_60435000[10:15,]
+```
