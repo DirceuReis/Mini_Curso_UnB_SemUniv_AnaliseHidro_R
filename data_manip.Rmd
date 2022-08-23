@@ -118,3 +118,69 @@ Abaixo testamos ela fazendo uma nova coluna no nosso *dataframe*.
 ```{r ano_hidro_2}
 dados_ANA$ano_hidro <- fun_ano_hidro(dados_ANA$Data)
 ```
+
+### Tabela Resumo
+
+Aqui introduzimos um novo conceito do pacote **magrittr** (ele está internamente no **tiyverse**). Esse conceito se chama **pipe operator** e é dado pelo símbolo `%>%`. Basicamente o que ele faz é tomar o que está na esquerda dele, e usar como argumento da função a direita. Assim ao invés de escrever as funções umas dentro das outras, podemos deixar o código mais limpo e fácil de entender. Olhe o exemplo abaixo. Nele estamos tirando o log das vazões, com a função `log()`, depois calculando as diferenças desse log em um passo de tempo com `diff()`, calculamos o exponencial disso com `exp()`, em seguimas calculamos a média desses valores e depois arredondamos isso para ter apenas 2 casas decimais.
+
+```{r ano_hidro_3}
+round(mean(exp(diff(log(dados_ANA$Vazao))), na.rm = T), 2)
+```
+
+É fácil se perder lendo isso pois no **R** normalmente lemos de dentro para fora das funções (e portanto da direita para a esquerda) e é mais fácil ainda confundir qual argumento entra em qual função. Usando o **pipe operator**, dado por `%>%`, o código fica mais facilmente interpretável. Selecionamos a vazão e em seguida tiramos o log, depois a diferença, depois o expoente... Quando uma função tem diversos argumentos podemos escrever explicitamente onde que o objeto a esquerda do *pipe* vai entrar colocando um ponto no lugar dele, não precisando que ele sempre entre no primeiro argumento da função.
+
+```{r ano_hidro_4}
+dados_ANA$Vazao %>%
+  log() %>%
+  diff() %>%
+  exp() %>%
+  mean(., na.rm = T) %>%
+  round(digits = 2, x = .)
+```
+
+Agora que temos o ano hidrológico para cada data, podemos fazer a nossa série de máximos, mínimos e médias anuais a partir dos dados diários. Primeiro cria-se um *dataframe* vazio com as colunas para cada ano, uma coluna para os máximos, outra para os mínimos e outra para as médias anuais. Podemos também criar uma quarta coluna para o número de valores *NA* nesse período.
+
+Já iremos fazer isso no formato de função, para que possamos replicar para as outras estações também! A função tomará como argumento a tabela original de dados (`dados_ANA`), e irá rodar a função `fun_ano_hidro()` internamente. Assim teremos uma nova coluna criada com a função `mutate()`. Em seguida agrupamos os dados por estação (se tivesse mais de uma por exemplo) e por ano hidrológico usando o `group_by` e falamos o que faremos ao juntar esses dados com o `summarise()`. Um problema é se o ano hidrológico estiver todo com falha, nesses casos as funções usadas retornarão `Inf` (infinito), `-Inf` ou `NaN` (*Not a Number*), portanto depois de agruparmos, iremos trocar qualquer valor não-finito na tabela por **NA**.
+
+Rodar uma outra função internamente requer alguns cuidados. Por exemplo, aqui assumimos que a tabela virá com uma coluna chamada "Data". Caso isso não aconteca a nossa função não irá funcionar.
+
+
+```{r ano_hidro_5}
+fun_resumo_ano <- function(dados_hidro){
+  
+  tabela_resumo <-
+    dados_hidro %>%
+    mutate(ano_hidro = fun_ano_hidro(Data)) %>%
+    group_by(Cod_estacao, ano_hidro) %>%
+    summarise(maxima = max(Vazao, na.rm = T),
+              minima = min(Vazao, na.rm = T),
+              media = mean(Vazao, na.rm = T),
+              NAs = sum(is.na(Vazao)))
+  
+  tabela_resumo[!is.finite(tabela_resumo$maxima), c(3, 4, 5)] <- NA
+  
+  return(tabela_resumo)
+}
+```
+
+### Tabela final (loop)
+
+Agora podemos aplicar essa função diretamente aos `dados_ANA` da última aula. Na realidade, podemos fazer um *loop* para abrir cada uma das 4 estações, rodar essa função e juntar essas tabelas em uma só com a função `rbind()` - essa função junta diferentes *dataframes* pelas mesmas colunas, colocando um embaixo do outro. Abaixo rodamos o *loop* de outra maneira, definindo antes quais os códigos das estações e rodando o `for()` variando de 1 a 4. Primeiro lemos a primeira estação e, se for a primeira iteração, salvamos ela em um objeto chamado *tabela_final*. Se não for a primeira iteração, juntamos elas com o `rbind()`.
+
+
+```{r ano_hidro_6}
+estacoes_cod <- c(60435000, 60436000, 60436190, 60443000)
+
+for(i in 1:4){
+  dados_proxy <- read.table(file = paste0("dado/", estacoes_cod[i],".txt"),
+                            sep = "\t",
+                            dec = ".",
+                            header = T,
+                            fileEncoding = "UTF-8")
+  
+  dados_proxy <- fun_resumo_ano(dados_proxy)
+  
+  if(i == 1) tabela_final <- dados_proxy
+  if(i != 1) tabela_final <- rbind(tabela_final, dados_proxy)
+}
+```
