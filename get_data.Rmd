@@ -226,7 +226,7 @@ tipo_dados <- 3
 nivel_consist <- 1
 ```
 
-Em seguida, esses objetos são utilizados para criar um *url* para podermos acessar os dados do HidroWeb. Após é feito o mesmo que a cima em outros portais dentro do portal da ANA, fazendo então um `XML::xmlParse()`, seguido por um `XML::getNodeSet()` e `XML::xmlToDataFrame()`. Assim como anteriormente, faz-se também a separação da coluna de data em duas, uma contendo a data e outra contendo a hora.
+Em seguida, esses objetos são utilizados para criar um *url* para podermos acessar os dados do HidroWeb. Após é feito o mesmo que a cima em outros portais dentro do portal da ANA, fazendo então um `XML::xmlParse()`, seguido por um `XML::getNodeSet()` e `XML::xmlToDataFrame()`. Assim como anteriormente, faz-se também a separação da coluna de data em duas, uma contendo a data e outra contendo a hora. Na coluna de Data é feita a transformação de caractere para Date de modo que possamos fazer algumas operações com ela depois.
 
 obs: Por algum motivo o hidroweb não está filtrando os dados pela consistencia, sendo necessária essa etapa abaixo (um filtro).
 
@@ -246,7 +246,7 @@ node_doc <- XML::getNodeSet(url_parse, "//SerieHistorica")
 dados_estacao <- XML::xmlToDataFrame(nodes = node_doc)
 
 # Separar data e hora
-dados_estacao$Data <- substr(dados_estacao$DataHora, 1, 10)
+dados_estacao$Data <- as.Date(substr(dados_estacao$DataHora, 1, 10))
 dados_estacao$Hora <- substr(dados_estacao$DataHora, 12, 19)
 ```
 
