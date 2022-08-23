@@ -96,12 +96,15 @@ O que fazer com cada dado em branco vai depender do que se quer com os dados. Co
 
 Em hidrologia estatística, é muito comum utilizarmos o ano hidrológico ao invés do calendário "normal" (janeiro a dezembro) para fazer análises estatísticas. Onde começa o ano hidrológico também não é tão simples, mas a via de regra é: entre as secas e cheias.
 
-Faremos aqui uma função para transformar nossa data em ano hidrológico, assim conseguiremos fazer algumas análises anuais interessantes. A função, chamada aqui de `fun_ano_hidro()` tomará 2 argumentos: um sendo as datas que queremos transformar e o outro em que mês que se inicia o ano hidrológico, aqui deixamos pré-definido como 8, mas se quiser mudar isso, basta alterar o argumento na hora de chamar ela (assim não ficamos preso a esse número)!
+Faremos aqui uma função para transformar nossa data em ano hidrológico, assim conseguiremos fazer algumas análises anuais interessantes. A função, chamada aqui de `fun_ano_hidro()` tomará 2 argumentos: um sendo as datas que queremos transformar e o outro em que mês que se inicia o ano hidrológico, aqui deixamos pré-definido como 8, mas se quiser mudar isso, basta alterar o argumento na hora de chamar ela (assim não ficamos preso a esse número)! Primeiro devemos garantir que as datas estão no formato certo, portanto fazemos essa transformação no começo da função. Em seguida definimos qual será o ano hidrológico. O que fazemos é avaliar se o mês em questão é menor ou maior do que o começo do ano hidrológico definido pela função. Se for maior, significa que já entramos em outro ano hidrológico, portanto o ano em questão é o seguinte (o mês 8, Agosto, de 2000 entra para o ano hidrológico de 2001 e assim por diante).
 
 
 ```{r ano_hidro_1}
 fun_ano_hidro <- function(datas,
                           comeco_ano_hidro = 8){
+ 
+  # Se não tiver no formato de datas, fazer essa correção
+  datas <- as.Date(datas)
   
   # Se vai pular (deslocar) um ano ou não
   desloc_ano <- ifelse(month(datas) < comeco_ano_hidro, 0, 1)
@@ -117,6 +120,8 @@ Abaixo testamos ela fazendo uma nova coluna no nosso *dataframe*.
 
 ```{r ano_hidro_2}
 dados_ANA$ano_hidro <- fun_ano_hidro(dados_ANA$Data)
+
+head(dados_ANA)
 ```
 
 ### Tabela Resumo
