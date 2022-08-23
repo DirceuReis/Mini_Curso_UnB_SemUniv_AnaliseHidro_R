@@ -5,6 +5,7 @@ description: Como organizar as informações para facilitar as análises
 
 ```{r setup, include = FALSE}
 library(knitr)
+library(lubridate)
 ```
 
 ## Pacotes
@@ -27,7 +28,7 @@ library(tidyverse)
 Primeiro vamos baixar apenas uma das estações que fizemos na última aula. Ao final podemos repetir o que foi feito anteriormente e criar um *loop* para repetir para as outras 3 estações.
 
 ```{r arquivo_1}
-dados_ANA <- read.table(file = "data/60435000.txt",
+dados_ANA <- read.table(file = "dados/60435000.txt",
                         sep = "\t",
                         dec = ".",
                         header = T,

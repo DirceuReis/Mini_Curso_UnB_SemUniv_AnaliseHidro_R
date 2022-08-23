@@ -2140,13 +2140,242 @@ Aulas
 <h3>Contents</h3>
 <ul>
 <li><a href="#pacotes" id="toc-pacotes">Pacotes</a></li>
-<li><a href="#bla-bla-bla" id="toc-bla-bla-bla">Bla bla bla</a></li>
+<li><a href="#puxar-arquivo-anterior-e-analisar-ele"
+id="toc-puxar-arquivo-anterior-e-analisar-ele">Puxar arquivo anterior e
+analisar ele</a></li>
+<li><a href="#manipulações-básicas-nos-dados"
+id="toc-manipulações-básicas-nos-dados">Manipulações básicas nos
+dados</a></li>
+<li><a href="#dados-em-branco-na" id="toc-dados-em-branco-na">Dados em
+Branco (NA)</a></li>
+<li><a href="#ano-hidrológico" id="toc-ano-hidrológico">Ano
+hidrológico</a></li>
 </ul>
 </nav>
 </div>
 <h2 id="pacotes">Pacotes</h2>
-<h2 id="bla-bla-bla">Bla bla bla</h2>
-<div class="sourceCode" id="cb1"><pre
+<p>Nessa seção vamos usar mecanismos de pacotes já feitos no
+<strong>R</strong>. Existem inúmeros pacotes, cada um com suas funções
+e/ou bancos de dados para diferentes assuntos. Eles podem, inclusive,
+ser apenas um aglomerado de diferentes pacotes para não precisar baixar
+todos um por um. A primeira etapa de utilizar um pacote é a sua
+instalação, isso é feito com o comando <code>install.packages()</code>
+com o nome do pacote estando entre aspas (““) dentro dos parêntesis.
+Assim podemos fazer com todos que se encontram no CRAN (repositório que
+contém o que queremos). Na aula de hoje utilizaremos apenas o
+<strong>tidyverse</strong>, que é um agregado de pacotes extremamente
+populares hoje para manipulação e análise de dados.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/install.packages.html'>install.packages</a></span><span class='op'>(</span><span class='st'>"tidyverse"</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p>Para que o <strong>R</strong> não fique muito pesado, todos os
+pacotes baixados precisam ser carregados na sua seção do
+<strong>R</strong> - isso é feito com o comando <code>library()</code>
+com o pacote estando detro do parêntesis <strong>sem</strong> aspas.</p>
+<p>Podemos notar que ao carregar o pacote dentro da nossa seção primeiro
+vemos quais outros pacotes que foram carregados e suas respectivas
+versões. Nesse exemplo, ao carregar o <strong>tidyverse</strong>, ele
+contém o <strong>ggplot2</strong>, <strong>purrr</strong>,
+<strong>tibble</strong>, <strong>dplyr</strong>, <strong>tidyr</strong>,
+<strong>stringr</strong>, <strong>readr</strong> e
+<strong>forcats</strong>. Além disso, aparece uma mensagem mostrando
+“conflitos”. Esses conflitos são quando diferentes pacotes utilizam
+funções de mesmo nome (as vezes para fazer coisas diferentes), assim o
+<strong>R</strong> te avisa quais funções são iguais e quais serão as
+utilizadas normalmente no programa. É possível usar qualquer função se
+deixarmos explícito de qual pacote queremos (por exemplo
+<code>stats::filter()</code>)</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>── Attaching packages ───────────────────────────── tidyverse 1.3.1 ──</code></pre>
+<pre><code>✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+✔ tibble  3.1.7     ✔ dplyr   1.0.9
+✔ tidyr   1.2.0     ✔ stringr 1.4.0
+✔ readr   2.1.2     ✔ forcats 0.5.1</code></pre>
+<pre><code>── Conflicts ──────────────────────────────── tidyverse_conflicts() ──
+✖ lubridate::as.difftime() masks base::as.difftime()
+✖ lubridate::date()        masks base::date()
+✖ dplyr::filter()          masks stats::filter()
+✖ lubridate::intersect()   masks base::intersect()
+✖ dplyr::lag()             masks stats::lag()
+✖ lubridate::setdiff()     masks base::setdiff()
+✖ lubridate::union()       masks base::union()</code></pre>
+</div>
+<h2 id="puxar-arquivo-anterior-e-analisar-ele">Puxar arquivo anterior e
+analisar ele</h2>
+<p>Primeiro vamos baixar apenas uma das estações que fizemos na última
+aula. Ao final podemos repetir o que foi feito anteriormente e criar um
+<em>loop</em> para repetir para as outras 3 estações.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_ANA</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='st'>"dados/60435000.txt"</span>,</span>
+<span>                        sep <span class='op'>=</span> <span class='st'>"\t"</span>,</span>
+<span>                        dec <span class='op'>=</span> <span class='st'>"."</span>,</span>
+<span>                        header <span class='op'>=</span> <span class='cn'>T</span>,</span>
+<span>                        fileEncoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p>Apesar de termos mexido nesses dados na última aula, o
+<strong>R</strong> não sabe disso, ele baixa o arquivo como se fosse um
+outro qualquer, assim a coluna da estação é do tipo “inteiro” e a
+segunda coluna (de data) está do tipo “caractere”. Vemos isso abaixo e
+em seguida corrigimos ambas para caractere e data, respectivamente.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Cod_estacao</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] &quot;integer&quot;</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] &quot;character&quot;</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Cod_estacao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Cod_estacao</span><span class='op'>)</span></span>
+<span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<h2 id="manipulações-básicas-nos-dados">Manipulações básicas nos
+dados</h2>
+<p>Agora que temos um arquivo do jeito que queríamos (diferente do que
+pegamos diretamente do servidor da ANA), fazer algumas análises podem
+ser bem fáceis. Se quisermos saber de quando a quando essa estação tem
+dados, basta vermos os valores mínimos e máximos da Data.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] &quot;1978-05-01&quot;</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] &quot;2021-11-30&quot;</code></pre>
+</div>
+<p>Se quisermos saber qual valor mínimo, máximo e médio de vazão podemos
+também, mas aparece um problema! Nesses valores temos dados em branco,
+ou <code>NA</code> (<em>Not Available</em>). Dados faltantes sempre são
+problemático e devem ser tratados quando possível. Para algumas funções
+nativas, como <code>max()</code>, <code>min()</code> e
+<code>mean()</code> temos a opção de apenas ignorar eles com o argumento
+<code>na.rm = TRUE</code>, assim os valores máximos, médios e mínimos
+são calculados sem considerar os dados em branco.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Vazao</span>, na.rm <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] 37.4633</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Vazao</span>, na.rm <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] 0.0539</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Vazao</span>, na.rm <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] 2.096619</code></pre>
+</div>
+<h2 id="dados-em-branco-na">Dados em Branco (NA)</h2>
+<p>Antes mesmo de começar a fazer essas avaliações é interessante e
+importante entender melhor os dados em branco. Primeiro, quantos
+existem? Para isso podemos usar a função <code>is.na()</code>, vamos
+rodar ela apenas para os primeiros 15 dados de vazão para mostrar na
+tela.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>15</span><span class='op'>]</span></span></code></pre>
+</div>
+<pre><code> [1]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
+[12] FALSE FALSE FALSE FALSE</code></pre>
+</div>
+<p>Essa função retorna um dado <code>TRUE</code> ou <code>FALSE</code>
+para cada valor avaliado. Como dados lógicos também são
+binários/numéricos (<strong>TRUE = 1</strong> e <strong>FALSE =
+0</strong>), podemos somar esses valores para ver quantos dados em
+branco temos no total. Temos então
+<code>sum(is.na(dados_ANA[,3]))</code> dados em branco.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] 87</code></pre>
+</div>
+<p>Para saber quais as datas que tem o valor de vazão em branco basta
+aplicarmos esse <code>is.na()</code> na coluna de datas.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>]</span></span></code></pre>
+</div>
+<pre><code> [1] &quot;1978-05-01&quot; &quot;1978-05-02&quot; &quot;1978-05-03&quot; &quot;1978-05-04&quot; &quot;1978-05-05&quot;
+ [6] &quot;1978-05-06&quot; &quot;1978-05-07&quot; &quot;1978-05-08&quot; &quot;1978-05-09&quot; &quot;1978-05-10&quot;
+[11] &quot;1978-05-11&quot; &quot;2008-12-01&quot; &quot;2008-12-02&quot; &quot;2008-12-03&quot; &quot;2008-12-04&quot;
+[16] &quot;2008-12-05&quot; &quot;2008-12-06&quot; &quot;2008-12-07&quot; &quot;2008-12-08&quot; &quot;2008-12-09&quot;
+[21] &quot;2008-12-10&quot; &quot;2008-12-11&quot; &quot;2008-12-12&quot; &quot;2008-12-13&quot; &quot;2008-12-14&quot;
+[26] &quot;2008-12-15&quot; &quot;2008-12-16&quot; &quot;2008-12-17&quot; &quot;2008-12-18&quot; &quot;2008-12-19&quot;
+[31] &quot;2008-12-20&quot; &quot;2008-12-21&quot; &quot;2008-12-22&quot; &quot;2008-12-23&quot; &quot;2008-12-25&quot;
+[36] &quot;2008-12-26&quot; &quot;2008-12-27&quot; &quot;2008-12-28&quot; &quot;2008-12-29&quot; &quot;2008-12-30&quot;
+[41] &quot;2008-12-31&quot; &quot;2009-01-01&quot; &quot;2009-01-02&quot; &quot;2009-01-03&quot; &quot;2009-01-04&quot;
+[46] &quot;2009-01-05&quot; &quot;2009-01-06&quot; &quot;2009-01-07&quot; &quot;2009-01-08&quot; &quot;2009-01-09&quot;
+[51] &quot;2009-01-10&quot; &quot;2009-01-11&quot; &quot;2009-01-12&quot; &quot;2009-01-13&quot; &quot;2009-01-14&quot;
+[56] &quot;2009-01-15&quot; &quot;2019-08-01&quot; &quot;2019-08-02&quot; &quot;2019-08-03&quot; &quot;2019-08-04&quot;
+[61] &quot;2019-08-05&quot; &quot;2019-08-06&quot; &quot;2019-08-07&quot; &quot;2019-08-08&quot; &quot;2019-08-09&quot;
+[66] &quot;2019-08-10&quot; &quot;2019-08-11&quot; &quot;2019-08-12&quot; &quot;2019-08-13&quot; &quot;2019-08-14&quot;
+[71] &quot;2019-08-15&quot; &quot;2019-08-16&quot; &quot;2019-08-17&quot; &quot;2019-08-18&quot; &quot;2019-08-19&quot;
+[76] &quot;2019-08-20&quot; &quot;2019-08-21&quot; &quot;2019-08-22&quot; &quot;2019-08-23&quot; &quot;2019-08-24&quot;
+[81] &quot;2019-08-25&quot; &quot;2019-08-26&quot; &quot;2019-08-27&quot; &quot;2019-08-28&quot; &quot;2019-08-29&quot;
+[86] &quot;2019-08-30&quot; &quot;2019-08-31&quot;</code></pre>
+</div>
+<p>E se quiser o último (a última data com vazão em branco), podemos
+fazer o <code>max()</code> dessas datas todas.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] &quot;2019-08-31&quot;</code></pre>
+</div>
+<p>O que fazer com cada dado em branco vai depender do que se quer com
+os dados. Como completar essas falhas é uma temática extremamente
+relevante e difícil de responder até mesmo hoje. Pararemos por hora de
+falar desses valores, e não entraremos muito a fundo sobre o que fazer
+com eles (até porque depende do que se quer fazer) nesse curso.</p>
+<h2 id="ano-hidrológico">Ano hidrológico</h2>
+<p>Em hidrologia estatística, é muito comum utilizarmos o ano
+hidrológico ao invés do calendário “normal” (janeiro a dezembro) para
+fazer análises estatísticas. Onde começa o ano hidrológico também não é
+tão simples, mas a via de regra é: entre as secas e cheias.</p>
+<p>Faremos aqui uma função para transformar nossa data em ano
+hidrológico, assim conseguiremos fazer algumas análises anuais
+interessantes. A função, chamada aqui de <code>fun_ano_hidro()</code>
+tomará 2 argumentos: um sendo as datas que queremos transformar e o
+outro em que mês que se inicia o ano hidrológico, aqui deixamos
+pré-definido como 8, mas se quiser mudar isso, basta alterar o argumento
+na hora de chamar ela (assim não ficamos preso a esse número)!</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>fun_ano_hidro</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>datas</span>,</span>
+<span>                          <span class='va'>comeco_ano_hidro</span> <span class='op'>=</span> <span class='fl'>8</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  </span>
+<span>  <span class='co'># Se vai pular (deslocar) um ano ou não</span></span>
+<span>  <span class='va'>desloc_ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/month.html'>month</a></span><span class='op'>(</span><span class='va'>datas</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='va'>comeco_ano_hidro</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Ano Hidro</span></span>
+<span>  <span class='va'>ano_hidro</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/year.html'>year</a></span><span class='op'>(</span><span class='va'>datas</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>desloc_ano</span></span>
+<span>  </span>
+<span>  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>ano_hidro</span><span class='op'>)</span></span>
+<span><span class='op'>}</span></span></code></pre>
+</div>
+</div>
+<p>Abaixo testamos ela fazendo uma nova coluna no nosso
+<em>dataframe</em>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>ano_hidro</span> <span class='op'>&lt;-</span> <span class='fu'>fun_ano_hidro</span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<div class="sourceCode" id="cb15"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

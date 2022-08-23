@@ -2299,7 +2299,7 @@ entrar em qualqer detalhes sobre seu funcionamento.</p>
 <span>  </span>
 <span>  <span class='co'># Fazer um dataframe só com datas e valores de vazão</span></span>
 <span>  <span class='va'>datas_dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,</span>
-<span>                        to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/lubridate/man/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
+<span>                        to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://lubridate.tidyverse.org/reference/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
 <span>                        by <span class='op'>=</span> <span class='st'>"day"</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>Cod_estacao <span class='op'>=</span> <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>EstacaoCodigo</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,</span>
@@ -2398,10 +2398,10 @@ função incluindo como argumento o mês de início do ano hidrológico.</p>
 <span>  <span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Definir se o mês em questão entra no ano atual ou no próximo ano</span></span>
-<span>  <span class='va'>desloc_ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/lubridate/man/month.html'>month</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='va'>comeco_ano_hidro</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span></span>
+<span>  <span class='va'>desloc_ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/month.html'>month</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='va'>comeco_ano_hidro</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Ano Hidro</span></span>
-<span>  <span class='va'>tabela</span><span class='op'>$</span><span class='va'>ano_hidro</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lubridate/man/year.html'>year</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>desloc_ano</span></span>
+<span>  <span class='va'>tabela</span><span class='op'>$</span><span class='va'>ano_hidro</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/year.html'>year</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>desloc_ano</span></span>
 <span>  </span>
 <span>  <span class='co'># Fazer uma tabela final apenas com os máximos anuais</span></span>
 <span>  <span class='va'>max_anuais</span> <span class='op'>&lt;-</span></span>
@@ -2783,7 +2783,7 @@ estudo do Rio Salado. Porém, nesta etapa de nossa análise, apenas os
 valores amostrais das vazões máximas serão apresentados.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span>,type <span class='op'>=</span> <span class='st'>"p"</span>, pch <span class='op'>=</span> <span class='fl'>19</span>,log <span class='op'>=</span> <span class='st'>"xy"</span>, </span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span>,type <span class='op'>=</span> <span class='st'>"p"</span>, pch <span class='op'>=</span> <span class='fl'>19</span>,log <span class='op'>=</span> <span class='st'>"x"</span>, </span>
 <span>     main <span class='op'>=</span> <span class='st'>"Curva de frequência de cheias - 60435000"</span>,</span>
 <span>     xlab <span class='op'>=</span> <span class='st'>"Tr (anos)"</span>,ylab <span class='op'>=</span> <span class='st'>"Q_max (m3/s)"</span>,</span>
 <span>     xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>100</span><span class='op'>)</span>,   <span class='co'># X-axis limits</span></span>
@@ -2905,6 +2905,84 @@ class="math inline">\(Q\)</span>,</p>
 <p><span class="math display">\[
 \hat{Q}_p = exp(\hat{\mu}_Y + Z_p\hat{\sigma}_Y)
 \]</span> ### Ajuste propriamente dito</p>
+<p>Então, vamos ao que interessa. Tems basicamente que realizar três
+etapas para determinar os quantis de cheia com base na distribuição
+lognormal,</p>
+<ol type="1">
+<li>Construir a série $Y = ln(Q)={Y_1,Y_2,,Q_n}</li>
+<li>Estimar <span class="math inline">\(\mu_y\)</span> e <span
+class="math inline">\(\sigma_Y^2\)</span> por meio dos estimadores <span
+class="math inline">\(\hat{\mu}_Y\)</span> e <span
+class="math inline">\(\hat{\sigma}_Y^2\)</span></li>
+<li>Estimar os quantis de cheia, <span
+class="math inline">\(Q_p\)</span>, por meio do estimador <span
+class="math inline">\(\hat{Q}_p\)</span></li>
+</ol>
+<p>O código para realizar esse ajuste segue abaixo,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Determinar a nova série Y = ln(Q)</span></span>
+<span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Estimar os parâmetros da distribuição Normal, sabendo que Y ~ N(mu_y,sigma2_Y)</span></span>
+<span><span class='va'>mu_Y_hat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>)</span></span>
+<span><span class='va'>sigma2_hat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/cor.html'>var</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Estimar os quantis de Y e de Q</span></span>
+<span><span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fl'>0.01</span>,to <span class='op'>=</span> <span class='fl'>0.99</span>,by <span class='op'>=</span> <span class='fl'>0.01</span><span class='op'>)</span>     <span class='co'># define valores de p que serão empregados para os quantis</span></span>
+<span><span class='va'>Tr</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>/</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>-</span><span class='va'>p</span><span class='op'>)</span>                                 <span class='co'># Calcula os tempos de recorrência para cada valro de p</span></span>
+<span><span class='va'>z_p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>qnorm</a></span><span class='op'>(</span><span class='va'>p</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>                         <span class='co'># quantil da normal-padrão</span></span>
+<span><span class='va'>y_p_hat</span> <span class='op'>&lt;-</span> <span class='va'>mu_Y_hat</span> <span class='op'>+</span> <span class='va'>z_p</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>sigma2_hat</span><span class='op'>)</span>    <span class='co'># estimativa do quantil de Y</span></span>
+<span><span class='va'>q_p_hat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span><span class='op'>(</span><span class='va'>y_p_hat</span><span class='op'>)</span>                       <span class='co'># estimativa do quantil de Q</span></span>
+<span></span>
+<span><span class='co'># Criação de um dataframe com os quantis de cheia</span></span>
+<span><span class='va'>Quantis_Q</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='va'>q_p_hat</span>,<span class='va'>Tr</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p>Podemos dar uma espiada no dataframe que contém os quantis de cheia
+utilizando a função <code>head(dataframe.name)</code>,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>Quantis_Q</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>   q_p_hat       Tr
+1 3.603989 1.010101
+2 4.101790 1.020408
+3 4.452708 1.030928
+4 4.736340 1.041667
+5 4.980326 1.052632
+6 5.197874 1.063830</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='va'>Quantis_Q</span>,<span class='fl'>5</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>    q_p_hat        Tr
+95 23.73313  20.00000
+96 24.95571  25.00000
+97 26.54536  33.33333
+98 28.81638  50.00000
+99 32.79664 100.00000</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span>,type <span class='op'>=</span> <span class='st'>"p"</span>, pch <span class='op'>=</span> <span class='fl'>19</span>,log <span class='op'>=</span> <span class='st'>"y"</span>, </span>
+<span>     main <span class='op'>=</span> <span class='st'>"Curva de frequência de cheias - 60435000"</span>,</span>
+<span>     xlab <span class='op'>=</span> <span class='st'>"Tr (anos)"</span>,ylab <span class='op'>=</span> <span class='st'>"Q_max (m3/s)"</span>,</span>
+<span>     xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>100</span><span class='op'>)</span>,   <span class='co'># X-axis limits</span></span>
+<span>     ylim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Adiciona a LN2</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/lines.html'>lines</a></span><span class='op'>(</span><span class='va'>Quantis_Q</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>Quantis_Q</span><span class='op'>$</span><span class='va'>q_p_hat</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Adiciona grid horizontal</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>1</span>, at <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>10</span>,by<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>10</span>,<span class='fl'>100</span>,by<span class='op'>=</span><span class='fl'>10</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>200</span>,<span class='fl'>1000</span>,by<span class='op'>=</span><span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span>     tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span>
+<span><span class='co'># Adiciona grid vertical</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>2</span>, tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-14-1.png" width="768" /></p>
+</div>
 <h3 id="determinação-dos-quantis-de-cheia">Determinação dos quantis de
 cheia</h3>
 <h2 id="descrição-das-incerteas">Descrição das incerteas</h2>
@@ -2973,7 +3051,7 @@ teórica de probabilidades</li>
 Lognormal</li>
 <li>Curva de frequência com intervalos de confiança</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre
+<div class="sourceCode" id="cb9"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

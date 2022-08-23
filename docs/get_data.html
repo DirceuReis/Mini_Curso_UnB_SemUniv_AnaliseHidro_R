@@ -2141,6 +2141,9 @@ Aulas
 <ul>
 <li><a href="#repositório-de-dados"
 id="toc-repositório-de-dados">Repositório de dados</a></li>
+<li><a href="#obtenção-de-dados-tradicional"
+id="toc-obtenção-de-dados-tradicional">Obtenção de dados
+“tradicional”</a></li>
 <li><a href="#obtenção-via-webservice"
 id="toc-obtenção-via-webservice">Obtenção via webservice</a></li>
 <li><a href="#lista-das-estações-telemétricas-da-ana"
@@ -2149,12 +2152,111 @@ Telemétricas da ANA</a></li>
 <li><a href="#dados-hidrometeorológicos-da-ana"
 id="toc-dados-hidrometeorológicos-da-ana">Dados Hidrometeorológicos da
 ANA</a></li>
-<li><a href="#outras-formas" id="toc-outras-formas">Outras
-formas</a></li>
+<li><a href="#série-histórica" id="toc-série-histórica">Série
+Histórica</a></li>
+<li><a href="#salvar-arquivos" id="toc-salvar-arquivos">Salvar
+arquivos</a>
+<ul>
+<li><a href="#salvar-um-arquivo-único"
+id="toc-salvar-um-arquivo-único">Salvar um arquivo único</a></li>
+<li><a href="#salvar-em-um-loop" id="toc-salvar-em-um-loop">Salvar em um
+<em>loop</em></a></li>
+</ul></li>
 </ul>
 </nav>
 </div>
 <h2 id="repositório-de-dados">Repositório de dados</h2>
+<p>Existem inúmeros repositórios contendo dados hidrológicos no mundo e
+no Brasil. Alguns exemplos são:</p>
+<ul>
+<li>HidroWeb da ANA;</li>
+<li>Séries históricas do ONS;</li>
+<li>Dados do CPRM;</li>
+<li>Dados do INMET.</li>
+</ul>
+<h2 id="obtenção-de-dados-tradicional">Obtenção de dados
+“tradicional”</h2>
+<p>Uma maneira de obter dados é simplesmente baixando eles de algum site
+oficial. Geralmente o arquivo baixado está no formato <code>.csv</code>,
+<code>.txt</code> ou <code>.xls</code> (excel) - esse último sendo menos
+comum. No próprio portal da ANA tem a opção de baixar os dados
+diretamente se souber a estação em questão ou utilizando um mapa
+dinâmico. Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o
+arquivo, é importante entender como ele está salvo, para isso podemos
+abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é
+mostrado na figura abaixo</p>
+<div class="layout-chunk" data-layout="l-body-outset">
+<p><img src="images/arquivo_vazao_ANA_csv.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<p>É possível perceber alguns detalhes importantes. As primeiras 13
+linhas contém informações sobre o sistema em sí e a estação, mas os
+dados medidos começam de fato na linha 14. O separador de cada coluna é
+um <code>;</code> e os decimais são separados por <code>,</code>. Agora
+já temos as informações necessárias para acessar esses dados pelo
+<strong>R</strong>. Usamos aqui a função <code>read.table()</code>,
+também é possível utilizar a função <code>read.csv()</code>, ambas fazem
+a mesma coisa, apenas alteram os argumentos pré definidos (que podem ser
+trocados).</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_ANA</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='st'>"dados/vazoes_T_60435000.txt"</span>,</span>
+<span>                        skip <span class='op'>=</span> <span class='fl'>13</span>,</span>
+<span>                        header <span class='op'>=</span> <span class='cn'>T</span>,</span>
+<span>                        sep <span class='op'>=</span> <span class='st'>";"</span>,</span>
+<span>                        dec <span class='op'>=</span> <span class='st'>","</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p>Agora podemos ver quais colunas existem nesse dataframe dentro do
+próprio <strong>R</strong> e tentar entender ele melhor também!</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code> [1] &quot;EstacaoCodigo&quot;        &quot;NivelConsistencia&quot;   
+ [3] &quot;Data&quot;                 &quot;Hora&quot;                
+ [5] &quot;MediaDiaria&quot;          &quot;MetodoObtencaoVazoes&quot;
+ [7] &quot;Maxima&quot;               &quot;Minima&quot;              
+ [9] &quot;Media&quot;                &quot;DiaMaxima&quot;           
+[11] &quot;DiaMinima&quot;            &quot;MaximaStatus&quot;        
+[13] &quot;MinimaStatus&quot;         &quot;MediaStatus&quot;         
+[15] &quot;MediaAnual&quot;           &quot;MediaAnualStatus&quot;    
+[17] &quot;Vazao01&quot;              &quot;Vazao02&quot;             
+[19] &quot;Vazao03&quot;              &quot;Vazao04&quot;             
+[21] &quot;Vazao05&quot;              &quot;Vazao06&quot;             
+[23] &quot;Vazao07&quot;              &quot;Vazao08&quot;             
+[25] &quot;Vazao09&quot;              &quot;Vazao10&quot;             
+[27] &quot;Vazao11&quot;              &quot;Vazao12&quot;             
+[29] &quot;Vazao13&quot;              &quot;Vazao14&quot;             
+[31] &quot;Vazao15&quot;              &quot;Vazao16&quot;             
+[33] &quot;Vazao17&quot;              &quot;Vazao18&quot;             
+[35] &quot;Vazao19&quot;              &quot;Vazao20&quot;             
+[37] &quot;Vazao21&quot;              &quot;Vazao22&quot;             
+[39] &quot;Vazao23&quot;              &quot;Vazao24&quot;             
+[41] &quot;Vazao25&quot;              &quot;Vazao26&quot;             
+[43] &quot;Vazao27&quot;              &quot;Vazao28&quot;             
+[45] &quot;Vazao29&quot;              &quot;Vazao30&quot;             
+[47] &quot;Vazao31&quot;              &quot;Vazao01Status&quot;       
+[49] &quot;Vazao02Status&quot;        &quot;Vazao03Status&quot;       
+[51] &quot;Vazao04Status&quot;        &quot;Vazao05Status&quot;       
+[53] &quot;Vazao06Status&quot;        &quot;Vazao07Status&quot;       
+[55] &quot;Vazao08Status&quot;        &quot;Vazao09Status&quot;       
+[57] &quot;Vazao10Status&quot;        &quot;Vazao11Status&quot;       
+[59] &quot;Vazao12Status&quot;        &quot;Vazao13Status&quot;       
+[61] &quot;Vazao14Status&quot;        &quot;Vazao15Status&quot;       
+[63] &quot;Vazao16Status&quot;        &quot;Vazao17Status&quot;       
+[65] &quot;Vazao18Status&quot;        &quot;Vazao19Status&quot;       
+[67] &quot;Vazao20Status&quot;        &quot;Vazao21Status&quot;       
+[69] &quot;Vazao22Status&quot;        &quot;Vazao23Status&quot;       
+[71] &quot;Vazao24Status&quot;        &quot;Vazao25Status&quot;       
+[73] &quot;Vazao26Status&quot;        &quot;Vazao27Status&quot;       
+[75] &quot;Vazao28Status&quot;        &quot;Vazao29Status&quot;       
+[77] &quot;Vazao30Status&quot;        &quot;Vazao31Status&quot;       
+[79] &quot;X&quot;                   </code></pre>
+</div>
+<p>A seguir puxaremos o mesmo dado porém diretamente da internet,
+utilizando o que chamamos de <em>webservice</em>. Isso facilita muito a
+criação de códigos mais automatizados em que não é necessário ficar
+baixando os dados um a um.</p>
 <h2 id="obtenção-via-webservice">Obtenção via webservice</h2>
 <p>Ser capaz de obter informações hidrológicas de forma gratuita
 diretamente da internet, algo conhecido como “webscraping”, representa
@@ -2727,8 +2829,270 @@ desse dataframe.</p>
 <p>Aqui rodamos a função apenas para uma estação. Mas se quisermos rodar
 para várias estações, basta utilizar um loop (for) ou até mesmo a função
 lapply do R (mais rápido!).</p>
-<h2 id="outras-formas">Outras formas</h2>
-<div class="sourceCode" id="cb5"><pre
+<h2 id="série-histórica">Série Histórica</h2>
+<p>Outro local do HidroWeb da ANA que possui dados hidrológicos
+relevantes é na seção de série histórica. Para puxar o arquivo dentro do
+<strong>R</strong> é possível fazer algo similar ao feito acima. Nessa
+seção, porém, são necessários 5 argumentos: - codEstacao (código da
+estação); - dataInicio (primeira data em que se quer os dados); -
+dataFim (última data em que se quer os dados); - tipoDados (podendo ser
+cotas, 1, chuvas, 2, ou vazões, 3); - nivelConsistencia (podendo ser
+Bruto, 1, ou consistido, 2).</p>
+<p>Primeiro então criamos objetos contendo essas informações necessárias
+para entrar no <em>url</em> da série histórica.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>cod_estacao</span> <span class='op'>&lt;-</span> <span class='fl'>60435000</span></span>
+<span><span class='va'>data_inicio</span> <span class='op'>&lt;-</span> <span class='st'>"01/01/1800"</span></span>
+<span><span class='va'>data_fim</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span><span class='va'>tipo_dados</span> <span class='op'>&lt;-</span> <span class='fl'>3</span></span>
+<span><span class='va'>nivel_consist</span> <span class='op'>&lt;-</span> <span class='fl'>1</span></span></code></pre>
+</div>
+</div>
+<p>Em seguida, esses objetos são utilizados para criar um <em>url</em>
+para podermos acessar os dados do HidroWeb. Após é feito o mesmo que a
+cima em outros portais dentro do portal da ANA, fazendo então um
+<code>XML::xmlParse()</code>, seguido por um
+<code>XML::getNodeSet()</code> e <code>XML::xmlToDataFrame()</code>.
+Assim como anteriormente, faz-se também a separação da coluna de data em
+duas, uma contendo a data e outra contendo a hora. Na coluna de Data é
+feita a transformação de caractere para Date de modo que possamos fazer
+algumas operações com ela depois.</p>
+<p>obs: Por algum motivo o hidroweb não está filtrando os dados pela
+consistencia, sendo necessária essa etapa abaixo (um filtro).</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Puxar dados do url e transformar em dataframe</span></span>
+<span><span class='va'>url_base</span> <span class='op'>&lt;-</span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"http://telemetriaws1.ana.gov.br/ServiceANA.asmx/"</span>,</span>
+<span>         <span class='st'>"HidroSerieHistorica?"</span>,</span>
+<span>         <span class='st'>"codEstacao="</span>, <span class='va'>cod_estacao</span>,</span>
+<span>         <span class='st'>"&amp;dataInicio="</span>, <span class='va'>data_inicio</span>,</span>
+<span>         <span class='st'>"&amp;dataFim="</span>, <span class='va'>data_fim</span>,</span>
+<span>         <span class='st'>"&amp;tipoDados="</span>, <span class='va'>tipo_dados</span>,</span>
+<span>         <span class='st'>"&amp;nivelConsistencia="</span>, <span class='va'>nivel_consist</span><span class='op'>)</span></span>
+<span>         </span>
+<span><span class='va'>url_parse</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlTreeParse.html'>xmlParse</a></span><span class='op'>(</span><span class='va'>url_base</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span>
+<span><span class='va'>node_doc</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/getNodeSet.html'>getNodeSet</a></span><span class='op'>(</span><span class='va'>url_parse</span>, <span class='st'>"//SerieHistorica"</span><span class='op'>)</span></span>
+<span><span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlToDataFrame.html'>xmlToDataFrame</a></span><span class='op'>(</span>nodes <span class='op'>=</span> <span class='va'>node_doc</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Separar data e hora</span></span>
+<span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span>, <span class='fl'>1</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Hora</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span>, <span class='fl'>12</span>, <span class='fl'>19</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p>Nesse arquivo temos a necessidade de uma nova etapa. Ao olhar um
+pouco como os dados estão oganizados, percebemos que existem 78 colunas.
+Ao invés dos dados de vazão estarem todos em uma mesma coluna, eles
+estão espaçados por coluna, contendo 1 mês completo para cada linha do
+dataframe. Isso é um pouco problemático, pois não podemos simplesmente
+puxar todas as colunas visto que cada mês vai ter datas diferentes
+(fevereiro podendo até mudar dependendo do ano bisexto). Para resolver
+isso, primeiro criamos um vetor/objeto contendo <strong>todas</strong>
+as datas desde o primeiro mês em questão, até o útimo dia do último
+mês.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>datas_dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,</span>
+<span>                      to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://lubridate.tidyverse.org/reference/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
+<span>                      by <span class='op'>=</span> <span class='st'>"day"</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p>Em seguida fazemos um dataframe vazio, contendo 3 colunas. A primeira
+possui o código da estação sendo avaliado (como repete para todas as
+linhas, podemos pegar apenas o primeiro valor). A segunda as datas, no
+formato <code>caracter</code> (útil para manipulação de texto), e a
+última sendo a coluna com os dados de vazão que está, por hora,
+vazio.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>Cod_estacao <span class='op'>=</span> <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>EstacaoCodigo</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,</span>
+<span>                           Data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='va'>datas_dia</span><span class='op'>)</span>,</span>
+<span>                           Vazao <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='cn'>NA</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p>Agora vamos preencher essa tabela com os dados de vazão do arquivo
+acessado. Uma maneira de fazer isso é fazendo um <em>loop</em> para cada
+linha dessa tabela. Para cada linha, acessamos o dia em questão (o dia é
+sempre os últimos 2 caracteres da coluna data). Em seguida obtemos o mês
+e ano dessa data (os primeiros oito caracteres da coluna de data) e
+adicionamos o dia “-01” a eles (isso para sabermos em qual linha do
+arquivo da ANA está o dado) - para isso criamos o objeto
+<em>linha_dado</em>. Por último rodamos um <code>ifelse()</code> do
+tipo: se eu não tiver essa <em>linha_dado</em>, ou seja, se não houver
+medição desse mês na ANA, eu coloco um <code>NA</code> (<em>Not
+Available</em>) na tabela final, caso o contrário é pego o valor na
+linha definida e na coluna do dia + 15 (é somado 15 porque as colunas de
+dia começam a partir da coluna 16).</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'>for</span><span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  <span class='co'># Dia em análise</span></span>
+<span>  <span class='va'>dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span>, <span class='fl'>9</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>    </span>
+<span>  <span class='co'># Mês e ano em análise</span></span>
+<span>  <span class='va'>mes_ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span>, <span class='fl'>1</span>, <span class='fl'>8</span><span class='op'>)</span>, <span class='st'>"01"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Olhar a linha do mes e ano e escolher a coluna pelo dia + 15</span></span>
+<span>  <span class='va'>linha_dado</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>==</span> <span class='va'>mes_ano</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Se não tiver o mês nos dados da estação, colocar valor NA</span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>linha_dado</span><span class='op'>)</span> <span class='op'>==</span> <span class='fl'>0</span>,</span>
+<span>         <span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NA</span>,</span>
+<span>         <span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span> <span class='op'>&lt;-</span></span>
+<span>           <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>[</span><span class='va'>linha_dado</span>, <span class='op'>(</span><span class='va'>dia</span> <span class='op'>+</span> <span class='fl'>15</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>    </span>
+<span><span class='op'>}</span></span></code></pre>
+</div>
+</div>
+<p>Pronto, agora podemos ver, por exemplo, as primeiras 5 medições que
+não são <code>NA</code></p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>[</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span>,<span class='op'>]</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>   Cod_estacao       Data  Vazao
+12    60435000 1978-05-12 2.5342
+13    60435000 1978-05-13 2.5004
+14    60435000 1978-05-14 2.5004
+15    60435000 1978-05-15 2.4667
+16    60435000 1978-05-16 2.4667
+17    60435000 1978-05-17 2.5004</code></pre>
+</div>
+<p>Assim como feito nas outras etapas, podemos aqui fazer uma função
+para automatizar tudo que foi feito em várias etapas para deixar o
+processo mais automatizado e mais fácil quando quiser rodar o mesmo
+processo para outras estações.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_serie_ANA</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>cod_estacao</span> <span class='op'>=</span> <span class='cn'>NA</span>,</span>
+<span>                            <span class='va'>data_inicio</span> <span class='op'>=</span> <span class='st'>"01/01/1800"</span>,</span>
+<span>                            <span class='va'>data_fim</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>                            <span class='va'>tipo_dados</span> <span class='op'>=</span> <span class='fl'>3</span>,</span>
+<span>                            <span class='va'>nivel_consist</span> <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  </span>
+<span>  <span class='co'># Puxar dados do url e transformar em dataframe</span></span>
+<span>  <span class='va'>url_base</span> <span class='op'>&lt;-</span></span>
+<span>    <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"http://telemetriaws1.ana.gov.br/ServiceANA.asmx/"</span>,</span>
+<span>           <span class='st'>"HidroSerieHistorica?"</span>,</span>
+<span>           <span class='st'>"codEstacao="</span>, <span class='va'>cod_estacao</span>,</span>
+<span>           <span class='st'>"&amp;dataInicio="</span>, <span class='va'>data_inicio</span>,</span>
+<span>           <span class='st'>"&amp;dataFim="</span>, <span class='va'>data_fim</span>,</span>
+<span>           <span class='st'>"&amp;tipoDados="</span>, <span class='va'>tipo_dados</span>,</span>
+<span>           <span class='st'>"&amp;nivelConsistencia="</span>, <span class='va'>nivel_consist</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='va'>url_parse</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlTreeParse.html'>xmlParse</a></span><span class='op'>(</span><span class='va'>url_base</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span>
+<span>  <span class='va'>node_doc</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/getNodeSet.html'>getNodeSet</a></span><span class='op'>(</span><span class='va'>url_parse</span>, <span class='st'>"//SerieHistorica"</span><span class='op'>)</span></span>
+<span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlToDataFrame.html'>xmlToDataFrame</a></span><span class='op'>(</span>nodes <span class='op'>=</span> <span class='va'>node_doc</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Por algum motivo o hidroweb não está filtrando os dados pela consistencia</span></span>
+<span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>dados_estacao</span>, <span class='va'>NivelConsistencia</span> <span class='op'>==</span> <span class='va'>nivel_consist</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Separar data e hora</span></span>
+<span>  <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span>, <span class='fl'>1</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Hora</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span>, <span class='fl'>12</span>, <span class='fl'>19</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Fazer um dataframe só com datas e valores de vazão</span></span>
+<span>  <span class='va'>datas_dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,</span>
+<span>                        to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://lubridate.tidyverse.org/reference/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
+<span>                        by <span class='op'>=</span> <span class='st'>"day"</span><span class='op'>)</span></span>
+<span>  <span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>Cod_estacao <span class='op'>=</span> <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>EstacaoCodigo</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,</span>
+<span>                             Data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='va'>datas_dia</span><span class='op'>)</span>,</span>
+<span>                             Vazao <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='cn'>NA</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  </span>
+<span>  <span class='kw'>for</span><span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>    <span class='va'>dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span>, <span class='fl'>9</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>    <span class='va'>mes_ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span>, <span class='fl'>1</span>, <span class='fl'>8</span><span class='op'>)</span>, <span class='st'>"01"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>    <span class='va'>linha_dado</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>==</span> <span class='va'>mes_ano</span><span class='op'>)</span></span>
+<span>    <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>linha_dado</span><span class='op'>)</span> <span class='op'>==</span> <span class='fl'>0</span>,</span>
+<span>           <span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NA</span>,</span>
+<span>           <span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span> <span class='op'>&lt;-</span></span>
+<span>             <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>[</span><span class='va'>linha_dado</span>, <span class='op'>(</span><span class='va'>dia</span> <span class='op'>+</span> <span class='fl'>15</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span> </span>
+<span>  <span class='op'>}</span> <span class='co'># fim do loop</span></span>
+<span>  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>)</span></span>
+<span><span class='op'>}</span></span></code></pre>
+</div>
+</div>
+<p>Para testar essa função basta utilizar a linha abaixo.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_60435000</span> <span class='op'>&lt;-</span> <span class='fu'>dados_serie_ANA</span><span class='op'>(</span>cod_estacao <span class='op'>=</span> <span class='fl'>60435000</span><span class='op'>)</span></span>
+<span><span class='va'>dados_60435000</span><span class='op'>[</span><span class='fl'>10</span><span class='op'>:</span><span class='fl'>15</span>,<span class='op'>]</span></span></code></pre>
+</div>
+<pre><code>   Cod_estacao       Data  Vazao
+10    60435000 1978-05-10     NA
+11    60435000 1978-05-11     NA
+12    60435000 1978-05-12 2.5342
+13    60435000 1978-05-13 2.5004
+14    60435000 1978-05-14 2.5004
+15    60435000 1978-05-15 2.4667</code></pre>
+</div>
+<h2 id="salvar-arquivos">Salvar arquivos</h2>
+<h3 id="salvar-um-arquivo-único">Salvar um arquivo único</h3>
+<p>Uma etapa tão importante quanto baixar os próprios dados que se
+precisa é conseguir salvar eles antes ou depois de alguma manipulação
+feita. Isso pode ser feito pelo <strong>R</strong> utilizando as funções
+<code>write.table()</code>, <code>write.csv()</code> ou variações delas
+- da mesma forma que haviam variações em <code>read.table()</code>
+<code>read.csv()</code>.</p>
+<p>Uma boa prática é deixar todos os argumentos mais importantes
+explícitos, para que não tenha dúvidas de qua função usar ou como se irá
+salvar. Assim deixa-se explícito abaixo o separador (<em>tab</em>), os
+decimais (“.”), que não irá salvar o nome das linhas (elas não tem nome)
+e a codificação do arquivo (acentos e etc.).</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/write.table.html'>write.table</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>dados_60435000</span>,</span>
+<span>            file <span class='op'>=</span> <span class='st'>"dados_60435000.txt"</span>,</span>
+<span>            sep <span class='op'>=</span> <span class='st'>"\t"</span>,</span>
+<span>            dec <span class='op'>=</span> <span class='st'>"."</span>,</span>
+<span>            row.names <span class='op'>=</span> <span class='cn'>FALSE</span>,</span>
+<span>            fileEncoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<h3 id="salvar-em-um-loop">Salvar em um <em>loop</em></h3>
+<p>A vantagem de utilizar funções e automatizações é fazer tudo que foi
+feito acima para <em>n</em> estações, não apenas uma! Selecionamos já 4
+estações de uma mesma bacia para fazermos análises mais a frente. Os
+códigos delas são:</p>
+<ul>
+<li>60435000 (feita);</li>
+<li>60436000;</li>
+<li>60436190;</li>
+<li><ol start="60443000" type="1">
+<li></li>
+</ol></li>
+</ul>
+<p>Para fazer isso, podemos rodar a nossa funão criada,
+<code>dados_serie_ANA()</code>, para cada uma dessas estações. Depois de
+rodar a função, podemos rodar também o código para salvar elas! Note que
+o <strong>i</strong> interno ao <code>for()</code> não precisa ser uma
+sequência, ele apenas informa quais os valores que <strong>i</strong>
+vai tomar a cada iteração. Na hora de salvar usamos a função
+<code>paste0()</code> pois o nome vai variar com cada iteração.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'>for</span><span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>60435000</span>, <span class='fl'>60436000</span>, <span class='fl'>60436190</span>, <span class='fl'>60443000</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  <span class='va'>dados_proxy</span> <span class='op'>&lt;-</span> <span class='fu'>dados_serie_ANA</span><span class='op'>(</span><span class='va'>i</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/utils/write.table.html'>write.table</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>dados_proxy</span>,</span>
+<span>              file <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='va'>i</span>, <span class='st'>".txt"</span><span class='op'>)</span>,</span>
+<span>              sep <span class='op'>=</span> <span class='st'>"\t"</span>,</span>
+<span>              dec <span class='op'>=</span> <span class='st'>"."</span>,</span>
+<span>              row.names <span class='op'>=</span> <span class='cn'>FALSE</span>,</span>
+<span>              fileEncoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span>
+<span><span class='op'>}</span></span></code></pre>
+</div>
+</div>
+<p>Agora temos 4 arquivos, um para cada estação que definimos, salvos em
+formato <em>.txt</em> do jeito que queremos - o que tornará a próxima
+etapa de manipulação muito mais fácil. Ao invés de termos um arquivo
+para cada estação com 78 colunas e as vazões podendo estar em diferentes
+linhas e colunas temos uma tabela bem simples, com apenas 3 colunas. Uma
+contendo o código da estação, outra a data e a última o valor de vazão
+observado.</p>
+<div class="sourceCode" id="cb8"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
