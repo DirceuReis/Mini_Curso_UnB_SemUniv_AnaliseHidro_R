@@ -370,7 +370,7 @@ write.table(x = dados_60435000,
             fileEncoding = "UTF-8")
 ```
 
-### Salvar em um *loop*
+### Salvar em um loop
 
 A vantagem de utilizar funções e automatizações é fazer tudo que foi feito acima para *n* estações, não apenas uma! Selecionamos já 4 estações de uma mesma bacia para fazermos análises mais a frente. Os códigos delas são:
 
