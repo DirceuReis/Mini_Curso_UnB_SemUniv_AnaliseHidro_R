@@ -12,6 +12,7 @@ library(dplyr)
 ## Repositório de dados
 
 Existem inúmeros repositórios contendo dados hidrológicos no mundo e no Brasil. Alguns exemplos são:
+
 - HidroWeb da ANA;
 - Séries históricas do ONS;
 - Dados do CPRM;
@@ -351,3 +352,46 @@ Para testar essa função basta utilizar a linha abaixo.
 dados_60435000 <- dados_serie_ANA(cod_estacao = 60435000)
 dados_60435000[10:15,]
 ```
+
+## Salvar arquivos
+
+### Salvar um arquivo único
+
+Uma etapa tão importante quanto baixar os próprios dados que se precisa é conseguir salvar eles antes ou depois de alguma manipulação feita. Isso pode ser feito pelo  **R** utilizando as funções `write.table()`, `write.csv()` ou variações delas - da mesma forma que haviam variações em `read.table()` `read.csv()`.
+
+Uma boa prática é deixar todos os argumentos mais importantes explícitos, para que não tenha dúvidas de qua função usar ou como se irá salvar. Assim deixa-se explícito abaixo o separador (*tab*), os decimais ("."), que não irá salvar o nome das linhas (elas não tem nome) e a codificação do arquivo (acentos e etc.).
+
+```{r salvar_arq_1, eval = FALSE}
+write.table(x = dados_60435000,
+            file = "dados_60435000.txt",
+            sep = "\t",
+            dec = ".",
+            row.names = FALSE,
+            fileEncoding = "UTF-8")
+```
+
+### Salvar em um *loop*
+
+A vantagem de utilizar funções e automatizações é fazer tudo que foi feito acima para *n* estações, não apenas uma! Selecionamos já 4 estações de uma mesma bacia para fazermos análises mais a frente. Os códigos delas são:
+
+- 60435000 (feita);
+- 60436000;
+- 60436190;
+- 60443000.
+
+Para fazer isso, podemos rodar a nossa funão criada, `dados_serie_ANA()`, para cada uma dessas estações. Depois de rodar a função, podemos rodar também o código para salvar elas! Note que o **i** interno ao `for()` não precisa ser uma sequência, ele apenas informa quais os valores que **i** vai tomar a cada iteração. Na hora de salvar usamos a função `paste0()` pois o nome vai variar com cada iteração.
+
+```{r salvar_arq_2, eval = FALSE}
+for(i in c(60435000, 60436000, 60436190, 60443000)){
+  dados_proxy <- dados_serie_ANA(i)
+  
+  write.table(x = dados_proxy,
+              file = paste0(i, ".txt"),
+              sep = "\t",
+              dec = ".",
+              row.names = FALSE,
+              fileEncoding = "UTF-8")
+}
+```
+
+Agora temos 4 arquivos, um para cada estação que definimos, salvos em formato *.txt* do jeito que queremos - o que tornará a próxima etapa de manipulação muito mais fácil. Ao invés de termos um arquivo para cada estação com 78 colunas e as vazões podendo estar em diferentes linhas e colunas temos uma tabela bem simples, com apenas 3 colunas. Uma contendo o código da estação, outra a data e a última o valor de vazão observado.
