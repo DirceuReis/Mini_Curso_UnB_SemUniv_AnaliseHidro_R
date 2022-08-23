@@ -2162,6 +2162,23 @@ de frequência amostral</a>
 <li><a href="#posição-de-plotagem" id="toc-posição-de-plotagem">Posição
 de plotagem</a></li>
 </ul></li>
+<li><a href="#ajuste-da-distribuição-lognormal"
+id="toc-ajuste-da-distribuição-lognormal">Ajuste da Distribuição
+Lognormal</a>
+<ul>
+<li><a href="#a-distribuição-lognormal"
+id="toc-a-distribuição-lognormal">A distribuição lognormal</a></li>
+<li><a href="#quantis-de-cheia-da-lognormal"
+id="toc-quantis-de-cheia-da-lognormal">Quantis de cheia da
+lognormal</a></li>
+<li><a href="#método-de-ajuste" id="toc-método-de-ajuste">Método de
+ajuste</a></li>
+<li><a href="#determinação-dos-quantis-de-cheia"
+id="toc-determinação-dos-quantis-de-cheia">Determinação dos quantis de
+cheia</a></li>
+</ul></li>
+<li><a href="#descrição-das-incerteas"
+id="toc-descrição-das-incerteas">Descrição das incerteas</a></li>
 <li><a href="#inferência" id="toc-inferência">Inferência</a>
 <ul>
 <li><a href="#cálculo-dos-momentos-l"
@@ -2282,7 +2299,7 @@ entrar em qualqer detalhes sobre seu funcionamento.</p>
 <span>  </span>
 <span>  <span class='co'># Fazer um dataframe só com datas e valores de vazão</span></span>
 <span>  <span class='va'>datas_dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,</span>
-<span>                        to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://lubridate.tidyverse.org/reference/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
+<span>                        to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/lubridate/man/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
 <span>                        by <span class='op'>=</span> <span class='st'>"day"</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>Cod_estacao <span class='op'>=</span> <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>EstacaoCodigo</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,</span>
@@ -2358,7 +2375,7 @@ chamado R-base, ao invés de pacote <code>ggplot2</code>.</p>
 <span>     col <span class='op'>=</span> <span class='st'>"gray"</span>, <span class='co'># Grid line color</span></span>
 <span>     lwd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>      <span class='co'># Grid line width</span></span></code></pre>
 </div>
-<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-41-1.png" width="768" /></p>
+<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-1-1.png" width="768" /></p>
 </div>
 <p>Pode-se notar que nos seis primeiros dias dos dados, que se inicia em
 maio de 1978, não temos valores registrados de vazão.</p>
@@ -2381,10 +2398,10 @@ função incluindo como argumento o mês de início do ano hidrológico.</p>
 <span>  <span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Definir se o mês em questão entra no ano atual ou no próximo ano</span></span>
-<span>  <span class='va'>desloc_ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/month.html'>month</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='va'>comeco_ano_hidro</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span></span>
+<span>  <span class='va'>desloc_ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/lubridate/man/month.html'>month</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='va'>comeco_ano_hidro</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Ano Hidro</span></span>
-<span>  <span class='va'>tabela</span><span class='op'>$</span><span class='va'>ano_hidro</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/year.html'>year</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>desloc_ano</span></span>
+<span>  <span class='va'>tabela</span><span class='op'>$</span><span class='va'>ano_hidro</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lubridate/man/year.html'>year</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>desloc_ano</span></span>
 <span>  </span>
 <span>  <span class='co'># Fazer uma tabela final apenas com os máximos anuais</span></span>
 <span>  <span class='va'>max_anuais</span> <span class='op'>&lt;-</span></span>
@@ -2498,7 +2515,7 @@ feita com o código abaixo, que utiliza apenas o <code>R-base</code>.</p>
 <span>     col <span class='op'>=</span> <span class='st'>"gray"</span>, <span class='co'># Grid line color</span></span>
 <span>     lwd <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>      <span class='co'># Grid line width</span></span></code></pre>
 </div>
-<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-47-1.png" width="768" /></p>
+<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-7-1.png" width="768" /></p>
 </div>
 <h2 id="construção-da-curva-de-frequência-amostral">Construção da curva
 de frequência amostral</h2>
@@ -2714,11 +2731,19 @@ anuais da amostra na curva de frequência utilizando a posição de
 plotagem de Weibull.</p>
 <p>Na verdade, utilizaremos o tempo de recorrência, <span
 class="math inline">\(T_r\)</span>, para plotagem, lembrando que o <span
-class="math inline">\(T_r\)</span> é simplemenste o inveso da
+class="math inline">\(T_r\)</span> é simplemenste o inverso da
 probabilidade de excedência, representada pela posição de plotagem de
 Weibull.</p>
-<p>O código para o cálculo do é apresentado no código abaixo, que cria
-três colunas ao dataframe que contém as séries de máximos anuais.</p>
+<p>O código para o cálculo do <span class="math inline">\(Tr\)</span> é
+apresentado abaixo. Para facilitar a compreenção de como o cálculo é
+feito, criaram-se três novas colunas ao dataframe que ontém as vazões
+máximas anuais. Mas antes disso, efetuou-se o ordenamento das vazões
+máximas em ordem decrescente, ou seja, o primeiro valor de vazão da nova
+série ordenada é o maior da amostra.</p>
+<p>As três novas colunas são, respectivamente, o índice das vazões,
+começando de 1 indo até o número total de valores, a posição de plotagem
+de Weilbull, que expressa a probabilidade de excedência, e por último o
+tempo de recorrência, <span class="math inline">\(Tr\)</span>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Remoção dos anos com falha</span></span>
@@ -2731,8 +2756,9 @@ três colunas ao dataframe que contém as séries de máximos anuais.</p>
 <span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>/</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>weibull</span></span></code></pre>
 </div>
 </div>
-<p>Como já fizemos antes podemos dar uma espiada nesse dataframe
-utilizando a fnução <code>head(dataframe_name)</code>,</p>
+<p>Como já fizemos antes, podemos dar uma espiada nesse novo dataframe
+com as vazões máximas anuais ordenada utilizando a função
+<code>head(dataframe_name)</code>,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>)</span></span></code></pre>
@@ -2752,9 +2778,9 @@ utilizando a fnução <code>head(dataframe_name)</code>,</p>
 recorrência de cada uma das observações contidas na amostra. Vale notar
 que as observações em <code>Q_max_ord</code> estão ordenadas em ordem
 decrescente.</p>
-<p>Podemos agora cirar uma Figura, siilar àquela apresentada para o
-estudo do Rio Salado, porém, nesta etapa de nossa análise, apenas com os
-valores amostrais.</p>
+<p>Podemos agora criar uma Figura, similar àquela apresentada para o
+estudo do Rio Salado. Porém, nesta etapa de nossa análise, apenas os
+valores amostrais das vazões máximas serão apresentados.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span>,type <span class='op'>=</span> <span class='st'>"p"</span>, pch <span class='op'>=</span> <span class='fl'>19</span>,log <span class='op'>=</span> <span class='st'>"xy"</span>, </span>
@@ -2768,8 +2794,120 @@ valores amostrais.</p>
 <span><span class='co'># Adiciona grid vertical</span></span>
 <span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>2</span>, tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span></code></pre>
 </div>
-<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-50-1.png" width="768" /></p>
+<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-10-1.png" width="768" /></p>
 </div>
+<h2 id="ajuste-da-distribuição-lognormal">Ajuste da Distribuição
+Lognormal</h2>
+<h3 id="a-distribuição-lognormal">A distribuição lognormal</h3>
+<p>Se considerarmos que as vazões máximas anuais <span
+class="math inline">\((Q)\)</span> possuem uma distribuição lognormal,
+então os logaritmos de <span class="math inline">\(Q\)</span>, chamados
+aqui de <span class="math inline">\(Y = ln(Q)\)</span>, terão, por
+definição, uma distribuição normal,</p>
+<p><span class="math display">\[
+Y = ln(Q) \sim N(\mu_Y,\sigma_Y^2)
+\]</span> o que significa dizer que os logarítmicos das vazões máximas
+anuais são bem representados por uma distribuição Normal com parâmetros
+<span class="math inline">\(\mu_Y\)</span> e <span
+class="math inline">\(\sigma_Y^2\)</span>, que, para quem não lembra,
+representam a média e a variância populacionais.</p>
+<p>O adjetivo populacional utilizado aqui é para lembrarmos que essas
+caracerísticas da distribuição são, na verdade, desconhecidas. A única
+pista que temos sobre o valor desses parâmetros está contida na amostra
+que temos, formada por um conjunto de vazões máximas anuais. A maneira
+que utilizaremos a amostra para tentar compreender essa distribuição é o
+assunto da próxima seção.</p>
+<h3 id="quantis-de-cheia-da-lognormal">Quantis de cheia da
+lognormal</h3>
+<p>É muito provável que vocês não se recordem, mas a distribuição Normal
+possui uma caracterísitca bastante interessante. Se aplicarmos uma
+transformação linear numa variável normalmente distribuída, a nova
+variável continua sendo normalmente distribuída, porém com diferentes
+valores para os parâmetros da distribuição.</p>
+<p>Uma transformação bastante útil é aquela em que a variável é
+transformada numa variável normal-padrão, usualmente representada pela
+letra <span class="math inline">\(Z\)</span>. A variável normal-padrão
+<span class="math inline">\(Z\)</span> possui média zero e variância
+unitária, <span class="math inline">\(Z \sim N(0,1)\)</span>. Qualquer
+variável que possui distribuiçao Normal pode ser transformada numa
+variável normal-padrão, bastando subtrair sua média e dividir pelo seu
+desvio-padrão,</p>
+<p><span class="math display">\[
+Z = \frac{Y-\mu_Y}{\sigma_Y}\sim N(0,1)
+\]</span></p>
+<p>Essa transformação é bastate útil aqui, pois utilizaremos o quantil
+da variável normal-padrão, <span class="math inline">\(Z_p\)</span>,
+para escrever o quantil de <span class="math inline">\(Y\)</span>, <span
+class="math inline">\(Y_p\)</span>, e também o quantil de cheia, <span
+class="math inline">\(Q_p\)</span>.</p>
+<p>Quantil de uma variável aleatória, para quem não se lembra, é o valor
+da variável associado a uma dada probabilidade de não-excedência. Por
+exemplo, por definição, a probabilidade da variável aleatória <span
+class="math inline">\(X\)</span> ser menor ou igual ao quantil <span
+class="math inline">\(x_p\)</span> é igual a p,</p>
+<p><span class="math display">\[
+P(X\le x_p)=p
+\]</span> Portanto, a probabilidade da variável normal-padrão, <span
+class="math inline">\(Z\)</span>, ser menor do que os quantis <span
+class="math inline">\(Z_{0.10}\)</span>, <span
+class="math inline">\(Z_{0.50}\)</span> e <span
+class="math inline">\(Z_{0.90}\)</span> é, respectivamente, 0.10, 0.50 e
+0.90.</p>
+<p>Como <span class="math inline">\(Z = (Y-\mu_Y)/\sigma_Y\)</span>,
+podemos dizer que <span class="math inline">\(Z_p =
+(Y_p-\mu_Y)/\sigma_Y\)</span>, de forma que</p>
+<p><span class="math display">\[
+Y_p = \mu_Y + Z_p\sigma_Y
+\]</span> E como $Y=ln(Q), podemos afirmar que</p>
+<p><span class="math display">\[
+Q_p = exp(\mu_Y + Z_p\sigma_Y)
+\]</span> em que <span class="math inline">\(Q_p\)</span> é o quantil
+populacional da variável aleatória <span
+class="math inline">\(Q\)</span>, que representa as vazões máximas
+anuais. Da mesma for que <span class="math inline">\(\mu_y\)</span> e
+<span class="math inline">\(\sigma_Y\)</span> são desconhecidos, <span
+class="math inline">\(Q_p\)</span> também é. A única maneira de estimar
+<span class="math inline">\(Q_p\)</span> é por meio das estimativas de
+<span class="math inline">\(\mu_Y\)</span> e de <span
+class="math inline">\(\sigma_Y\)</span>.</p>
+<h3 id="método-de-ajuste">Método de ajuste</h3>
+<p>Existem diversos métodos para ajustar uma distribuição teórica de
+probabilidades aos dados que se tem em mãos. Para o caso da distribuição
+lognormal com 2 parâmetros, sabe-se que a forma mais eficiente de
+estimar os parâmetros <span class="math inline">\(\mu_Y\)</span> e <span
+class="math inline">\(\sigma_Y^2\)</span> é por meio do método dos
+momentos, que será explicado na sequência.</p>
+<p>Com base numa série de vazões máximas anuais <span
+class="math inline">\(\{Q_1,Q_2,\ldots,Q_n\}\)</span>, determinamos uma
+nova série com base no logarítmos da série original, <span
+class="math inline">\(Y = \{Y_1,Y_2,\ldots,Y_n\}\)</span>.</p>
+<p>Em seguida, aplicamos o métodos dos momentos para estimar <span
+class="math inline">\(\mu_Y,\sigma_Y^2\)</span>, o que consiste em igual
+esses parâmetros aos seus valores amostrias, ou seja,</p>
+<p><span class="math display">\[
+\hat{\mu}_Y = \bar{Y} = \frac{\sum_1^n y_i}{n}
+\]</span> e</p>
+<p><span class="math display">\[
+\hat{\sigma}_Y^2 = \frac{\sum_{i=1}^n (y_i - \bar{Y})^2}{n-1}
+\]</span> Vale notar mais uma vez que <span
+class="math inline">\(\hat{\mu}_Y\)</span> e <span
+class="math inline">\(\hat{\sigma}_Y^2\)</span> possuem um acento
+circunflexo para indicar que eles são os estimadores amostrais dos
+parâmetros populacionais <span class="math inline">\(\mu_Y\)</span> e
+<span class="math inline">\(\sigma_Y^2\)</span>.</p>
+<p>Com os valores de <span class="math inline">\(\hat{\mu}_Y\)</span> e
+<span class="math inline">\(\hat{\sigma}_Y^2\)</span>, podemos estimar
+os quantis de <span class="math inline">\(Y\)</span> e de <span
+class="math inline">\(Q\)</span>,</p>
+<p><span class="math display">\[
+\hat{Y}_p = \hat{\mu}_Y + Z_p\hat{\sigma}_Y
+\]</span> e</p>
+<p><span class="math display">\[
+\hat{Q}_p = exp(\hat{\mu}_Y + Z_p\hat{\sigma}_Y)
+\]</span> ### Ajuste propriamente dito</p>
+<h3 id="determinação-dos-quantis-de-cheia">Determinação dos quantis de
+cheia</h3>
+<h2 id="descrição-das-incerteas">Descrição das incerteas</h2>
 <h2 id="inferência">Inferência</h2>
 <h3 id="cálculo-dos-momentos-l">Cálculo dos momentos-L</h3>
 <h3 id="diagrama-de-momentos-l">Diagrama de momentos-L</h3>

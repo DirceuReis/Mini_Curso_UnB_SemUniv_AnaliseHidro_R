@@ -312,7 +312,7 @@ Podemos agora criar uma Figura, similar àquela apresentada para o estudo do Rio
 
 ```{r, fig.width = 8, fig.height = 6}
 
-plot(Q_max_ord$Tr,Q_max_ord$maxima,type = "p", pch = 19,log = "xy", 
+plot(Q_max_ord$Tr,Q_max_ord$maxima,type = "p", pch = 19,log = "x", 
      main = "Curva de frequência de cheias - 60435000",
      xlab = "Tr (anos)",ylab = "Q_max (m3/s)",
      xlim = c(1, 100),   # X-axis limits
@@ -324,7 +324,139 @@ axis(1, at = c(seq(1,10,by=1),seq(10,100,by=10),seq(200,1000,by=100)),
 axis(2, tck = 1, lty = 2, col = "gray")
 ```
 
+## Ajuste da Distribuição Lognormal
 
+### A distribuição lognormal
+
+Se considerarmos que as vazões máximas anuais $(Q)$ possuem uma distribuição lognormal, então os logaritmos de $Q$, chamados aqui de $Y = ln(Q)$, terão, por definição, uma distribuição normal,
+
+$$
+Y = ln(Q) \sim N(\mu_Y,\sigma_Y^2)
+$$
+o que significa dizer que os logarítmicos das vazões máximas anuais são bem representados por uma distribuição Normal com parâmetros $\mu_Y$ e $\sigma_Y^2$, que, para quem não lembra, representam a média e a variância populacionais.
+
+O adjetivo populacional utilizado aqui é para lembrarmos que essas caracerísticas da distribuição são, na verdade, desconhecidas. A única pista que temos sobre o valor desses parâmetros está contida na amostra que temos, formada por um conjunto de vazões máximas anuais. A maneira que utilizaremos a amostra para tentar compreender essa distribuição é o assunto da próxima seção. 
+
+### Quantis de cheia da lognormal
+
+É muito provável que vocês não se recordem, mas a distribuição Normal possui uma caracterísitca bastante interessante. Se aplicarmos uma transformação linear numa variável normalmente distribuída, a nova variável continua sendo normalmente distribuída, porém com diferentes valores para os parâmetros da distribuição.
+
+Uma transformação bastante útil é aquela em que a variável é transformada numa variável normal-padrão, usualmente representada pela letra $Z$. A variável normal-padrão $Z$ possui média zero e variância unitária, $Z \sim N(0,1)$. Qualquer variável que possui distribuiçao Normal pode ser transformada numa variável normal-padrão, bastando subtrair sua média e dividir pelo seu desvio-padrão,
+
+$$
+Z = \frac{Y-\mu_Y}{\sigma_Y}\sim N(0,1)
+$$
+
+Essa transformação é bastate útil aqui, pois utilizaremos o quantil da variável normal-padrão, $Z_p$, para escrever o quantil de $Y$, $Y_p$, e também o quantil de cheia, $Q_p$. 
+
+Quantil de uma variável aleatória, para quem não se lembra, é o valor da variável associado a uma dada probabilidade de não-excedência. Por exemplo, por definição, a probabilidade da variável aleatória $X$ ser menor ou igual ao quantil $x_p$ é igual a p,
+
+$$
+P(X\le x_p)=p
+$$
+Portanto, a probabilidade da variável normal-padrão, $Z$, ser menor do que os quantis $Z_{0.10}$, $Z_{0.50}$ e $Z_{0.90}$ é, respectivamente, 0.10, 0.50 e 0.90. 
+
+Como $Z = (Y-\mu_Y)/\sigma_Y$, podemos dizer que $Z_p = (Y_p-\mu_Y)/\sigma_Y$, de forma que
+
+$$
+Y_p = \mu_Y + Z_p\sigma_Y
+$$
+E como $Y=ln(Q), podemos afirmar que 
+
+$$
+Q_p = exp(\mu_Y + Z_p\sigma_Y)
+$$
+em que $Q_p$ é o quantil populacional da variável aleatória $Q$, que representa as vazões máximas anuais. Da mesma for que $\mu_y$ e $\sigma_Y$ são desconhecidos, $Q_p$ também é. A única maneira de estimar $Q_p$ é por meio das estimativas de $\mu_Y$ e de $\sigma_Y$. 
+
+### Método de ajuste
+
+Existem diversos métodos para ajustar uma distribuição teórica de probabilidades aos dados que se tem em mãos. Para o caso da distribuição lognormal com 2 parâmetros, sabe-se que a forma mais eficiente de estimar os parâmetros $\mu_Y$ e $\sigma_Y^2$ é por meio do método dos momentos, que será explicado na sequência.
+
+Com base numa série de vazões máximas anuais $\{Q_1,Q_2,\ldots,Q_n\}$, determinamos uma nova série com base no logarítmos da série original, $Y = \{Y_1,Y_2,\ldots,Y_n\}$.
+
+Em seguida, aplicamos o métodos dos momentos para estimar $\mu_Y,\sigma_Y^2$, o que consiste em igual esses parâmetros aos seus valores amostrias, ou seja, 
+
+$$
+\hat{\mu}_Y = \bar{Y} = \frac{\sum_1^n y_i}{n}
+$$
+e
+
+$$
+\hat{\sigma}_Y^2 = \frac{\sum_{i=1}^n (y_i - \bar{Y})^2}{n-1}
+$$
+Vale notar mais uma vez que $\hat{\mu}_Y$ e $\hat{\sigma}_Y^2$ possuem um acento circunflexo para indicar que eles são os estimadores amostrais dos parâmetros populacionais $\mu_Y$ e $\sigma_Y^2$.
+
+Com os valores de $\hat{\mu}_Y$ e $\hat{\sigma}_Y^2$, podemos estimar os quantis de $Y$ e de $Q$,
+
+$$
+\hat{Y}_p = \hat{\mu}_Y + Z_p\hat{\sigma}_Y
+$$
+e
+
+$$
+\hat{Q}_p = exp(\hat{\mu}_Y + Z_p\hat{\sigma}_Y)
+$$
+### Ajuste propriamente dito
+
+Então, vamos ao que interessa. Tems basicamente que realizar três etapas para determinar os quantis de cheia com base na distribuição lognormal,
+
+1. Construir a série $Y = ln(Q)={Y_1,Y_2,\ldots,Q_n}
+2. Estimar $\mu_y$ e $\sigma_Y^2$ por meio dos estimadores $\hat{\mu}_Y$ e $\hat{\sigma}_Y^2$
+3. Estimar os quantis de cheia, $Q_p$, por meio do estimador $\hat{Q}_p$
+
+O código para realizar esse ajuste segue abaixo,
+
+```{r}
+# Determinar a nova série Y = ln(Q)
+Q_max_ord$Y <- log(Q_max_ord$maxima)
+
+# Estimar os parâmetros da distribuição Normal, sabendo que Y ~ N(mu_y,sigma2_Y)
+mu_Y_hat <- mean(Q_max_ord$Y)
+sigma2_hat <- var(Q_max_ord$Y)
+
+# Estimar os quantis de Y e de Q
+p <- seq(from = 0.01,to = 0.99,by = 0.01)     # define valores de p que serão empregados para os quantis
+Tr <- 1/(1-p)                                 # Calcula os tempos de recorrência para cada valro de p
+z_p <- qnorm(p, 0, 1)                         # quantil da normal-padrão
+y_p_hat <- mu_Y_hat + z_p*sqrt(sigma2_hat)    # estimativa do quantil de Y
+q_p_hat <- exp(y_p_hat)                       # estimativa do quantil de Q
+
+# Criação de um dataframe com os quantis de cheia
+Quantis_Q <- data.frame(q_p_hat,Tr)
+```
+
+Podemos dar uma espiada no dataframe que contém os quantis de cheia utilizando a função `head(dataframe.name)`,
+
+```{r}
+head(Quantis_Q)
+```
+
+```{r}
+tail(Quantis_Q,5)
+```
+
+```{r, fig.width = 8, fig.height = 6}
+
+plot(Q_max_ord$Tr,Q_max_ord$maxima,type = "p", pch = 19,log = "y", 
+     main = "Curva de frequência de cheias - 60435000",
+     xlab = "Tr (anos)",ylab = "Q_max (m3/s)",
+     xlim = c(1, 100),   # X-axis limits
+     ylim = c(1, 50))
+
+# Adiciona a LN2
+lines(Quantis_Q$Tr,Quantis_Q$q_p_hat)
+
+# Adiciona grid horizontal
+axis(1, at = c(seq(1,10,by=1),seq(10,100,by=10),seq(200,1000,by=100)),
+     tck = 1, lty = 2, col = "gray")
+# Adiciona grid vertical
+axis(2, tck = 1, lty = 2, col = "gray")
+
+```
+
+### Determinação dos quantis de cheia
+
+## Descrição das incerteas
 ## Inferência
 
 ### Cálculo dos momentos-L
