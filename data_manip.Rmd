@@ -3,10 +3,117 @@ title: "Manipulação dos dados"
 description: Como organizar as informações para facilitar as análises
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include = FALSE}
 library(knitr)
 ```
 
 ## Pacotes
+Nessa seção vamos usar mecanismos de pacotes já feitos no **R**. Existem inúmeros pacotes, cada um com suas funções e/ou bancos de dados para diferentes assuntos. Eles podem, inclusive, ser apenas um aglomerado de diferentes pacotes para não precisar baixar todos um por um. A primeira etapa de utilizar um pacote é a sua instalação, isso é feito com o comando `install.packages()` com o nome do pacote estando entre aspas ("") dentro dos parêntesis. Assim podemos fazer com todos que se encontram no CRAN (repositório que contém o que queremos). Na aula de hoje utilizaremos apenas o **tidyverse**, que é um agregado de pacotes extremamente populares hoje para manipulação e análise de dados.
 
-## Bla bla bla
+```{r pacotes_1, eval = FALSE}
+install.packages("tidyverse")
+```
+
+Para que o **R** não fique muito pesado, todos os pacotes baixados precisam ser carregados na sua seção do **R** - isso é feito com o comando `library()` com o pacote estando detro do parêntesis **sem** aspas.
+
+Podemos notar que ao carregar o pacote dentro da nossa seção primeiro vemos quais outros pacotes que foram carregados e suas respectivas versões. Nesse exemplo, ao carregar o **tidyverse**, ele contém o **ggplot2**, **purrr**, **tibble**, **dplyr**, **tidyr**, **stringr**, **readr** e **forcats**. Além disso, aparece uma mensagem mostrando "conflitos". Esses conflitos são quando diferentes pacotes utilizam funções de mesmo nome (as vezes para fazer coisas diferentes), assim o **R** te avisa quais funções são iguais e quais serão as utilizadas normalmente no programa. É possível usar qualquer função se deixarmos explícito de qual pacote queremos (por exemplo `stats::filter()`)
+
+```{r pacotes_2, message = TRUE, warning = TRUE, results = TRUE}
+library(tidyverse)
+```
+
+## Puxar arquivo anterior e analisar ele
+
+Primeiro vamos baixar apenas uma das estações que fizemos na última aula. Ao final podemos repetir o que foi feito anteriormente e criar um *loop* para repetir para as outras 3 estações.
+
+```{r arquivo_1}
+dados_ANA <- read.table(file = "data/60435000.txt",
+                        sep = "\t",
+                        dec = ".",
+                        header = T,
+                        fileEncoding = "UTF-8")
+```
+
+Apesar de termos mexido nesses dados na última aula, o **R** não sabe disso, ele baixa o arquivo como se fosse um outro qualquer, assim a coluna da estação é do tipo "inteiro" e a segunda coluna (de data) está do tipo "caractere". Vemos isso abaixo e em seguida corrigimos ambas para caractere e data, respectivamente.
+
+```{r arquivo_2}
+class(dados_ANA$Cod_estacao)
+class(dados_ANA$Data)
+
+dados_ANA$Cod_estacao <- as.character(dados_ANA$Cod_estacao)
+dados_ANA$Data <- as.Date(dados_ANA$Data)
+```
+
+## Manipulações básicas nos dados
+
+Agora que temos um arquivo do jeito que queríamos (diferente do que pegamos diretamente do servidor da ANA), fazer algumas análises podem ser bem fáceis. Se quisermos saber de quando a quando essa estação tem dados, basta vermos os valores mínimos e máximos da Data.
+
+```{r arquivo_3}
+min(dados_ANA$Data)
+```
+
+```{r arquivo_4}
+max(dados_ANA$Data)
+```
+
+Se quisermos saber qual valor mínimo, máximo e médio de vazão podemos também, mas aparece um problema! Nesses valores temos dados em branco, ou `NA` (*Not Available*). Dados faltantes sempre são problemático e devem ser tratados quando possível. Para algumas funções nativas, como `max()`, `min()` e `mean()` temos a opção de apenas ignorar eles com o argumento `na.rm = TRUE`, assim os valores máximos, médios e mínimos são calculados sem considerar os dados em branco.
+
+```{r arquivo_5}
+max(dados_ANA$Vazao, na.rm = T)
+min(dados_ANA$Vazao, na.rm = T)
+mean(dados_ANA$Vazao, na.rm = T)
+```
+
+## Dados em Branco (NA)
+Antes mesmo de começar a fazer essas avaliações é interessante e importante entender melhor os dados em branco. Primeiro, quantos existem? Para isso podemos usar a função `is.na()`, vamos rodar ela apenas para os primeiros 15 dados de vazão para mostrar na tela.
+
+```{r arquivo_NA_1}
+is.na(dados_ANA$Vazao)[1:15]
+```
+
+Essa função retorna um dado `TRUE` ou `FALSE` para cada valor avaliado. Como dados lógicos também são binários/numéricos (**TRUE = 1** e **FALSE = 0**), podemos somar esses valores para ver quantos dados em branco temos no total. Temos então `sum(is.na(dados_ANA[,3]))` dados em branco.
+
+```{r arquivo_NA_2}
+sum(is.na(dados_ANA$Vazao))
+```
+
+Para saber quais as datas que tem o valor de vazão em branco basta aplicarmos esse `is.na()` na coluna de datas.
+
+```{r arquivo_NA_3}
+dados_ANA$Data[is.na(dados_ANA$Vazao)]
+```
+
+E se quiser o último (a última data com vazão em branco), podemos fazer o `max()` dessas datas todas.
+ 
+```{r arquivo_NA_4}
+max(dados_ANA$Data[is.na(dados_ANA$Vazao)])
+```
+
+O que fazer com cada dado em branco vai depender do que se quer com os dados. Como completar essas falhas é uma temática extremamente relevante e difícil de responder até mesmo hoje. Pararemos por hora de falar desses valores, e não entraremos muito a fundo sobre o que fazer com eles (até porque depende do que se quer fazer) nesse curso.
+
+## Ano hidrológico
+
+Em hidrologia estatística, é muito comum utilizarmos o ano hidrológico ao invés do calendário "normal" (janeiro a dezembro) para fazer análises estatísticas. Onde começa o ano hidrológico também não é tão simples, mas a via de regra é: entre as secas e cheias.
+
+Faremos aqui uma função para transformar nossa data em ano hidrológico, assim conseguiremos fazer algumas análises anuais interessantes. A função, chamada aqui de `fun_ano_hidro()` tomará 2 argumentos: um sendo as datas que queremos transformar e o outro em que mês que se inicia o ano hidrológico, aqui deixamos pré-definido como 8, mas se quiser mudar isso, basta alterar o argumento na hora de chamar ela (assim não ficamos preso a esse número)!
+
+
+```{r ano_hidro_1}
+fun_ano_hidro <- function(datas,
+                          comeco_ano_hidro = 8){
+  
+  # Se vai pular (deslocar) um ano ou não
+  desloc_ano <- ifelse(month(datas) < comeco_ano_hidro, 0, 1)
+  
+  # Ano Hidro
+  ano_hidro <- year(datas) + desloc_ano
+  
+  return(ano_hidro)
+}
+```
+
+Abaixo testamos ela fazendo uma nova coluna no nosso *dataframe*.
+
+```{r ano_hidro_2}
+dados_ANA$ano_hidro <- fun_ano_hidro(dados_ANA$Data)
+```
