@@ -2159,15 +2159,6 @@ R</a>
 <li><a href="#criação-de-variáveis-e-atribuição-de-valores"
 id="toc-criação-de-variáveis-e-atribuição-de-valores">Criação de
 variáveis e atribuição de valores</a></li>
-<li><a href="#criação-de-variáveis-e-atribuição-de-valores-1"
-id="toc-criação-de-variáveis-e-atribuição-de-valores-1">Criação de
-variáveis e atribuição de valores</a></li>
-<li><a href="#criação-de-variáveis-e-atribuição-de-valores-2"
-id="toc-criação-de-variáveis-e-atribuição-de-valores-2">Criação de
-variáveis e atribuição de valores</a></li>
-<li><a href="#criação-de-variáveis-e-atribuição-de-valores-3"
-id="toc-criação-de-variáveis-e-atribuição-de-valores-3">Criação de
-variáveis e atribuição de valores</a></li>
 </ul></li>
 <li><a href="#objetos-do-r" id="toc-objetos-do-r">Objetos do R</a>
 <ul>
@@ -2320,8 +2311,8 @@ inglês <em>square root</em>.</p>
 </div>
 <pre><code>[1]  3  7 11 15 19</code></pre>
 </div>
-<p><font size="5">A função c() é usada para concatenar valores, criando
-vetores de valores da mesma classe.</font></p>
+<p>A função c() é usada para concatenar valores, criando vetores de
+valores da mesma classe.</p>
 <p>Ao usar o operador multiplicativo <code>*</code> o <strong>R</strong>
 entende que será feita a operação elemento a elemento. Para
 multiplicação de matrizes, o operador correto é <code>%*%</code>.
@@ -2368,8 +2359,6 @@ o valor.</p>
 </div>
 <pre><code>[1] -8</code></pre>
 </div>
-<h3 id="criação-de-variáveis-e-atribuição-de-valores-1">Criação de
-variáveis e atribuição de valores</h3>
 <p>Pode-se atribuir, por exemplo, um valor não numérico a
 <code>x</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -2379,8 +2368,6 @@ variáveis e atribuição de valores</h3>
 </div>
 <pre><code>[1] &quot;teste&quot;</code></pre>
 </div>
-<h3 id="criação-de-variáveis-e-atribuição-de-valores-2">Criação de
-variáveis e atribuição de valores</h3>
 <p>Alguns dos operadores que existem no R são: <code>&lt;-</code>,
 <code>=</code> e <code>==</code>. Como já comentado, os operadores
 <code>&lt;-</code> e <code>=</code> podem ser usados para atribuir
@@ -2403,8 +2390,6 @@ podendo ser <code>TRUE</code> ou <code>FALSE</code>. Por exemplo:</p>
 </div>
 <pre><code>[1] FALSE</code></pre>
 </div>
-<h3 id="criação-de-variáveis-e-atribuição-de-valores-3">Criação de
-variáveis e atribuição de valores</h3>
 <p>Outros operadores que resultam em lógicos são:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2428,12 +2413,12 @@ variáveis e atribuição de valores</h3>
 <p>Existem diversas <strong>classes</strong> de objetos dentro do
 <strong>R</strong>, alguns dos principais tipos são:</p>
 <ul>
-<li>Caractere (letras)</li>
-<li>Numérico (real)</li>
-<li>Inteiro</li>
-<li>Complexo</li>
-<li>Fator (classes)</li>
-<li>Lógico (<code>TRUE/FALSE</code>)</li>
+<li>Caractere (letras);</li>
+<li>Numérico (real);</li>
+<li>Inteiro;</li>
+<li>Complexo;</li>
+<li>Fator (classes);</li>
+<li>Lógico (<code>TRUE/FALSE</code>).</li>
 </ul>
 <p>Para sabermos qual classe cada objeto é, podemos utilizar uma função
 interna ao <strong>R</strong> chamada <code>class()</code>. Usualmente,
@@ -2519,20 +2504,22 @@ com variáveis categóricas de entrada (estações do ano, classes de solo,
 cotas de alerta hidrológico etc.):</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normal"</span>,<span class='st'>"atenção"</span>,<span class='st'>"alerta"</span>,<span class='st'>"inundação"</span>,<span class='st'>"inundação severa"</span>,<span class='st'>"inundação"</span>,<span class='st'>"atenção"</span>,<span class='st'>"normal"</span>,<span class='st'>"inundação"</span>,<span class='st'>"normal"</span>,<span class='st'>"alerta"</span>,<span class='st'>"atenção"</span><span class='op'>)</span><span class='op'>)</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normal"</span>, <span class='st'>"atenção"</span>, <span class='st'>"alerta"</span>, <span class='st'>"inundação"</span>,</span>
+<span>              <span class='st'>"inundação severa"</span>, <span class='st'>"inundação"</span>, <span class='st'>"atenção"</span>,</span>
+<span>              <span class='st'>"normal"</span>, <span class='st'>"inundação"</span>, <span class='st'>"normal"</span>, <span class='st'>"alerta"</span><span class='op'>)</span><span class='op'>)</span></span>
 <span><span class='va'>x</span></span></code></pre>
 </div>
 <pre><code> [1] normal           atenção          alerta          
  [4] inundação        inundação severa inundação       
  [7] atenção          normal           inundação       
-[10] normal           alerta           atenção         
+[10] normal           alerta          
 Levels: alerta atenção inundação inundação severa normal</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/table.html'>table</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>x
           alerta          atenção        inundação inundação severa 
-               2                3                3                1 
+               2                2                3                1 
           normal 
                3 </code></pre>
 </div>
@@ -2555,8 +2542,14 @@ caractere:</p>
 </div>
 <p>Podemos forçar uma coerção no <strong>R</strong>, a chamada
 <strong>Coerção explícita</strong>. Fazemos isso utilizando funções do
-tipo: - as.numeric() ; - as.character() ; - as.logical() ; - as.factor()
-; - as.complex() …</p>
+tipo:</p>
+<ul>
+<li><code>as.numeric()</code>;</li>
+<li><code>as.character()</code>;</li>
+<li><code>as.logical()</code>;</li>
+<li><code>as.factor()</code>;</li>
+<li><code>as.complex()</code>.</li>
+</ul>
 <p>Com elas o <strong>R</strong> vai transformar o vetor (ou objeto) em
 questão no tipo que você definiu. Isso pode ser uma tarefa simples ou
 complicada pro programa. No exemplo abaixo, transformar tudo em
@@ -2586,8 +2579,11 @@ transformar “ola” em um número? Nesses casos, no lugar é retornado um
 valor <code>NA</code> (<em>Not Available</em>):</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ola"</span>, <span class='fl'>1</span>, <span class='st'>"dia"</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span></span>
-<span><span class='va'>x</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ola"</span>, <span class='fl'>1</span>, <span class='st'>"dia"</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>Warning: NAs introduced by coercion</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span></span></code></pre>
 </div>
 <pre><code>[1] NA  1 NA  2</code></pre>
 <div class="sourceCode">
@@ -2604,8 +2600,8 @@ valor <code>NA</code> (<em>Not Available</em>):</p>
 </div>
 <pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
 </div>
-Também podemos utilizar o símboblo <code>:</code> para facilitar. Assim
-a sequência é gerada somando um a um.
+<p>Também podemos utilizar o símboblo <code>:</code> para facilitar.
+Assim a sequência é gerada somando um a um.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>)</span></span>
@@ -2636,11 +2632,11 @@ colocado dentro do <code>seq()</code>.</p>
 <pre><code>[1] 1 5 9</code></pre>
 </div>
 <h3 id="indexing"><em>Indexing</em></h3>
-Para selecionar um valor específico dentro de um vetor, se usa colchetes
-<code>[]</code>. Assim, se quiser o primeiro elemento do vetor
+<p>Para selecionar um valor específico dentro de um vetor, se usa
+colchetes <code>[]</code>. Assim, se quiser o primeiro elemento do vetor
 <code>x</code> eu escrevo <code>x[1]</code>. O mesmo vale para
 selecionar o primeiro, segundo e quinto elemento, escreveria
-<code>x[c(1, 2, 5)]</code>.
+<code>x[c(1, 2, 5)]</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>11</span><span class='op'>:</span><span class='fl'>20</span><span class='op'>)</span></span>
@@ -2875,16 +2871,16 @@ duas dimensões:</p>
 <span><span class='va'>uniao</span></span></code></pre>
 </div>
 <pre><code>       x         y
- [1,]  1  6.435354
- [2,]  2  5.699126
- [3,]  3  3.161791
- [4,]  4 11.192925
- [5,]  5 10.348130
- [6,]  6  1.976570
- [7,]  7  3.611233
- [8,]  8 12.868593
- [9,]  9  8.464211
-[10,] 10 12.260206</code></pre>
+ [1,]  1 17.781057
+ [2,]  2 11.475606
+ [3,]  3 10.343930
+ [4,]  4 19.405913
+ [5,]  5  6.821329
+ [6,]  6 11.940574
+ [7,]  7 16.955202
+ [8,]  8  5.751312
+ [9,]  9  5.851220
+[10,] 10  6.491646</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>uniao</span><span class='op'>)</span></span></code></pre>
 </div>
@@ -2899,12 +2895,12 @@ duas dimensões:</p>
 <span><span class='va'>uniao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span></span>
 <span><span class='va'>uniao</span></span></code></pre>
 </div>
-<pre><code>      [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]
-x  1.00000  2.00000  3.00000 4.000000  5.00000  6.00000  7.00000
-y 19.61684 26.24158 21.32786 4.144148 26.41651 19.81348 20.86141
+<pre><code>      [,1]     [,2]     [,3]     [,4]     [,5]     [,6]    [,7]
+x  1.00000  2.00000  3.00000  4.00000  5.00000  6.00000  7.0000
+y 15.31294 16.82499 22.61916 19.79692 17.36787 27.30892 12.1604
       [,8]     [,9]    [,10]
 x  8.00000  9.00000 10.00000
-y 20.39223 29.99363 19.05977</code></pre>
+y 24.59228 20.47331 15.81667</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>uniao</span><span class='op'>)</span></span></code></pre>
 </div>
@@ -3123,7 +3119,7 @@ menor ou igual a 5, por exemplo.</p>
 [1] 4
 [1] 5</code></pre>
 </div>
-<div class="sourceCode" id="cb82"><pre
+<div class="sourceCode" id="cb83"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

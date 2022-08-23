@@ -274,6 +274,7 @@ x
 ```
 
 Também podemos utilizar o símboblo `:` para facilitar. Assim a sequência é gerada somando um a um.
+
 ```{r seq_2, echo = TRUE}
 x <- c(1:10)
 x
