@@ -312,8 +312,8 @@ Podemos agora criar uma Figura, similar àquela apresentada para o estudo do Rio
 
 ```{r, fig.width = 8, fig.height = 6}
 
-plot(Q_max_ord$Tr,Q_max_ord$maxima,type = "p", pch = 19,log = "x", 
-     main = "Curva de frequência de cheias - 60435000",
+plot(Q_max_ord$Tr,Q_max_ord$maxima,type = "p", pch = 19,cex = 1.5,col = "blue",
+     log = "x",main = "Curva de frequência de cheias - 60435000",
      xlab = "Tr (anos)",ylab = "Q_max (m3/s)",
      xlim = c(1, 100),   # X-axis limits
      ylim = c(1, 50))
@@ -437,14 +437,16 @@ tail(Quantis_Q,5)
 
 ```{r, fig.width = 8, fig.height = 6}
 
-plot(Q_max_ord$Tr,Q_max_ord$maxima,type = "p", pch = 19,log = "y", 
-     main = "Curva de frequência de cheias - 60435000",
+plot(Q_max_ord$Tr,Q_max_ord$maxima,type = "p", pch = 19,cex = 1.5,col = "blue",
+     log = "x",main = "Curva de frequência de cheias - 60435000",
      xlab = "Tr (anos)",ylab = "Q_max (m3/s)",
      xlim = c(1, 100),   # X-axis limits
      ylim = c(1, 50))
 
 # Adiciona a LN2
-lines(Quantis_Q$Tr,Quantis_Q$q_p_hat)
+lines(Quantis_Q$Tr,Quantis_Q$q_p_hat,
+      col = "red",
+      lwd = 2)
 
 # Adiciona grid horizontal
 axis(1, at = c(seq(1,10,by=1),seq(10,100,by=10),seq(200,1000,by=100)),

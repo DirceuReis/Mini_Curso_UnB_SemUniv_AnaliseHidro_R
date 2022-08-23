@@ -2149,7 +2149,13 @@ dados</a></li>
 <li><a href="#dados-em-branco-na" id="toc-dados-em-branco-na">Dados em
 Branco (NA)</a></li>
 <li><a href="#ano-hidrológico" id="toc-ano-hidrológico">Ano
-hidrológico</a></li>
+hidrológico</a>
+<ul>
+<li><a href="#tabela-resumo" id="toc-tabela-resumo">Tabela
+Resumo</a></li>
+<li><a href="#tabela-final-loop" id="toc-tabela-final-loop">Tabela final
+(loop)</a></li>
+</ul></li>
 </ul>
 </nav>
 </div>
@@ -2352,11 +2358,21 @@ interessantes. A função, chamada aqui de <code>fun_ano_hidro()</code>
 tomará 2 argumentos: um sendo as datas que queremos transformar e o
 outro em que mês que se inicia o ano hidrológico, aqui deixamos
 pré-definido como 8, mas se quiser mudar isso, basta alterar o argumento
-na hora de chamar ela (assim não ficamos preso a esse número)!</p>
+na hora de chamar ela (assim não ficamos preso a esse número)! Primeiro
+devemos garantir que as datas estão no formato certo, portanto fazemos
+essa transformação no começo da função. Em seguida definimos qual será o
+ano hidrológico. O que fazemos é avaliar se o mês em questão é menor ou
+maior do que o começo do ano hidrológico definido pela função. Se for
+maior, significa que já entramos em outro ano hidrológico, portanto o
+ano em questão é o seguinte (o mês 8, Agosto, de 2000 entra para o ano
+hidrológico de 2001 e assim por diante).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>fun_ano_hidro</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>datas</span>,</span>
 <span>                          <span class='va'>comeco_ano_hidro</span> <span class='op'>=</span> <span class='fl'>8</span><span class='op'>)</span><span class='op'>{</span></span>
+<span> </span>
+<span>  <span class='co'># Se não tiver no formato de datas, fazer essa correção</span></span>
+<span>  <span class='va'>datas</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>datas</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Se vai pular (deslocar) um ano ou não</span></span>
 <span>  <span class='va'>desloc_ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/month.html'>month</a></span><span class='op'>(</span><span class='va'>datas</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='va'>comeco_ano_hidro</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span></span>
@@ -2372,10 +2388,129 @@ na hora de chamar ela (assim não ficamos preso a esse número)!</p>
 <em>dataframe</em>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>ano_hidro</span> <span class='op'>&lt;-</span> <span class='fu'>fun_ano_hidro</span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>ano_hidro</span> <span class='op'>&lt;-</span> <span class='fu'>fun_ano_hidro</span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>  Cod_estacao       Data Vazao ano_hidro
+1    60435000 1978-05-01    NA      1978
+2    60435000 1978-05-02    NA      1978
+3    60435000 1978-05-03    NA      1978
+4    60435000 1978-05-04    NA      1978
+5    60435000 1978-05-05    NA      1978
+6    60435000 1978-05-06    NA      1978</code></pre>
+</div>
+<h3 id="tabela-resumo">Tabela Resumo</h3>
+<p>Aqui introduzimos um novo conceito do pacote
+<strong>magrittr</strong> (ele está internamente no
+<strong>tiyverse</strong>). Esse conceito se chama <strong>pipe
+operator</strong> e é dado pelo símbolo <code>%&gt;%</code>. Basicamente
+o que ele faz é tomar o que está na esquerda dele, e usar como argumento
+da função a direita. Assim ao invés de escrever as funções umas dentro
+das outras, podemos deixar o código mais limpo e fácil de entender. Olhe
+o exemplo abaixo. Nele estamos tirando o log das vazões, com a função
+<code>log()</code>, depois calculando as diferenças desse log em um
+passo de tempo com <code>diff()</code>, calculamos o exponencial disso
+com <code>exp()</code>, em seguimas calculamos a média desses valores e
+depois arredondamos isso para ter apenas 2 casas decimais.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/diff.html'>diff</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>, na.rm <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span>, <span class='fl'>2</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] 1.03</code></pre>
+</div>
+<p>É fácil se perder lendo isso pois no <strong>R</strong> normalmente
+lemos de dentro para fora das funções (e portanto da direita para a
+esquerda) e é mais fácil ainda confundir qual argumento entra em qual
+função. Usando o <strong>pipe operator</strong>, dado por
+<code>%&gt;%</code>, o código fica mais facilmente interpretável.
+Selecionamos a vazão e em seguida tiramos o log, depois a diferença,
+depois o expoente… Quando uma função tem diversos argumentos podemos
+escrever explicitamente onde que o objeto a esquerda do <em>pipe</em>
+vai entrar colocando um ponto no lugar dele, não precisando que ele
+sempre entre no primeiro argumento da função.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Vazao</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/diff.html'>diff</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>.</span>, na.rm <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span>digits <span class='op'>=</span> <span class='fl'>2</span>, x <span class='op'>=</span> <span class='va'>.</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] 1.03</code></pre>
+</div>
+<p>Agora que temos o ano hidrológico para cada data, podemos fazer a
+nossa série de máximos, mínimos e médias anuais a partir dos dados
+diários. Primeiro cria-se um <em>dataframe</em> vazio com as colunas
+para cada ano, uma coluna para os máximos, outra para os mínimos e outra
+para as médias anuais. Podemos também criar uma quarta coluna para o
+número de valores <em>NA</em> nesse período.</p>
+<p>Já iremos fazer isso no formato de função, para que possamos replicar
+para as outras estações também! A função tomará como argumento a tabela
+original de dados (<code>dados_ANA</code>), e irá rodar a função
+<code>fun_ano_hidro()</code> internamente. Assim teremos uma nova coluna
+criada com a função <code>mutate()</code>. Em seguida agrupamos os dados
+por estação (se tivesse mais de uma por exemplo) e por ano hidrológico
+usando o <code>group_by</code> e falamos o que faremos ao juntar esses
+dados com o <code>summarise()</code>. Um problema é se o ano hidrológico
+estiver todo com falha, nesses casos as funções usadas retornarão
+<code>Inf</code> (infinito), <code>-Inf</code> ou <code>NaN</code>
+(<em>Not a Number</em>), portanto depois de agruparmos, iremos trocar
+qualquer valor não-finito na tabela por <strong>NA</strong>.</p>
+<p>Rodar uma outra função internamente requer alguns cuidados. Por
+exemplo, aqui assumimos que a tabela virá com uma coluna chamada “Data”.
+Caso isso não aconteca a nossa função não irá funcionar.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>fun_resumo_ano</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>dados_hidro</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  </span>
+<span>  <span class='va'>tabela_resumo</span> <span class='op'>&lt;-</span></span>
+<span>    <span class='va'>dados_hidro</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>ano_hidro <span class='op'>=</span> <span class='fu'>fun_ano_hidro</span><span class='op'>(</span><span class='va'>Data</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Cod_estacao</span>, <span class='va'>ano_hidro</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span>maxima <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>Vazao</span>, na.rm <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span>,</span>
+<span>              minima <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>Vazao</span>, na.rm <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span>,</span>
+<span>              media <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Vazao</span>, na.rm <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span>,</span>
+<span>              NAs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='va'>tabela_resumo</span><span class='op'>[</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/is.finite.html'>is.finite</a></span><span class='op'>(</span><span class='va'>tabela_resumo</span><span class='op'>$</span><span class='va'>maxima</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>3</span>, <span class='fl'>4</span>, <span class='fl'>5</span><span class='op'>)</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NA</span></span>
+<span>  </span>
+<span>  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>tabela_resumo</span><span class='op'>)</span></span>
+<span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
-<div class="sourceCode" id="cb15"><pre
+<h3 id="tabela-final-loop">Tabela final (loop)</h3>
+<p>Agora podemos aplicar essa função diretamente aos
+<code>dados_ANA</code> da última aula. Na realidade, podemos fazer um
+<em>loop</em> para abrir cada uma das 4 estações, rodar essa função e
+juntar essas tabelas em uma só com a função <code>rbind()</code> - essa
+função junta diferentes <em>dataframes</em> pelas mesmas colunas,
+colocando um embaixo do outro. Abaixo rodamos o <em>loop</em> de outra
+maneira, definindo antes quais os códigos das estações e rodando o
+<code>for()</code> variando de 1 a 4. Primeiro lemos a primeira estação
+e, se for a primeira iteração, salvamos ela em um objeto chamado
+<em>tabela_final</em>. Se não for a primeira iteração, juntamos elas com
+o <code>rbind()</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>estacoes_cod</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>60435000</span>, <span class='fl'>60436000</span>, <span class='fl'>60436190</span>, <span class='fl'>60443000</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='kw'>for</span><span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  <span class='va'>dados_proxy</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"dados/"</span>, <span class='va'>estacoes_cod</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span>,<span class='st'>".txt"</span><span class='op'>)</span>,</span>
+<span>                            sep <span class='op'>=</span> <span class='st'>"\t"</span>,</span>
+<span>                            dec <span class='op'>=</span> <span class='st'>"."</span>,</span>
+<span>                            header <span class='op'>=</span> <span class='cn'>T</span>,</span>
+<span>                            fileEncoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='va'>dados_proxy</span> <span class='op'>&lt;-</span> <span class='fu'>fun_resumo_ano</span><span class='op'>(</span><span class='va'>dados_proxy</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='kw'>if</span><span class='op'>(</span><span class='va'>i</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span> <span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='va'>dados_proxy</span></span>
+<span>  <span class='kw'>if</span><span class='op'>(</span><span class='va'>i</span> <span class='op'>!=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>tabela_final</span>, <span class='va'>dados_proxy</span><span class='op'>)</span></span>
+<span><span class='op'>}</span></span></code></pre>
+</div>
+</div>
+<div class="sourceCode" id="cb18"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

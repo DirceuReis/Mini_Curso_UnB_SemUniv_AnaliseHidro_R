@@ -177,7 +177,7 @@ Agora podemos aplicar essa função diretamente aos `dados_ANA` da última aula.
 estacoes_cod <- c(60435000, 60436000, 60436190, 60443000)
 
 for(i in 1:4){
-  dados_proxy <- read.table(file = paste0("dado/", estacoes_cod[i],".txt"),
+  dados_proxy <- read.table(file = paste0("dados/", estacoes_cod[i],".txt"),
                             sep = "\t",
                             dec = ".",
                             header = T,
