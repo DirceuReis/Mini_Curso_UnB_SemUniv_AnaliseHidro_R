@@ -221,7 +221,7 @@ Por exemplo, se a probabilidade da vazão máxima anual ultrapassar um dado valo
 
 Portanto, para que possamos incluir as vazões observadas na nossa curva de frequência, será preciso determinar a probabilidade de excedência de cada uma das observações contidas na série de vazões máximas anuais da localidade de interesse. Como o intuito neste primeiro momento é plotar as vazões observadas na curva de frequência, nos basearemos na chamada distribuição empírica de frequência. 
 
-A distribuição empírica de frequência relaciona cada valor de vazão máxima observada na série histórica, denominada aqui de $q_i$, com sua frequência relativa acumulada, $\hat{F}_Q(q_i)$, que representa a nossa estimativa para a probabilidade da variável de interesse, $X$, ser menor ou igual ao valor amostral, $q_i$,
+A distribuição empírica de frequência relaciona cada valor de vazão máxima observada na série histórica, denominada aqui de $q_i$, com sua frequência relativa acumulada, $\hat{F}_Q(q_i)$, que representa a nossa estimativa para a probabilidade da variável de interesse, $Q$, ser menor ou igual ao valor amostral, $q_i$,
 
 $$\hat{F}_Q(q_i) = \hat{P}(Q \le q_i)$$
 
@@ -234,7 +234,7 @@ de forma que
 
 $$\hat{T}_r(q_i) = \frac{1}{1-\hat{P}(Q \le q_i)}$$
 
-Pode parecer estranho se você estiver vendo isso pela primeira vez, mas a verdade é que há diferentes maneiras de se estimar a distribuição empírica de frequência das observações de uma amostra,$\hat{P}(Q\le q_i)$, ou seu complemento, $\hat{P}(Q\le q_i)$.
+Pode parecer estranho se você estiver vendo isso pela primeira vez, mas a verdade é que há diferentes maneiras de se estimar a distribuição empírica de frequência das observações de uma amostra,$\hat{P}(Q\le q_i)$, ou seu complemento, $\hat{P}(Q\gt q_i)$.
 
 Uma maneira bem comum de estimar tais probabilidades, quando se tem uma amostra de tamanho $n$, consiste em ordenar a série em ordem decrescente e determinar a probabilidade de excedência utilizando a seguinte fórmula,
 
@@ -242,50 +242,12 @@ $$\hat{P}(Q > q_{(i)}) = 1 - \hat{F}_Q(q_{(i)}) = \frac{i}{n+1}$$
 
 em que $q_{(i)}$ representa a chamada estatística de ordem $i$, em que $q_{(1)}\gt q_{(2)}\gt \ldots \gt q_{(n)}$, de forma que $q_{(1)}$ e $q_{(n)}$ são, respectivamente, a maior e a menor observações da amostra. De acordo com essa expressão, por exemplo, numa amostra de tamanho 49, a probabilidade da vazão máxima anual ser maior do que a maior observação da amostra vale $P(Q>q_{(1)})=0.02$), o que resulta num tempo de recorrência de $T_r(q_{(1)})=50$ anos.
 
-Embora não seja o objetivo aqui deste curso entender os detalhes deste procedimento, mas vale a pena dizer o seguinte: como a distribuição empírica de frequência depende da amostra que se tem em mãos, ela é na verdade uma variável aleatória, ou seja, ela pode variar de amostra para amostra, de modo que é razoável imaginar que ela possui uma distribuição de probabilidades.
-
-Suponha que fosse possível obter diversas amostras independentes da variável de interesse, todas de tamanho $n$ e oriundas de uma mesma distribuição de probabilidades. Vale lembrar que na prática apenas uma amostra está disponível. Embora não seja apresentado aqui o porquê, é possível mostrar que a probabilidade de não-excedência da estatística de ordem $X_{(i)}, $Q_i = P(X \gt x_{(i)})$ é também uma variável aleatória, pois depende da amostra. A distribuição de $Q_i$  é uma Beta (i.e., possui uma distribuição Beta) com valor esperado
-
-$$E[Q_i] = \frac{i}{n + 1}$$
-
-e variância
-
-$$V[Q_i] = \frac{n-i+1}{(n+1)^2(n+2)}$$
-independetente da dsitribuiçao da variável de interesse. 
-
-Isso significa, por exemplo, que numa amostra com 19 observações, o valor esperado da probabilididade da variável de interesse ser maior do que a segunda maior observação da referida amostra, $Q_{(2)}$, é igual a 
-
-$$E[Q_{(2)}]=\frac{2}{20}=0.10$$
-
-da mesma forma que o valor esperado da probabilididade da variável de interesse ser maior do que a maior observação da referida amostra, $Q_{(1)}$, é igual a
-
-$$E[Q_{(1)}]=\frac{1}{20}=0.05$$
-
-Podemos concluir, portanto, que se estimarmos $F_X(x_{(i)})$ utilizando a expressão $i/(n+1)$, em média, utilizando várias amostras, a média das estimativas de $F_X(x_{(i)})$ seria bem próxima do valor populacional, e o grau de proximidade aumenta com o tamanho da amostra. 
-
-Porém, é importanter deixar claro que quando há apenas uma amostra, não é possível ter certeza de que a estimativa é correta, mas é  intuitivo pensar que um estimador, que em média está correto, é de fato um bom estimador. Mais à frente na aula, retornaremos à discussão sobre estimadores e suas características. Mas vale introduzir o conceito de estimador não tendencioso, que é aquele que na média, ao longo de várias amostras, seu valor é igual ao valor populacional.
-
-Portanto, por se tratar de um estimador não-tendencioso da probabilidade de não-excedência da estatística de ordem de uma amostra, a expressão apresentada anteriormente é uma forte candidata a ser utilizada na construção da curva de distribuição empírica de frequência. Porém, como já mencionado anteriormente, há outras formas de se estimar $F_X(x_{(i)})$, sendo que todas seguem a seguinte expressão, com diferença apenas para o valor do parâmetro $a$.
-
-$$P(X \lt x_{(i)}) = \frac{i-a}{n+1-2a}$$
-
-A Tabela abaixo apresenta diversas expressões para o estimador de $F_X(x_{(i)})$, incluindo a motivação de cada alternativa.
-
-Nome | Fórmula | $a$ | $T_n$ | Motivação
------|---------|-----|-------|------------
-Weibull | $\frac{i}{n+1}$ | 0 | $n+1$ | Est. não-tendenciosa da Prob. de não-excedência para qualquer distribuição teórica
-Mediana | $\frac{i-0.3175}{n+0.365}$ | 0.3175 | $1.47n+0.5$ | Mediana das probabilidades
-APL | $\frac{i-0.35}{n}$ | $~0.35$ | $1.54n$ | Estimador baseado em momentos probabilísticos
-Blom |  $\frac{i-3/8}{n+1/4}$ | 0.375 | $1.60n+0.4$ | Quantis normais não-tendenciosos
-Cunnane | $\frac{i-0.40}{n+0.2}$ | 0.40 | $1.67n+0.3$ | Quantis aproximadamente não-tendenciosos
-Grigorten | $\frac{i-0.44}{n+0.12}$ | 0.44 | $1.79n+0.2$ | Otimizada para distribuição Gumbel
-Hazen | $\frac{i-0.5}{n}$ | 0.50 | $2n$ | Escolha tradicional
 
 Não se preocupe tanto se esse conceito de posição de plotagem não ficou totalmente claro. Basta saber que plotaremos os valores de máximos anuais da amostra na curva de frequência utilizando a posição de plotagem de Weibull. 
 
 Na verdade, utilizaremos o tempo de recorrência, $T_r$, para plotagem, lembrando que o $T_r$ é simplemenste o inverso da probabilidade de excedência, representada pela posição de plotagem de Weibull.
 
-O código para o cálculo do $Tr$ é apresentado abaixo. Para facilitar a compreenção de como o cálculo é feito, criaram-se três novas colunas ao dataframe que ontém as vazões máximas anuais. Mas antes disso, efetuou-se o ordenamento das vazões máximas em ordem decrescente, ou seja, o primeiro valor de vazão da nova série ordenada é o maior da amostra.
+O código para o cálculo do $Tr$ é apresentado abaixo. Para facilitar a compreenção de como o cálculo é feito, criaram-se três novas colunas ao dataframe que contém as vazões máximas anuais. Mas antes disso, efetuou-se o ordenamento das vazões máximas em ordem decrescente, ou seja, o primeiro valor de vazão da nova série ordenada é o maior da amostra.
 
 As três novas colunas são, respectivamente, o índice das vazões, começando de 1 indo até o número total de valores, a posição de plotagem de Weilbull, que expressa a probabilidade de excedência, e por último o tempo de recorrência, $Tr$.
 
@@ -324,7 +286,7 @@ axis(1, at = c(seq(1,10,by=1),seq(10,100,by=10),seq(200,1000,by=100)),
 axis(2, tck = 1, lty = 2, col = "gray")
 ```
 
-## Ajuste da Distribuição Lognormal
+## Ajuste de uma distribuição teórica de probabilidades
 
 ### A distribuição lognormal
 
@@ -361,7 +323,7 @@ Como $Z = (Y-\mu_Y)/\sigma_Y$, podemos dizer que $Z_p = (Y_p-\mu_Y)/\sigma_Y$, d
 $$
 Y_p = \mu_Y + Z_p\sigma_Y
 $$
-E como $Y=ln(Q), podemos afirmar que 
+E como $Y=ln(Q)$, podemos afirmar que 
 
 $$
 Q_p = exp(\mu_Y + Z_p\sigma_Y)
@@ -396,17 +358,19 @@ e
 $$
 \hat{Q}_p = exp(\hat{\mu}_Y + Z_p\hat{\sigma}_Y)
 $$
-### Ajuste propriamente dito
 
-Então, vamos ao que interessa. Tems basicamente que realizar três etapas para determinar os quantis de cheia com base na distribuição lognormal,
+### Ajuste da lognormal e estimativa dos quantis
 
-1. Construir a série $Y = ln(Q)={Y_1,Y_2,\ldots,Q_n}
-2. Estimar $\mu_y$ e $\sigma_Y^2$ por meio dos estimadores $\hat{\mu}_Y$ e $\hat{\sigma}_Y^2$
-3. Estimar os quantis de cheia, $Q_p$, por meio do estimador $\hat{Q}_p$
+Então, vamos ao que interessa. Temos basicamente que realizar três etapas para determinar os quantis de cheia com base na distribuição lognormal,
+
+1. Construir a série $Y = ln(Q)=\{Y_1,Y_2,\ldots,Q_n\}$
+2. Estimar os parâmetros $\mu_y$ e $\sigma_Y^2$ por meio dos estimadores $\hat{\mu}_Y$ e $\hat{\sigma}_Y^2$
+3. Estimar os quantis de cheia, $Q_p$, por meio do estimador $\hat{Q}_p = exp(\hat{\mu}_Y + Z_p\hat{\sigma}_Y)$
 
 O código para realizar esse ajuste segue abaixo,
 
-```{r}
+```{r quantil LN}
+
 # Determinar a nova série Y = ln(Q)
 Q_max_ord$Y <- log(Q_max_ord$maxima)
 
@@ -431,9 +395,13 @@ Podemos dar uma espiada no dataframe que contém os quantis de cheia utilizando 
 head(Quantis_Q)
 ```
 
+Podemos perceber que os seis primeiros valores dos quantis estimados não são tão interessantes, pois eles estão associados a tempos de recorrência muito baixos. Existe uma outra função no função no `R` que permite espiar a parte final do dataframe, ao invés da parte inicial. Essa função é chamada de `tail(dataframe.name)`.
+
 ```{r}
 tail(Quantis_Q,5)
 ```
+
+O número `5` no código acima serve para especificar quantas linhas eu estou interessado em ver.
 
 ```{r, fig.width = 8, fig.height = 6}
 
@@ -458,7 +426,161 @@ axis(2, tck = 1, lty = 2, col = "gray")
 
 ### Determinação dos quantis de cheia
 
-## Descrição das incerteas
+## Descrição das incertezas
+
+Quando realizamos uma análise de frequência, além da estimativa dos quantis de cheia, precisamos ter uma ideia doo quão confiantes estamos em relação aos valores estimados. Sendo assim, precisamos entender como calcular a precisão dessas estimativas.
+
+Normalmente, a maneira que empregamos para descrever as incertezas nas estiamtovas dos quantis de cheias é por meio de intervalos de confiança.Neste nosso exercício aqui, aprenderemos como calcular intervalos de confiança associados à distribuição lognormal, que é a distribuição que está sendo utilizados por nós para construir a curva de frequência.
+
+Existem duas maneiras de se calcular intervaloes de confiança para a distribuição lognormal,
+
+- intervalos aproximados
+- intervalos exatos
+
+Aqui aprenderemos como determinar intervalos de confiança aproximados para os quantis de cheia oriundos da distribuição lognormal. 
+
+### Lógica da construção de intervalos de confiança aproximados
+
+Suponha que tenhamos uma estimador qualquer denominado $\hat{W}_p$. Estou usando a variável $W$ apenas para reforçar a ideia de que não precisa ser aquele estimador apresentado anteriormente, que chamamos de $\hat{Q}_p$, embora possa ser.
+
+Para a quase totalidade de possíveis estimadores, quando $n\rightarrow \infty$, ou em outras palavras, à medida que a amostra aumenta e passa a ter um número bem grande de observações, esses estimadores tendem a ter uma distribuição Normal. 
+Como um estimador depende da amostra que se tem em mãos, ele é também uma variável aleatória. E como toda variável aleatória, seu comportamento pode se descrito por uma distribuição teórica de probabilidades.
+
+Bem, se $\hat{W}_p$ possui distribuição Normal e variância $V(\hat{W}_p)$, então
+
+$$
+Z = \frac{\hat{W}_p-E[\hat{W}_p]}{\sqrt{V(\hat{W}_p)}}
+$$
+Como $Z\sim N(0,1)$, podemos afirmar que 
+
+$$
+P(z_{\alpha/2}\le Z \le z_{1-\alpha/2}) = \alpha
+$$
+Se substituirmos $Z$ da equação acima pela equação anterior, obtemos
+
+$$
+P\Bigg(z_{\alpha/2}\le \frac{\hat{W}_p-E[\hat{W}_p]}{\sqrt{V(\hat{W}_p)}} \le z_{1-\alpha/2}\Bigg) = \alpha
+$$
+Depois de algumas manipulações algébricas, e admitindo que o estimador \hat{W}_p é não-tendencioso, o que significa dizer que $E[\hat{W}_p]=W_p$, chegamos à afirmação abaixo,
+
+$$
+P\Bigg(\hat{W}_p - z_{1-\alpha/2}\sqrt{V(\hat{W}_p)} \le W_p \le \hat{W}_p + z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}\Bigg) = \alpha
+$$
+que em bom português diz que a probabilidade do valor populacional de $W_p$ estar entre esses dois limites, $\hat{W}_p \pm z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}$ é igual à $\alpha$. É essa afirmação matemática que nos permite estabelecer o intervalo de confiança de $100(1-\alpha)\%$ para $W_p$, apresentado abaixo,
+
+$$
+\Bigg[\hat{W}_p - z_{1-\alpha/2}\sqrt{V(\hat{W}_p)};\hat{W}_p + z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}\Bigg]
+$$
+
+Sendo assim, podemos construir o intervalo de confiança aproximado de $Y_p=ln(Q_p)$ e de $Q_p$, que é o que de fato nos interessa.
+
+Primeiro, constuímos o intervalo de confiança aproximado de $Y_p$,
+
+$$
+\Bigg[\hat{Y}_p - z_{1-\alpha/2}\sqrt{V(\hat{Y}_p)};\hat{Y}_p + z_{1-\alpha/2}\sqrt{V(\hat{Y}_p)}\Bigg]
+$$
+
+O problema aqui é que ainda precisamos saber quem é $V(\hat{Y}_p)$. Este não é um curso de estatística, mas sim de `R` aplicado à Hidrologia. Por isso, deixarei a explicação de como determinar $V(\hat{Y}_p)$ num local separado,
+
+::: {.infobox .tip data-latex="{note}"}
+There is a lot of information within this practical book and **we do not expect you to read everything we link to**. You should attend each lecture, go through every practical and do some associated reading. 
+
+This is a 15 credit module, equivalent to 150 hours of study (including the taught sessions). Outside of our lectures and practical sessions (3 hours a week) **you should be spending an extra 12 hours a week on this module**. 
+
+$$
+\begin{align}
+V(\hat{Y}_p) &= V(\hat{\mu}_y + z_p\hat{\sigma}_Y)\\
+             &= V(\hat{\mu}_y) + V(z_p\hat{\sigma}_Y)\\
+             &= V(\hat{\mu}_y) + z_p^2V(\hat{\sigma}_Y)\\
+             &= \frac{\hat{\sigma}_Y^2}{n} + z_p^2V(\hat{\sigma}_Y)
+\end{align}
+$$
+:::
+
+
+$$
+\begin{align}
+V(\hat{Y}_p) &= V(\hat{\mu}_y + z_p\hat{\sigma}_Y)\\
+             &= V(\hat{\mu}_y) + V(z_p\hat{\sigma}_Y)\\
+             &= V(\hat{\mu}_y) + z_p^2V(\hat{\sigma}_Y)\\
+             &= \frac{\hat{\sigma}_Y^2}{n} + z_p^2V(\hat{\sigma}_Y)
+\end{align}
+$$
+Pode-se mostrar que $V(\sigma_Y)\approx \hat{\sigma}_Y^2/(2n)$, o que resulta na seguinte expressão para $V(\hat{Y}_p)$,
+
+$$
+V(\hat{Y}_p) \approx \frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)
+$$
+
+Dessa forma, o intervalo de confiança de $100(1-\alpha)\%$ para $Y_p$ pode ser descrito como
+
+$$
+\Bigg[\hat{Y}_p - z_{1-\alpha/2}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)};\hat{Y}_p + z_{1-\alpha/2}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)}\Bigg]
+$$
+
+Para determinar o o intervalo de confiança de $100(1-\alpha)\%$ para $Q_p$, basta exponenciar o intervalo acima,
+
+$$
+\begin{align}
+IC_{(1-\alpha)}(Q_p) &= exp\Bigg[\hat{Y}_p \pm z_{1-\alpha/2}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)}\Bigg]\\
+               &= exp\Bigg[(\hat{\mu}_Y+z_p\hat{\sigma}_y) \pm z_{1-\alpha/2}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)}\Bigg]
+\end{align}
+$$
+
+Por exemplo, suponha que queiramos estabelecer o intervalo de confiança de 95% para o quantil $Q_99$, equivalente à cheia de 100 anos de recorrência. Nesse caso, $\alpha = 0.05$ e $p=0.99$, o que leva a seguinte intervalo de confiança,
+
+$$
+\begin{align}
+IC_{.95}(Q_{0.99}) &= exp\Bigg[(\hat{\mu}_Y+z_{.99}\hat{\sigma}_y) \pm z_{.975}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_{.99}^2\Bigg)}\Bigg]\\
+                    &=exp\Bigg[(\hat{\mu}_Y+2.326\hat{\sigma}_y) \pm 1.96\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}2.326^2\Bigg)}\Bigg]
+\end{align}
+$$
+
+
+
+```{r}
+alpha <- 0.05
+var_yp <- sigma2_hat/nrow(Q_max_ord)*(1 + z_p^2/2)
+
+lower_IC <- exp((mu_Y_hat + z_p*sqrt(sigma2_hat)) - qnorm(1-alpha/2,0,1)*sqrt(var_yp))
+upper_IC <- exp((mu_Y_hat + z_p*sqrt(sigma2_hat)) + qnorm(1-alpha/2,0,1)*sqrt(var_yp))
+
+```
+
+
+
+```{r, fig.width = 10, fig.height = 6}
+
+plot(Q_max_ord$Tr,Q_max_ord$maxima,type = "p",           # plota apenas pontos
+     pch = 19,col = "blue", cex = 1.5,                   # círculos azuis de tamanho 1.5 
+     log = "x",                                          # escala logaritmica no eixo-x
+     main = "Curva de frequência de cheias - 60435000",  # título 
+     xlab = "Tr (anos)",ylab = "Q_max (m3/s)",           # nome dos eixos
+     xlim = c(1, 100),                                   # limites od eixo-x              
+     ylim = c(1, 50))                                    # limites do eixo-y
+
+# Adiciona a LN2
+lines(Quantis_Q$Tr,Quantis_Q$q_p_hat,
+      col = "red",
+      lwd = 2)
+
+# Adiciona IC
+lines(Quantis_Q$Tr,lower_IC,
+      col = "red",lty = 2,
+      lwd = 2)
+
+lines(Quantis_Q$Tr,upper_IC,
+      col = "red",lty = 2,
+      lwd = 2)
+
+# Adiciona grid horizontal
+axis(1, at = c(seq(1,10,by=1),seq(10,100,by=10),seq(200,1000,by=100)),
+     tck = 1, lty = 2, col = "gray")
+# Adiciona grid vertical
+axis(2, tck = 1, lty = 2, col = "gray")
+
+```
+
 ## Inferência
 
 ### Cálculo dos momentos-L
@@ -486,6 +608,47 @@ O uso de uma distribuição teórica de probabilidades se justifica por três mo
 - permite a extrapolação da curva, ou seja, torna possível a estimativa de uma vazão com 50 anos tempo de retorno mesmo quando temos apenas 20 anos de dados;
 - pode ser utilizada como um interpolador de quantis de cheia, já que o uso da frequência amostral só permite estimar quantis para um número discreto, e nem sempre desejado, de períodos de retorno.
 - é uma maneira de armazenar as infomações relevantes da série de máximos de maneira compacta, visto que basta guardar o valor dos parâmetro da distribuição para obter qualquer quantil de cheia que se tenha interesse.
+
+
+## Detalhamento de posição de plotagem
+Embora não seja o objetivo aqui deste curso entender os detalhes deste procedimento, mas vale a pena dizer o seguinte: como a distribuição empírica de frequência depende da amostra que se tem em mãos, ela é na verdade uma variável aleatória, ou seja, ela pode variar de amostra para amostra, de modo que é razoável imaginar que ela possui uma distribuição de probabilidades.
+
+Suponha que fosse possível obter diversas amostras independentes da variável de interesse, todas de tamanho $n$ e oriundas de uma mesma distribuição de probabilidades. Vale lembrar que na prática apenas uma amostra está disponível. Embora não seja apresentado aqui o porquê, é possível mostrar que a probabilidade de não-excedência da estatística de ordem $X_{(i)}, $Q_i = P(X \gt x_{(i)})$ é também uma variável aleatória, pois depende da amostra. A distribuição de $Q_i$  é uma Beta (i.e., possui uma distribuição Beta) com valor esperado
+
+$$E[Q_i] = \frac{i}{n + 1}$$
+
+e variância
+
+$$V[Q_i] = \frac{n-i+1}{(n+1)^2(n+2)}$$
+independetente da dsitribuiçao da variável de interesse. 
+
+Isso significa, por exemplo, que numa amostra com 19 observações, o valor esperado da probabilididade da variável de interesse ser maior do que a segunda maior observação da referida amostra, $Q_{(2)}$, é igual a 
+
+$$E[Q_{(2)}]=\frac{2}{20}=0.10$$
+
+da mesma forma que o valor esperado da probabilididade da variável de interesse ser maior do que a maior observação da referida amostra, $Q_{(1)}$, é igual a
+
+$$E[Q_{(1)}]=\frac{1}{20}=0.05$$
+
+Podemos concluir, portanto, que se estimarmos $F_X(x_{(i)})$ utilizando a expressão $i/(n+1)$, em média, utilizando várias amostras, a média das estimativas de $F_X(x_{(i)})$ seria bem próxima do valor populacional, e o grau de proximidade aumenta com o tamanho da amostra. 
+
+Porém, é importanter deixar claro que quando há apenas uma amostra, não é possível ter certeza de que a estimativa é correta, mas é  intuitivo pensar que um estimador, que em média está correto, é de fato um bom estimador. Mais à frente na aula, retornaremos à discussão sobre estimadores e suas características. Mas vale introduzir o conceito de estimador não tendencioso, que é aquele que na média, ao longo de várias amostras, seu valor é igual ao valor populacional.
+
+Portanto, por se tratar de um estimador não-tendencioso da probabilidade de não-excedência da estatística de ordem de uma amostra, a expressão apresentada anteriormente é uma forte candidata a ser utilizada na construção da curva de distribuição empírica de frequência. Porém, como já mencionado anteriormente, há outras formas de se estimar $F_X(x_{(i)})$, sendo que todas seguem a seguinte expressão, com diferença apenas para o valor do parâmetro $a$.
+
+$$P(X \lt x_{(i)}) = \frac{i-a}{n+1-2a}$$
+
+A Tabela abaixo apresenta diversas expressões para o estimador de $F_X(x_{(i)})$, incluindo a motivação de cada alternativa.
+
+Nome | Fórmula | $a$ | $T_n$ | Motivação
+-----|---------|-----|-------|------------
+Weibull | $\frac{i}{n+1}$ | 0 | $n+1$ | Est. não-tendenciosa da Prob. de não-excedência para qualquer distribuição teórica
+Mediana | $\frac{i-0.3175}{n+0.365}$ | 0.3175 | $1.47n+0.5$ | Mediana das probabilidades
+APL | $\frac{i-0.35}{n}$ | $~0.35$ | $1.54n$ | Estimador baseado em momentos probabilísticos
+Blom |  $\frac{i-3/8}{n+1/4}$ | 0.375 | $1.60n+0.4$ | Quantis normais não-tendenciosos
+Cunnane | $\frac{i-0.40}{n+0.2}$ | 0.40 | $1.67n+0.3$ | Quantis aproximadamente não-tendenciosos
+Grigorten | $\frac{i-0.44}{n+0.12}$ | 0.44 | $1.79n+0.2$ | Otimizada para distribuição Gumbel
+Hazen | $\frac{i-0.5}{n}$ | 0.50 | $2n$ | Escolha tradicional
 
 #### Quais são as distribuições mais usadas?
   

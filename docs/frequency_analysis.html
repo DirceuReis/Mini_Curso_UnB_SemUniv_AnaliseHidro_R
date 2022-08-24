@@ -2162,9 +2162,9 @@ de frequência amostral</a>
 <li><a href="#posição-de-plotagem" id="toc-posição-de-plotagem">Posição
 de plotagem</a></li>
 </ul></li>
-<li><a href="#ajuste-da-distribuição-lognormal"
-id="toc-ajuste-da-distribuição-lognormal">Ajuste da Distribuição
-Lognormal</a>
+<li><a href="#ajuste-de-uma-distribuição-teórica-de-probabilidades"
+id="toc-ajuste-de-uma-distribuição-teórica-de-probabilidades">Ajuste de
+uma distribuição teórica de probabilidades</a>
 <ul>
 <li><a href="#a-distribuição-lognormal"
 id="toc-a-distribuição-lognormal">A distribuição lognormal</a></li>
@@ -2173,12 +2173,21 @@ id="toc-quantis-de-cheia-da-lognormal">Quantis de cheia da
 lognormal</a></li>
 <li><a href="#método-de-ajuste" id="toc-método-de-ajuste">Método de
 ajuste</a></li>
+<li><a href="#ajuste-da-lognormal-e-estimativa-dos-quantis"
+id="toc-ajuste-da-lognormal-e-estimativa-dos-quantis">Ajuste da
+lognormal e estimativa dos quantis</a></li>
 <li><a href="#determinação-dos-quantis-de-cheia"
 id="toc-determinação-dos-quantis-de-cheia">Determinação dos quantis de
 cheia</a></li>
 </ul></li>
-<li><a href="#descrição-das-incerteas"
-id="toc-descrição-das-incerteas">Descrição das incerteas</a></li>
+<li><a href="#descrição-das-incertezas"
+id="toc-descrição-das-incertezas">Descrição das incertezas</a>
+<ul>
+<li><a
+href="#lógica-da-construção-de-intervalos-de-confiança-aproximados"
+id="toc-lógica-da-construção-de-intervalos-de-confiança-aproximados">Lógica
+da construção de intervalos de confiança aproximados</a></li>
+</ul></li>
 <li><a href="#inferência" id="toc-inferência">Inferência</a>
 <ul>
 <li><a href="#cálculo-dos-momentos-l"
@@ -2207,6 +2216,9 @@ técnicos</a>
 id="toc-distribuição-de-probabilidades">Distribuição de
 probabilidades</a></li>
 </ul></li>
+<li><a href="#detalhamento-de-posição-de-plotagem"
+id="toc-detalhamento-de-posição-de-plotagem">Detalhamento de posição de
+plotagem</a></li>
 <li><a href="#passos-a-serem-executados"
 id="toc-passos-a-serem-executados">Passos a serem executados</a></li>
 </ul>
@@ -2299,7 +2311,7 @@ entrar em qualqer detalhes sobre seu funcionamento.</p>
 <span>  </span>
 <span>  <span class='co'># Fazer um dataframe só com datas e valores de vazão</span></span>
 <span>  <span class='va'>datas_dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,</span>
-<span>                        to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://lubridate.tidyverse.org/reference/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
+<span>                        to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/lubridate/man/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
 <span>                        by <span class='op'>=</span> <span class='st'>"day"</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>Cod_estacao <span class='op'>=</span> <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>EstacaoCodigo</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,</span>
@@ -2398,10 +2410,10 @@ função incluindo como argumento o mês de início do ano hidrológico.</p>
 <span>  <span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Definir se o mês em questão entra no ano atual ou no próximo ano</span></span>
-<span>  <span class='va'>desloc_ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/month.html'>month</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='va'>comeco_ano_hidro</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span></span>
+<span>  <span class='va'>desloc_ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/lubridate/man/month.html'>month</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='va'>comeco_ano_hidro</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Ano Hidro</span></span>
-<span>  <span class='va'>tabela</span><span class='op'>$</span><span class='va'>ano_hidro</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/year.html'>year</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>desloc_ano</span></span>
+<span>  <span class='va'>tabela</span><span class='op'>$</span><span class='va'>ano_hidro</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lubridate/man/year.html'>year</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>desloc_ano</span></span>
 <span>  </span>
 <span>  <span class='co'># Fazer uma tabela final apenas com os máximos anuais</span></span>
 <span>  <span class='va'>max_anuais</span> <span class='op'>&lt;-</span></span>
@@ -2553,7 +2565,7 @@ máxima observada na série histórica, denominada aqui de <span
 class="math inline">\(q_i\)</span>, com sua frequência relativa
 acumulada, <span class="math inline">\(\hat{F}_Q(q_i)\)</span>, que
 representa a nossa estimativa para a probabilidade da variável de
-interesse, <span class="math inline">\(X\)</span>, ser menor ou igual ao
+interesse, <span class="math inline">\(Q\)</span>, ser menor ou igual ao
 valor amostral, <span class="math inline">\(q_i\)</span>,</p>
 <p><span class="math display">\[\hat{F}_Q(q_i) = \hat{P}(Q \le
 q_i)\]</span></p>
@@ -2577,7 +2589,7 @@ q_i)\]</span> de forma que</p>
 mas a verdade é que há diferentes maneiras de se estimar a distribuição
 empírica de frequência das observações de uma amostra,<span
 class="math inline">\(\hat{P}(Q\le q_i)\)</span>, ou seu complemento,
-<span class="math inline">\(\hat{P}(Q\le q_i)\)</span>.</p>
+<span class="math inline">\(\hat{P}(Q\gt q_i)\)</span>.</p>
 <p>Uma maneira bem comum de estimar tais probabilidades, quando se tem
 uma amostra de tamanho <span class="math inline">\(n\)</span>, consiste
 em ordenar a série em ordem decrescente e determinar a probabilidade de
@@ -2596,6 +2608,506 @@ maior do que a maior observação da amostra vale <span
 class="math inline">\(P(Q&gt;q_{(1)})=0.02\)</span>), o que resulta num
 tempo de recorrência de <span
 class="math inline">\(T_r(q_{(1)})=50\)</span> anos.</p>
+<p>Não se preocupe tanto se esse conceito de posição de plotagem não
+ficou totalmente claro. Basta saber que plotaremos os valores de máximos
+anuais da amostra na curva de frequência utilizando a posição de
+plotagem de Weibull.</p>
+<p>Na verdade, utilizaremos o tempo de recorrência, <span
+class="math inline">\(T_r\)</span>, para plotagem, lembrando que o <span
+class="math inline">\(T_r\)</span> é simplemenste o inverso da
+probabilidade de excedência, representada pela posição de plotagem de
+Weibull.</p>
+<p>O código para o cálculo do <span class="math inline">\(Tr\)</span> é
+apresentado abaixo. Para facilitar a compreenção de como o cálculo é
+feito, criaram-se três novas colunas ao dataframe que contém as vazões
+máximas anuais. Mas antes disso, efetuou-se o ordenamento das vazões
+máximas em ordem decrescente, ou seja, o primeiro valor de vazão da nova
+série ordenada é o maior da amostra.</p>
+<p>As três novas colunas são, respectivamente, o índice das vazões,
+começando de 1 indo até o número total de valores, a posição de plotagem
+de Weilbull, que expressa a probabilidade de excedência, e por último o
+tempo de recorrência, <span class="math inline">\(Tr\)</span>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Remoção dos anos com falha</span></span>
+<span><span class='va'>Q_max</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>)</span></span>
+<span><span class='co'># Ordenamento decrescente do dataframe</span></span>
+<span><span class='va'>Q_max_ord</span> <span class='op'>&lt;-</span> <span class='va'>Q_max</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/order.html'>order</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>$</span><span class='va'>maxima</span>, decreasing <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, <span class='op'>]</span></span>
+<span><span class='co'># Inclusão de Três novas colunas: index, posição de plotagem de Weibull, e Tr</span></span>
+<span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>index</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fl'>1</span>,to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>weibull</span> <span class='op'>&lt;-</span> <span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>index</span><span class='op'>/</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>)</span> <span class='op'>+</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>/</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>weibull</span></span></code></pre>
+</div>
+</div>
+<p>Como já fizemos antes, podemos dar uma espiada nesse novo dataframe
+com as vazões máximas anuais ordenada utilizando a função
+<code>head(dataframe_name)</code>,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code># A tibble: 6 × 6
+# Groups:   Cod_estacao [1]
+  Cod_estacao ano_hidro maxima index weibull    Tr
+  &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;
+1 60435000         2004   37.5     1  0.0233 43   
+2 60435000         1980   28.9     2  0.0465 21.5 
+3 60435000         1983   25.3     3  0.0698 14.3 
+4 60435000         1994   19.3     4  0.0930 10.8 
+5 60435000         2016   17.8     5  0.116   8.6 
+6 60435000         1988   17.1     6  0.140   7.17</code></pre>
+</div>
+<p>A última coluna de <code>Q_max_ord</code> contém o valor do tempo de
+recorrência de cada uma das observações contidas na amostra. Vale notar
+que as observações em <code>Q_max_ord</code> estão ordenadas em ordem
+decrescente.</p>
+<p>Podemos agora criar uma Figura, similar àquela apresentada para o
+estudo do Rio Salado. Porém, nesta etapa de nossa análise, apenas os
+valores amostrais das vazões máximas serão apresentados.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span>,type <span class='op'>=</span> <span class='st'>"p"</span>, pch <span class='op'>=</span> <span class='fl'>19</span>,cex <span class='op'>=</span> <span class='fl'>1.5</span>,col <span class='op'>=</span> <span class='st'>"blue"</span>,</span>
+<span>     log <span class='op'>=</span> <span class='st'>"x"</span>,main <span class='op'>=</span> <span class='st'>"Curva de frequência de cheias - 60435000"</span>,</span>
+<span>     xlab <span class='op'>=</span> <span class='st'>"Tr (anos)"</span>,ylab <span class='op'>=</span> <span class='st'>"Q_max (m3/s)"</span>,</span>
+<span>     xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>100</span><span class='op'>)</span>,   <span class='co'># X-axis limits</span></span>
+<span>     ylim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='co'># Adiciona grid horizontal</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>1</span>, at <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>10</span>,by<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>10</span>,<span class='fl'>100</span>,by<span class='op'>=</span><span class='fl'>10</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>200</span>,<span class='fl'>1000</span>,by<span class='op'>=</span><span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span>     tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span>
+<span><span class='co'># Adiciona grid vertical</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>2</span>, tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-10-1.png" width="768" /></p>
+</div>
+<h2 id="ajuste-de-uma-distribuição-teórica-de-probabilidades">Ajuste de
+uma distribuição teórica de probabilidades</h2>
+<h3 id="a-distribuição-lognormal">A distribuição lognormal</h3>
+<p>Se considerarmos que as vazões máximas anuais <span
+class="math inline">\((Q)\)</span> possuem uma distribuição lognormal,
+então os logaritmos de <span class="math inline">\(Q\)</span>, chamados
+aqui de <span class="math inline">\(Y = ln(Q)\)</span>, terão, por
+definição, uma distribuição normal,</p>
+<p><span class="math display">\[
+Y = ln(Q) \sim N(\mu_Y,\sigma_Y^2)
+\]</span> o que significa dizer que os logarítmicos das vazões máximas
+anuais são bem representados por uma distribuição Normal com parâmetros
+<span class="math inline">\(\mu_Y\)</span> e <span
+class="math inline">\(\sigma_Y^2\)</span>, que, para quem não lembra,
+representam a média e a variância populacionais.</p>
+<p>O adjetivo populacional utilizado aqui é para lembrarmos que essas
+caracerísticas da distribuição são, na verdade, desconhecidas. A única
+pista que temos sobre o valor desses parâmetros está contida na amostra
+que temos, formada por um conjunto de vazões máximas anuais. A maneira
+que utilizaremos a amostra para tentar compreender essa distribuição é o
+assunto da próxima seção.</p>
+<h3 id="quantis-de-cheia-da-lognormal">Quantis de cheia da
+lognormal</h3>
+<p>É muito provável que vocês não se recordem, mas a distribuição Normal
+possui uma caracterísitca bastante interessante. Se aplicarmos uma
+transformação linear numa variável normalmente distribuída, a nova
+variável continua sendo normalmente distribuída, porém com diferentes
+valores para os parâmetros da distribuição.</p>
+<p>Uma transformação bastante útil é aquela em que a variável é
+transformada numa variável normal-padrão, usualmente representada pela
+letra <span class="math inline">\(Z\)</span>. A variável normal-padrão
+<span class="math inline">\(Z\)</span> possui média zero e variância
+unitária, <span class="math inline">\(Z \sim N(0,1)\)</span>. Qualquer
+variável que possui distribuiçao Normal pode ser transformada numa
+variável normal-padrão, bastando subtrair sua média e dividir pelo seu
+desvio-padrão,</p>
+<p><span class="math display">\[
+Z = \frac{Y-\mu_Y}{\sigma_Y}\sim N(0,1)
+\]</span></p>
+<p>Essa transformação é bastate útil aqui, pois utilizaremos o quantil
+da variável normal-padrão, <span class="math inline">\(Z_p\)</span>,
+para escrever o quantil de <span class="math inline">\(Y\)</span>, <span
+class="math inline">\(Y_p\)</span>, e também o quantil de cheia, <span
+class="math inline">\(Q_p\)</span>.</p>
+<p>Quantil de uma variável aleatória, para quem não se lembra, é o valor
+da variável associado a uma dada probabilidade de não-excedência. Por
+exemplo, por definição, a probabilidade da variável aleatória <span
+class="math inline">\(X\)</span> ser menor ou igual ao quantil <span
+class="math inline">\(x_p\)</span> é igual a p,</p>
+<p><span class="math display">\[
+P(X\le x_p)=p
+\]</span> Portanto, a probabilidade da variável normal-padrão, <span
+class="math inline">\(Z\)</span>, ser menor do que os quantis <span
+class="math inline">\(Z_{0.10}\)</span>, <span
+class="math inline">\(Z_{0.50}\)</span> e <span
+class="math inline">\(Z_{0.90}\)</span> é, respectivamente, 0.10, 0.50 e
+0.90.</p>
+<p>Como <span class="math inline">\(Z = (Y-\mu_Y)/\sigma_Y\)</span>,
+podemos dizer que <span class="math inline">\(Z_p =
+(Y_p-\mu_Y)/\sigma_Y\)</span>, de forma que</p>
+<p><span class="math display">\[
+Y_p = \mu_Y + Z_p\sigma_Y
+\]</span> E como <span class="math inline">\(Y=ln(Q)\)</span>, podemos
+afirmar que</p>
+<p><span class="math display">\[
+Q_p = exp(\mu_Y + Z_p\sigma_Y)
+\]</span> em que <span class="math inline">\(Q_p\)</span> é o quantil
+populacional da variável aleatória <span
+class="math inline">\(Q\)</span>, que representa as vazões máximas
+anuais. Da mesma for que <span class="math inline">\(\mu_y\)</span> e
+<span class="math inline">\(\sigma_Y\)</span> são desconhecidos, <span
+class="math inline">\(Q_p\)</span> também é. A única maneira de estimar
+<span class="math inline">\(Q_p\)</span> é por meio das estimativas de
+<span class="math inline">\(\mu_Y\)</span> e de <span
+class="math inline">\(\sigma_Y\)</span>.</p>
+<h3 id="método-de-ajuste">Método de ajuste</h3>
+<p>Existem diversos métodos para ajustar uma distribuição teórica de
+probabilidades aos dados que se tem em mãos. Para o caso da distribuição
+lognormal com 2 parâmetros, sabe-se que a forma mais eficiente de
+estimar os parâmetros <span class="math inline">\(\mu_Y\)</span> e <span
+class="math inline">\(\sigma_Y^2\)</span> é por meio do método dos
+momentos, que será explicado na sequência.</p>
+<p>Com base numa série de vazões máximas anuais <span
+class="math inline">\(\{Q_1,Q_2,\ldots,Q_n\}\)</span>, determinamos uma
+nova série com base no logarítmos da série original, <span
+class="math inline">\(Y = \{Y_1,Y_2,\ldots,Y_n\}\)</span>.</p>
+<p>Em seguida, aplicamos o métodos dos momentos para estimar <span
+class="math inline">\(\mu_Y,\sigma_Y^2\)</span>, o que consiste em igual
+esses parâmetros aos seus valores amostrias, ou seja,</p>
+<p><span class="math display">\[
+\hat{\mu}_Y = \bar{Y} = \frac{\sum_1^n y_i}{n}
+\]</span> e</p>
+<p><span class="math display">\[
+\hat{\sigma}_Y^2 = \frac{\sum_{i=1}^n (y_i - \bar{Y})^2}{n-1}
+\]</span> Vale notar mais uma vez que <span
+class="math inline">\(\hat{\mu}_Y\)</span> e <span
+class="math inline">\(\hat{\sigma}_Y^2\)</span> possuem um acento
+circunflexo para indicar que eles são os estimadores amostrais dos
+parâmetros populacionais <span class="math inline">\(\mu_Y\)</span> e
+<span class="math inline">\(\sigma_Y^2\)</span>.</p>
+<p>Com os valores de <span class="math inline">\(\hat{\mu}_Y\)</span> e
+<span class="math inline">\(\hat{\sigma}_Y^2\)</span>, podemos estimar
+os quantis de <span class="math inline">\(Y\)</span> e de <span
+class="math inline">\(Q\)</span>,</p>
+<p><span class="math display">\[
+\hat{Y}_p = \hat{\mu}_Y + Z_p\hat{\sigma}_Y
+\]</span> e</p>
+<p><span class="math display">\[
+\hat{Q}_p = exp(\hat{\mu}_Y + Z_p\hat{\sigma}_Y)
+\]</span></p>
+<h3 id="ajuste-da-lognormal-e-estimativa-dos-quantis">Ajuste da
+lognormal e estimativa dos quantis</h3>
+<p>Então, vamos ao que interessa. Temos basicamente que realizar três
+etapas para determinar os quantis de cheia com base na distribuição
+lognormal,</p>
+<ol type="1">
+<li>Construir a série <span class="math inline">\(Y =
+ln(Q)=\{Y_1,Y_2,\ldots,Q_n\}\)</span></li>
+<li>Estimar os parâmetros <span class="math inline">\(\mu_y\)</span> e
+<span class="math inline">\(\sigma_Y^2\)</span> por meio dos estimadores
+<span class="math inline">\(\hat{\mu}_Y\)</span> e <span
+class="math inline">\(\hat{\sigma}_Y^2\)</span></li>
+<li>Estimar os quantis de cheia, <span
+class="math inline">\(Q_p\)</span>, por meio do estimador <span
+class="math inline">\(\hat{Q}_p = exp(\hat{\mu}_Y +
+Z_p\hat{\sigma}_Y)\)</span></li>
+</ol>
+<p>O código para realizar esse ajuste segue abaixo,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Determinar a nova série Y = ln(Q)</span></span>
+<span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Estimar os parâmetros da distribuição Normal, sabendo que Y ~ N(mu_y,sigma2_Y)</span></span>
+<span><span class='va'>mu_Y_hat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>)</span></span>
+<span><span class='va'>sigma2_hat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/cor.html'>var</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Estimar os quantis de Y e de Q</span></span>
+<span><span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fl'>0.01</span>,to <span class='op'>=</span> <span class='fl'>0.99</span>,by <span class='op'>=</span> <span class='fl'>0.01</span><span class='op'>)</span>     <span class='co'># define valores de p que serão empregados para os quantis</span></span>
+<span><span class='va'>Tr</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>/</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>-</span><span class='va'>p</span><span class='op'>)</span>                                 <span class='co'># Calcula os tempos de recorrência para cada valro de p</span></span>
+<span><span class='va'>z_p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>qnorm</a></span><span class='op'>(</span><span class='va'>p</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>                         <span class='co'># quantil da normal-padrão</span></span>
+<span><span class='va'>y_p_hat</span> <span class='op'>&lt;-</span> <span class='va'>mu_Y_hat</span> <span class='op'>+</span> <span class='va'>z_p</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>sigma2_hat</span><span class='op'>)</span>    <span class='co'># estimativa do quantil de Y</span></span>
+<span><span class='va'>q_p_hat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span><span class='op'>(</span><span class='va'>y_p_hat</span><span class='op'>)</span>                       <span class='co'># estimativa do quantil de Q</span></span>
+<span></span>
+<span><span class='co'># Criação de um dataframe com os quantis de cheia</span></span>
+<span><span class='va'>Quantis_Q</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='va'>q_p_hat</span>,<span class='va'>Tr</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p>Podemos dar uma espiada no dataframe que contém os quantis de cheia
+utilizando a função <code>head(dataframe.name)</code>,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>Quantis_Q</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>   q_p_hat       Tr
+1 3.603989 1.010101
+2 4.101790 1.020408
+3 4.452708 1.030928
+4 4.736340 1.041667
+5 4.980326 1.052632
+6 5.197874 1.063830</code></pre>
+</div>
+<p>Podemos perceber que os seis primeiros valores dos quantis estimados
+não são tão interessantes, pois eles estão associados a tempos de
+recorrência muito baixos. Existe uma outra função no função no
+<code>R</code> que permite espiar a parte final do dataframe, ao invés
+da parte inicial. Essa função é chamada de
+<code>tail(dataframe.name)</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='va'>Quantis_Q</span>,<span class='fl'>5</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>    q_p_hat        Tr
+95 23.73313  20.00000
+96 24.95571  25.00000
+97 26.54536  33.33333
+98 28.81638  50.00000
+99 32.79664 100.00000</code></pre>
+</div>
+<p>O número <code>5</code> no código acima serve para especificar
+quantas linhas eu estou interessado em ver.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span>,type <span class='op'>=</span> <span class='st'>"p"</span>, pch <span class='op'>=</span> <span class='fl'>19</span>,cex <span class='op'>=</span> <span class='fl'>1.5</span>,col <span class='op'>=</span> <span class='st'>"blue"</span>,</span>
+<span>     log <span class='op'>=</span> <span class='st'>"x"</span>,main <span class='op'>=</span> <span class='st'>"Curva de frequência de cheias - 60435000"</span>,</span>
+<span>     xlab <span class='op'>=</span> <span class='st'>"Tr (anos)"</span>,ylab <span class='op'>=</span> <span class='st'>"Q_max (m3/s)"</span>,</span>
+<span>     xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>100</span><span class='op'>)</span>,   <span class='co'># X-axis limits</span></span>
+<span>     ylim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Adiciona a LN2</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/lines.html'>lines</a></span><span class='op'>(</span><span class='va'>Quantis_Q</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>Quantis_Q</span><span class='op'>$</span><span class='va'>q_p_hat</span>,</span>
+<span>      col <span class='op'>=</span> <span class='st'>"red"</span>,</span>
+<span>      lwd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Adiciona grid horizontal</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>1</span>, at <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>10</span>,by<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>10</span>,<span class='fl'>100</span>,by<span class='op'>=</span><span class='fl'>10</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>200</span>,<span class='fl'>1000</span>,by<span class='op'>=</span><span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span>     tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span>
+<span><span class='co'># Adiciona grid vertical</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>2</span>, tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-13-1.png" width="768" /></p>
+</div>
+<h3 id="determinação-dos-quantis-de-cheia">Determinação dos quantis de
+cheia</h3>
+<h2 id="descrição-das-incertezas">Descrição das incertezas</h2>
+<p>Quando realizamos uma análise de frequência, além da estimativa dos
+quantis de cheia, precisamos ter uma ideia doo quão confiantes estamos
+em relação aos valores estimados. Sendo assim, precisamos entender como
+calcular a precisão dessas estimativas.</p>
+<p>Normalmente, a maneira que empregamos para descrever as incertezas
+nas estiamtovas dos quantis de cheias é por meio de intervalos de
+confiança.Neste nosso exercício aqui, aprenderemos como calcular
+intervalos de confiança associados à distribuição lognormal, que é a
+distribuição que está sendo utilizados por nós para construir a curva de
+frequência.</p>
+<p>Existem duas maneiras de se calcular intervaloes de confiança para a
+distribuição lognormal,</p>
+<ul>
+<li>intervalos aproximados</li>
+<li>intervalos exatos</li>
+</ul>
+<p>Aqui aprenderemos como determinar intervalos de confiança aproximados
+para os quantis de cheia oriundos da distribuição lognormal.</p>
+<h3
+id="lógica-da-construção-de-intervalos-de-confiança-aproximados">Lógica
+da construção de intervalos de confiança aproximados</h3>
+<p>Suponha que tenhamos uma estimador qualquer denominado <span
+class="math inline">\(\hat{W}_p\)</span>. Estou usando a variável <span
+class="math inline">\(W\)</span> apenas para reforçar a ideia de que não
+precisa ser aquele estimador apresentado anteriormente, que chamamos de
+<span class="math inline">\(\hat{Q}_p\)</span>, embora possa ser.</p>
+<p>Para a quase totalidade de possíveis estimadores, quando <span
+class="math inline">\(n\rightarrow \infty\)</span>, ou em outras
+palavras, à medida que a amostra aumenta e passa a ter um número bem
+grande de observações, esses estimadores tendem a ter uma distribuição
+Normal. Como um estimador depende da amostra que se tem em mãos, ele é
+também uma variável aleatória. E como toda variável aleatória, seu
+comportamento pode se descrito por uma distribuição teórica de
+probabilidades.</p>
+<p>Bem, se <span class="math inline">\(\hat{W}_p\)</span> possui
+distribuição Normal e variância <span
+class="math inline">\(V(\hat{W}_p)\)</span>, então</p>
+<p><span class="math display">\[
+Z = \frac{\hat{W}_p-E[\hat{W}_p]}{\sqrt{V(\hat{W}_p)}}
+\]</span> Como <span class="math inline">\(Z\sim N(0,1)\)</span>,
+podemos afirmar que</p>
+<p><span class="math display">\[
+P(z_{\alpha/2}\le Z \le z_{1-\alpha/2}) = \alpha
+\]</span> Se substituirmos <span class="math inline">\(Z\)</span> da
+equação acima pela equação anterior, obtemos</p>
+<p><span class="math display">\[
+P\Bigg(z_{\alpha/2}\le
+\frac{\hat{W}_p-E[\hat{W}_p]}{\sqrt{V(\hat{W}_p)}} \le
+z_{1-\alpha/2}\Bigg) = \alpha
+\]</span> Depois de algumas manipulações algébricas, e admitindo que o
+estimador _p é não-tendencioso, o que significa dizer que <span
+class="math inline">\(E[\hat{W}_p]=W_p\)</span>, chegamos à afirmação
+abaixo,</p>
+<p><span class="math display">\[
+P\Bigg(\hat{W}_p - z_{1-\alpha/2}\sqrt{V(\hat{W}_p)} \le W_p \le
+\hat{W}_p + z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}\Bigg) = \alpha
+\]</span> que em bom português diz que a probabilidade do valor
+populacional de <span class="math inline">\(W_p\)</span> estar entre
+esses dois limites, <span class="math inline">\(\hat{W}_p \pm
+z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}\)</span> é igual à <span
+class="math inline">\(\alpha\)</span>. É essa afirmação matemática que
+nos permite estabelecer o intervalo de confiança de <span
+class="math inline">\(100(1-\alpha)\%\)</span> para <span
+class="math inline">\(W_p\)</span>, apresentado abaixo,</p>
+<p><span class="math display">\[
+\Bigg[\hat{W}_p - z_{1-\alpha/2}\sqrt{V(\hat{W}_p)};\hat{W}_p +
+z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}\Bigg]
+\]</span></p>
+<p>Sendo assim, podemos construir o intervalo de confiança aproximado de
+<span class="math inline">\(Y_p=ln(Q_p)\)</span> e de <span
+class="math inline">\(Q_p\)</span>, que é o que de fato nos
+interessa.</p>
+<p>Primeiro, constuímos o intervalo de confiança aproximado de <span
+class="math inline">\(Y_p\)</span>,</p>
+<p><span class="math display">\[
+\Bigg[\hat{Y}_p - z_{1-\alpha/2}\sqrt{V(\hat{Y}_p)};\hat{Y}_p +
+z_{1-\alpha/2}\sqrt{V(\hat{Y}_p)}\Bigg]
+\]</span></p>
+<p>O problema aqui é que ainda precisamos saber quem é <span
+class="math inline">\(V(\hat{Y}_p)\)</span>. Este não é um curso de
+estatística, mas sim de <code>R</code> aplicado à Hidrologia. Por isso,
+deixarei a explicação de como determinar <span
+class="math inline">\(V(\hat{Y}_p)\)</span> num local separado,</p>
+<div class="infobox tip">
+<p>There is a lot of information within this practical book and
+<strong>we do not expect you to read everything we link to</strong>. You
+should attend each lecture, go through every practical and do some
+associated reading.</p>
+<p>This is a 15 credit module, equivalent to 150 hours of study
+(including the taught sessions). Outside of our lectures and practical
+sessions (3 hours a week) <strong>you should be spending an extra 12
+hours a week on this module</strong>.</p>
+<p><span class="math display">\[
+\begin{align}
+V(\hat{Y}_p) &amp;= V(\hat{\mu}_y + z_p\hat{\sigma}_Y)\\
+             &amp;= V(\hat{\mu}_y) + V(z_p\hat{\sigma}_Y)\\
+             &amp;= V(\hat{\mu}_y) + z_p^2V(\hat{\sigma}_Y)\\
+             &amp;= \frac{\hat{\sigma}_Y^2}{n} + z_p^2V(\hat{\sigma}_Y)
+\end{align}
+\]</span></p>
+</div>
+<p><span class="math display">\[
+\begin{align}
+V(\hat{Y}_p) &amp;= V(\hat{\mu}_y + z_p\hat{\sigma}_Y)\\
+             &amp;= V(\hat{\mu}_y) + V(z_p\hat{\sigma}_Y)\\
+             &amp;= V(\hat{\mu}_y) + z_p^2V(\hat{\sigma}_Y)\\
+             &amp;= \frac{\hat{\sigma}_Y^2}{n} + z_p^2V(\hat{\sigma}_Y)
+\end{align}
+\]</span> Pode-se mostrar que <span
+class="math inline">\(V(\sigma_Y)\approx \hat{\sigma}_Y^2/(2n)\)</span>,
+o que resulta na seguinte expressão para <span
+class="math inline">\(V(\hat{Y}_p)\)</span>,</p>
+<p><span class="math display">\[
+V(\hat{Y}_p) \approx
+\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)
+\]</span></p>
+<p>Dessa forma, o intervalo de confiança de <span
+class="math inline">\(100(1-\alpha)\%\)</span> para <span
+class="math inline">\(Y_p\)</span> pode ser descrito como</p>
+<p><span class="math display">\[
+\Bigg[\hat{Y}_p -
+z_{1-\alpha/2}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)};\hat{Y}_p
++
+z_{1-\alpha/2}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)}\Bigg]
+\]</span></p>
+<p>Para determinar o o intervalo de confiança de <span
+class="math inline">\(100(1-\alpha)\%\)</span> para <span
+class="math inline">\(Q_p\)</span>, basta exponenciar o intervalo
+acima,</p>
+<p><span class="math display">\[
+\begin{align}
+IC_{(1-\alpha)}(Q_p) &amp;= exp\Bigg[\hat{Y}_p \pm
+z_{1-\alpha/2}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)}\Bigg]\\
+               &amp;= exp\Bigg[(\hat{\mu}_Y+z_p\hat{\sigma}_y) \pm
+z_{1-\alpha/2}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)}\Bigg]
+\end{align}
+\]</span></p>
+<p>Por exemplo, suponha que queiramos estabelecer o intervalo de
+confiança de 95% para o quantil <span
+class="math inline">\(Q_99\)</span>, equivalente à cheia de 100 anos de
+recorrência. Nesse caso, <span class="math inline">\(\alpha =
+0.05\)</span> e <span class="math inline">\(p=0.99\)</span>, o que leva
+a seguinte intervalo de confiança,</p>
+<p><span class="math display">\[
+\begin{align}
+IC_{.95}(Q_{0.99}) &amp;= exp\Bigg[(\hat{\mu}_Y+z_{.99}\hat{\sigma}_y)
+\pm
+z_{.975}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_{.99}^2\Bigg)}\Bigg]\\
+                    &amp;=exp\Bigg[(\hat{\mu}_Y+2.326\hat{\sigma}_y) \pm
+1.96\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}2.326^2\Bigg)}\Bigg]
+\end{align}
+\]</span></p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>alpha</span> <span class='op'>&lt;-</span> <span class='fl'>0.05</span></span>
+<span><span class='va'>var_yp</span> <span class='op'>&lt;-</span> <span class='va'>sigma2_hat</span><span class='op'>/</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>)</span><span class='op'>*</span><span class='op'>(</span><span class='fl'>1</span> <span class='op'>+</span> <span class='va'>z_p</span><span class='op'>^</span><span class='fl'>2</span><span class='op'>/</span><span class='fl'>2</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>lower_IC</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span><span class='op'>(</span><span class='op'>(</span><span class='va'>mu_Y_hat</span> <span class='op'>+</span> <span class='va'>z_p</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>sigma2_hat</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>qnorm</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>-</span><span class='va'>alpha</span><span class='op'>/</span><span class='fl'>2</span>,<span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>var_yp</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='va'>upper_IC</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span><span class='op'>(</span><span class='op'>(</span><span class='va'>mu_Y_hat</span> <span class='op'>+</span> <span class='va'>z_p</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>sigma2_hat</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>qnorm</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>-</span><span class='va'>alpha</span><span class='op'>/</span><span class='fl'>2</span>,<span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>var_yp</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span>,type <span class='op'>=</span> <span class='st'>"p"</span>,           <span class='co'># plota apenas pontos</span></span>
+<span>     pch <span class='op'>=</span> <span class='fl'>19</span>,col <span class='op'>=</span> <span class='st'>"blue"</span>, cex <span class='op'>=</span> <span class='fl'>1.5</span>,                   <span class='co'># círculos azuis de tamanho 1.5 </span></span>
+<span>     log <span class='op'>=</span> <span class='st'>"x"</span>,                                          <span class='co'># escala logaritmica no eixo-x</span></span>
+<span>     main <span class='op'>=</span> <span class='st'>"Curva de frequência de cheias - 60435000"</span>,  <span class='co'># título </span></span>
+<span>     xlab <span class='op'>=</span> <span class='st'>"Tr (anos)"</span>,ylab <span class='op'>=</span> <span class='st'>"Q_max (m3/s)"</span>,           <span class='co'># nome dos eixos</span></span>
+<span>     xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>100</span><span class='op'>)</span>,                                   <span class='co'># limites od eixo-x              </span></span>
+<span>     ylim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span>                                    <span class='co'># limites do eixo-y</span></span>
+<span></span>
+<span><span class='co'># Adiciona a LN2</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/lines.html'>lines</a></span><span class='op'>(</span><span class='va'>Quantis_Q</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>Quantis_Q</span><span class='op'>$</span><span class='va'>q_p_hat</span>,</span>
+<span>      col <span class='op'>=</span> <span class='st'>"red"</span>,</span>
+<span>      lwd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Adiciona IC</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/lines.html'>lines</a></span><span class='op'>(</span><span class='va'>Quantis_Q</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>lower_IC</span>,</span>
+<span>      col <span class='op'>=</span> <span class='st'>"red"</span>,lty <span class='op'>=</span> <span class='fl'>2</span>,</span>
+<span>      lwd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/lines.html'>lines</a></span><span class='op'>(</span><span class='va'>Quantis_Q</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>upper_IC</span>,</span>
+<span>      col <span class='op'>=</span> <span class='st'>"red"</span>,lty <span class='op'>=</span> <span class='fl'>2</span>,</span>
+<span>      lwd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Adiciona grid horizontal</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>1</span>, at <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>10</span>,by<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>10</span>,<span class='fl'>100</span>,by<span class='op'>=</span><span class='fl'>10</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>200</span>,<span class='fl'>1000</span>,by<span class='op'>=</span><span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span>     tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span>
+<span><span class='co'># Adiciona grid vertical</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>2</span>, tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-15-1.png" width="960" /></p>
+</div>
+<h2 id="inferência">Inferência</h2>
+<h3 id="cálculo-dos-momentos-l">Cálculo dos momentos-L</h3>
+<h3 id="diagrama-de-momentos-l">Diagrama de momentos-L</h3>
+<h3 id="estimativa-dos-parâmetros-da-distribuição">Estimativa dos
+parâmetros da distribuição</h3>
+<h3 id="cálculo-dos-quantis-de-cheia">Cálculo dos quantis de cheia</h3>
+<h2 id="construção-da-curva-de-frequência">Construção da curva de
+frequência</h2>
+<h2 id="descrição-das-incertezas-intervalo-de-confiança">Descrição das
+incertezas (intervalo de confiança)</h2>
+<h2 id="curva-de-frequência-final">Curva de frequência final</h2>
+<h2 id="detalhes-técnicos">Detalhes técnicos</h2>
+<h3 id="distribuição-de-probabilidades">Distribuição de
+probabilidades</h3>
+<h4 id="para-que-servem">Para que servem?</h4>
+<p>O uso de uma distribuição teórica de probabilidades se justifica por
+três motivos,</p>
+<ul>
+<li>permite a extrapolação da curva, ou seja, torna possível a
+estimativa de uma vazão com 50 anos tempo de retorno mesmo quando temos
+apenas 20 anos de dados;</li>
+<li>pode ser utilizada como um interpolador de quantis de cheia, já que
+o uso da frequência amostral só permite estimar quantis para um número
+discreto, e nem sempre desejado, de períodos de retorno.</li>
+<li>é uma maneira de armazenar as infomações relevantes da série de
+máximos de maneira compacta, visto que basta guardar o valor dos
+parâmetro da distribuição para obter qualquer quantil de cheia que se
+tenha interesse.</li>
+</ul>
+<h2 id="detalhamento-de-posição-de-plotagem">Detalhamento de posição de
+plotagem</h2>
 <p>Embora não seja o objetivo aqui deste curso entender os detalhes
 deste procedimento, mas vale a pena dizer o seguinte: como a
 distribuição empírica de frequência depende da amostra que se tem em
@@ -2725,298 +3237,6 @@ distribuição teórica</td>
 </tr>
 </tbody>
 </table>
-<p>Não se preocupe tanto se esse conceito de posição de plotagem não
-ficou totalmente claro. Basta saber que plotaremos os valores de máximos
-anuais da amostra na curva de frequência utilizando a posição de
-plotagem de Weibull.</p>
-<p>Na verdade, utilizaremos o tempo de recorrência, <span
-class="math inline">\(T_r\)</span>, para plotagem, lembrando que o <span
-class="math inline">\(T_r\)</span> é simplemenste o inverso da
-probabilidade de excedência, representada pela posição de plotagem de
-Weibull.</p>
-<p>O código para o cálculo do <span class="math inline">\(Tr\)</span> é
-apresentado abaixo. Para facilitar a compreenção de como o cálculo é
-feito, criaram-se três novas colunas ao dataframe que ontém as vazões
-máximas anuais. Mas antes disso, efetuou-se o ordenamento das vazões
-máximas em ordem decrescente, ou seja, o primeiro valor de vazão da nova
-série ordenada é o maior da amostra.</p>
-<p>As três novas colunas são, respectivamente, o índice das vazões,
-começando de 1 indo até o número total de valores, a posição de plotagem
-de Weilbull, que expressa a probabilidade de excedência, e por último o
-tempo de recorrência, <span class="math inline">\(Tr\)</span>.</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Remoção dos anos com falha</span></span>
-<span><span class='va'>Q_max</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>)</span></span>
-<span><span class='co'># Ordenamento decrescente do dataframe</span></span>
-<span><span class='va'>Q_max_ord</span> <span class='op'>&lt;-</span> <span class='va'>Q_max</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/order.html'>order</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>$</span><span class='va'>maxima</span>, decreasing <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, <span class='op'>]</span></span>
-<span><span class='co'># Inclusão de Três novas colunas: index, posição de plotagem de Weibull, e Tr</span></span>
-<span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>index</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fl'>1</span>,to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>)</span><span class='op'>)</span></span>
-<span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>weibull</span> <span class='op'>&lt;-</span> <span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>index</span><span class='op'>/</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>)</span> <span class='op'>+</span> <span class='fl'>1</span><span class='op'>)</span></span>
-<span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>/</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>weibull</span></span></code></pre>
-</div>
-</div>
-<p>Como já fizemos antes, podemos dar uma espiada nesse novo dataframe
-com as vazões máximas anuais ordenada utilizando a função
-<code>head(dataframe_name)</code>,</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>)</span></span></code></pre>
-</div>
-<pre><code># A tibble: 6 × 6
-# Groups:   Cod_estacao [1]
-  Cod_estacao ano_hidro maxima index weibull    Tr
-  &lt;chr&gt;           &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;
-1 60435000         2004   37.5     1  0.0233 43   
-2 60435000         1980   28.9     2  0.0465 21.5 
-3 60435000         1983   25.3     3  0.0698 14.3 
-4 60435000         1994   19.3     4  0.0930 10.8 
-5 60435000         2016   17.8     5  0.116   8.6 
-6 60435000         1988   17.1     6  0.140   7.17</code></pre>
-</div>
-<p>A última coluna de <code>Q_max_ord</code> contém o valor do tempo de
-recorrência de cada uma das observações contidas na amostra. Vale notar
-que as observações em <code>Q_max_ord</code> estão ordenadas em ordem
-decrescente.</p>
-<p>Podemos agora criar uma Figura, similar àquela apresentada para o
-estudo do Rio Salado. Porém, nesta etapa de nossa análise, apenas os
-valores amostrais das vazões máximas serão apresentados.</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span>,type <span class='op'>=</span> <span class='st'>"p"</span>, pch <span class='op'>=</span> <span class='fl'>19</span>,cex <span class='op'>=</span> <span class='fl'>1.5</span>,col <span class='op'>=</span> <span class='st'>"blue"</span>,</span>
-<span>     log <span class='op'>=</span> <span class='st'>"x"</span>,main <span class='op'>=</span> <span class='st'>"Curva de frequência de cheias - 60435000"</span>,</span>
-<span>     xlab <span class='op'>=</span> <span class='st'>"Tr (anos)"</span>,ylab <span class='op'>=</span> <span class='st'>"Q_max (m3/s)"</span>,</span>
-<span>     xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>100</span><span class='op'>)</span>,   <span class='co'># X-axis limits</span></span>
-<span>     ylim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span></span>
-<span><span class='co'># Adiciona grid horizontal</span></span>
-<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>1</span>, at <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>10</span>,by<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>10</span>,<span class='fl'>100</span>,by<span class='op'>=</span><span class='fl'>10</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>200</span>,<span class='fl'>1000</span>,by<span class='op'>=</span><span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>,</span>
-<span>     tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span>
-<span><span class='co'># Adiciona grid vertical</span></span>
-<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>2</span>, tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span></code></pre>
-</div>
-<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-10-1.png" width="768" /></p>
-</div>
-<h2 id="ajuste-da-distribuição-lognormal">Ajuste da Distribuição
-Lognormal</h2>
-<h3 id="a-distribuição-lognormal">A distribuição lognormal</h3>
-<p>Se considerarmos que as vazões máximas anuais <span
-class="math inline">\((Q)\)</span> possuem uma distribuição lognormal,
-então os logaritmos de <span class="math inline">\(Q\)</span>, chamados
-aqui de <span class="math inline">\(Y = ln(Q)\)</span>, terão, por
-definição, uma distribuição normal,</p>
-<p><span class="math display">\[
-Y = ln(Q) \sim N(\mu_Y,\sigma_Y^2)
-\]</span> o que significa dizer que os logarítmicos das vazões máximas
-anuais são bem representados por uma distribuição Normal com parâmetros
-<span class="math inline">\(\mu_Y\)</span> e <span
-class="math inline">\(\sigma_Y^2\)</span>, que, para quem não lembra,
-representam a média e a variância populacionais.</p>
-<p>O adjetivo populacional utilizado aqui é para lembrarmos que essas
-caracerísticas da distribuição são, na verdade, desconhecidas. A única
-pista que temos sobre o valor desses parâmetros está contida na amostra
-que temos, formada por um conjunto de vazões máximas anuais. A maneira
-que utilizaremos a amostra para tentar compreender essa distribuição é o
-assunto da próxima seção.</p>
-<h3 id="quantis-de-cheia-da-lognormal">Quantis de cheia da
-lognormal</h3>
-<p>É muito provável que vocês não se recordem, mas a distribuição Normal
-possui uma caracterísitca bastante interessante. Se aplicarmos uma
-transformação linear numa variável normalmente distribuída, a nova
-variável continua sendo normalmente distribuída, porém com diferentes
-valores para os parâmetros da distribuição.</p>
-<p>Uma transformação bastante útil é aquela em que a variável é
-transformada numa variável normal-padrão, usualmente representada pela
-letra <span class="math inline">\(Z\)</span>. A variável normal-padrão
-<span class="math inline">\(Z\)</span> possui média zero e variância
-unitária, <span class="math inline">\(Z \sim N(0,1)\)</span>. Qualquer
-variável que possui distribuiçao Normal pode ser transformada numa
-variável normal-padrão, bastando subtrair sua média e dividir pelo seu
-desvio-padrão,</p>
-<p><span class="math display">\[
-Z = \frac{Y-\mu_Y}{\sigma_Y}\sim N(0,1)
-\]</span></p>
-<p>Essa transformação é bastate útil aqui, pois utilizaremos o quantil
-da variável normal-padrão, <span class="math inline">\(Z_p\)</span>,
-para escrever o quantil de <span class="math inline">\(Y\)</span>, <span
-class="math inline">\(Y_p\)</span>, e também o quantil de cheia, <span
-class="math inline">\(Q_p\)</span>.</p>
-<p>Quantil de uma variável aleatória, para quem não se lembra, é o valor
-da variável associado a uma dada probabilidade de não-excedência. Por
-exemplo, por definição, a probabilidade da variável aleatória <span
-class="math inline">\(X\)</span> ser menor ou igual ao quantil <span
-class="math inline">\(x_p\)</span> é igual a p,</p>
-<p><span class="math display">\[
-P(X\le x_p)=p
-\]</span> Portanto, a probabilidade da variável normal-padrão, <span
-class="math inline">\(Z\)</span>, ser menor do que os quantis <span
-class="math inline">\(Z_{0.10}\)</span>, <span
-class="math inline">\(Z_{0.50}\)</span> e <span
-class="math inline">\(Z_{0.90}\)</span> é, respectivamente, 0.10, 0.50 e
-0.90.</p>
-<p>Como <span class="math inline">\(Z = (Y-\mu_Y)/\sigma_Y\)</span>,
-podemos dizer que <span class="math inline">\(Z_p =
-(Y_p-\mu_Y)/\sigma_Y\)</span>, de forma que</p>
-<p><span class="math display">\[
-Y_p = \mu_Y + Z_p\sigma_Y
-\]</span> E como $Y=ln(Q), podemos afirmar que</p>
-<p><span class="math display">\[
-Q_p = exp(\mu_Y + Z_p\sigma_Y)
-\]</span> em que <span class="math inline">\(Q_p\)</span> é o quantil
-populacional da variável aleatória <span
-class="math inline">\(Q\)</span>, que representa as vazões máximas
-anuais. Da mesma for que <span class="math inline">\(\mu_y\)</span> e
-<span class="math inline">\(\sigma_Y\)</span> são desconhecidos, <span
-class="math inline">\(Q_p\)</span> também é. A única maneira de estimar
-<span class="math inline">\(Q_p\)</span> é por meio das estimativas de
-<span class="math inline">\(\mu_Y\)</span> e de <span
-class="math inline">\(\sigma_Y\)</span>.</p>
-<h3 id="método-de-ajuste">Método de ajuste</h3>
-<p>Existem diversos métodos para ajustar uma distribuição teórica de
-probabilidades aos dados que se tem em mãos. Para o caso da distribuição
-lognormal com 2 parâmetros, sabe-se que a forma mais eficiente de
-estimar os parâmetros <span class="math inline">\(\mu_Y\)</span> e <span
-class="math inline">\(\sigma_Y^2\)</span> é por meio do método dos
-momentos, que será explicado na sequência.</p>
-<p>Com base numa série de vazões máximas anuais <span
-class="math inline">\(\{Q_1,Q_2,\ldots,Q_n\}\)</span>, determinamos uma
-nova série com base no logarítmos da série original, <span
-class="math inline">\(Y = \{Y_1,Y_2,\ldots,Y_n\}\)</span>.</p>
-<p>Em seguida, aplicamos o métodos dos momentos para estimar <span
-class="math inline">\(\mu_Y,\sigma_Y^2\)</span>, o que consiste em igual
-esses parâmetros aos seus valores amostrias, ou seja,</p>
-<p><span class="math display">\[
-\hat{\mu}_Y = \bar{Y} = \frac{\sum_1^n y_i}{n}
-\]</span> e</p>
-<p><span class="math display">\[
-\hat{\sigma}_Y^2 = \frac{\sum_{i=1}^n (y_i - \bar{Y})^2}{n-1}
-\]</span> Vale notar mais uma vez que <span
-class="math inline">\(\hat{\mu}_Y\)</span> e <span
-class="math inline">\(\hat{\sigma}_Y^2\)</span> possuem um acento
-circunflexo para indicar que eles são os estimadores amostrais dos
-parâmetros populacionais <span class="math inline">\(\mu_Y\)</span> e
-<span class="math inline">\(\sigma_Y^2\)</span>.</p>
-<p>Com os valores de <span class="math inline">\(\hat{\mu}_Y\)</span> e
-<span class="math inline">\(\hat{\sigma}_Y^2\)</span>, podemos estimar
-os quantis de <span class="math inline">\(Y\)</span> e de <span
-class="math inline">\(Q\)</span>,</p>
-<p><span class="math display">\[
-\hat{Y}_p = \hat{\mu}_Y + Z_p\hat{\sigma}_Y
-\]</span> e</p>
-<p><span class="math display">\[
-\hat{Q}_p = exp(\hat{\mu}_Y + Z_p\hat{\sigma}_Y)
-\]</span> ### Ajuste propriamente dito</p>
-<p>Então, vamos ao que interessa. Tems basicamente que realizar três
-etapas para determinar os quantis de cheia com base na distribuição
-lognormal,</p>
-<ol type="1">
-<li>Construir a série $Y = ln(Q)={Y_1,Y_2,,Q_n}</li>
-<li>Estimar <span class="math inline">\(\mu_y\)</span> e <span
-class="math inline">\(\sigma_Y^2\)</span> por meio dos estimadores <span
-class="math inline">\(\hat{\mu}_Y\)</span> e <span
-class="math inline">\(\hat{\sigma}_Y^2\)</span></li>
-<li>Estimar os quantis de cheia, <span
-class="math inline">\(Q_p\)</span>, por meio do estimador <span
-class="math inline">\(\hat{Q}_p\)</span></li>
-</ol>
-<p>O código para realizar esse ajuste segue abaixo,</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Determinar a nova série Y = ln(Q)</span></span>
-<span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span><span class='op'>)</span></span>
-<span></span>
-<span><span class='co'># Estimar os parâmetros da distribuição Normal, sabendo que Y ~ N(mu_y,sigma2_Y)</span></span>
-<span><span class='va'>mu_Y_hat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>)</span></span>
-<span><span class='va'>sigma2_hat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/cor.html'>var</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Y</span><span class='op'>)</span></span>
-<span></span>
-<span><span class='co'># Estimar os quantis de Y e de Q</span></span>
-<span><span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fl'>0.01</span>,to <span class='op'>=</span> <span class='fl'>0.99</span>,by <span class='op'>=</span> <span class='fl'>0.01</span><span class='op'>)</span>     <span class='co'># define valores de p que serão empregados para os quantis</span></span>
-<span><span class='va'>Tr</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>/</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>-</span><span class='va'>p</span><span class='op'>)</span>                                 <span class='co'># Calcula os tempos de recorrência para cada valro de p</span></span>
-<span><span class='va'>z_p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>qnorm</a></span><span class='op'>(</span><span class='va'>p</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span>                         <span class='co'># quantil da normal-padrão</span></span>
-<span><span class='va'>y_p_hat</span> <span class='op'>&lt;-</span> <span class='va'>mu_Y_hat</span> <span class='op'>+</span> <span class='va'>z_p</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>sigma2_hat</span><span class='op'>)</span>    <span class='co'># estimativa do quantil de Y</span></span>
-<span><span class='va'>q_p_hat</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span><span class='op'>(</span><span class='va'>y_p_hat</span><span class='op'>)</span>                       <span class='co'># estimativa do quantil de Q</span></span>
-<span></span>
-<span><span class='co'># Criação de um dataframe com os quantis de cheia</span></span>
-<span><span class='va'>Quantis_Q</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span><span class='va'>q_p_hat</span>,<span class='va'>Tr</span><span class='op'>)</span></span></code></pre>
-</div>
-</div>
-<p>Podemos dar uma espiada no dataframe que contém os quantis de cheia
-utilizando a função <code>head(dataframe.name)</code>,</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>Quantis_Q</span><span class='op'>)</span></span></code></pre>
-</div>
-<pre><code>   q_p_hat       Tr
-1 3.603989 1.010101
-2 4.101790 1.020408
-3 4.452708 1.030928
-4 4.736340 1.041667
-5 4.980326 1.052632
-6 5.197874 1.063830</code></pre>
-</div>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='va'>Quantis_Q</span>,<span class='fl'>5</span><span class='op'>)</span></span></code></pre>
-</div>
-<pre><code>    q_p_hat        Tr
-95 23.73313  20.00000
-96 24.95571  25.00000
-97 26.54536  33.33333
-98 28.81638  50.00000
-99 32.79664 100.00000</code></pre>
-</div>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span>,type <span class='op'>=</span> <span class='st'>"p"</span>, pch <span class='op'>=</span> <span class='fl'>19</span>,cex <span class='op'>=</span> <span class='fl'>1.5</span>,col <span class='op'>=</span> <span class='st'>"blue"</span>,</span>
-<span>     log <span class='op'>=</span> <span class='st'>"x"</span>,main <span class='op'>=</span> <span class='st'>"Curva de frequência de cheias - 60435000"</span>,</span>
-<span>     xlab <span class='op'>=</span> <span class='st'>"Tr (anos)"</span>,ylab <span class='op'>=</span> <span class='st'>"Q_max (m3/s)"</span>,</span>
-<span>     xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>100</span><span class='op'>)</span>,   <span class='co'># X-axis limits</span></span>
-<span>     ylim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span></span>
-<span></span>
-<span><span class='co'># Adiciona a LN2</span></span>
-<span><span class='fu'><a href='https://rdrr.io/r/graphics/lines.html'>lines</a></span><span class='op'>(</span><span class='va'>Quantis_Q</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>Quantis_Q</span><span class='op'>$</span><span class='va'>q_p_hat</span>,</span>
-<span>      col <span class='op'>=</span> <span class='st'>"red"</span>,</span>
-<span>      lwd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span>
-<span></span>
-<span><span class='co'># Adiciona grid horizontal</span></span>
-<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>1</span>, at <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>10</span>,by<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>10</span>,<span class='fl'>100</span>,by<span class='op'>=</span><span class='fl'>10</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>200</span>,<span class='fl'>1000</span>,by<span class='op'>=</span><span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>,</span>
-<span>     tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span>
-<span><span class='co'># Adiciona grid vertical</span></span>
-<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>2</span>, tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span></code></pre>
-</div>
-<p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-14-1.png" width="768" /></p>
-</div>
-<h3 id="determinação-dos-quantis-de-cheia">Determinação dos quantis de
-cheia</h3>
-<h2 id="descrição-das-incerteas">Descrição das incerteas</h2>
-<h2 id="inferência">Inferência</h2>
-<h3 id="cálculo-dos-momentos-l">Cálculo dos momentos-L</h3>
-<h3 id="diagrama-de-momentos-l">Diagrama de momentos-L</h3>
-<h3 id="estimativa-dos-parâmetros-da-distribuição">Estimativa dos
-parâmetros da distribuição</h3>
-<h3 id="cálculo-dos-quantis-de-cheia">Cálculo dos quantis de cheia</h3>
-<h2 id="construção-da-curva-de-frequência">Construção da curva de
-frequência</h2>
-<h2 id="descrição-das-incertezas-intervalo-de-confiança">Descrição das
-incertezas (intervalo de confiança)</h2>
-<h2 id="curva-de-frequência-final">Curva de frequência final</h2>
-<h2 id="detalhes-técnicos">Detalhes técnicos</h2>
-<h3 id="distribuição-de-probabilidades">Distribuição de
-probabilidades</h3>
-<h4 id="para-que-servem">Para que servem?</h4>
-<p>O uso de uma distribuição teórica de probabilidades se justifica por
-três motivos,</p>
-<ul>
-<li>permite a extrapolação da curva, ou seja, torna possível a
-estimativa de uma vazão com 50 anos tempo de retorno mesmo quando temos
-apenas 20 anos de dados;</li>
-<li>pode ser utilizada como um interpolador de quantis de cheia, já que
-o uso da frequência amostral só permite estimar quantis para um número
-discreto, e nem sempre desejado, de períodos de retorno.</li>
-<li>é uma maneira de armazenar as infomações relevantes da série de
-máximos de maneira compacta, visto que basta guardar o valor dos
-parâmetro da distribuição para obter qualquer quantil de cheia que se
-tenha interesse.</li>
-</ul>
 <h4 id="quais-são-as-distribuições-mais-usadas">Quais são as
 distribuições mais usadas?</h4>
 <h4 id="como-avaliar-a-distribuição-mais-indicada">Como avaliar a
@@ -3025,7 +3245,7 @@ distribuição mais indicada?</h4>
 distribuição</h4>
 <h4 id="estimativa-dos-quantis-de-cheia">Estimativa dos quantis de
 cheia</h4>
-<h4 id="descrição-das-incertezas">Descrição das incertezas</h4>
+<h4 id="descrição-das-incertezas-1">Descrição das incertezas</h4>
 <h2 id="passos-a-serem-executados">Passos a serem executados</h2>
 <ul>
 <li>Visualizar os dados
