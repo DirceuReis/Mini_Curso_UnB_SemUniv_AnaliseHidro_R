@@ -2152,8 +2152,8 @@ id="toc-instalação-do-programa">Instalação do programa</a></li>
 <li><a href="#interface-do-r-e-rstudio"
 id="toc-interface-do-r-e-rstudio">Interface do R e RStudio</a></li>
 </ul></li>
-<li><a href="#primeiros-passos-comandos-no-r"
-id="toc-primeiros-passos-comandos-no-r">Primeiros passos, comandos no
+<li><a href="#primeiros-passos-e-comandos-no-r"
+id="toc-primeiros-passos-e-comandos-no-r">Primeiros passos e comandos no
 R</a>
 <ul>
 <li><a href="#criação-de-variáveis-e-atribuição-de-valores"
@@ -2238,6 +2238,14 @@ R in Hydrology </a>, Slater, et al., Hydrol. Earth Syst. Sci., 23,
 2939–2963, 2019.</p></li>
 </ul>
 <h3 id="instalação-do-programa">Instalação do programa</h3>
+<p>Os computadores da sala de aula do curso já têm instalado o
+<strong>R</strong>, assim como o <strong>RStudio</strong>. Entretanto,
+para que você possa se desenvolver rapidamente na linguagem, é muito
+importante que você tenha acesso a esses programs fora do horário do
+curso, ou apos a Semana Universitária.</p>
+<p>Dessa forma, sugerimos que você instale os dois programas no seu
+computador pessoal seguindo as instruções fornecidas nos links
+abaixo.</p>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
@@ -2272,16 +2280,23 @@ mais amigável para utilização dessa linguagem e algumas facilidades.
 <p>O layout é ajustável em
 <code>view -&gt; Panes -&gt; Pane Layout</code>
 <left><img src="images/RStudio_panel_layout.jpeg" height="400"></left></p>
-<h2 id="primeiros-passos-comandos-no-r">Primeiros passos, comandos no
+<h2 id="primeiros-passos-e-comandos-no-r">Primeiros passos e comandos no
 R</h2>
-<p>Antes de tudo, é importante saber onde se está trabalhando! Para isso
-o <strong>R</strong> precisa saber em qual diretório está o programa e
-os possíveis dados que você for utilizar. Pra isso a gente tem os
-comandos: - <code>getwd()</code>: vai informar qual diretório se está
-mexendo; - <code>setwd()</code>: vai definir um diretório para usar no
-seu <em>script</em>; - <code>dir()</code>: vai informar quais arquivos
-tem nesse diretório; - <code>source()</code>: vai puxar e rodar um
-arquivo <strong>R</strong> com esse nome que está no diretório;</p>
+<p>Antes de tudo, vale dizer que organizar seu material de trabalho
+enqunto utiliza o <strong>R</strong> é muito importante. E para isso, é
+importante que você saiba onde está trabalhando na árvore de diretórios
+do seu computador.</p>
+<p>Os dois comandos abaixo ajudam nesse processo:</p>
+<ul>
+<li><code>getwd()</code>: informa em qual diretório você está fazendo
+suas atividades;</li>
+<li><code>setwd()</code>: define um diretório de trabalho onde seus
+<em>scripts</em> ficarão alojados;</li>
+<li><code>dir()</code>: informa quais arquivos estão contidos nesse
+diretório;</li>
+<li><code>source()</code>: vai puxar e rodar um arquivo
+<strong>R</strong> com esse nome que está no diretório;</li>
+</ul>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>#getwd()</span></span>
@@ -2290,11 +2305,13 @@ arquivo <strong>R</strong> com esse nome que está no diretório;</p>
 <span><span class='co'>#source("soma.R")</span></span></code></pre>
 </div>
 </div>
-<p>O <strong>R</strong> é utilizável como uma calculadora, com os
-operadores aritméticos que se conhece. Para multiplicação utilizamos
-<code>*</code>, para divisão <code>/</code>, para expoentes
-<code>^</code> e para raiz quadrada usamos <code>sqrt()</code> - do
-inglês <em>square root</em>.</p>
+<p>O <strong>R</strong> pode ser utilizável como uma calculadora, com os
+operadores aritméticos que se conhece, embora os benefícios da linguagem
+vai mito além dos de uma simples calculadora.</p>
+<p>MAs vamos começar pelas operações básicas da matemática. Para
+multiplicação utilizamos <code>*</code>, para divisão <code>/</code>,
+para expoentes <code>^</code> e para raiz quadrada usamos
+<code>sqrt()</code> - do inglês <em>square root</em>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fl'>1</span> <span class='op'>+</span> <span class='fl'>2</span></span></code></pre>
@@ -2325,7 +2342,8 @@ inglês <em>square root</em>.</p>
 </div>
 <pre><code>[1] 3</code></pre>
 </div>
-<p>O R trabalha igualmente com vetores e escalares</p>
+<p>O R trabalha igualmente com vetores e escalares. ABaixo, criamos e
+somamos dois vetores,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>5</span>, <span class='fl'>7</span>, <span class='fl'>9</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>6</span>, <span class='fl'>8</span>, <span class='fl'>10</span><span class='op'>)</span></span></code></pre>
@@ -2333,11 +2351,11 @@ inglês <em>square root</em>.</p>
 <pre><code>[1]  3  7 11 15 19</code></pre>
 </div>
 <p>A função c() é usada para concatenar valores, criando vetores de
-valores da mesma classe.</p>
-<p>Ao usar o operador multiplicativo <code>*</code> o <strong>R</strong>
-entende que será feita a operação elemento a elemento. Para
-multiplicação de matrizes, o operador correto é <code>%*%</code>.
-Importante na vetorização!</p>
+valores da mesma <code>classe</code>. Falaremos mais especificamente de
+<code>classe</code>mias à frente.</p>
+<p>Ao usar o operador multiplicativo <code>*</code>, o
+<strong>R</strong> entende que será feita a operação elemento a elemento
+dentro do vetor.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>5</span>, <span class='fl'>7</span><span class='op'>)</span> <span class='op'>*</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>6</span>, <span class='fl'>8</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
@@ -2345,6 +2363,9 @@ Importante na vetorização!</p>
 <pre><code>     [,1] [,2] [,3] [,4]
 [1,]    2   12   30   56</code></pre>
 </div>
+<p>Se o objetivo, por outro lado, for o de realizar uma multiplicação de
+matrizes, o operador correto a ser usado é <code>%*%</code>, o que é
+muito importante na vetorização!</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>5</span>, <span class='fl'>7</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/r/base/matmult.html'>%*%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>6</span>, <span class='fl'>8</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
@@ -2358,10 +2379,9 @@ Importante na vetorização!</p>
 <h3 id="criação-de-variáveis-e-atribuição-de-valores">Criação de
 variáveis e atribuição de valores</h3>
 <p>A forma de se atribuir um valor a um elemento/objeto é utilizando o
-operador <code>&lt;-</code>, da forma que deve ester algo dos dois lados
-dessa seta - de um o nome do objeto que irá receber o valor e do outro
-lado o próprio valor. Também é possível usar o operador <code>=</code>
-para fazer isso, porém não é recomendado.</p>
+operador <code>&lt;-</code>, de forma que deve haver algo dos dois lados
+dessa seta. De uma lado o objeto que irá receber o valor, e do outro
+lado o valor propriamente dito.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>2</span></span>
@@ -2369,10 +2389,12 @@ para fazer isso, porém não é recomendado.</p>
 </div>
 <pre><code>[1] 2</code></pre>
 </div>
-<p>Se usarmos novamente o <code>x</code> para atribuir algum outro
-valor, esse será salvo por cima. Também podemos trocar a direção da
-seta, mas ela sempre deve apontar para o nome do objeto que vai receber
-o valor.</p>
+<p>Também é possível usar o operador <code>=</code> para fazer isso,
+porém não é recomendado. Se atribuirmos algum outro valor à variável
+<code>x</code>, o valor antigo será perdido.</p>
+<p>Veja que o <em>R</em> aceita trocar trocar a direção da seta, mas ela
+sempre deve apontar para o nome do objeto que vai receber o valor, como
+no exmeplo abaixo,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='op'>-</span><span class='fl'>8</span> <span class='op'>-&gt;</span> <span class='va'>x</span></span>
@@ -2892,16 +2914,16 @@ duas dimensões:</p>
 <span><span class='va'>uniao</span></span></code></pre>
 </div>
 <pre><code>       x         y
- [1,]  1  4.375114
- [2,]  2 13.477503
- [3,]  3  7.247090
- [4,]  4  5.801590
- [5,]  5 10.216368
- [6,]  6  6.832533
- [7,]  7  2.184605
- [8,]  8 12.416983
- [9,]  9 16.159864
-[10,] 10 24.032055</code></pre>
+ [1,]  1 16.075408
+ [2,]  2  5.739148
+ [3,]  3 11.320877
+ [4,]  4 14.376188
+ [5,]  5  9.742017
+ [6,]  6 12.543162
+ [7,]  7 17.917618
+ [8,]  8 12.568256
+ [9,]  9  8.856367
+[10,] 10  7.269641</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>uniao</span><span class='op'>)</span></span></code></pre>
 </div>
@@ -2916,12 +2938,12 @@ duas dimensões:</p>
 <span><span class='va'>uniao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span></span>
 <span><span class='va'>uniao</span></span></code></pre>
 </div>
-<pre><code>      [,1]     [,2]     [,3]     [,4]     [,5]    [,6]     [,7]
-x  1.00000  2.00000  3.00000  4.00000  5.00000  6.0000  7.00000
-y 15.97048 11.73401 15.05772 18.33197 20.96173 15.5113 24.67863
-      [,8]     [,9]    [,10]
-x  8.00000  9.00000 10.00000
-y 10.38011 12.45654 10.89126</code></pre>
+<pre><code>      [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]
+x  1.00000  2.00000  3.00000  4.00000  5.00000  6.00000  7.00000
+y 27.02764 28.90174 15.15197 21.00424 24.07199 22.66249 26.73645
+      [,8]     [,9]     [,10]
+x  8.00000  9.00000 10.000000
+y 23.03661 17.59409  6.991313</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>uniao</span><span class='op'>)</span></span></code></pre>
 </div>

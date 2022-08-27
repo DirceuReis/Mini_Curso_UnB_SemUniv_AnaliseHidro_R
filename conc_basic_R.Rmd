@@ -39,6 +39,10 @@ Mas para não fugir da pergunta, seguem abaixo alguns motivos para usar a lingua
 
 ### Instalação do programa
 
+Os computadores da sala de aula do curso já têm instalado o **R**, assim como o **RStudio**. Entretanto, para que você possa se desenvolver rapidamente na linguagem, é muito importante que você tenha acesso a esses programs fora do horário do curso, ou apos a Semana Universitária. 
+
+Dessa forma, sugerimos que você instale os dois programas no seu computador pessoal seguindo as instruções fornecidas nos links abaixo. 
+
 ```{r instalacao_1, echo = FALSE}
 # Define variable containing url
 urlR <- "https://www.r-project.org/logo/Rlogo.png"
@@ -68,12 +72,15 @@ Baixamos também o **RStudio**, ele é uma IDE (*Integrated Development Environm
 O layout é ajustável em `view -> Panes -> Pane Layout`
 <left><img src="images/RStudio_panel_layout.jpeg" height="400"></left>
 
-## Primeiros passos, comandos no R
+## Primeiros passos e comandos no R
 
-Antes de tudo, é importante saber onde se está trabalhando! Para isso o **R** precisa saber em qual diretório está o programa e os possíveis dados que você for utilizar. Pra isso a gente tem os comandos:
-- `getwd()`: vai informar qual diretório se está mexendo;
-- `setwd()`: vai definir um diretório para usar no seu *script*;
-- `dir()`: vai informar quais arquivos tem nesse diretório;
+Antes de tudo, vale dizer que organizar seu material de trabalho enqunto utiliza o **R** é muito importante. E para isso, é importante que você saiba onde está trabalhando na árvore de diretórios do seu computador. 
+
+Os dois comandos abaixo ajudam nesse processo:
+
+- `getwd()`: informa em qual diretório você está fazendo suas atividades;
+- `setwd()`: define um diretório de trabalho onde seus *scripts* ficarão alojados;
+- `dir()`: informa quais arquivos estão contidos nesse diretório;
 - `source()`: vai puxar e rodar um arquivo **R** com esse nome que está no diretório;
 
 ```{r primeiros_passos_1, echo = TRUE}
@@ -83,7 +90,9 @@ Antes de tudo, é importante saber onde se está trabalhando! Para isso o **R** 
 #source("soma.R")
 ```
 
-O **R** é utilizável como uma calculadora, com os operadores aritméticos que se conhece. Para multiplicação utilizamos `*`, para divisão `/`, para expoentes `^` e para raiz quadrada usamos `sqrt()` - do inglês *square root*.
+O **R** pode ser utilizável como uma calculadora, com os operadores aritméticos que se conhece, embora os benefícios da linguagem vai mito além dos de uma simples calculadora. 
+
+MAs vamos começar pelas operações básicas da matemática. Para multiplicação utilizamos `*`, para divisão `/`, para expoentes `^` e para raiz quadrada usamos `sqrt()` - do inglês *square root*.
 
 ```{r primeiros_passos_2, echo = TRUE}
 1 + 2
@@ -105,19 +114,21 @@ O **R** é utilizável como uma calculadora, com os operadores aritméticos que 
 sqrt(9)
 ```
 
-O R trabalha igualmente com vetores e escalares
+O R trabalha igualmente com vetores e escalares. ABaixo, criamos e somamos dois vetores,
 
 ```{r primeiros_passos_7, echo = TRUE}
 c(1, 3, 5, 7, 9) + c(2, 4, 6, 8, 10)
 ```
 
-A função c() é usada para concatenar valores, criando vetores de valores da mesma classe.
+A função c() é usada para concatenar valores, criando vetores de valores da mesma `classe`. Falaremos mais especificamente de `classe`mias à frente.
 
-Ao usar o operador multiplicativo `*` o **R** entende que será feita a operação elemento a elemento. Para multiplicação de matrizes, o operador correto é `%*%`. Importante na vetorização!
+Ao usar o operador multiplicativo `*`, o **R** entende que será feita a operação elemento a elemento dentro do vetor. 
 
 ```{r primeiros_passos_8, echo = TRUE}
 c(1, 3, 5, 7) * t(c(2, 4, 6, 8))
 ```
+
+Se o objetivo, por outro lado, for o de realizar uma multiplicação de matrizes, o operador correto a ser usado é `%*%`, o que é muito importante na vetorização!
 
 ```{r primeiros_passos_9, echo = TRUE}
 c(1, 3, 5, 7) %*% t(c(2, 4, 6, 8))
@@ -125,14 +136,16 @@ c(1, 3, 5, 7) %*% t(c(2, 4, 6, 8))
 
 ### Criação de variáveis e atribuição de valores
 
-A forma de se atribuir um valor a um elemento/objeto é utilizando o operador `<-`, da forma que deve ester algo dos dois lados dessa seta - de um o nome do objeto que irá receber o valor e do outro lado o próprio valor. Também é possível usar o operador `=` para fazer isso, porém não é recomendado.
+A forma de se atribuir um valor a um elemento/objeto é utilizando o operador `<-`, de forma que deve haver algo dos dois lados dessa seta. De uma lado o objeto que irá receber o valor, e do outro lado o valor propriamente dito. 
 
 ```{r criar_var_1, echo = TRUE}
 x <- 2
 x
 ```
 
-Se usarmos novamente o `x` para atribuir algum outro valor, esse será salvo por cima. Também podemos trocar a direção da seta, mas ela sempre deve apontar para o nome do objeto que vai receber o valor.
+Também é possível usar o operador `=` para fazer isso, porém não é recomendado. Se atribuirmos algum outro valor à variável `x`, o valor antigo será perdido. 
+
+Veja que o *R* aceita trocar trocar a direção da seta, mas ela sempre deve apontar para o nome do objeto que vai receber o valor, como no exmeplo abaixo,
 
 ```{r criar_var_2, echo = TRUE}
 -8 -> x
