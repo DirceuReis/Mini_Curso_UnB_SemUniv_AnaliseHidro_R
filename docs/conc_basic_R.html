@@ -2196,6 +2196,14 @@ while)</a></li>
 </div>
 <h2 id="visão-geral-do-r-e-rstudio">Visão geral do R e RStudio</h2>
 <h3 id="o-que-é-a-linguagem-r">O que é a linguagem R</h3>
+<p>Existe um grande número de publicações sobre a linguagem R, e muitas
+delas podem ser obtidas de forma gratuita na internet, tudo dentro da
+lei, sem cometer qualquer violação de direitos autorais.</p>
+<p>O livro abaixo é uma dessas publicações, e por se tratar de um livro
+digital, seu autor continua fazendo atualizações em seu conteúdo.
+Trata-se de uma excelente fonte de consulta, e ainda nos ensina um pouco
+sobre a história por detrás do desenvolvimento do R, e sua relação com a
+linguagem S.</p>
 <ul>
 <li><a href="https://bookdown.org/rdpeng/rprogdatascience/">R
 Programming for Data Science</a>, Roger D. Peng, 2019. Johns Hopkins
@@ -2203,8 +2211,21 @@ Bloomberg School of Public Health.</li>
 </ul>
 <h3 id="porque-usar-o-r-em-hidrologia">Porque usar o R em
 Hidrologia?</h3>
+<p>Se você decidiu fazer este curso, você já deve ter uma ideia da
+importância de dominar uma linguagem de programação que te permita
+realizar suas próprias análises, aumentar sua produtividade, testar
+novas metodologias, ou até escrever seus próprios pacotes para serem
+distribuídos na internet de forma a facilitar a vida dos outros.</p>
+<p>Mas por que o R especificamente? Para ser sincero, o mais importante,
+ao meu ver, é ter o domínio de uma linguagem de programação. Mas me
+parece bastante razoável utilizar uma linguagem que se tornou bastante
+popular nos útimos anos, extrapolando os limites da estatística, área
+genitora da linguagem.</p>
+<p>Mas para não fugir da pergunta, seguem abaixo alguns motivos para
+usar a linguagem R na área de engenharia, e mais especificamente, na
+área de Hidrologia,</p>
 <ul>
-<li><p>Simplicidade da linguagem</p></li>
+<li><p>Simplicidade da linguagem (fácil de aprender)</p></li>
 <li><p>Excelente desempenho na manipulação de grandes bancos de
 dados</p></li>
 <li><p>Acesso a métodos estatísticos consolidados</p></li>
@@ -2570,7 +2591,7 @@ alguns tratamentos utilizados em texto.</p>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>+</span> <span class='fl'>1</span></span></code></pre>
 </div>
-<pre><code>Error in x + 1: argumento não-numérico para operador binário</code></pre>
+<pre><code>Error in x + 1: non-numeric argument to binary operator</code></pre>
 </div>
 <p>Pdemos fazer a mesma coerção para que o vetor seja numérico. Assim
 iremos transformar tudo dentro do vetor como classe numérico. Nesse
@@ -2581,7 +2602,7 @@ valor <code>NA</code> (<em>Not Available</em>):</p>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ola"</span>, <span class='fl'>1</span>, <span class='st'>"dia"</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
-<pre><code>Warning: NAs introduzidos por coerção</code></pre>
+<pre><code>Warning: NAs introduced by coercion</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span></span></code></pre>
 </div>
@@ -2871,16 +2892,16 @@ duas dimensões:</p>
 <span><span class='va'>uniao</span></span></code></pre>
 </div>
 <pre><code>       x         y
- [1,]  1 16.650557
- [2,]  2 13.995728
- [3,]  3  7.994728
- [4,]  4  8.026533
- [5,]  5 11.203624
- [6,]  6 -1.213850
- [7,]  7 12.287441
- [8,]  8  7.361899
- [9,]  9  6.755540
-[10,] 10  7.629407</code></pre>
+ [1,]  1  4.375114
+ [2,]  2 13.477503
+ [3,]  3  7.247090
+ [4,]  4  5.801590
+ [5,]  5 10.216368
+ [6,]  6  6.832533
+ [7,]  7  2.184605
+ [8,]  8 12.416983
+ [9,]  9 16.159864
+[10,] 10 24.032055</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>uniao</span><span class='op'>)</span></span></code></pre>
 </div>
@@ -2895,12 +2916,12 @@ duas dimensões:</p>
 <span><span class='va'>uniao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span></span>
 <span><span class='va'>uniao</span></span></code></pre>
 </div>
-<pre><code>     [,1]     [,2]     [,3]     [,4]    [,5]     [,6]     [,7]
-x  1.0000  2.00000  3.00000  4.00000  5.0000  6.00000  7.00000
-y 23.5646 13.81363 13.09557 25.19093 13.9108 21.07327 22.57734
+<pre><code>      [,1]     [,2]     [,3]     [,4]     [,5]    [,6]     [,7]
+x  1.00000  2.00000  3.00000  4.00000  5.00000  6.0000  7.00000
+y 15.97048 11.73401 15.05772 18.33197 20.96173 15.5113 24.67863
       [,8]     [,9]    [,10]
 x  8.00000  9.00000 10.00000
-y 20.58697 16.11471 23.45043</code></pre>
+y 10.38011 12.45654 10.89126</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>uniao</span><span class='op'>)</span></span></code></pre>
 </div>

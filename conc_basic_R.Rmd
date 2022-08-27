@@ -10,11 +10,22 @@ library(knitr)
 
 ### O que é a linguagem R
 
+Existe um grande número de publicações sobre a linguagem R, e muitas delas podem ser obtidas de forma gratuita na internet, tudo dentro da lei, sem cometer qualquer violação de direitos autorais. 
+
+O livro abaixo é uma dessas publicações, e por se tratar de um livro digital, seu autor continua fazendo atualizações em seu conteúdo. Trata-se de uma excelente fonte de consulta, e ainda nos ensina um pouco sobre a história por detrás do desenvolvimento do R, e sua relação com a linguagem S.
+
 - <a href="https://bookdown.org/rdpeng/rprogdatascience/">R Programming for Data Science</a>, Roger D. Peng, 2019. Johns Hopkins Bloomberg School of Public Health.
 
 ### Porque usar o R em Hidrologia?
 
-- Simplicidade da linguagem
+Se você decidiu fazer este curso, você já deve ter uma ideia da importância de dominar uma linguagem de programação que te permita realizar suas próprias análises, aumentar sua produtividade, testar novas metodologias, ou até escrever seus próprios pacotes para serem distribuídos na internet de forma a facilitar a vida dos outros.
+
+Mas por que o R especificamente? Para ser sincero, o mais importante, ao meu ver, é ter o domínio de uma linguagem de programação. Mas me parece bastante razoável utilizar uma linguagem que se tornou bastante popular nos útimos anos, extrapolando os limites da estatística, área genitora da linguagem. 
+
+
+Mas para não fugir da pergunta, seguem abaixo alguns motivos para usar a linguagem R na área de engenharia, e mais especificamente, na área de Hidrologia, 
+
+- Simplicidade da linguagem (fácil de aprender)
 
 - Excelente desempenho na manipulação de grandes bancos de dados
 
