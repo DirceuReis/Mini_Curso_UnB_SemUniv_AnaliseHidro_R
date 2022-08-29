@@ -2352,7 +2352,7 @@ somamos dois vetores,</p>
 </div>
 <p>A função c() é usada para concatenar valores, criando vetores de
 valores da mesma <code>classe</code>. Falaremos mais especificamente de
-<code>classe</code>mias à frente.</p>
+<code>classe</code> mais à frente.</p>
 <p>Ao usar o operador multiplicativo <code>*</code>, o
 <strong>R</strong> entende que será feita a operação elemento a elemento
 dentro do vetor.</p>
@@ -2392,9 +2392,9 @@ lado o valor propriamente dito.</p>
 <p>Também é possível usar o operador <code>=</code> para fazer isso,
 porém não é recomendado. Se atribuirmos algum outro valor à variável
 <code>x</code>, o valor antigo será perdido.</p>
-<p>Veja que o <em>R</em> aceita trocar trocar a direção da seta, mas ela
-sempre deve apontar para o nome do objeto que vai receber o valor, como
-no exmeplo abaixo,</p>
+<p>Veja que o <strong>R</strong> aceita trocar trocar a direção da seta,
+mas ela sempre deve apontar para o nome do objeto que vai receber o
+valor, como no exemplo abaixo,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='op'>-</span><span class='fl'>8</span> <span class='op'>-&gt;</span> <span class='va'>x</span></span>
@@ -2402,7 +2402,7 @@ no exmeplo abaixo,</p>
 </div>
 <pre><code>[1] -8</code></pre>
 </div>
-<p>Pode-se atribuir, por exemplo, um valor não numérico a
+<p>Pode-se atribuir, por exemplo, um valor não-numérico a
 <code>x</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2416,9 +2416,10 @@ no exmeplo abaixo,</p>
 <code>&lt;-</code> e <code>=</code> podem ser usados para atribuir
 valores a variáveis/objetos, mas recomendamos utilizar smepre o
 <code>&lt;-</code> porque o <code>=</code> também serve para outras
-coisas (falaremos disso mais a frente quando formos criar funções!). Já
-o símbolo <code>==</code> funciona para avaliar uma igualdade e não de
-atribuir um valor a um elemento do R e retorna uma variável lógica,
+coisas (falaremos disso mais a frente quando formos criar funções!).</p>
+<p>Já o símbolo <code>==</code> funciona para avaliar uma igualdade e
+não para atribuir um valor a um elemento do R. QUando utilizamos
+<code>==</code>, o <strong>R</strong> retorna uma variável lógica,
 podendo ser <code>TRUE</code> ou <code>FALSE</code>. Por exemplo:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2427,19 +2428,28 @@ podendo ser <code>TRUE</code> ou <code>FALSE</code>. Por exemplo:</p>
 </div>
 <pre><code>[1] TRUE</code></pre>
 </div>
+<p>A segunda linha de código acima pode ser interpretada como uma
+pergunta que fazemos ao <strong>R</strong>, <code>x</code> é igual a 2?
+E ele responde em termos de <code>TRUE</code> ou <code>FALSE</code>.</p>
+<p>Como neste momento, <code>x=2</code>, se perguntarmos, <code>x</code>
+é igua a 3? Qual deve ser a resposta?</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>==</span> <span class='fl'>3</span></span></code></pre>
 </div>
 <pre><code>[1] FALSE</code></pre>
 </div>
-<p>Outros operadores que resultam em lógicos são:</p>
+<p>Mas existem outros operadores lógicos que também são muito úteis,
+como na linha de código abaixo em que queremos saber se <code>x</code> é
+diferente de 2,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>!=</span> <span class='fl'>2</span></span></code></pre>
 </div>
 <pre><code>[1] FALSE</code></pre>
 </div>
+<p>Os operadores matemáticos <code>&gt;</code>, <code>&lt;</code>,
+<code>&gt;=</code> e <code>&lt;=</code> também podem ser utilizados,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;</span> <span class='fl'>3</span></span></code></pre>
@@ -2913,17 +2923,17 @@ duas dimensões:</p>
 <span><span class='va'>uniao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span></span>
 <span><span class='va'>uniao</span></span></code></pre>
 </div>
-<pre><code>       x         y
- [1,]  1 16.075408
- [2,]  2  5.739148
- [3,]  3 11.320877
- [4,]  4 14.376188
- [5,]  5  9.742017
- [6,]  6 12.543162
- [7,]  7 17.917618
- [8,]  8 12.568256
- [9,]  9  8.856367
-[10,] 10  7.269641</code></pre>
+<pre><code>       x          y
+ [1,]  1 17.1460967
+ [2,]  2  1.6894210
+ [3,]  3 13.9688241
+ [4,]  4 -3.5342734
+ [5,]  5  1.7062229
+ [6,]  6  0.3694579
+ [7,]  7  5.4473491
+ [8,]  8 12.7948408
+ [9,]  9  9.0779082
+[10,] 10 15.9105311</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>uniao</span><span class='op'>)</span></span></code></pre>
 </div>
@@ -2938,12 +2948,12 @@ duas dimensões:</p>
 <span><span class='va'>uniao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span></span>
 <span><span class='va'>uniao</span></span></code></pre>
 </div>
-<pre><code>      [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]
-x  1.00000  2.00000  3.00000  4.00000  5.00000  6.00000  7.00000
-y 27.02764 28.90174 15.15197 21.00424 24.07199 22.66249 26.73645
-      [,8]     [,9]     [,10]
-x  8.00000  9.00000 10.000000
-y 23.03661 17.59409  6.991313</code></pre>
+<pre><code>     [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]
+x  1.0000  2.00000  3.00000  4.00000  5.00000  6.00000  7.00000
+y 28.7989 11.62114 21.53587 18.96327 17.33439 20.95428 18.61884
+     [,8]     [,9]  [,10]
+x  8.0000  9.00000 10.000
+y 21.1532 17.07201 13.602</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>uniao</span><span class='op'>)</span></span></code></pre>
 </div>

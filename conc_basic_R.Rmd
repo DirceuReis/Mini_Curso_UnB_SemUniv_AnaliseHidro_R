@@ -120,7 +120,7 @@ O R trabalha igualmente com vetores e escalares. ABaixo, criamos e somamos dois 
 c(1, 3, 5, 7, 9) + c(2, 4, 6, 8, 10)
 ```
 
-A função c() é usada para concatenar valores, criando vetores de valores da mesma `classe`. Falaremos mais especificamente de `classe`mias à frente.
+A função c() é usada para concatenar valores, criando vetores de valores da mesma `classe`. Falaremos mais especificamente de `classe` mais à frente.
 
 Ao usar o operador multiplicativo `*`, o **R** entende que será feita a operação elemento a elemento dentro do vetor. 
 
@@ -145,14 +145,14 @@ x
 
 Também é possível usar o operador `=` para fazer isso, porém não é recomendado. Se atribuirmos algum outro valor à variável `x`, o valor antigo será perdido. 
 
-Veja que o *R* aceita trocar trocar a direção da seta, mas ela sempre deve apontar para o nome do objeto que vai receber o valor, como no exmeplo abaixo,
+Veja que o **R** aceita trocar trocar a direção da seta, mas ela sempre deve apontar para o nome do objeto que vai receber o valor, como no exemplo abaixo,
 
 ```{r criar_var_2, echo = TRUE}
 -8 -> x
 x
 ```
 
-Pode-se atribuir, por exemplo, um valor não numérico a `x`.
+Pode-se atribuir, por exemplo, um valor não-numérico a `x`.
 
 ```{r criar_var_3, echo = TRUE}
 x <- "teste"
@@ -160,22 +160,30 @@ x
 ```
 
 Alguns dos operadores que existem no R são: `<-`, `=` e `==`.
-Como já comentado, os operadores `<-` e `=` podem ser usados para atribuir valores a variáveis/objetos, mas recomendamos utilizar smepre o `<-` porque o `=` também  serve para outras coisas (falaremos disso mais a frente quando formos criar funções!). Já o símbolo `==` funciona para avaliar uma igualdade e não de atribuir um valor a um elemento do R e retorna uma variável lógica, podendo ser `TRUE` ou `FALSE`. Por exemplo:
+Como já comentado, os operadores `<-` e `=` podem ser usados para atribuir valores a variáveis/objetos, mas recomendamos utilizar smepre o `<-` porque o `=` também  serve para outras coisas (falaremos disso mais a frente quando formos criar funções!). 
+
+Já o símbolo `==` funciona para avaliar uma igualdade e não para atribuir um valor a um elemento do R. QUando utilizamos `==`, o **R** retorna uma variável lógica, podendo ser `TRUE` ou `FALSE`. Por exemplo:
 
 ```{r criar_var_4, echo = TRUE}
 x = 2
 x == 2
 ```
 
+A segunda linha de código acima pode ser interpretada como uma pergunta que fazemos ao **R**, `x` é igual a 2? E ele responde em termos de `TRUE` ou `FALSE`. 
+
+Como neste momento, `x=2`, se perguntarmos, `x` é igua a 3? Qual deve ser a resposta?
+
 ```{r criar_var_5, echo = TRUE}
 x == 3
 ```
 
-Outros operadores que resultam em lógicos são:
+Mas existem outros operadores lógicos que também são muito úteis, como na linha de código abaixo em que queremos saber se `x` é diferente de 2, 
 
 ```{r criar_var_6, echo = TRUE}
 x != 2
 ```
+
+Os operadores matemáticos `>`, `<`, `>=` e `<=` também podem ser utilizados, 
 
 ```{r criar_var_7, echo = TRUE}
 x < 3
@@ -196,7 +204,7 @@ Existem diversas **classes** de objetos dentro do **R**, alguns dos principais t
 - Fator (classes);
 - Lógico (`TRUE/FALSE`).
 
-Para sabermos qual classe cada objeto é, podemos utilizar uma função interna ao **R** chamada `class()`. Usualmente, as funções vão sempre terminar com um parêntesis `()`, sendo que dentro dele botamos os argumentos da função - o que ela precisa (nesse caso, o objeto). Mais a frente falaremos com maiores detalhes sobre esses argumentos, funções em geral e até como criar uma sua.
+Para sabermos a classe de um objeto, podemos utilizar uma função interna do **R** chamada `class()`. Usualmente, as funções vão sempre terminar com um parêntesis `()`, sendo que dentro dele incluímos os argumentos da função - o que ela precisa (nesse caso, o nome do objeto). Mais `a frente no curso, falaremos com maiores detalhes sobre esses argumentos, funções em geral, e até mesmo como criar sua própria função.
 
 ```{r objetos_1, echo = TRUE}
 x <- 2

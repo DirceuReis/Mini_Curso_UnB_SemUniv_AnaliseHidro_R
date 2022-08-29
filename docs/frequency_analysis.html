@@ -2303,7 +2303,7 @@ entrar em qualqer detalhes sobre seu funcionamento.</p>
 <span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlToDataFrame.html'>xmlToDataFrame</a></span><span class='op'>(</span>nodes <span class='op'>=</span> <span class='va'>node_doc</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Por algum motivo o hidroweb não está filtrando os dados pela consistencia</span></span>
-<span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>dados_estacao</span>, <span class='va'>NivelConsistencia</span> <span class='op'>==</span> <span class='va'>nivel_consist</span><span class='op'>)</span></span>
+<span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>dados_estacao</span>, <span class='va'>NivelConsistencia</span> <span class='op'>==</span> <span class='va'>nivel_consist</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Separar data e hora</span></span>
 <span>  <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span>, <span class='fl'>1</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
@@ -2418,8 +2418,8 @@ função incluindo como argumento o mês de início do ano hidrológico.</p>
 <span>  <span class='co'># Fazer uma tabela final apenas com os máximos anuais</span></span>
 <span>  <span class='va'>max_anuais</span> <span class='op'>&lt;-</span></span>
 <span>    <span class='va'>tabela</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
-<span>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Cod_estacao</span>, <span class='va'>ano_hidro</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
-<span>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span>maxima <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>    <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Cod_estacao</span>, <span class='va'>ano_hidro</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>    <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/summarise.html'>summarise</a></span><span class='op'>(</span>maxima <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span></span>
 <span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
