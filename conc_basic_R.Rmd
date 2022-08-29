@@ -199,6 +199,7 @@ Existem diversas **classes** de objetos dentro do **R**, alguns dos principais t
 
 - Caractere (letras);
 - Numérico (real);
+- Datas;
 - Inteiro;
 - Complexo;
 - Fator (classes);
@@ -274,6 +275,7 @@ Podemos forçar uma coerção no **R**, a chamada **Coerção explícita**. Faze
 
 - `as.numeric()`;
 - `as.character()`;
+- `as.Date()`;
 - `as.logical()`;
 - `as.factor()`;
 - `as.complex()`.
@@ -520,8 +522,8 @@ Agora vamos fazer nossa própria função dentro do **R**. Para isso, primeiro d
 
 ```{r funcoes_4, echo = TRUE}
 fun_area_circulo <- function(raio){
-  x <- 2*pi*raio
-  return(x)
+  area <- pi*raio^2
+  return(area)
 }
 
 fun_area_circulo(5)
