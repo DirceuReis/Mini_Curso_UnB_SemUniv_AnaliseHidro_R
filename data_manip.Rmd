@@ -189,3 +189,14 @@ for(i in 1:4){
   if(i != 1) tabela_final <- rbind(tabela_final, dados_proxy)
 }
 ```
+
+Por último, podemos salvar esse arquivo também, para usarmos nas aulas seguintes.
+
+```{r ano_hidro_7, eval = FALSE}
+write.table(x = tabela_final,
+            file = "Resumo_estacoes.txt",
+            sep = "\t",
+            dec = ".",
+            row.names = FALSE,
+            fileEncoding = "UTF-8")
+```
