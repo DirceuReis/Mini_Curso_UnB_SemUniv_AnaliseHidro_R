@@ -2139,9 +2139,9 @@ Aulas
 <nav class="l-text toc figcaption" id="TOC">
 <h3>Contents</h3>
 <ul>
-<li><a href="#dados-feitos-nas-últimas-aulas"
-id="toc-dados-feitos-nas-últimas-aulas">Dados feitos nas últimas
-aulas</a></li>
+<li><a href="#leitura-dos-dados-gerados-na-última-aula"
+id="toc-leitura-dos-dados-gerados-na-última-aula">Leitura dos dados
+gerados na última aula</a></li>
 <li><a href="#disponibilidade-de-dados"
 id="toc-disponibilidade-de-dados">Disponibilidade de dados</a></li>
 <li><a href="#plotagem-da-série-histórica"
@@ -2194,18 +2194,32 @@ cores do R:</a></li>
 </ul>
 </nav>
 </div>
-<h2 id="dados-feitos-nas-últimas-aulas">Dados feitos nas últimas
-aulas</h2>
-<p>Primeiro puxamos os dados feitos nas últimas aulas. Faremos isso com
-três arquivos, um contendo apenas a série histórica de uma estação.
-Outro objeto contendo os dados da série histórica de todas as estações e
-a última variável contendo os dados anuais com valores tratados das
-estações (mínimo, máximo e média anual). Para não precisarmos redefinir
-a coluna de Datas como sendo do formato <em>Date</em> (lembrar que o
-<strong>R</strong> vai ler ela automaticamente como <em>character</em>),
-podemos usar o argumento <strong>colClasses =</strong> para avisar ao
-<strong>R</strong> a classe de cada coluna. Vamos aproveitar e
-transformar a coluna de código das estações como fator.</p>
+<p>Nesta aula, iremos realizar um conjunto de atividade que nos ajudarão
+entender os dados que temos em mão. Essas atividade são conhecidas como
+<strong>análise exploratória de dados</strong>.</p>
+<p>Não existe um conjunto único de atividades que define uma
+<strong>análise exploratória</strong>. O que se costuma fazer nessa
+etapa de um estudo vai depender da natureza do estudo.</p>
+<p>Embora nossa atividade final é a de relaizar um estudo de análise de
+frequÊncia de cheias, nesta aula, apresentaremos algumas atividades mais
+gerais, que podem e devem ser utilizadas em outros tipos de estudo.</p>
+<p>Para iniciar essas atividades, vamos primeiro carregar os dados que
+obtivemos em aulas anteriores.</p>
+<h2 id="leitura-dos-dados-gerados-na-última-aula">Leitura dos dados
+gerados na última aula</h2>
+<p>Vamos iniciar nossa exploração dos dados lendo os arquivos gerados
+quando da obtenção dos dados de vazão via webservide da ANA.</p>
+<p>Faremos isso com três arquivos, um contendo apenas a série histórica
+de uma estação, um segundo objeto contendo os dados da série histórica
+de todas as estações, e por último, a última variável contendo os dados
+anuais com valores tratados das estações (mínimo, máximo e média
+anual).</p>
+<p>Para não precisarmos redefinir a coluna de Datas como sendo do
+formato <em>Date</em> (lembrar que o <strong>R</strong> vai ler ela
+automaticamente como <em>character</em>), podemos usar o argumento
+<strong>colClasses =</strong> para avisar ao <strong>R</strong> a classe
+de cada coluna. Além disso, vamos aproveitar e transformar a coluna de
+código das estações como fator.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_60435000</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='st'>"dados/60435000.txt"</span>,</span>

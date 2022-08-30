@@ -10,10 +10,21 @@ library(lubridate)
 library(ggplot2)
 library(tidyr)
 ```
+Nesta aula, iremos realizar um conjunto de atividade que nos ajudarão entender os dados que temos em mão. Essas atividade são conhecidas como **análise exploratória de dados**. 
 
-## Dados feitos nas últimas aulas
+Não existe um conjunto único de atividades que define uma **análise exploratória**. O que se costuma fazer nessa etapa de um estudo vai depender da natureza do estudo. 
 
-Primeiro puxamos os dados feitos nas últimas aulas. Faremos isso com três arquivos, um contendo apenas a série histórica de uma estação. Outro objeto contendo os dados da série histórica de todas as estações e a última variável contendo os dados anuais com valores tratados das estações (mínimo, máximo e média anual). Para não precisarmos redefinir a coluna de Datas como sendo do formato *Date* (lembrar que o **R** vai ler ela automaticamente como *character*), podemos usar o argumento **colClasses =** para avisar ao **R** a classe de cada coluna. Vamos aproveitar e transformar a coluna de código das estações como fator.
+Embora nossa atividade final é a de relaizar um estudo de análise de frequÊncia de cheias, nesta aula, apresentaremos algumas atividades mais gerais, que podem e devem ser utilizadas em outros tipos de estudo. 
+
+Para iniciar essas atividades, vamos primeiro carregar os dados que obtivemos em aulas anteriores.
+
+## Leitura dos dados gerados na última aula
+
+Vamos iniciar nossa exploração dos dados lendo os arquivos gerados quando da obtenção dos dados de vazão via webservide da ANA.
+
+Faremos isso com três arquivos, um contendo apenas a série histórica de uma estação, um segundo objeto contendo os dados da série histórica de todas as estações, e por último, a última variável contendo os dados anuais com valores tratados das estações (mínimo, máximo e média anual). 
+
+Para não precisarmos redefinir a coluna de Datas como sendo do formato *Date* (lembrar que o **R** vai ler ela automaticamente como *character*), podemos usar o argumento **colClasses =** para avisar ao **R** a classe de cada coluna. Além disso, vamos aproveitar e transformar a coluna de código das estações como fator.
 
 ```{r dados_1}
 dados_60435000 <- read.table(file = "dados/60435000.txt",
