@@ -9,6 +9,263 @@ library(knitr)
 
 ## Pacotes
 
-## Carcaterização numérica
+## Dados feitos nas últimas aulas
 
-## Caracterização gráfica
+Primeiro puxamos os dados feitos nas últimas aulas. Faremos isso com três arquivos, um contendo apenas a série histórica de uma estação. Outro objeto contendo os dados da série histórica de todas as estações e a última variável contendo os dados anuais com valores tratados das estações (mínimo, máximo e média anual). Para não precisarmos redefinir a coluna de Datas como sendo do formato *Date* (lembrar que o **R** vai ler ela automaticamente como *character*), podemos usar o argumento **colClasses =** para avisar ao **R** a classe de cada coluna. Vamos aproveitar e transformar a coluna de código das estações como fator.
+
+```{r dados_1}
+dados_60435000 <- read.table(file = "60435000.txt",
+                             sep = "\t",
+                             dec = ".",
+                             header = T,
+                             fileEncoding = "UTF-8",
+                             colClasses = c("factor", "Date", "numeric"))
+
+dados_todas <- read.table(file = "todas_estacoes.txt",
+                          sep = "\t",
+                          dec = ".",
+                          header = T,
+                          fileEncoding = "UTF-8",
+                          colClasses = c("factor", "Date", "numeric"))
+                          
+resumo_todas <- read.table(file = "dados/Resumo_estacoes.txt",
+                           sep = "\t",
+                           dec = ".",
+                           header = T,
+                           fileEncoding = "UTF-8")
+```
+
+## Caracterização gráfica com ggplot2
+
+Diferentemente dos gráficos que podem ser feitos no **R base** (sem pacotes adicionais), o **ggplot2** atua um pouco diferente na forma em que é chamado. Por exemplo, se quisesse fazer um gráfico da série histórica da estação 60435000, poderíamos fazer sem pacotes.
+
+```{r grafico_1, fig.width = 8, fig.height = 6, fig.cap = "Gráfico base no R"}
+plot(x = dados_60435000$Data,
+     y = dados_60435000$Vazao)
+```
+
+Também podemos mexer com alguns argumentos dessa função base para mudar coisas como o título, nome dos eixos, a cor e o tipo de gráfico (ponto x linha por exemplo).
+
+```{r grafico_2, , fig.width = 8, fig.height = 6, fig.cap = "Gráfico base no R com alguns argumentos a mais"}
+plot(x = dados_60435000$Data,
+     y = dados_60435000$Vazao,
+     main = "Estação 60435000",
+     xlab = "Datas", ylab = "Vazão",
+     type = "l",
+     col = "blue")
+```
+
+Já com a função `ggplot()` não adianta apenas definirmos em quem iremos mexer. Dentro dessa função existe um argumento chamado de **aes**. Ele vem do inglês, *aesthetics* e, como o nome diz, reflete a estética do gráfico, o que você vai mexer nele (cores, pontos, linhas...). Se chamarmos apenas o `ggplot()` com o argumento **aes** definido, nada será plotado, mas veremos os eixos e as grades (imagem abaixo). Lembrar que esses plots aparecerão no **RStudio** no canto inferior direito.
+
+```{r grafico_3, , fig.width = 8, fig.height = 6, fig.cap = "Gráfico ggplot2 vazio!"}
+ggplot(dados_60435000, aes(x = Data, y = Vazao))
+```
+
+No **ggplot2**, a escrita é um pouco diferente do **R base** e se assemelha ao que fizemos com o **pipe operator**. Escrevemos `ggplot()` e em seguida vamos somando o que queremos com o sinal de "**+**". Por exemplo, se quisermos um gráfico de linha vamos escrever `+ geom_line()`. Temos dois jeitos de escrever isso, um colocando os dados dentro do `ggplot()` e deixando o `geom_line()` em branco, ou o contrário. Ambos códigos abaixo retornam o mesmo gráfico.
+
+```{r grafico_4_escondido, echo = FALSE, fig.width = 8, fig.height = 6, fig.cap = "Gráfico ggplot2 básico"}
+ggplot(data = dados_60435000, aes(x = Data, y = Vazao)) +
+  geom_line()
+```
+```{r grafico_5, eval = FALSE}
+ggplot(data = dados_60435000, aes(x = Data, y = Vazao)) +
+  geom_line()
+  
+ggplot() +
+  geom_line(data = dados_60435000, aes(x = Data, y = Vazao))
+```
+
+Similar ao **R base**, podemos mexer em todos os aspectos gráficos aqui, como a cor dos pontos e o tema (***theme***). Esse tema refere a todos os detalhes gráficos (qual o tamanho das linhas do gráfico, tamanho das letras, do título, qual fonte...). Já existem diversos temas pré-programados com o ggplot2, como o tema *bw*
+ (*black and white*, ou preto e branco).
+ 
+```{r grafico_6, fig.width = 8, fig.height = 6, fig.cap = "Gráfico ggplot2 com tema bw"}
+ggplot() +
+  geom_line(data = dados_60435000, aes(x = Data, y = Vazao), col = "blue") +
+  labs(title = "Estação 60435000", subtitle = "série histórica",
+       caption = "fonte dos dados: ANA (2022)",
+       x = "Datas", y = "Vazão") +
+  theme_bw()
+```
+
+```{r grafico_7, fig.width = 8, fig.height = 6, fig.cap = "Gráfico ggplot2 com tema bw e definições extras"}
+ggplot() +
+  geom_line(data = dados_60435000, aes(x = Data, y = Vazao), col = "blue") +
+  labs(title = "Estação 60435000", subtitle = "série histórica",
+       caption = "fonte dos dados: ANA (2022)",
+       x = "Datas", y = "Vazão") +
+  scale_y_continuous(expand = c(0, 1)) +
+  theme_bw() +
+  theme(plot.title = element_text(size = 16, face = 2, hjust = 0.5),
+        plot.subtitle = element_text(size = 12, hjust = 0.5),
+        axis.ticks.y = element_blank(),
+        axis.text.x = element_text(angle = 50, vjust = 0.5))
+```
+
+```{r grafico_8, fig.width = 8, fig.height = 6, fig.cap = "Gráfico ggplot2 com tema feito por a gente"}
+tema_top <-
+  theme_bw() +
+  theme(plot.title = element_text(size = 16, face = 2, hjust = 0.5),
+        plot.subtitle = element_text(size = 12, hjust = 0.5),
+        axis.ticks.y = element_blank(),
+        axis.text.x = element_text(angle = 50, vjust = 0.5))
+
+ggplot() +
+  geom_line(data = dados_60435000, aes(x = Data, y = Vazao), col = "blue") +
+  labs(title = "Estação 60435000", subtitle = "série histórica",
+       caption = "fonte dos dados: ANA (2022)",
+       x = "Datas", y = "Vazão") +
+  scale_y_continuous(expand = c(0, 1)) +
+  tema_top
+```
+
+```{r grafico_9, fig.width = 8, fig.height = 6, fig.cap = "Gráfico ggplot2 sem específicar o tema!"}
+theme_set(tema_top)
+
+ggplot() +
+  geom_line(data = dados_60435000, aes(x = Data, y = Vazao), col = "blue") +
+  labs(title = "Estação 60435000", subtitle = "série histórica",
+       caption = "fonte dos dados: ANA (2022)",
+       x = "Datas", y = "Vazão") +
+  scale_y_continuous(expand = c(0, 1))
+```
+
+## Gráficos com as 4 estações
+```{r grafico_10, fig.width = 8, fig.height = 6, fig.cap = "Gráfico com as 4 estações"}
+ggplot() +
+  geom_line(data = dados_todas,
+            aes(x = Data, y = Vazao, col = Cod_estacao)) +
+  labs(title = "Estações",
+       caption = "fonte dos dados: ANA (2022)",
+       x = "Datas", y = "Vazão",
+       col = "Estação") +
+  scale_y_continuous(breaks = seq(0, 300, 100),
+                     minor_breaks = seq(0, 300, 25),
+                     expand = c(0, 10))
+```
+
+```{r grafico_11, fig.width = 8, fig.height = 6, fig.cap = "Gráfico com as 4 estações, definindo a cor da legenda e alterando o tema"}
+ggplot() +
+  geom_line(data = dados_todas,
+            aes(x = Data, y = Vazao, col = Cod_estacao)) +
+  labs(title = "Estações",
+       caption = "fonte dos dados: ANA (2022)",
+       x = "Datas", y = "Vazão",
+       col = "Estação") +
+  scale_y_continuous(breaks = seq(0, 300, 100),
+                     minor_breaks = seq(0, 300, 25),
+                     expand = c(0, 10)) +
+  scale_color_manual(values = c("#3943B7", "#BDF7B7",
+                                "#E08E45", "#6B2737")) +
+  theme(panel.background = element_rect(fill = "grey95"),
+        panel.grid.major = element_line(color = "gray10",
+                                        size = 0.5),
+        panel.grid.minor = element_line(color = "gray70",
+                                        linetype="dashed",
+                                        size = 0.25))
+```
+
+```{r grafico_12, fig.width = 8, fig.height = 6, fig.cap = "Facet Wrap"}
+ggplot() +
+  geom_line(data = dados_todas, col = "blue",
+            aes(x = Data, y = Vazao)) +
+  labs(title = "Estações - HidroWeb",
+       caption = "fonte dos dados: ANA (2022)",
+       x = "Datas", y = "Vazão") +
+  scale_y_continuous(breaks = seq(0, 300, 100),
+                     minor_breaks = seq(0, 300, 25),
+                     expand = c(0, 10)) +
+  facet_wrap(~ Cod_estacao, nrow = 4)
+```
+
+```{r grafico_13, fig.width = 8, fig.height = 6, fig.cap = "Facet Wrap com eixos livres"}
+ggplot() +
+  geom_line(data = dados_todas, col = "blue",
+            aes(x = Data, y = Vazao)) +
+  labs(title = "Estações - HidroWeb",
+       caption = "fonte dos dados: ANA (2022)",
+       x = "Datas", y = "Vazão") +
+  facet_wrap(~ Cod_estacao, nrow = 4, scales = "free_y")
+```
+
+## Outros gráficos interessantes
+```{r boxplot_1, fig.width = 8, fig.height = 6, fig.cap = "BoxPlot com uma estação"}
+dados_60435000$Mes <- as.factor(month(dados_60435000$Data))
+
+boxplot(data = dados_60435000,
+        Vazao ~ Mes,
+        main = "Boxplot da vazão por mês",
+        xlab = "Mês",
+        ylab = "Vazão",
+        col = "orange",
+        border = "brown")
+```
+
+```{r boxplot_2, fig.width = 8, fig.height = 6, fig.cap = "BoxPlot com uma estação e linha média"}
+# Mudar os leveis do Fator mês!
+levels(dados_60435000$Mes)
+levels(dados_60435000$Mes) <-
+  c("Jan", "Feb", "Mar", "Abr", "Maio", "Jun",
+    "Jul", "Ago", "Set", "Out", "Nov", "Dez")
+levels(dados_60435000$Mes)
+
+# Fazer um objeto contendo um ggplot
+grafico_boxplot_1 <-
+  ggplot(data = dados_60435000,
+         aes(x = Mes, y = Vazao)) +
+    geom_boxplot() +
+    stat_summary(fun = mean,
+                 geom = "line",
+                 aes(group = 1),
+                 col = "red")
+ 
+# Printar o ggplot na tela do computador
+grafico_boxplot_1
+```
+
+## Gráficos usando a tabela de resumo estatístico
+```{r ribbon_1, fig.width = 8, fig.height = 6, fig.cap = "Gráfico com a média das vazões por estação"}
+ggplot(data = resumo_todas,
+       aes(x = ano_hidro, y = media, col = Cod_estacao)) +
+  geom_ribbon(aes(x = ano_hidro, fill = Cod_estacao,
+                  ymax = maxima, ymin = minima),
+              alpha = 0.5) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Estações - HidroWeb",
+       caption = "fonte dos dados: ANA (2022)",
+       x = "Ano hidrológico", y = "Vazão",
+       fill = "Estação", color = "Estação")
+```
+
+```{r ribbon_2, fig.width = 8, fig.height = 6, fig.cap = "Gráfico com a média das vazões por estação"}
+ggplot(data = resumo_todas,
+       aes(x = ano_hidro, y = media, col = Cod_estacao)) +
+  geom_ribbon(aes(x = ano_hidro, fill = Cod_estacao,
+                  ymax = maxima, ymin = minima),
+              alpha = 0.5) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Estações - HidroWeb",
+       caption = "fonte dos dados: ANA (2022)",
+       x = "Ano hidrológico", y = "Vazão",
+       fill = "Estação", color = "Estação") +
+  facet_wrap(~ Cod_estacao, nrow = 4, scales = "free_y")
+```
+
+
+## Livros !
+
+### Livro do criador do ggplot2:
+
+-  https://ggplot2-book.org/
+
+### Entender melhor quais cores usar:
+
+- http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/
+- https://eos.org/features/visualizing-science-how-color-determines-whatwesee?utm_source=eos&utm_medium=email&utm_campaign=EosBuzz052920
+- https://eagereyes.org/basics/rainbow-color-map
+- https://ieeexplore.ieee.org/document/4118486
+
+### Todas as cores do R:
+
+- http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
