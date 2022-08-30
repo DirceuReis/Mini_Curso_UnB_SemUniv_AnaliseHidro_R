@@ -2139,18 +2139,63 @@ Aulas
 <nav class="l-text toc figcaption" id="TOC">
 <h3>Contents</h3>
 <ul>
-<li><a href="#pacotes" id="toc-pacotes">Pacotes</a></li>
-<li><a href="#carcaterização-numérica"
-id="toc-carcaterização-numérica">Carcaterização numérica</a></li>
-<li><a href="#caracterização-gráfica"
-id="toc-caracterização-gráfica">Caracterização gráfica</a></li>
+<li><a href="#plotagem-da-série-histórica"
+id="toc-plotagem-da-série-histórica">Plotagem da série
+histórica</a></li>
+<li><a href="#caracterização-da-distribuição"
+id="toc-caracterização-da-distribuição">Caracterização da
+distribuição</a>
+<ul>
+<li><a href="#diagramas-de-caixa-boxplot"
+id="toc-diagramas-de-caixa-boxplot">Diagramas de caixa
+(<em>boxplot</em>)</a></li>
+<li><a href="#histograma" id="toc-histograma">Histograma</a></li>
+<li><a href="#funções-de-densidade"
+id="toc-funções-de-densidade">Funções de densidade</a></li>
+</ul></li>
+<li><a href="#frequência-amostral"
+id="toc-frequência-amostral">Frequência amostral</a></li>
+<li><a href="#curva-de-permanência" id="toc-curva-de-permanência">Curva
+de permanência</a></li>
+<li><a href="#avaliação-de-tendência-monotônica"
+id="toc-avaliação-de-tendência-monotônica">Avaliação de tendência
+monotônica</a></li>
+<li><a href="#medidas-de-associação"
+id="toc-medidas-de-associação">Medidas de associação</a></li>
 </ul>
 </nav>
 </div>
-<h2 id="pacotes">Pacotes</h2>
-<h2 id="carcaterização-numérica">Carcaterização numérica</h2>
-<h2 id="caracterização-gráfica">Caracterização gráfica</h2>
-<div class="sourceCode" id="cb1"><pre
+<h2 id="plotagem-da-série-histórica">Plotagem da série histórica</h2>
+<div class="layout-chunk" data-layout="l-body">
+
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_60435000</span> <span class='op'>&lt;-</span> <span class='fu'>dados_serie_ANA</span><span class='op'>(</span>cod_estacao <span class='op'>=</span> <span class='fl'>60435000</span><span class='op'>)</span></span>
+<span><span class='va'>index_falha_diario</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>[</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>==</span><span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='va'>dias_falha</span> <span class='op'>&lt;-</span> <span class='va'>dados_60435000</span><span class='op'>[</span><span class='va'>index_falha_diario</span>,<span class='fl'>2</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>  Cod_estacao       Data Vazao
+1    60435000 1978-05-01    NA
+2    60435000 1978-05-02    NA
+3    60435000 1978-05-03    NA
+4    60435000 1978-05-04    NA
+5    60435000 1978-05-05    NA
+6    60435000 1978-05-06    NA</code></pre>
+</div>
+<h2 id="caracterização-da-distribuição">Caracterização da
+distribuição</h2>
+<h3 id="diagramas-de-caixa-boxplot">Diagramas de caixa
+(<em>boxplot</em>)</h3>
+<h3 id="histograma">Histograma</h3>
+<h3 id="funções-de-densidade">Funções de densidade</h3>
+<h2 id="frequência-amostral">Frequência amostral</h2>
+<h2 id="curva-de-permanência">Curva de permanência</h2>
+<h2 id="avaliação-de-tendência-monotônica">Avaliação de tendência
+monotônica</h2>
+<h2 id="medidas-de-associação">Medidas de associação</h2>
+<div class="sourceCode" id="cb2"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

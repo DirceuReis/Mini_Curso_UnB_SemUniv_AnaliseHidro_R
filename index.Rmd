@@ -84,20 +84,31 @@ Como o número de vagas é limitado, recomenda-se que a inscrição seja feita o
 
 ## Antes do curso
 
-Incluiremos aqui um tutorial de como instalar o R, RStudio e os diversos pacotes que serão utilizados no curso.
-
-- R e RStudio
-- Pacotes
-   - tydiverse
+Apresar da sala onde será ministrado contenha computadores com os programas já instalados, que quiser utilizar seu prórpio computador será muito bem vindo. Nesse caso, sugerimos instalar tanto o **R** quanto o **RStudio**. Para isso, entre na aula **Conceitos Básicos em R** e siga as intruções de instalação.
    
 ## Tópicos (em construção)
 
-### Noções de R
+### Conceitos básicos de R
 
-- Criação de objetos e operações matemáticas básicas
-- Abertura de arquivos de várias fontes (csv, excel, binário etc)
-- Discussão de Como lidar com a presença de "NA" no R com exemplos de operações
-- Apresentação de alguns pacotes (tidyverse: dplyr, ggplot2, lubridate)
+- Ambientação no **RStudio**
+- Primeiros passos e comandos
+- Criação de variáveis e atribuição de valores
+- Objetos do **R**
+   - Classes
+   - Vetores
+   - Fatores
+   - Coerção de variáveis
+   - Sequências
+   - Indexação
+- Operação com vetores
+- Outros tipos de objetos
+   - Matrizes
+   - Data frames
+   - Listas
+- Progamação básica
+   - Funções
+   - Estruturas condicionais
+   - Loops
 
 ### Obtenção dos dados
 

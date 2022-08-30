@@ -20,7 +20,7 @@ Existem inúmeros repositórios contendo dados hidrológicos no mundo e no Brasi
 
 ## Obtenção de dados "tradicional"
 
-Uma maneira de obter dados é simplesmente baixando eles de algum site oficial. Geralmente o arquivo baixado está no formato `.csv`, `.txt` ou `.xls` (excel) - esse último sendo menos comum. No próprio portal da ANA tem a opção de baixar os dados diretamente se souber a estação em questão ou utilizando um mapa dinâmico. Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o arquivo, é importante entender como ele está salvo, para isso podemos abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é mostrado na figura abaixo
+Uma maneira de obter dados hidrológicos é simplesmente acessando de algum site oficial. Geralmente, o arquivo obtido baixado está no formato `.csv`, `.txt` ou `.xls` (excel) - esse último sendo menos comum. No próprio portal da ANA tem a opção de baixar os dados diretamente se souber a estação em questão ou utilizando um mapa dinâmico. Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o arquivo, é importante entender como ele está salvo, para isso podemos abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é mostrado na figura abaixo
 
 ```{r obtencao_dados_trad_imagem_1, echo = FALSE, layout = "l-body-outset", fig.align = 'center', out.width = "100%", fig.cap = ""}
 knitr::include_graphics("images/arquivo_vazao_ANA_csv.png")

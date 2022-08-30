@@ -2176,15 +2176,15 @@ no Brasil. Alguns exemplos são:</p>
 </ul>
 <h2 id="obtenção-de-dados-tradicional">Obtenção de dados
 “tradicional”</h2>
-<p>Uma maneira de obter dados é simplesmente baixando eles de algum site
-oficial. Geralmente o arquivo baixado está no formato <code>.csv</code>,
-<code>.txt</code> ou <code>.xls</code> (excel) - esse último sendo menos
-comum. No próprio portal da ANA tem a opção de baixar os dados
-diretamente se souber a estação em questão ou utilizando um mapa
-dinâmico. Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o
-arquivo, é importante entender como ele está salvo, para isso podemos
-abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é
-mostrado na figura abaixo</p>
+<p>Uma maneira de obter dados hidrológicos é simplesmente acessando de
+algum site oficial. Geralmente, o arquivo obtido baixado está no formato
+<code>.csv</code>, <code>.txt</code> ou <code>.xls</code> (excel)
+&amp;mdash esse último sendo menos comum. No próprio portal da ANA tem a
+opção de baixar os dados diretamente se souber a estação em questão ou
+utilizando um mapa dinâmico. Fazemos o exemplo abaixo para a estação
+60435000. Ao baixar o arquivo, é importante entender como ele está
+salvo, para isso podemos abrir o arquivo pelo bloco de notas por
+exemplo. O arquivo em questão é mostrado na figura abaixo</p>
 <div class="layout-chunk" data-layout="l-body-outset">
 <p><img src="images/arquivo_vazao_ANA_csv.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
@@ -2375,7 +2375,7 @@ apenas as estações de Brasília, escrevemos o código abaixo. O
 com base em qualquer outra também.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='op'>(</span><span class='va'>estacoes_bsb</span> <span class='op'>&lt;-</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>cadastro_estacoes</span>, <span class='va'>`Municipio-UF`</span> <span class='op'>==</span> <span class='st'>"BRASÍLIA-DF"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='op'>(</span><span class='va'>estacoes_bsb</span> <span class='op'>&lt;-</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>cadastro_estacoes</span>, <span class='va'>`Municipio-UF`</span> <span class='op'>==</span> <span class='st'>"BRASÍLIA-DF"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>                                    NomeEstacao CodEstacao Bacia
 1                        ANA SEDE (COTA ONLINE)   01547032     6
@@ -2703,7 +2703,7 @@ arquivo original, as duas últimas letras são as siglas da UF).</p>
 <span>                                 <span class='fu'><a href='https://rdrr.io/r/base/nchar.html'>nchar</a></span><span class='op'>(</span><span class='va'>cadastro_estacoes</span><span class='op'>$</span><span class='va'>`Municipio-UF`</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
 <span>                                 <span class='fu'><a href='https://rdrr.io/r/base/nchar.html'>nchar</a></span><span class='op'>(</span><span class='va'>cadastro_estacoes</span><span class='op'>$</span><span class='va'>`Municipio-UF`</span><span class='op'>)</span><span class='op'>)</span></span>
 <span>                                 </span>
-<span>  <span class='va'>estacoes_UF</span> <span class='op'>&lt;-</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>cadastro_estacoes</span>, <span class='va'>`UF`</span> <span class='op'>==</span> <span class='va'>UF_fun</span><span class='op'>)</span></span>
+<span>  <span class='va'>estacoes_UF</span> <span class='op'>&lt;-</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>cadastro_estacoes</span>, <span class='va'>`UF`</span> <span class='op'>==</span> <span class='va'>UF_fun</span><span class='op'>)</span></span>
 <span></span>
 <span>  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>estacoes_UF</span><span class='op'>)</span></span>
 <span><span class='op'>}</span></span></code></pre>
@@ -2894,7 +2894,7 @@ mês.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>datas_dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,</span>
-<span>                      to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://lubridate.tidyverse.org/reference/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
+<span>                      to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/lubridate/man/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
 <span>                      by <span class='op'>=</span> <span class='st'>"day"</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
@@ -2986,7 +2986,7 @@ processo para outras estações.</p>
 <span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlToDataFrame.html'>xmlToDataFrame</a></span><span class='op'>(</span>nodes <span class='op'>=</span> <span class='va'>node_doc</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Por algum motivo o hidroweb não está filtrando os dados pela consistencia</span></span>
-<span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>dados_estacao</span>, <span class='va'>NivelConsistencia</span> <span class='op'>==</span> <span class='va'>nivel_consist</span><span class='op'>)</span></span>
+<span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>dados_estacao</span>, <span class='va'>NivelConsistencia</span> <span class='op'>==</span> <span class='va'>nivel_consist</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Separar data e hora</span></span>
 <span>  <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span>, <span class='fl'>1</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
@@ -2994,7 +2994,7 @@ processo para outras estações.</p>
 <span>  </span>
 <span>  <span class='co'># Fazer um dataframe só com datas e valores de vazão</span></span>
 <span>  <span class='va'>datas_dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,</span>
-<span>                        to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://lubridate.tidyverse.org/reference/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
+<span>                        to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/lubridate/man/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
 <span>                        by <span class='op'>=</span> <span class='st'>"day"</span><span class='op'>)</span></span>
 <span>  <span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>Cod_estacao <span class='op'>=</span> <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>EstacaoCodigo</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,</span>
 <span>                             Data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='va'>datas_dia</span><span class='op'>)</span>,</span>
