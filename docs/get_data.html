@@ -2145,7 +2145,8 @@ id="toc-repositório-de-dados">Repositório de dados</a></li>
 id="toc-obtenção-de-dados-tradicional">Obtenção de dados
 “tradicional”</a></li>
 <li><a href="#obtenção-via-webservice"
-id="toc-obtenção-via-webservice">Obtenção via webservice</a></li>
+id="toc-obtenção-via-webservice">Obtenção via webservice</a>
+<ul>
 <li><a href="#lista-das-estações-telemétricas-da-ana"
 id="toc-lista-das-estações-telemétricas-da-ana">Lista das Estações
 Telemétricas da ANA</a></li>
@@ -2154,6 +2155,7 @@ id="toc-dados-hidrometeorológicos-da-ana">Dados Hidrometeorológicos da
 ANA</a></li>
 <li><a href="#série-histórica" id="toc-série-histórica">Série
 Histórica</a></li>
+</ul></li>
 <li><a href="#salvar-arquivos" id="toc-salvar-arquivos">Salvar
 arquivos</a>
 <ul>
@@ -2176,23 +2178,39 @@ no Brasil. Alguns exemplos são:</p>
 </ul>
 <h2 id="obtenção-de-dados-tradicional">Obtenção de dados
 “tradicional”</h2>
-<p>Uma maneira de obter dados hidrológicos é simplesmente acessando de
-algum site oficial. Geralmente, o arquivo obtido baixado está no formato
-<code>.csv</code>, <code>.txt</code> ou <code>.xls</code> (excel)
-&amp;mdash esse último sendo menos comum. No próprio portal da ANA tem a
-opção de baixar os dados diretamente se souber a estação em questão ou
-utilizando um mapa dinâmico. Fazemos o exemplo abaixo para a estação
-60435000. Ao baixar o arquivo, é importante entender como ele está
-salvo, para isso podemos abrir o arquivo pelo bloco de notas por
-exemplo. O arquivo em questão é mostrado na figura abaixo</p>
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD Uma maneira de obter dados
+hidrológicos é simplesmente acessando de algum site oficial. Geralmente,
+o arquivo obtido baixado está no formato <code>.csv</code>,
+<code>.txt</code> ou <code>.xls</code> (excel) - esse último sendo menos
+comum. No próprio portal da ANA tem a opção de baixar os dados
+diretamente se souber a estação em questão ou utilizando um mapa
+dinâmico. Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o
+arquivo, é importante entender como ele está salvo, para isso podemos
+abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é
+mostrado na figura abaixo ======= Uma maneira de obter dados é
+simplesmente baixando eles de algum site oficial. Geralmente o arquivo
+baixado está no formato <code>.csv</code>, <code>.txt</code> ou
+<code>.xls</code> (excel) - esse último sendo menos comum. No próprio
+portal da ANA tem a opção de baixar os dados diretamente se souber a
+estação em questão (<a
+href="https://www.snirh.gov.br/hidroweb/serieshistoricas"
+class="uri">https://www.snirh.gov.br/hidroweb/serieshistoricas</a>) ou
+utilizando um mapa dinâmico (<a
+href="https://www.snirh.gov.br/hidroweb/mapa"
+class="uri">https://www.snirh.gov.br/hidroweb/mapa</a>). Fazemos o
+exemplo abaixo para a estação 60435000. Ao baixar o arquivo, é
+importante entender como ele está salvo, para isso podemos abrir o
+arquivo pelo bloco de notas por exemplo. O arquivo em questão é mostrado
+na figura abaixo &gt;&gt;&gt;&gt;&gt;&gt;&gt;
+2aa96fc38fa716a70fee28c186be23697f6320d1</p>
 <div class="layout-chunk" data-layout="l-body-outset">
 <p><img src="images/arquivo_vazao_ANA_csv.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
 <p>É possível perceber alguns detalhes importantes. As primeiras 13
 linhas contém informações sobre o sistema em sí e a estação, mas os
 dados medidos começam de fato na linha 14. O separador de cada coluna é
-um <code>;</code> e os decimais são separados por <code>,</code>. Agora
-já temos as informações necessárias para acessar esses dados pelo
+um “<code>;</code>” e os decimais são separados por “<code>,</code>”.
+Agora já temos as informações necessárias para acessar esses dados pelo
 <strong>R</strong>. Usamos aqui a função <code>read.table()</code>,
 também é possível utilizar a função <code>read.csv()</code>, ambas fazem
 a mesma coisa, apenas alteram os argumentos pré definidos (que podem ser
@@ -2298,8 +2316,25 @@ disponibilizados nesse formato. Mas discutiremos apenas o básico neste
 curso, sem nos profundarmos muito. Porém se você deseja saber mais sobre
 webscraping e usufruir de várias de suas possibilidade, sugerimos que
 procure se aprofundar mais nesse tema.</p>
-<h2 id="lista-das-estações-telemétricas-da-ana">Lista das Estações
-Telemétricas da ANA</h2>
+<p>Para acessar dados do tipo <strong>XML</strong> dentro do
+<strong>R</strong>, utilizamos um pacote já criado, chamado
+<strong>XML</strong>. Lembrando que caso não tenhamos instalado ele
+ainda, precisamos o fazer com o <code>install.packages()</code>. Em
+seguida precisamos apenas carregar na seção utilizando
+<code>library()</code> como escrito abaixo. Além desse pacote, também
+utilizaremos algumas partes do pacote <strong>lubridate</strong> para
+trabalharmos com datas.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>#install.packages("XML")</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://www.omegahat.net/RSXML/'>XML</a></span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'>#install.packages("lubridate")</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://lubridate.tidyverse.org'>lubridate</a></span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<h3 id="lista-das-estações-telemétricas-da-ana">Lista das Estações
+Telemétricas da ANA</h3>
 <p>Começaremos nossas atividades acessando os dados das estações
 telemétricas desse sistema. Pode-se perceber olhando para o próprio
 site, que são necessários dois parâmetros para pesquisar as estações. O
@@ -2319,14 +2354,20 @@ telemétricas.</p>
 </div>
 <p>Para que tenhamos cesso a essas informações nesse mesmo formato no
 RStudio, teremos que fazer uso de um pacote chamado “XML”, que contém a
-função denominada xmlParse(). Essa função é capaz de ler um arquivo do
-tipo XML e gerar uma estrutura no R similar ao que aparece na imagem
-acima (formato de “árvore”). A função exige que informemos um argumento
-obrigatório, que é o url a ser utilizado, e permite ainda que passemos
-um argumento opcional, que é a codificação do arquivo (do inglês
-encoding). Usualmente no Brasil, utilizamos o “UTF-8” para poder
-utilizar nossos acentos (mas lembre-se que essa parte é um outro mundo
-no R e não entraremos com maiores detalhamentos).</p>
+função denominada <code>xmlParse()</code>. Essa função é capaz de ler um
+arquivo do tipo XML e gerar uma estrutura no <strong>R</strong> similar
+ao que aparece na imagem acima (formato de “árvore”). A função exige que
+informemos um argumento obrigatório, que é o <em>url</em> a ser
+utilizado, e permite ainda que passemos um argumento opcional, que é a
+codificação do arquivo (do inglês encoding). Usualmente no Brasil,
+utilizamos o “UTF-8” para poder utilizar nossos acentos (mas lembre-se
+que essa parte é um outro mundo no R e não entraremos com maiores
+detalhamentos). Quando um pacote já está carregado dentro do
+<strong>R</strong>, não precisamos escrever ele antes da função - isso,
+porém, pode ser uma boa prática para deixar o código mais fácil de ler
+(uma vez que qualquer leitor entenderia que a funçção
+<code>xmlParse()</code> pertence ao pacote <strong>XML</strong> uma vez
+que está escrito <code>XML::</code> antes da função!</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>status_codigo</span> <span class='op'>&lt;-</span> <span class='st'>""</span></span>
@@ -2372,305 +2413,67 @@ xmlToDataFrame().</p>
 (com dataframe ficou fácil!). Por exemplo, se quisermos selecionar
 apenas as estações de Brasília, escrevemos o código abaixo. O
 “Municipio-UF” é apenas uma das colunas do dataframe, podemos filtrar
-com base em qualquer outra também.</p>
+com base em qualquer outra também. Vemos então a estrutura desse
+dataframe criado, usando a função <code>str()</code>, e as primeiras 5
+linhas delem usando a função <code>head()</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='op'>(</span><span class='va'>estacoes_bsb</span> <span class='op'>&lt;-</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>cadastro_estacoes</span>, <span class='va'>`Municipio-UF`</span> <span class='op'>==</span> <span class='st'>"BRASÍLIA-DF"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>estacoes_bsb</span> <span class='op'>&lt;-</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>cadastro_estacoes</span>, <span class='va'>`Municipio-UF`</span> <span class='op'>==</span> <span class='st'>"BRASÍLIA-DF"</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>estacoes_bsb</span><span class='op'>)</span></span></code></pre>
 </div>
-<pre><code>                                    NomeEstacao CodEstacao Bacia
-1                        ANA SEDE (COTA ONLINE)   01547032     6
-2                        ANA SEDE - TELEMÉTRICA   01547079     6
-3                            RIBEIRÃO PALMEIRAS   20000950     2
-4                                        SONHEM   20001050     2
-5                             CONTAGEM - VC 201   20001200     2
-6                           RIBEIRÃO SANTA RITA   42450050     4
-7                               RIBEIRÃO JACARÉ   42450300     4
-8                  RIO PRETO - MONTANTE EXTREMA   42450360     4
-9                             LAGOINHA - DF 105   42450370     4
-10                             EXTREMA - DF 100   42450510     4
-11                  RIO PRETO - FAZENDA ITAPETI   42450600     4
-12                              JARDIM - DF 260   42450740     4
-13                    JARDIM - MONTANTE LAMARÃO   42450770     4
-14                       RIBEIRÃO JARDIM DF-100   42450900     4
-15                             RIO SÃO BERNARDO   42454000     4
-16            DESCOBERTO JUS. CAPTAÇÃO BARROCÃO   60434600     6
-17                      DESCOBERTO - CHACARA 89   60435000     6
-18                            RODEADOR - DF 435   60435200     6
-19                          RIBEIRÃO DAS PEDRAS   60435405     6
-20                        DESCOBERTO - BARRAGEM   60435500     6
-21                                     MELCHIOR   60436185     6
-22                               RIO DESCOBERTO   60436186     6
-23                                   PONTE ALTA   60443830     6
-24                                      ALAGADO   60444035     6
-25                                    PIPIRIPAU   60472235     6
-26                          RIBEIRÃO SOBRADINHO   60474300     6
-27                BARTOLOMEU - MONTANTE PARANOÁ   60476155     6
-28                       SANTA MARIA - BARRAGEM   60477100     6
-29         RIBEIRÃO TORTO JUSANTE CÓRREGO URUBÚ   60477380     6
-30                  UHE PARANOÁ CÓRREGO BANANAL   60477607     6
-31                      RIACHO FUNDO VILA CAUHY   60478185     6
-32 MONTANTE ZOOLÓGICO - EPIA 003 - RIACHO FUNDO   60478200     6
-33                                ESTAÇÃO TESTE   60478250     6
-34                                ESTAÇÃO TESTE   60478250     6
-35                              ESTAÇÃO TESTE 1   60478251     6
-36                       RIBEIRÃO MARIA PEREIRA   60478477     6
-37                           CÓRREGO SAIA VELHA   60478481     6
-38                                      FAL-UNB   60478482     6
-39                              CÓRREGO TAQUARA   60478493     6
-40                             RIBEIRÃO DO GAMA   60478520     6
-41          UHE PARANOÁ CÓRREGO CABEÇA DE VEADO   60478610     6
-42                        BARRAGEM LAGO PARANOÁ   60479230     6
-43                       UHE PARANOÁ BARRAMENTO   60479270     6
-44                          UHE PARANOÁ JUSANTE   60479280     6
-45                                       TABOCA   60480310     6
-46                                       PAPUDA   60480550     6
-47                                 CACHOEIRINHA   60491000     6
-48                                      SANTANA   60492000     6
-   SubBacia
-1        60
-2        60
-3        20
-4        20
-5        20
-6        42
-7        42
-8        42
-9        42
-10       42
-11       42
-12       42
-13       42
-14       42
-15       42
-16       60
-17       60
-18       60
-19       60
-20       60
-21       60
-22       60
-23       60
-24       60
-25       60
-26       60
-27       60
-28       60
-29       60
-30       60
-31       60
-32       60
-33       60
-34       60
-35       60
-36       60
-37       60
-38       60
-39       60
-40       60
-41       60
-42       60
-43       60
-44       60
-45       60
-46       60
-47       60
-48       60
-                                                          Operadora
-1                          00001 - ANA - Agência Nacional de Águas 
-2                          00001 - ANA - Agência Nacional de Águas 
-3  00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-4  00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-5  00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-6  00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-7               00082 - CPRM - Cia de Pesquisa de Recursos Minerais
-8  00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-9  00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-10 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-11 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-12 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-13 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-14 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-15              00082 - CPRM - Cia de Pesquisa de Recursos Minerais
-16                                            00077 - CAESB - CAESB
-17                                            00077 - CAESB - CAESB
-18                                            00077 - CAESB - CAESB
-19 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-20                                            00077 - CAESB - CAESB
-21 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-22 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-23 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-24 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-25              00082 - CPRM - Cia de Pesquisa de Recursos Minerais
-26 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-27 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-28                                            00077 - CAESB - CAESB
-29 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-30                                   00133 - CEB - CEB Geração S.A.
-31 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-32                                            00077 - CAESB - CAESB
-33                         00001 - ANA - Agência Nacional de Águas 
-34                         00001 - ANA - Agência Nacional de Águas 
-35                         00001 - ANA - Agência Nacional de Águas 
-36 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-37 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-38                           00250 - UNB - Universidade de Brasília
-39                           00250 - UNB - Universidade de Brasília
-40 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-41                                   00133 - CEB - CEB Geração S.A.
-42 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-43                                   00133 - CEB - CEB Geração S.A.
-44                                   00133 - CEB - CEB Geração S.A.
-45 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-46 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-47 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-48 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-                                                        Responsavel
-1                          00001 - ANA - Agência Nacional de Águas 
-2                          00001 - ANA - Agência Nacional de Águas 
-3  00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-4  00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-5  00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-6  00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-7                          00001 - ANA - Agência Nacional de Águas 
-8  00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-9  00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-10 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-11 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-12 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-13 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-14 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-15                         00001 - ANA - Agência Nacional de Águas 
-16                                            00077 - CAESB - CAESB
-17                                            00077 - CAESB - CAESB
-18                                            00077 - CAESB - CAESB
-19 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-20                                            00077 - CAESB - CAESB
-21 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-22 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-23 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-24 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-25                         00001 - ANA - Agência Nacional de Águas 
-26 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-27 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-28                                            00077 - CAESB - CAESB
-29 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-30                                   00133 - CEB - CEB Geração S.A.
-31 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-32                                            00077 - CAESB - CAESB
-33                         00001 - ANA - Agência Nacional de Águas 
-34                         00001 - ANA - Agência Nacional de Águas 
-35                         00001 - ANA - Agência Nacional de Águas 
-36 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-37 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-38                         00001 - ANA - Agência Nacional de Águas 
-39                         00001 - ANA - Agência Nacional de Águas 
-40 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-41                                   00133 - CEB - CEB Geração S.A.
-42 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-43                                   00133 - CEB - CEB Geração S.A.
-44                                   00133 - CEB - CEB Geração S.A.
-45 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-46 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-47 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-48 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-   Municipio-UF  Latitude Longitude Altitude   CodRio
-1   BRASÍLIA-DF -15.81805 -47.94500  1150.00        0
-2   BRASÍLIA-DF -15.81810 -47.94500  1150.00        0
-3   BRASÍLIA-DF -15.52810 -47.74190     0.00 20003000
-4   BRASÍLIA-DF -15.52310 -47.81580     0.00 20030000
-5   BRASÍLIA-DF -15.50080 -47.85420     0.00 20050000
-6   BRASÍLIA-DF -15.58560 -47.33330   870.00 42250100
-7   BRASÍLIA-DF -15.64060 -47.35670     0.00 42250300
-8   BRASÍLIA-DF -15.83720 -47.36890     0.00 42250000
-9   BRASÍLIA-DF -15.77250 -47.39890     0.00 42250350
-10  BRASÍLIA-DF -15.84580 -47.38530     0.00 42250500
-11  BRASÍLIA-DF -15.94280 -47.36360     0.00 42250000
-12  BRASÍLIA-DF -15.85970 -47.47560     0.00 42250800
-13  BRASÍLIA-DF -15.94750 -47.44580     0.00 42250800
-14  BRASÍLIA-DF -15.97390 -47.39860     0.00 42250800
-15  BRASÍLIA-DF -16.03580 -47.41500     0.00 42252000
-16  BRASÍLIA-DF -15.63440 -48.18420  1094.00 60315000
-17  BRASÍLIA-DF -15.70890 -48.23390  1034.00 60315000
-18  BRASÍLIA-DF -15.72500 -48.16830  1035.00 60315400
-19  BRASÍLIA-DF -15.76220 -48.15940     0.00 60315800
-20  BRASÍLIA-DF -15.77780 -48.23140  1032.00 60315000
-21  BRASÍLIA-DF -15.92670 -48.25890     0.00 60314500
-22  BRASÍLIA-DF -15.93110 -48.25750     0.00 60315000
-23  BRASÍLIA-DF -16.03720 -48.13610     0.00 60317515
-24  BRASÍLIA-DF -16.04670 -48.08220     0.00 60317500
-25  BRASÍLIA-DF -15.61440 -47.54560  1008.00 60320100
-26  BRASÍLIA-DF -15.72720 -47.69670     0.00 60320800
-27  BRASÍLIA-DF -15.80940 -47.70060     0.00 60320000
-28  BRASÍLIA-DF -15.66890 -47.95360  1075.00 60321060
-29  BRASÍLIA-DF -15.72190 -47.86810     0.00 60321040
-30  BRASÍLIA-DF -15.72830 -47.91000  1003.00 60321120
-31  BRASÍLIA-DF -15.87530 -47.96610  1019.00 60321180
-32  BRASÍLIA-DF -15.85940 -47.94190  1005.00 60321180
-33  BRASÍLIA-DF -15.81670 -47.95000     0.00 60321180
-34  BRASÍLIA-DF -15.81670 -47.95000     0.00 60321180
-35  BRASÍLIA-DF -15.81940 -47.95560     0.00 60321180
-36  BRASÍLIA-DF -16.04220 -47.84860     0.00 60322510
-37  BRASÍLIA-DF -16.04970 -47.93780     0.00 60323000
-38  BRASÍLIA-DF -15.94500 -47.93830  1066.00 60321270
-39  BRASÍLIA-DF -15.91110 -47.90890     0.00 60321300
-40  BRASÍLIA-DF -15.85830 -47.87390     0.00 60321260
-41  BRASÍLIA-DF -15.85580 -47.85750  1003.96 60321340
-42  BRASÍLIA-DF -15.79720 -47.78420     0.00 60321020
-43  BRASÍLIA-DF -15.79750 -47.78390  1000.00 60321000
-44  BRASÍLIA-DF -15.79110 -47.76220   895.00 60321000
-45  BRASÍLIA-DF -15.87530 -47.72280     0.00 60321380
-46  BRASÍLIA-DF -15.89250 -47.72280     0.00 60321400
-47  BRASÍLIA-DF -16.03560 -47.68530     0.00 60103050
-48  BRASÍLIA-DF -16.05080 -47.74420     0.00 60321800
-                         NomeRio              Origem StatusEstacao
-1                                         CotaOnline         Ativo
-2                                                RHN         Ativo
-3             RIBEIRÃO PALMEIRAS Setor de Saneamento         Ativo
-4                     RIO SONHEM Setor de Saneamento         Ativo
-5           RIBEIRÃO DA CONTAGEM                 RHN         Ativo
-6            RIBEIRÃO SANTA RITA                 RHN         Ativo
-7  CÓRREGO BURITI GRANDE/ JACARÉ                 RHN         Ativo
-8                      RIO PRETO Setor de Saneamento         Ativo
-9               CÓRREGO LAGOINHA Setor de Saneamento         Ativo
-10              RIBEIRÃO EXTREMA                 RHN         Ativo
-11                     RIO PRETO                 RHN         Ativo
-12               RIBEIRÃO JARDIM Setor de Saneamento         Ativo
-13               RIBEIRÃO JARDIM Setor de Saneamento         Ativo
-14               RIBEIRÃO JARDIM                 RHN         Ativo
-15         RIBEIRÃO SÃO BERNARDO                 RHN         Ativo
-16                RIO DESCOBERTO                 RHN         Ativo
-17                RIO DESCOBERTO                 RHN         Ativo
-18                  RIO RODEADOR                 RHN         Ativo
-19           RIBEIRÃO DAS PEDRAS Setor de Saneamento         Ativo
-20                RIO DESCOBERTO                 RHN         Ativo
-21                  RIO MELCHIOR Setor de Saneamento         Ativo
-22                RIO DESCOBERTO Setor de Saneamento         Ativo
-23           RIBEIRÃO PONTE ALTA Setor de Saneamento         Ativo
-24                   RIO ALAGADO Setor de Saneamento         Ativo
-25                 RIO PIPIRIPAU                 RHN         Ativo
-26           RIBEIRÃO SOBRADINHO Setor de Saneamento         Ativo
-27            RIO SÃO BARTOLOMEU Setor de Saneamento         Ativo
-28              LAGO SANTA MARIA                 RHN         Ativo
-29             RIBEIRÃO DO TORTO                 RHN         Ativo
-30               CÓRREGO BANANAL      Setor Elétrico         Ativo
-31                  RIACHO FUNDO Setor de Saneamento         Ativo
-32                  RIACHO FUNDO                 RHN         Ativo
-33                  RIACHO FUNDO                 RHN         Ativo
-34                  RIACHO FUNDO                 GDH         Ativo
-35                  RIACHO FUNDO                 RHN         Ativo
-36        RIBEIRÃO MARIA PEREIRA Setor de Saneamento         Ativo
-37                RIO SAIA VELHA Setor de Saneamento         Ativo
-38             CORREGO CAPETINGA                 RHN         Ativo
-39               CÓRREGO TAQUARA                 RHN         Ativo
-40              RIBEIRÃO DO GAMA Setor de Saneamento         Ativo
-41       CÓRREGO CABEÇA DE VEADO      Setor Elétrico         Ativo
-42               LAGO DO PARANOÁ                 RHN         Ativo
-43                   RIO PARANOÁ      Setor Elétrico         Ativo
-44                   RIO PARANOÁ      Setor Elétrico         Ativo
-45            RIBEIRÃO DA TABOCA Setor de Saneamento         Ativo
-46             CÓRREGO DA PAPUDA Setor de Saneamento         Ativo
-47                 CÓRREGO VIÚDA Setor de Saneamento         Ativo
-48              RIBEIRÃO SANTANA Setor de Saneamento         Ativo</code></pre>
+<pre><code>&#39;data.frame&#39;:   48 obs. of  14 variables:
+ $ NomeEstacao  : chr  &quot;ANA SEDE (COTA ONLINE)&quot; &quot;ANA SEDE - TELEMÉTRICA&quot; &quot;RIBEIRÃO PALMEIRAS&quot; &quot;SONHEM&quot; ...
+ $ CodEstacao   : chr  &quot;01547032&quot; &quot;01547079&quot; &quot;20000950&quot; &quot;20001050&quot; ...
+ $ Bacia        : chr  &quot;6&quot; &quot;6&quot; &quot;2&quot; &quot;2&quot; ...
+ $ SubBacia     : chr  &quot;60&quot; &quot;60&quot; &quot;20&quot; &quot;20&quot; ...
+ $ Operadora    : chr  &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF&quot; &quot;00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF&quot; ...
+ $ Responsavel  : chr  &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF&quot; &quot;00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF&quot; ...
+ $ Municipio-UF : chr  &quot;BRASÍLIA-DF&quot; &quot;BRASÍLIA-DF&quot; &quot;BRASÍLIA-DF&quot; &quot;BRASÍLIA-DF&quot; ...
+ $ Latitude     : chr  &quot;-15.81805&quot; &quot;-15.81810&quot; &quot;-15.52810&quot; &quot;-15.52310&quot; ...
+ $ Longitude    : chr  &quot;-47.94500&quot; &quot;-47.94500&quot; &quot;-47.74190&quot; &quot;-47.81580&quot; ...
+ $ Altitude     : chr  &quot;1150.00&quot; &quot;1150.00&quot; &quot;0.00&quot; &quot;0.00&quot; ...
+ $ CodRio       : chr  &quot;0&quot; &quot;0&quot; &quot;20003000&quot; &quot;20030000&quot; ...
+ $ NomeRio      : chr  &quot;&quot; &quot;&quot; &quot;RIBEIRÃO PALMEIRAS&quot; &quot;RIO SONHEM&quot; ...
+ $ Origem       : chr  &quot;CotaOnline&quot; &quot;RHN&quot; &quot;Setor de Saneamento&quot; &quot;Setor de Saneamento&quot; ...
+ $ StatusEstacao: chr  &quot;Ativo&quot; &quot;Ativo&quot; &quot;Ativo&quot; &quot;Ativo&quot; ...</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>estacoes_bsb</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>             NomeEstacao CodEstacao Bacia SubBacia
+1 ANA SEDE (COTA ONLINE)   01547032     6       60
+2 ANA SEDE - TELEMÉTRICA   01547079     6       60
+3     RIBEIRÃO PALMEIRAS   20000950     2       20
+4                 SONHEM   20001050     2       20
+5      CONTAGEM - VC 201   20001200     2       20
+6    RIBEIRÃO SANTA RITA   42450050     4       42
+                                                         Operadora
+1                         00001 - ANA - Agência Nacional de Águas 
+2                         00001 - ANA - Agência Nacional de Águas 
+3 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
+4 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
+5 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
+6 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
+                                                       Responsavel
+1                         00001 - ANA - Agência Nacional de Águas 
+2                         00001 - ANA - Agência Nacional de Águas 
+3 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
+4 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
+5 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
+6 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
+  Municipio-UF  Latitude Longitude Altitude   CodRio
+1  BRASÍLIA-DF -15.81805 -47.94500  1150.00        0
+2  BRASÍLIA-DF -15.81810 -47.94500  1150.00        0
+3  BRASÍLIA-DF -15.52810 -47.74190     0.00 20003000
+4  BRASÍLIA-DF -15.52310 -47.81580     0.00 20030000
+5  BRASÍLIA-DF -15.50080 -47.85420     0.00 20050000
+6  BRASÍLIA-DF -15.58560 -47.33330   870.00 42250100
+               NomeRio              Origem StatusEstacao
+1                               CotaOnline         Ativo
+2                                      RHN         Ativo
+3   RIBEIRÃO PALMEIRAS Setor de Saneamento         Ativo
+4           RIO SONHEM Setor de Saneamento         Ativo
+5 RIBEIRÃO DA CONTAGEM                 RHN         Ativo
+6  RIBEIRÃO SANTA RITA                 RHN         Ativo</code></pre>
 </div>
 <p>Lembrando que isso tudo nos dá apenas a lista com informações sobre
 as estações telemétricas. Para de fato termos acesso aos dados dessas
@@ -2703,7 +2506,7 @@ arquivo original, as duas últimas letras são as siglas da UF).</p>
 <span>                                 <span class='fu'><a href='https://rdrr.io/r/base/nchar.html'>nchar</a></span><span class='op'>(</span><span class='va'>cadastro_estacoes</span><span class='op'>$</span><span class='va'>`Municipio-UF`</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
 <span>                                 <span class='fu'><a href='https://rdrr.io/r/base/nchar.html'>nchar</a></span><span class='op'>(</span><span class='va'>cadastro_estacoes</span><span class='op'>$</span><span class='va'>`Municipio-UF`</span><span class='op'>)</span><span class='op'>)</span></span>
 <span>                                 </span>
-<span>  <span class='va'>estacoes_UF</span> <span class='op'>&lt;-</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>cadastro_estacoes</span>, <span class='va'>`UF`</span> <span class='op'>==</span> <span class='va'>UF_fun</span><span class='op'>)</span></span>
+<span>  <span class='va'>estacoes_UF</span> <span class='op'>&lt;-</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>cadastro_estacoes</span>, <span class='va'>`UF`</span> <span class='op'>==</span> <span class='va'>UF_fun</span><span class='op'>)</span></span>
 <span></span>
 <span>  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>estacoes_UF</span><span class='op'>)</span></span>
 <span><span class='op'>}</span></span></code></pre>
@@ -2724,8 +2527,8 @@ dataframe.</p>
  [9] &quot;Longitude&quot;     &quot;Altitude&quot;      &quot;CodRio&quot;        &quot;NomeRio&quot;      
 [13] &quot;Origem&quot;        &quot;StatusEstacao&quot; &quot;UF&quot;           </code></pre>
 </div>
-<h2 id="dados-hidrometeorológicos-da-ana">Dados Hidrometeorológicos da
-ANA</h2>
+<h3 id="dados-hidrometeorológicos-da-ana">Dados Hidrometeorológicos da
+ANA</h3>
 <p>Para acessar os dados hidrometeorológicos nesse webservice, temos
 outro url: <a
 href="http://telemetriaws1.ana.gov.br/ServiceANA.asmx?op=DadosHidrometeorologicos"
@@ -2829,15 +2632,25 @@ desse dataframe.</p>
 <p>Aqui rodamos a função apenas para uma estação. Mas se quisermos rodar
 para várias estações, basta utilizar um loop (for) ou até mesmo a função
 lapply do R (mais rápido!).</p>
-<h2 id="série-histórica">Série Histórica</h2>
+<h3 id="série-histórica">Série Histórica</h3>
 <p>Outro local do HidroWeb da ANA que possui dados hidrológicos
-relevantes é na seção de série histórica. Para puxar o arquivo dentro do
-<strong>R</strong> é possível fazer algo similar ao feito acima. Nessa
-seção, porém, são necessários 5 argumentos: - codEstacao (código da
-estação); - dataInicio (primeira data em que se quer os dados); -
-dataFim (última data em que se quer os dados); - tipoDados (podendo ser
-cotas, 1, chuvas, 2, ou vazões, 3); - nivelConsistencia (podendo ser
-Bruto, 1, ou consistido, 2).</p>
+relevantes é na seção de série histórica, disponível <em>online</em> em:
+<a
+href="http://telemetriaws1.ana.gov.br/ServiceANA.asmx?op=HidroSerieHistorica"
+class="uri">http://telemetriaws1.ana.gov.br/ServiceANA.asmx?op=HidroSerieHistorica</a>.
+Para puxar esse arquivo dentro do <strong>R</strong> é possível fazer
+algo similar ao feito acima. Nessa seção, porém, são necessários 5
+argumentos:</p>
+<ul>
+<li><strong>codEstacao</strong> (código da estação);</li>
+<li><strong>dataInicio</strong> (primeira data em que se quer os
+dados);</li>
+<li><strong>dataFim</strong> (última data em que se quer os dados);</li>
+<li><strong>tipoDados</strong> (podendo ser cotas, 1, chuvas, 2, ou
+vazões, 3);</li>
+<li><strong>nivelConsistencia</strong> (podendo ser Bruto, 1, ou
+consistido, 2).</li>
+</ul>
 <p>Primeiro então criamos objetos contendo essas informações necessárias
 para entrar no <em>url</em> da série histórica.</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -2856,8 +2669,8 @@ cima em outros portais dentro do portal da ANA, fazendo então um
 <code>XML::getNodeSet()</code> e <code>XML::xmlToDataFrame()</code>.
 Assim como anteriormente, faz-se também a separação da coluna de data em
 duas, uma contendo a data e outra contendo a hora. Na coluna de Data é
-feita a transformação de caractere para Date de modo que possamos fazer
-algumas operações com ela depois.</p>
+feita a transformação de <em>character</em> para <em>Date</em> de modo
+que possamos fazer algumas operações com ela depois.</p>
 <p>obs: Por algum motivo o hidroweb não está filtrando os dados pela
 consistencia, sendo necessária essa etapa abaixo (um filtro).</p>
 <div class="layout-chunk" data-layout="l-body">
@@ -2881,6 +2694,42 @@ consistencia, sendo necessária essa etapa abaixo (um filtro).</p>
 <span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Hora</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span>, <span class='fl'>12</span>, <span class='fl'>19</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
+<p>É interessante lembrar um pouco como funciona esse formato de datas
+aqui. As datas podem vir de inúmeras formas diferentes de algum banco de
+dados. Elas podem vir com “dia - mês - ano”, com o ano podendo ser
+escrito com todos os dígitos (2022) ou apenas os últimos dois (22).
+Outra coisa que pode ser alterada é a ordem (“dia - mês - ano” ou “ano -
+mês - dia” ou qualquer variação desses três. Ainda podemos encontrar em
+bases de dados o mês escrito por extenso ou abreviado como
+“01/Jan/1990”. Isso sem contar com o separador dessas datass (“/”, “-”,
+um espaço em branco…). Podemos definir isso dentro da função
+<code>as.Date()</code>, utilizando como argumento a seguinte
+convenção:</p>
+<ul>
+<li><strong>%Y</strong> para anos com quatro dígitos;</li>
+<li><strong>%y</strong> para anos com dois dígitos;</li>
+<li><strong>%d</strong> para os dias (dígitos de 1 a 31);</li>
+<li><strong>%m</strong> para os meses (dígitos de 1 a 12);</li>
+<li><strong>%b</strong> para meses no formato abreviado em inglês
+(<em>Jan</em>, <em>Feb</em>, …);</li>
+<li><strong>%B</strong> para meses no formato por extenso em inglês
+(<em>January</em>, <em>February</em>, …).</li>
+</ul>
+<p>Essa função do <strong>R</strong> possui um argumento que irá ficar
+tentando diversos formatos diferentes e tomará como verdade o primeiro
+que não retornar valores NA - porém, para formatos específicos (e se já
+sabemos qual é), pode ser melhor já deixar isso explícito em seu
+código.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-11-01"</span>, format <span class='op'>=</span> <span class='st'>"%Y-%m-%d"</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] &quot;2021-11-01&quot;</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"01/Jan/70"</span>, format <span class='op'>=</span> <span class='st'>"%d/%b/%y"</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] &quot;1970-01-01&quot;</code></pre>
+</div>
 <p>Nesse arquivo temos a necessidade de uma nova etapa. Ao olhar um
 pouco como os dados estão oganizados, percebemos que existem 78 colunas.
 Ao invés dos dados de vazão estarem todos em uma mesma coluna, eles
@@ -2894,16 +2743,36 @@ mês.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>datas_dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,</span>
-<span>                      to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/lubridate/man/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
+<span>                      to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://lubridate.tidyverse.org/reference/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
 <span>                      by <span class='op'>=</span> <span class='st'>"day"</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p>É extremamente interessante notar duas coisas aqui. Primeiro, sempre
+temos diferentes formas de fazer um código, isso vai variar muito com a
+lógica de cada programador. Acima utilizamos uma função feita do pacote
+<strong>lubridate</strong> para somar um mês a uma certa data. Porém,
+podemos fazer o mesmo sem utilizar pacotes adicionais. Apesar deles
+ajudarem, podem tornar a manutenção do seu código algo essencial - as
+vezes o pacote pode alterar funções com atualizações ou até mesmo
+tornarem algumas obsoletas! Abaixo então fazemos a mesma sequência de
+outra forma, e ao final comparamos se ambas são idênticas.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>datas_i</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span>
+<span><span class='va'>datas_f</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>, by <span class='op'>=</span> <span class='st'>"month"</span>, length.out <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span> <span class='op'>-</span> <span class='fl'>1</span></span>
+<span></span>
+<span><span class='va'>datas_dia_v2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='va'>datas_i</span>,</span>
+<span>                         to <span class='op'>=</span> <span class='va'>datas_f</span>,</span>
+<span>                         by <span class='op'>=</span> <span class='st'>"day"</span><span class='op'>)</span></span>
+<span>                         </span>
+<span><span class='co'>#identical(datas_dia,datas_dia_V2)</span></span></code></pre>
 </div>
 </div>
 <p>Em seguida fazemos um dataframe vazio, contendo 3 colunas. A primeira
 possui o código da estação sendo avaliado (como repete para todas as
 linhas, podemos pegar apenas o primeiro valor). A segunda as datas, no
-formato <code>caracter</code> (útil para manipulação de texto), e a
-última sendo a coluna com os dados de vazão que está, por hora,
-vazio.</p>
+formato <em>character</em> (útil para manipulação de texto), e a última
+sendo a coluna com os dados de vazão que está, por hora, vazio.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>Cod_estacao <span class='op'>=</span> <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>EstacaoCodigo</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,</span>
@@ -2944,6 +2813,23 @@ dia começam a partir da coluna 16).</p>
 <span>    </span>
 <span><span class='op'>}</span></span></code></pre>
 </div>
+</div>
+<p>Novamente, poderíamos fazer esse código acima utilizando pacotes para
+“facilitar a nossa vida” (o <em>lubridate</em> para mexer com datas).
+Por exemplo, poderíamos usar a função <code>day()</code> para puxar o
+dia de cada linha (usando a coluna no formato de <em>Date</em>) ao invés
+de fazer uma manipulação de texto. Aqui não vemos se são idênticos
+porque não são (a função <code>day()</code> retorna números inteiros),
+portanto utilizamos a função <code>all.equal()</code> que avalia, até
+certo ponto, se são praticamente iguais.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>exemplo_dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span>, <span class='fl'>9</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='va'>exemplo_dia_v2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/day.html'>day</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span><span class='op'>)</span></span>
+<span> </span>
+<span><span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='va'>exemplo_dia</span>, <span class='va'>exemplo_dia_v2</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] TRUE</code></pre>
 </div>
 <p>Pronto, agora podemos ver, por exemplo, as primeiras 5 medições que
 não são <code>NA</code></p>
@@ -2986,7 +2872,7 @@ processo para outras estações.</p>
 <span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlToDataFrame.html'>xmlToDataFrame</a></span><span class='op'>(</span>nodes <span class='op'>=</span> <span class='va'>node_doc</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Por algum motivo o hidroweb não está filtrando os dados pela consistencia</span></span>
-<span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>dados_estacao</span>, <span class='va'>NivelConsistencia</span> <span class='op'>==</span> <span class='va'>nivel_consist</span><span class='op'>)</span></span>
+<span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>dados_estacao</span>, <span class='va'>NivelConsistencia</span> <span class='op'>==</span> <span class='va'>nivel_consist</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Separar data e hora</span></span>
 <span>  <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span>, <span class='fl'>1</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
@@ -2994,7 +2880,7 @@ processo para outras estações.</p>
 <span>  </span>
 <span>  <span class='co'># Fazer um dataframe só com datas e valores de vazão</span></span>
 <span>  <span class='va'>datas_dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,</span>
-<span>                        to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/lubridate/man/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
+<span>                        to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://lubridate.tidyverse.org/reference/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
 <span>                        by <span class='op'>=</span> <span class='st'>"day"</span><span class='op'>)</span></span>
 <span>  <span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>Cod_estacao <span class='op'>=</span> <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>EstacaoCodigo</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,</span>
 <span>                             Data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='va'>datas_dia</span><span class='op'>)</span>,</span>
@@ -3060,9 +2946,7 @@ códigos delas são:</p>
 <li>60435000 (feita);</li>
 <li>60436000;</li>
 <li>60436190;</li>
-<li><ol start="60443000" type="1">
-<li></li>
-</ol></li>
+<li>60443000 (última estação).</li>
 </ul>
 <p>Para fazer isso, podemos rodar a nossa funão criada,
 <code>dados_serie_ANA()</code>, para cada uma dessas estações. Depois de
@@ -3091,8 +2975,34 @@ etapa de manipulação muito mais fácil. Ao invés de termos um arquivo
 para cada estação com 78 colunas e as vazões podendo estar em diferentes
 linhas e colunas temos uma tabela bem simples, com apenas 3 colunas. Uma
 contendo o código da estação, outra a data e a última o valor de vazão
-observado.</p>
-<div class="sourceCode" id="cb8"><pre
+observado. Se quisermos fazer um <em>loop</em> para salvarmos os 4
+arquivos em um mesmo data.frame também podemos o fazer. Segue abaixo
+esse último exemplo.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>estacoes</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>60435000</span>, <span class='fl'>60436000</span>, <span class='fl'>60436190</span>, <span class='fl'>60443000</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='kw'>for</span><span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  <span class='co'># Qual estação estamos avaliando nesse loop específico</span></span>
+<span>  <span class='va'>estacao_proxy</span> <span class='op'>&lt;-</span> <span class='va'>estacoes</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span></span>
+<span>  </span>
+<span>  <span class='co'># Rodar a função criada</span></span>
+<span>  <span class='va'>dados_proxy</span> <span class='op'>&lt;-</span> <span class='fu'>dados_serie_ANA</span><span class='op'>(</span><span class='va'>estacao_proxy</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Juntar as estações em uma só</span></span>
+<span>  <span class='kw'>if</span><span class='op'>(</span><span class='va'>i</span> <span class='op'>==</span> <span class='fl'>1</span><span class='op'>)</span> <span class='va'>todas_estacoes</span> <span class='op'>&lt;-</span> <span class='va'>dados_proxy</span></span>
+<span>  <span class='kw'>if</span><span class='op'>(</span><span class='va'>i</span> <span class='op'>!=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='va'>todas_estacoes</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>todas_estacoes</span>, <span class='va'>dados_proxy</span><span class='op'>)</span></span>
+<span><span class='op'>}</span></span>
+<span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/write.table.html'>write.table</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>todas_estacoes</span>,</span>
+<span>            file <span class='op'>=</span> <span class='st'>"todas_estacoes.txt"</span>,</span>
+<span>            sep <span class='op'>=</span> <span class='st'>"\t"</span>,</span>
+<span>            dec <span class='op'>=</span> <span class='st'>"."</span>,</span>
+<span>            row.names <span class='op'>=</span> <span class='cn'>FALSE</span>,</span>
+<span>            fileEncoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<div class="sourceCode" id="cb12"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

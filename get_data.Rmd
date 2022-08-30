@@ -70,10 +70,10 @@ Esse documento nos informa que os dados hidrológicos da ANA estão disponibiliz
 Para acessar dados do tipo **XML** dentro do **R**, utilizamos um pacote já criado, chamado **XML**. Lembrando que caso não tenhamos instalado ele ainda, precisamos o fazer com o `install.packages()`. Em seguida precisamos apenas carregar na seção utilizando `library()` como escrito abaixo. Além desse pacote, também utilizaremos algumas partes do pacote **lubridate** para trabalharmos com datas.
 
 ```{r instalando_e_baixando_XML}
-install.packages("XML")
+#install.packages("XML")
 library(XML)
 
-install.packages("lubridate")
+#install.packages("lubridate")
 library(lubridate)
 ```
 
@@ -301,7 +301,7 @@ datas_dia_v2 <- seq.Date(from = datas_i,
                          to = datas_f,
                          by = "day")
                          
-identical(datas_dia, datas_dia_V2)
+#identical(datas_dia,datas_dia_V2)
 ```
 
 Em seguida fazemos um dataframe vazio, contendo 3 colunas. A primeira possui o código da estação sendo avaliado (como repete para todas as linhas, podemos pegar apenas o primeiro valor). A segunda as datas, no formato *character* (útil para manipulação de texto), e a última sendo a coluna com os dados de vazão que está, por hora, vazio.
