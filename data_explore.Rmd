@@ -5,82 +5,92 @@ description: Como obter uma visão geral dos dados
 
 ```{r setup, include=FALSE}
 library(knitr)
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+library(tidyr)
 ```
 
-## Plotagem da série histórica
+## Dados feitos nas últimas aulas
 
-<<<<<<< HEAD
-```{r dados_hidro_ANA_2, echo=FALSE}
-# Função para obter série histórica de vazão de uma determinada estação ####
-dados_serie_ANA <- function(cod_estacao = NA,
-                            data_inicio = "01/01/1800",
-                            data_fim = Sys.Date(),
-                            tipo_dados = 3,
-                            nivel_consist = 1){
-  
-  # Pegar dados a partir do url e transformar em um dataframe
-  url_base <-
-    paste0("http://telemetriaws1.ana.gov.br/ServiceANA.asmx/",
-           "HidroSerieHistorica?",
-           "codEstacao=", cod_estacao,
-           "&dataInicio=", data_inicio,
-           "&dataFim=", data_fim,
-           "&tipoDados=", tipo_dados,
-           "&nivelConsistencia=", nivel_consist)
-  
-  url_parse <- XML::xmlParse(url_base, encoding = "UTF-8")
-  node_doc <- XML::getNodeSet(url_parse, "//SerieHistorica")
-  dados_estacao <- XML::xmlToDataFrame(nodes = node_doc)
-  
-  # Por algum motivo o hidroweb não está filtrando os dados pela consistencia
-  dados_estacao <- filter(dados_estacao, NivelConsistencia == nivel_consist)
-  
-  # Separar data e hora
-  dados_estacao$Data <- as.Date(substr(dados_estacao$DataHora, 1, 10))
-  dados_estacao$Hora <- substr(dados_estacao$DataHora, 12, 19)
-  
-  # Fazer um dataframe só com datas e valores de vazão
-  datas_dia <- seq.Date(from = min(dados_estacao$Data),
-                        to = max(dados_estacao$Data) %m+% months(1) - 1,
-                        by = "day")
-  
-  tabela_final <- data.frame(Cod_estacao = dados_estacao$EstacaoCodigo[1],
-                             Data = as.character(datas_dia),
-                             Vazao = as.numeric(NA))
-  
-  
-  for(i in 1:nrow(tabela_final)){
-    # Dia em análise
-    dia <- as.numeric(substr(tabela_final$Data[i], 9, 10))
-    
-    # Mês e ano em análise
-    mes_ano <- as.Date(paste0(substr(tabela_final$Data[i], 1, 8), "01"))
-    
-    # Olhar a linha do mes e ano e escolher a coluna pelo dia + 15
-    linha_dado <- which(dados_estacao$Data == mes_ano)
-    
-    # Se não tiver o mês nos dados da estação, colocar valor NA
-    ifelse(length(linha_dado) == 0,
-           tabela_final$Vazao[i] <- NA,
-           tabela_final$Vazao[i] <-
-             as.numeric(dados_estacao[linha_dado, (dia + 15)]))
-    
-  }
-  
-  return(tabela_final)
-}
+Primeiro puxamos os dados feitos nas últimas aulas. Faremos isso com três arquivos, um contendo apenas a série histórica de uma estação. Outro objeto contendo os dados da série histórica de todas as estações e a última variável contendo os dados anuais com valores tratados das estações (mínimo, máximo e média anual). Para não precisarmos redefinir a coluna de Datas como sendo do formato *Date* (lembrar que o **R** vai ler ela automaticamente como *character*), podemos usar o argumento **colClasses =** para avisar ao **R** a classe de cada coluna. Vamos aproveitar e transformar a coluna de código das estações como fator.
+
+```{r dados_1}
+dados_60435000 <- read.table(file = "dados/60435000.txt",
+                             sep = "\t",
+                             dec = ".",
+                             header = T,
+                             fileEncoding = "UTF-8",
+                             colClasses = c("factor", "Date", "numeric"))
+
+dados_todas <- read.table(file = "dados/todas_estacoes.txt",
+                          sep = "\t",
+                          dec = ".",
+                          header = T,
+                          fileEncoding = "UTF-8",
+                          colClasses = c("factor", "Date", "numeric"))
+                          
+resumo_todas <- read.table(file = "dados/Resumo_estacoes.txt",
+                           sep = "\t",
+                           dec = ".",
+                           header = T,
+                           fileEncoding = "UTF-8")
 ```
 
 
-```{r dados_FAL_2}
-dados_60435000 <- dados_serie_ANA(cod_estacao = 60435000)
-dados_60435000$Data <- as.Date(dados_60435000$Data) 
-index_falha_diario <- which(is.na(dados_60435000[,3]==TRUE))
-dias_falha <- dados_60435000[index_falha_diario,2:3]
+## Disponibilidade de dados
+
+O primeiro passo que podemos dar é visualizar a disponibilidade dos dados de vazão que baixamos na aula anterior. Faremos isso de duas maneiras para ilustrar o que pode ser feito.
+
+Primeiramente, utilizaremos apenas uma estação, e faremos um gráfico do tipo **heatmap**, com os anos no eixo-x e os meses no eixo-x. O resulatdo final permite visualizar, dentro de uma faixa de anos, a maginitude das vazões por meio de cores, e também a ocorrência de falhas nos registros.
+
+
+Para isso, vamos trabalhar inicialmente com o `dataframe` denominado `dados_60435000`,  cujas primeiras observações pode ser vistas abaixo, onde observamos 3 colunas. 
+
+```{r leitura dos dados}
 head(dados_60435000)
 ```
 
-```{r, fig.width = 8, fig.height = 6}
+Para facilitar  o trabalho, vamos criar mais duas colunas, uma com os meses e outras com os anos. Para isso utilizamos o seguinte código,
+
+```{r criação de colunas}
+dados_60435000$Ano <- year(dados_60435000$Data)
+dados_60435000$Mes <- month(dados_60435000$Data)
+head(dados_60435000)
+```
+
+Precisamos agora calcular as vazões médias para cada mês de cada ano das observações. Se o mês contiver uma falha num ano qualquer, o valor da vazão média para esse ano será registrado como `NA`,
+
+```{r vazão média}
+dados_60435000_v2 <-
+  dados_60435000 %>%
+  group_by(Cod_estacao, Ano, Mes) %>%
+  summarise(Vazao = mean(Vazao)) %>%
+  arrange(desc(Ano))
+tail(dados_60435000_v2,12)
+```
+
+Aora, podemos construir nossa figura,
+
+```{r heatmap, fig.width = 8, fig.height = 6}
+teste <- pivot_wider(data = dados_60435000_v2,
+                     names_from = Mes,
+                     values_from = Vazao,
+                     names_sort = TRUE)
+         
+teste <- as.matrix(teste[,-c(1,2)]) 
+
+heatmap(teste, Colv = NA, Rowv = NA, scale = "none",
+        labCol = c("Jan", "Feb", "Mar", "Abr", "Jun", "Jul",
+                   "Ago", "Set", "Out", "Nov", "Dez"),
+        labRow = 2021:1978)
+
+```
+
+
+## Plotagem da série histórica
+
+```{r grafico DIrceu, fig.width = 8, fig.height = 6}
 time <- as.Date(dados_60435000$Data)
 plot(time,dados_60435000$Vazao,type="l",
      main = "Vazões diárias - estação 60435000",
@@ -90,7 +100,9 @@ grid(nx = NA, ny = NULL,
      lty = 2,      # Grid line type
      col = "gray", # Grid line color
      lwd = 2)      # Grid line width
+
 ```
+
 
 ## Caracterização da distribuição
 
@@ -108,31 +120,6 @@ grid(nx = NA, ny = NULL,
 
 ## Medidas de associação
 =======
-## Dados feitos nas últimas aulas
-
-Primeiro puxamos os dados feitos nas últimas aulas. Faremos isso com três arquivos, um contendo apenas a série histórica de uma estação. Outro objeto contendo os dados da série histórica de todas as estações e a última variável contendo os dados anuais com valores tratados das estações (mínimo, máximo e média anual). Para não precisarmos redefinir a coluna de Datas como sendo do formato *Date* (lembrar que o **R** vai ler ela automaticamente como *character*), podemos usar o argumento **colClasses =** para avisar ao **R** a classe de cada coluna. Vamos aproveitar e transformar a coluna de código das estações como fator.
-
-```{r dados_1}
-dados_60435000 <- read.table(file = "60435000.txt",
-                             sep = "\t",
-                             dec = ".",
-                             header = T,
-                             fileEncoding = "UTF-8",
-                             colClasses = c("factor", "Date", "numeric"))
-
-dados_todas <- read.table(file = "todas_estacoes.txt",
-                          sep = "\t",
-                          dec = ".",
-                          header = T,
-                          fileEncoding = "UTF-8",
-                          colClasses = c("factor", "Date", "numeric"))
-                          
-resumo_todas <- read.table(file = "dados/Resumo_estacoes.txt",
-                           sep = "\t",
-                           dec = ".",
-                           header = T,
-                           fileEncoding = "UTF-8")
-```
 
 ## Caracterização gráfica com ggplot2
 
@@ -323,17 +310,17 @@ grafico_boxplot_1
 
 ## Gráficos usando a tabela de resumo estatístico
 ```{r ribbon_1, fig.width = 8, fig.height = 6, fig.cap = "Gráfico com a média das vazões por estação"}
-ggplot(data = resumo_todas,
-       aes(x = ano_hidro, y = media, col = Cod_estacao)) +
-  geom_ribbon(aes(x = ano_hidro, fill = Cod_estacao,
-                  ymax = maxima, ymin = minima),
-              alpha = 0.5) +
-  geom_line() +
-  geom_point() +
-  labs(title = "Estações - HidroWeb",
-       caption = "fonte dos dados: ANA (2022)",
-       x = "Ano hidrológico", y = "Vazão",
-       fill = "Estação", color = "Estação")
+#ggplot(data = resumo_todas,
+#       aes(x = ano_hidro, y = media, col = Cod_estacao)) +
+#  geom_ribbon(aes(x = ano_hidro, fill = Cod_estacao,
+#                  ymax = maxima, ymin = minima),
+#              alpha = 0.5) +
+#  geom_line() +
+#  geom_point() +
+#  labs(title = "Estações - HidroWeb",
+#       caption = "fonte dos dados: ANA (2022)",
+#       x = "Ano hidrológico", y = "Vazão",
+#       fill = "Estação", color = "Estação")
 ```
 
 ```{r ribbon_2, fig.width = 8, fig.height = 6, fig.cap = "Gráfico com a média das vazões por estação"}
