@@ -20,13 +20,17 @@ Existem inúmeros repositórios contendo dados hidrológicos no mundo e no Brasi
 
 ## Obtenção de dados "tradicional"
 
+<<<<<<< HEAD
 Uma maneira de obter dados hidrológicos é simplesmente acessando de algum site oficial. Geralmente, o arquivo obtido baixado está no formato `.csv`, `.txt` ou `.xls` (excel) - esse último sendo menos comum. No próprio portal da ANA tem a opção de baixar os dados diretamente se souber a estação em questão ou utilizando um mapa dinâmico. Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o arquivo, é importante entender como ele está salvo, para isso podemos abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é mostrado na figura abaixo
+=======
+Uma maneira de obter dados é simplesmente baixando eles de algum site oficial. Geralmente o arquivo baixado está no formato `.csv`, `.txt` ou `.xls` (excel) - esse último sendo menos comum. No próprio portal da ANA tem a opção de baixar os dados diretamente se souber a estação em questão (https://www.snirh.gov.br/hidroweb/serieshistoricas) ou utilizando um mapa dinâmico (https://www.snirh.gov.br/hidroweb/mapa). Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o arquivo, é importante entender como ele está salvo, para isso podemos abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é mostrado na figura abaixo
+>>>>>>> 2aa96fc38fa716a70fee28c186be23697f6320d1
 
 ```{r obtencao_dados_trad_imagem_1, echo = FALSE, layout = "l-body-outset", fig.align = 'center', out.width = "100%", fig.cap = ""}
 knitr::include_graphics("images/arquivo_vazao_ANA_csv.png")
 ```
 
-É possível perceber alguns detalhes importantes. As primeiras 13 linhas contém informações sobre o sistema em sí e a estação, mas os dados medidos começam de fato na linha 14. O separador de cada coluna é um `;` e os decimais são separados por `,`. Agora já temos as informações necessárias para acessar esses dados pelo **R**. Usamos aqui a função `read.table()`, também é possível utilizar a função `read.csv()`, ambas fazem a mesma coisa, apenas alteram os argumentos pré definidos (que podem ser trocados).
+É possível perceber alguns detalhes importantes. As primeiras 13 linhas contém informações sobre o sistema em sí e a estação, mas os dados medidos começam de fato na linha 14. O separador de cada coluna é um "`;`" e os decimais são separados por "`,`". Agora já temos as informações necessárias para acessar esses dados pelo **R**. Usamos aqui a função `read.table()`, também é possível utilizar a função `read.csv()`, ambas fazem a mesma coisa, apenas alteram os argumentos pré definidos (que podem ser trocados).
 
 ```{r obtencao_dados_trad_1}
 dados_ANA <- read.table(file = "dados/vazoes_T_60435000.txt",
@@ -63,7 +67,17 @@ Nesse mesmo site, pode-se acessar um arquivo em formato pdf com detalhes sobre o
 
 Esse documento nos informa que os dados hidrológicos da ANA estão disponibilizados no formato XML ("Extended Markup Language"), de forma que precisamos aprender como acessar e manipular as informações disponibilizados nesse formato. Mas discutiremos apenas o básico neste curso, sem nos profundarmos muito. Porém se você deseja saber mais sobre webscraping e usufruir de várias de suas possibilidade, sugerimos que procure se aprofundar mais nesse tema.
 
-## Lista das Estações Telemétricas da ANA
+Para acessar dados do tipo **XML** dentro do **R**, utilizamos um pacote já criado, chamado **XML**. Lembrando que caso não tenhamos instalado ele ainda, precisamos o fazer com o `install.packages()`. Em seguida precisamos apenas carregar na seção utilizando `library()` como escrito abaixo. Além desse pacote, também utilizaremos algumas partes do pacote **lubridate** para trabalharmos com datas.
+
+```{r instalando_e_baixando_XML}
+install.packages("XML")
+library(XML)
+
+install.packages("lubridate")
+library(lubridate)
+```
+
+### Lista das Estações Telemétricas da ANA
 
 Começaremos nossas atividades acessando os dados das estações telemétricas desse sistema. Pode-se perceber olhando para o próprio site, que são necessários dois parâmetros para pesquisar as estações. O primiero chama-se “statusEstacoes”, que pode ser 0, que significa estação ativa, ou 1, que representa estação em manutenção. O segundo parâmetro é chamado de “Origem”, podendo variar entre 0 e 5. Se olharmos o arquivo em formato pdf mencioando acima, vamos ver que se deixarmos o “statusEstacoes” em branco, serão retornadas as informações de todas as estações do sistema, que é exatamente o que queremos agora. 
 
@@ -73,7 +87,7 @@ Sendo assim, se colocarmos no nosso navegador o seguinte url: <http://telemetria
 knitr::include_graphics("images/XML_ANA_info_1.png")
 ```
 
-Para que tenhamos cesso a essas informações nesse mesmo formato no RStudio, teremos que fazer uso de um pacote chamado "XML", que contém a função denominada xmlParse(). Essa função é capaz de ler um arquivo do tipo XML e gerar uma estrutura no R similar ao que aparece na imagem acima (formato de “árvore”). A função exige que informemos um argumento obrigatório, que é o url a ser utilizado, e permite ainda que passemos um argumento opcional, que é a codificação do arquivo (do inglês encoding). Usualmente no Brasil, utilizamos o “UTF-8” para poder utilizar nossos acentos (mas lembre-se que essa parte é um outro mundo no R e não entraremos com maiores detalhamentos).
+Para que tenhamos cesso a essas informações nesse mesmo formato no RStudio, teremos que fazer uso de um pacote chamado "XML", que contém a função denominada `xmlParse()`. Essa função é capaz de ler um arquivo do tipo XML e gerar uma estrutura no **R** similar ao que aparece na imagem acima (formato de “árvore”). A função exige que informemos um argumento obrigatório, que é o *url* a ser utilizado, e permite ainda que passemos um argumento opcional, que é a codificação do arquivo (do inglês encoding). Usualmente no Brasil, utilizamos o “UTF-8” para poder utilizar nossos acentos (mas lembre-se que essa parte é um outro mundo no R e não entraremos com maiores detalhamentos). Quando um pacote já está carregado dentro do **R**, não precisamos escrever ele antes da função - isso, porém, pode ser uma boa prática para deixar o código mais fácil de ler (uma vez que qualquer leitor entenderia que a funçção ``xmlParse()`` pertence ao pacote **XML** uma vez que está escrito `XML::` antes da função!
 
 ```{r XML_no_R_ANA}
 status_codigo <- ""
@@ -99,10 +113,12 @@ nodes_doc <- XML::getNodeSet(url_parse, "//Table")
 cadastro_estacoes <- XML::xmlToDataFrame(nodes = nodes_doc)
 ```
 
-Agora podemos fazer as manipulações que já aprendemos anteriormente (com dataframe ficou fácil!). Por exemplo, se quisermos selecionar apenas as estações de Brasília, escrevemos o código abaixo. O "Municipio-UF" é apenas uma das colunas do dataframe, podemos filtrar com base em qualquer outra também.
+Agora podemos fazer as manipulações que já aprendemos anteriormente (com dataframe ficou fácil!). Por exemplo, se quisermos selecionar apenas as estações de Brasília, escrevemos o código abaixo. O "Municipio-UF" é apenas uma das colunas do dataframe, podemos filtrar com base em qualquer outra também. Vemos então a estrutura desse dataframe criado, usando a função `str()`, e as primeiras 5 linhas delem usando a função `head()`.
 
 ```{r Filtrar_cadastro_estacoes_ANA}
-(estacoes_bsb <- dplyr::filter(cadastro_estacoes, `Municipio-UF` == "BRASÍLIA-DF"))
+estacoes_bsb <- dplyr::filter(cadastro_estacoes, `Municipio-UF` == "BRASÍLIA-DF")
+str(estacoes_bsb)
+head(estacoes_bsb)
 ```
  
 Lembrando que isso tudo nos dá apenas a lista com informações sobre as estações telemétricas. Para de fato termos acesso aos dados dessas estações, precisamos acessar outro url e fazer mais alguns códigos!
@@ -141,7 +157,7 @@ teste <- ANA_info()
 colnames(teste)
 ```
 
-## Dados Hidrometeorológicos da ANA
+### Dados Hidrometeorológicos da ANA
 
 Para acessar os dados hidrometeorológicos nesse webservice, temos outro url: <http://telemetriaws1.ana.gov.br/ServiceANA.asmx?op=DadosHidrometeorologicos>. Nele, vemos que são necessárias agora três parâmetros para fazermos uma busca: o “codEstacao” (que a gente pegou na parte anterior!), a “dataInicio” e a “dataFim”. Do mesmo jeito de antes, vamos definir um objeto para cada parâmetro e depois criar um url baseado nesses parâmetros. Em seguida fazemos um xmlParse() e pegamos as informações contidas nos nodes com o getNodeSet(). Por último, transformamos isso em um dataframe. Dessa vez, podemos fazer a função direto ja!
 
@@ -207,14 +223,15 @@ head(dados_FAL)
 
 Aqui rodamos a função apenas para uma estação. Mas se quisermos rodar para várias estações, basta utilizar um loop (for) ou até mesmo a função lapply do R (mais rápido!).
 
-## Série Histórica
+### Série Histórica
 
-Outro local do HidroWeb da ANA que possui dados hidrológicos relevantes é na seção de série histórica. Para puxar o arquivo dentro do **R** é possível fazer algo similar ao feito acima. Nessa seção, porém, são necessários 5 argumentos:
-- codEstacao (código da estação);
-- dataInicio (primeira data em que se quer os dados);
-- dataFim (última data em que se quer os dados);
-- tipoDados (podendo ser cotas, 1, chuvas, 2, ou vazões, 3);
-- nivelConsistencia (podendo ser Bruto, 1, ou consistido, 2).
+Outro local do HidroWeb da ANA que possui dados hidrológicos relevantes é na seção de série histórica, disponível *online* em: http://telemetriaws1.ana.gov.br/ServiceANA.asmx?op=HidroSerieHistorica. Para puxar esse arquivo dentro do **R** é possível fazer algo similar ao feito acima. Nessa seção, porém, são necessários 5 argumentos:
+
+- **codEstacao** (código da estação);
+- **dataInicio** (primeira data em que se quer os dados);
+- **dataFim** (última data em que se quer os dados);
+- **tipoDados** (podendo ser cotas, 1, chuvas, 2, ou vazões, 3);
+- **nivelConsistencia** (podendo ser Bruto, 1, ou consistido, 2).
 
 Primeiro então criamos objetos contendo essas informações necessárias para entrar no *url* da série histórica.
 
@@ -226,7 +243,7 @@ tipo_dados <- 3
 nivel_consist <- 1
 ```
 
-Em seguida, esses objetos são utilizados para criar um *url* para podermos acessar os dados do HidroWeb. Após é feito o mesmo que a cima em outros portais dentro do portal da ANA, fazendo então um `XML::xmlParse()`, seguido por um `XML::getNodeSet()` e `XML::xmlToDataFrame()`. Assim como anteriormente, faz-se também a separação da coluna de data em duas, uma contendo a data e outra contendo a hora. Na coluna de Data é feita a transformação de caractere para Date de modo que possamos fazer algumas operações com ela depois.
+Em seguida, esses objetos são utilizados para criar um *url* para podermos acessar os dados do HidroWeb. Após é feito o mesmo que a cima em outros portais dentro do portal da ANA, fazendo então um `XML::xmlParse()`, seguido por um `XML::getNodeSet()` e `XML::xmlToDataFrame()`. Assim como anteriormente, faz-se também a separação da coluna de data em duas, uma contendo a data e outra contendo a hora. Na coluna de Data é feita a transformação de *character* para *Date* de modo que possamos fazer algumas operações com ela depois.
 
 obs: Por algum motivo o hidroweb não está filtrando os dados pela consistencia, sendo necessária essa etapa abaixo (um filtro).
 
@@ -250,17 +267,46 @@ dados_estacao$Data <- as.Date(substr(dados_estacao$DataHora, 1, 10))
 dados_estacao$Hora <- substr(dados_estacao$DataHora, 12, 19)
 ```
 
-Nesse arquivo temos a necessidade de uma nova etapa. Ao olhar um pouco como os dados estão oganizados, percebemos que existem 78 colunas. Ao invés dos dados de vazão estarem todos em uma mesma coluna, eles estão espaçados por coluna, contendo 1 mês completo para cada linha do dataframe. Isso é um pouco problemático, pois não podemos simplesmente puxar todas as colunas visto que cada mês vai ter datas diferentes (fevereiro podendo até mudar dependendo do ano bisexto). Para resolver isso, primeiro criamos um vetor/objeto contendo **todas** as datas desde o primeiro mês em questão, até o útimo dia do último mês.
+É interessante lembrar um pouco como funciona esse formato de datas aqui. As datas podem vir de inúmeras formas diferentes de algum banco de dados. Elas podem vir com "dia - mês - ano", com o ano podendo ser escrito com todos os dígitos (2022) ou apenas os últimos dois (22). Outra coisa que pode ser alterada é a ordem ("dia - mês - ano" ou "ano - mês - dia" ou qualquer variação desses três. Ainda podemos encontrar em bases de dados o mês escrito por extenso ou abreviado como "01/Jan/1990". Isso sem contar com o separador dessas datass ("/", "-", um espaço em branco...). Podemos definir isso dentro da função `as.Date()`, utilizando como argumento a seguinte convenção:
+
+- **%Y** para anos com quatro dígitos;
+- **%y** para anos com dois dígitos;
+- **%d** para os dias (dígitos de 1 a 31);
+- **%m** para os meses (dígitos de 1 a 12);
+- **%b** para meses no formato abreviado em inglês (*Jan*, *Feb*, ...);
+- **%B** para meses no formato por extenso em inglês (*January*, *February*, ...).
+
+Essa função do **R** possui um argumento que irá ficar tentando diversos formatos diferentes e tomará como verdade o primeiro que não retornar valores NA - porém, para formatos específicos (e se já sabemos qual é), pode ser melhor já deixar isso explícito em seu código.
 
 ```{r serie_historica_3}
+as.Date("2021-11-01", format = "%Y-%m-%d")
+as.Date("01/Jan/70", format = "%d/%b/%y")
+```
+
+Nesse arquivo temos a necessidade de uma nova etapa. Ao olhar um pouco como os dados estão oganizados, percebemos que existem 78 colunas. Ao invés dos dados de vazão estarem todos em uma mesma coluna, eles estão espaçados por coluna, contendo 1 mês completo para cada linha do dataframe. Isso é um pouco problemático, pois não podemos simplesmente puxar todas as colunas visto que cada mês vai ter datas diferentes (fevereiro podendo até mudar dependendo do ano bisexto). Para resolver isso, primeiro criamos um vetor/objeto contendo **todas** as datas desde o primeiro mês em questão, até o útimo dia do último mês.
+
+```{r serie_historica_4}
 datas_dia <- seq.Date(from = min(dados_estacao$Data),
                       to = max(dados_estacao$Data) %m+% months(1) - 1,
                       by = "day")
 ```
 
-Em seguida fazemos um dataframe vazio, contendo 3 colunas. A primeira possui o código da estação sendo avaliado (como repete para todas as linhas, podemos pegar apenas o primeiro valor). A segunda as datas, no formato `caracter` (útil para manipulação de texto), e a última sendo a coluna com os dados de vazão que está, por hora, vazio.
+É extremamente interessante notar duas coisas aqui. Primeiro, sempre temos diferentes formas de fazer um código, isso vai variar muito com a lógica de cada programador. Acima utilizamos uma função feita do pacote **lubridate** para somar um mês a uma certa data. Porém, podemos fazer o mesmo sem utilizar pacotes adicionais. Apesar deles ajudarem, podem tornar a manutenção do seu código algo essencial - as vezes o pacote pode alterar funções com atualizações ou até mesmo tornarem algumas obsoletas! Abaixo então fazemos a mesma sequência de outra forma, e ao final comparamos se ambas são idênticas.
 
-```{r serie_historica_4}
+```{r serie_historica_5}
+datas_i <- min(dados_estacao$Data)
+datas_f <- seq.Date(max(dados_estacao$Data), by = "month", length.out = 2)[2] - 1
+
+datas_dia_v2 <- seq.Date(from = datas_i,
+                         to = datas_f,
+                         by = "day")
+                         
+identical(datas_dia, datas_dia_V2)
+```
+
+Em seguida fazemos um dataframe vazio, contendo 3 colunas. A primeira possui o código da estação sendo avaliado (como repete para todas as linhas, podemos pegar apenas o primeiro valor). A segunda as datas, no formato *character* (útil para manipulação de texto), e a última sendo a coluna com os dados de vazão que está, por hora, vazio.
+
+```{r serie_historica_6}
 tabela_final <- data.frame(Cod_estacao = dados_estacao$EstacaoCodigo[1],
                            Data = as.character(datas_dia),
                            Vazao = as.numeric(NA))
@@ -268,7 +314,7 @@ tabela_final <- data.frame(Cod_estacao = dados_estacao$EstacaoCodigo[1],
 
 Agora vamos preencher essa tabela com os dados de vazão do arquivo acessado. Uma maneira de fazer isso é fazendo um *loop* para cada linha dessa tabela. Para cada linha, acessamos o dia em questão (o dia é sempre os últimos 2 caracteres da coluna data). Em seguida obtemos o mês e ano dessa data (os primeiros oito caracteres da coluna de data) e adicionamos o dia "-01" a eles (isso para sabermos em qual linha do arquivo da ANA está o dado) - para isso criamos o objeto *linha_dado*. Por último rodamos um `ifelse()` do tipo: se eu não tiver essa *linha_dado*, ou seja, se não houver medição desse mês na ANA, eu coloco um `NA` (*Not Available*) na tabela final, caso o contrário é pego o valor na linha definida e na coluna do dia + 15 (é somado 15 porque as colunas de dia começam a partir da coluna 16).
 
-```{r serie_historica_5}
+```{r serie_historica_7}
 for(i in 1:nrow(tabela_final)){
   # Dia em análise
   dia <- as.numeric(substr(tabela_final$Data[i], 9, 10))
@@ -288,15 +334,24 @@ for(i in 1:nrow(tabela_final)){
 }
 ```
 
+Novamente, poderíamos fazer esse código acima utilizando pacotes para "facilitar a nossa vida" (o *lubridate* para mexer com datas). Por exemplo, poderíamos usar a função `day()` para puxar o dia de cada linha (usando a coluna no formato de *Date*) ao invés de fazer uma manipulação de texto. Aqui não vemos se são idênticos porque não são (a função `day()` retorna números inteiros), portanto utilizamos a função `all.equal()` que avalia, até certo ponto, se são praticamente iguais.
+
+```{r serie_historica_8}
+exemplo_dia <- as.numeric(substr(tabela_final$Data, 9, 10))
+exemplo_dia_v2 <- day(as.Date(tabela_final$Data))
+ 
+all.equal(exemplo_dia, exemplo_dia_v2)
+```
+
 Pronto, agora podemos ver, por exemplo, as primeiras 5 medições que não são `NA`
 
-```{r serie_historica_6}
+```{r serie_historica_9}
 head(tabela_final[!is.na(tabela_final$Vazao),])
 ```
 
 Assim como feito nas outras etapas, podemos aqui fazer uma função para automatizar tudo que foi feito em várias etapas para deixar o processo mais automatizado e mais fácil quando quiser rodar o mesmo processo para outras estações.
 
-```{r serie_historica_7_funcao}
+```{r serie_historica_10_funcao}
 dados_serie_ANA <- function(cod_estacao = NA,
                             data_inicio = "01/01/1800",
                             data_fim = Sys.Date(),
@@ -348,7 +403,7 @@ dados_serie_ANA <- function(cod_estacao = NA,
 
 Para testar essa função basta utilizar a linha abaixo.
 
-```{r serie_historica_8_fun}
+```{r serie_historica_11_fun}
 dados_60435000 <- dados_serie_ANA(cod_estacao = 60435000)
 dados_60435000[10:15,]
 ```
@@ -377,7 +432,7 @@ A vantagem de utilizar funções e automatizações é fazer tudo que foi feito 
 - 60435000 (feita);
 - 60436000;
 - 60436190;
-- 60443000.
+- 60443000 (última estação).
 
 Para fazer isso, podemos rodar a nossa funão criada, `dados_serie_ANA()`, para cada uma dessas estações. Depois de rodar a função, podemos rodar também o código para salvar elas! Note que o **i** interno ao `for()` não precisa ser uma sequência, ele apenas informa quais os valores que **i** vai tomar a cada iteração. Na hora de salvar usamos a função `paste0()` pois o nome vai variar com cada iteração.
 
@@ -394,4 +449,27 @@ for(i in c(60435000, 60436000, 60436190, 60443000)){
 }
 ```
 
-Agora temos 4 arquivos, um para cada estação que definimos, salvos em formato *.txt* do jeito que queremos - o que tornará a próxima etapa de manipulação muito mais fácil. Ao invés de termos um arquivo para cada estação com 78 colunas e as vazões podendo estar em diferentes linhas e colunas temos uma tabela bem simples, com apenas 3 colunas. Uma contendo o código da estação, outra a data e a última o valor de vazão observado.
+Agora temos 4 arquivos, um para cada estação que definimos, salvos em formato *.txt* do jeito que queremos - o que tornará a próxima etapa de manipulação muito mais fácil. Ao invés de termos um arquivo para cada estação com 78 colunas e as vazões podendo estar em diferentes linhas e colunas temos uma tabela bem simples, com apenas 3 colunas. Uma contendo o código da estação, outra a data e a última o valor de vazão observado. Se quisermos fazer um *loop* para salvarmos os 4 arquivos em um mesmo data.frame também podemos o fazer. Segue abaixo esse último exemplo.
+
+```{r salvar_arq_3, eval = FALSE}
+estacoes <- c(60435000, 60436000, 60436190, 60443000)
+
+for(i in 1:4){
+  # Qual estação estamos avaliando nesse loop específico
+  estacao_proxy <- estacoes[i]
+  
+  # Rodar a função criada
+  dados_proxy <- dados_serie_ANA(estacao_proxy)
+  
+  # Juntar as estações em uma só
+  if(i == 1) todas_estacoes <- dados_proxy
+  if(i != 1) todas_estacoes <- rbind(todas_estacoes, dados_proxy)
+}
+
+write.table(x = todas_estacoes,
+            file = "todas_estacoes.txt",
+            sep = "\t",
+            dec = ".",
+            row.names = FALSE,
+            fileEncoding = "UTF-8")
+```
