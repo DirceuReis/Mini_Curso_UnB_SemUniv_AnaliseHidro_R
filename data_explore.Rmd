@@ -49,20 +49,27 @@ resumo_todas <- read.table(file = "dados/Resumo_estacoes.txt",
 ```
 
 
-## Disponibilidade de dados
+## Visualizar a disponibilidade de dados
 
-O primeiro passo que podemos dar é visualizar a disponibilidade dos dados de vazão que baixamos na aula anterior. Faremos isso de duas maneiras para ilustrar o que pode ser feito.
+É comum realizar estudos hidrológicos que contemplem, pelo menos num primeiro momento, um número elevado de estações que possam ser potencialmente utilizadas. 
 
-Primeiramente, utilizaremos apenas uma estação, e faremos um gráfico do tipo **heatmap**, com os anos no eixo-x e os meses no eixo-x. O resulatdo final permite visualizar, dentro de uma faixa de anos, a maginitude das vazões por meio de cores, e também a ocorrência de falhas nos registros.
+Para termos uma visão de conjunto dos dados que estão disponíveis, é interessante fazer uma plotagem que permite entender o período de dados disponíveis em cada estação, bem como a ocorrência de falhas nas séries. Essa visão mais geral nos jauda a definir quais estações serão selecionadas, e possivelmente qual o período de dadso que deve ser empreagdo no estudo.
 
+Mas mesmo que estejamos trabalhando cm apenas uma estação, é sempre interessante visualizar o período disponível, bem como as falhas contidas no registro.
 
-Para isso, vamos trabalhar inicialmente com o `dataframe` denominado `dados_60435000`,  cujas primeiras observações pode ser vistas abaixo, onde observamos 3 colunas. 
+Nesta etapa, iniciaremos uma análise de apenas uma estação. Na etapa seguinte, expandiremos para um conjunto de estações. 
+
+Faremos um gráfico do tipo **heatmap**, que é uma figura que coloca cores numa Tabela. No nosso primeiro passo, para cada estação, faremos uma Figura com os anos no eixo-y e os meses no eixo-x, de forma que estaremos representadno as vazões na escala mensal. A tonalidade das cores está associada à magnitude da vazão média do mês em questão, e quando ocorre uma falha, a região do mês correspodente fica branca.
+
+O resulatdo final permite visualizar, dentro de uma faixa de anos, a maginitude das vazões por meio de cores, e também a ocorrência de falhas nos registros, permitindo reconhecer de cara a sazonalidade das vazões, com cores mais fortes no período úmido e cores mais suaves no período seco.
+
+Para construir essa Figura inicial de paenas uma estação, vamos trabalhar inicialmente com o `dataframe` denominado `dados_60435000`, cujas primeiras observações podem ser vistas abaixo, onde observamos 3 colunas, o código da estação, a data informando o dia, e o valore da vazão correspondente. 
 
 ```{r leitura dos dados}
 head(dados_60435000)
 ```
 
-Para facilitar  o trabalho, vamos criar mais duas colunas, uma com os meses e outras com os anos. Para isso utilizamos o seguinte código,
+Para facilitar a construção do **heatmap**, que precisa separa as informações de mês e ano, vamos criar um novo dataframe com mais duas colunas, uma com os meses e a outra com os anos, como pode ser visto na sequência,
 
 ```{r criação de colunas}
 dados_60435000$Ano <- year(dados_60435000$Data)
@@ -70,7 +77,7 @@ dados_60435000$Mes <- month(dados_60435000$Data)
 head(dados_60435000)
 ```
 
-Precisamos agora calcular as vazões médias para cada mês de cada ano das observações. Se o mês contiver uma falha num ano qualquer, o valor da vazão média para esse ano será registrado como `NA`,
+As duas colunas extras permitirão a realização do cálculo das vazões médias mensais para cada ano, sendo utilizadas as funções `group_by()`, `summarize()` e `mean()`. No final, rearrumamos as linhas em ordem decrescente de ano apenas para criarmos um **heatmap** que coloque os anos iniciais na parte de cima da Figura,
 
 ```{r vazão média}
 dados_60435000_v2 <-
@@ -81,23 +88,33 @@ dados_60435000_v2 <-
 tail(dados_60435000_v2,12)
 ```
 
-Aora, podemos construir nossa figura,
+Com esse novo_dataframe em mãos, podemos construir a Figura desejada. Mas para utilizar a função `heatmap()`, precisamos fazer uma pequena reestruturação, já que esa função precisa receber uma matriz com os valores de vazão média mensal, organizados de forma que as linhas representem os anos, enquanto as colunas representam os meses. Essa reestruturação é feita com o código abaixo,
 
-```{r heatmap, fig.width = 8, fig.height = 6}
+```{r reestrutura dataframe}
 teste <- pivot_wider(data = dados_60435000_v2,
                      names_from = Mes,
                      values_from = Vazao,
                      names_sort = TRUE)
-         
+head(teste)
+```
+
+Agora basta utiliza a função `heatmap()` para construir a Figura desejada,
+
+```{r heatmap, , fig.width = 8, fig.height = 6}
 teste <- as.matrix(teste[,-c(1,2)]) 
 
 heatmap(teste, Colv = NA, Rowv = NA, scale = "none",
-        labCol = c("Jan", "Feb", "Mar", "Abr", "Jun", "Jul",
+        labCol = c("Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul",
                    "Ago", "Set", "Out", "Nov", "Dez"),
         labRow = 2021:1978)
 
 ```
 
+Podemos perceber algumas características importantes nessa plotagem da disponibilidade dos dados de vazão da estação **60435000**. 
+
+Logo na primeira linha, que representa o ano de 1978, podemos ver que não há dados nos 5 primeiros meses, já que temos a cor branca representando os valores de vazão. No restate dos anos, pode-se verificar a ocorrência de falhas em mais três oportunidades: dez/2008, jan/2009 e ago/2019.
+
+Além das falhas, a Figura indica vazões médias mensais mais baixas (tons mais suaves) no meio do ano, entre os meses de junho a outubro, e vazões mais altas (tons mais escuros) entre novembro e maio.
 
 ## Plotagem da série histórica
 

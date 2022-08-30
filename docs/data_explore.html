@@ -2142,8 +2142,9 @@ Aulas
 <li><a href="#leitura-dos-dados-gerados-na-última-aula"
 id="toc-leitura-dos-dados-gerados-na-última-aula">Leitura dos dados
 gerados na última aula</a></li>
-<li><a href="#disponibilidade-de-dados"
-id="toc-disponibilidade-de-dados">Disponibilidade de dados</a></li>
+<li><a href="#visualizar-a-disponibilidade-de-dados"
+id="toc-visualizar-a-disponibilidade-de-dados">Visualizar a
+disponibilidade de dados</a></li>
 <li><a href="#plotagem-da-série-histórica"
 id="toc-plotagem-da-série-histórica">Plotagem da série
 histórica</a></li>
@@ -2243,18 +2244,39 @@ código das estações como fator.</p>
 <span>                           fileEncoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<h2 id="disponibilidade-de-dados">Disponibilidade de dados</h2>
-<p>O primeiro passo que podemos dar é visualizar a disponibilidade dos
-dados de vazão que baixamos na aula anterior. Faremos isso de duas
-maneiras para ilustrar o que pode ser feito.</p>
-<p>Primeiramente, utilizaremos apenas uma estação, e faremos um gráfico
-do tipo <strong>heatmap</strong>, com os anos no eixo-x e os meses no
-eixo-x. O resulatdo final permite visualizar, dentro de uma faixa de
-anos, a maginitude das vazões por meio de cores, e também a ocorrência
-de falhas nos registros.</p>
-<p>Para isso, vamos trabalhar inicialmente com o <code>dataframe</code>
-denominado <code>dados_60435000</code>, cujas primeiras observações pode
-ser vistas abaixo, onde observamos 3 colunas.</p>
+<h2 id="visualizar-a-disponibilidade-de-dados">Visualizar a
+disponibilidade de dados</h2>
+<p>É comum realizar estudos hidrológicos que contemplem, pelo menos num
+primeiro momento, um número elevado de estações que possam ser
+potencialmente utilizadas.</p>
+<p>Para termos uma visão de conjunto dos dados que estão disponíveis, é
+interessante fazer uma plotagem que permite entender o período de dados
+disponíveis em cada estação, bem como a ocorrência de falhas nas séries.
+Essa visão mais geral nos jauda a definir quais estações serão
+selecionadas, e possivelmente qual o período de dadso que deve ser
+empreagdo no estudo.</p>
+<p>Mas mesmo que estejamos trabalhando cm apenas uma estação, é sempre
+interessante visualizar o período disponível, bem como as falhas
+contidas no registro.</p>
+<p>Nesta etapa, iniciaremos uma análise de apenas uma estação. Na etapa
+seguinte, expandiremos para um conjunto de estações.</p>
+<p>Faremos um gráfico do tipo <strong>heatmap</strong>, que é uma figura
+que coloca cores numa Tabela. No nosso primeiro passo, para cada
+estação, faremos uma Figura com os anos no eixo-y e os meses no eixo-x,
+de forma que estaremos representadno as vazões na escala mensal. A
+tonalidade das cores está associada à magnitude da vazão média do mês em
+questão, e quando ocorre uma falha, a região do mês correspodente fica
+branca.</p>
+<p>O resulatdo final permite visualizar, dentro de uma faixa de anos, a
+maginitude das vazões por meio de cores, e também a ocorrência de falhas
+nos registros, permitindo reconhecer de cara a sazonalidade das vazões,
+com cores mais fortes no período úmido e cores mais suaves no período
+seco.</p>
+<p>Para construir essa Figura inicial de paenas uma estação, vamos
+trabalhar inicialmente com o <code>dataframe</code> denominado
+<code>dados_60435000</code>, cujas primeiras observações podem ser
+vistas abaixo, onde observamos 3 colunas, o código da estação, a data
+informando o dia, e o valore da vazão correspondente.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>)</span></span></code></pre>
@@ -2267,8 +2289,10 @@ ser vistas abaixo, onde observamos 3 colunas.</p>
 5    60435000 1978-05-05    NA
 6    60435000 1978-05-06    NA</code></pre>
 </div>
-<p>Para facilitar o trabalho, vamos criar mais duas colunas, uma com os
-meses e outras com os anos. Para isso utilizamos o seguinte código,</p>
+<p>Para facilitar a construção do <strong>heatmap</strong>, que precisa
+separa as informações de mês e ano, vamos criar um novo dataframe com
+mais duas colunas, uma com os meses e a outra com os anos, como pode ser
+visto na sequência,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/year.html'>year</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span>
@@ -2283,9 +2307,12 @@ meses e outras com os anos. Para isso utilizamos o seguinte código,</p>
 5    60435000 1978-05-05    NA 1978   5
 6    60435000 1978-05-06    NA 1978   5</code></pre>
 </div>
-<p>Precisamos agora calcular as vazões médias para cada mês de cada ano
-das observações. Se o mês contiver uma falha num ano qualquer, o valor
-da vazão média para esse ano será registrado como <code>NA</code>,</p>
+<p>As duas colunas extras permitirão a realização do cálculo das vazões
+médias mensais para cada ano, sendo utilizadas as funções
+<code>group_by()</code>, <code>summarize()</code> e <code>mean()</code>.
+No final, rearrumamos as linhas em ordem decrescente de ano apenas para
+criarmos um <strong>heatmap</strong> que coloque os anos iniciais na
+parte de cima da Figura,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_60435000_v2</span> <span class='op'>&lt;-</span></span>
@@ -2312,23 +2339,57 @@ da vazão média para esse ano será registrado como <code>NA</code>,</p>
 11 60435000     1978    11  1.40
 12 60435000     1978    12  2.71</code></pre>
 </div>
-<p>Aora, podemos construir nossa figura,</p>
+<p>Com esse novo_dataframe em mãos, podemos construir a Figura desejada.
+Mas para utilizar a função <code>heatmap()</code>, precisamos fazer uma
+pequena reestruturação, já que esa função precisa receber uma matriz com
+os valores de vazão média mensal, organizados de forma que as linhas
+representem os anos, enquanto as colunas representam os meses. Essa
+reestruturação é feita com o código abaixo,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>teste</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>dados_60435000_v2</span>,</span>
 <span>                     names_from <span class='op'>=</span> <span class='va'>Mes</span>,</span>
 <span>                     values_from <span class='op'>=</span> <span class='va'>Vazao</span>,</span>
 <span>                     names_sort <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
-<span>         </span>
-<span><span class='va'>teste</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>teste</span><span class='op'>[</span>,<span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span> </span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>teste</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code># A tibble: 6 × 14
+# Groups:   Cod_estacao, Ano [6]
+  Cod_estacao   Ano   `1`   `2`   `3`   `4`   `5`   `6`   `7`    `8`
+  &lt;fct&gt;       &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt;
+1 60435000     2021 1.12   4.26  3.18  2.25 1.47  1.05  0.744  0.471
+2 60435000     2020 5.02   4.66  7.22  4.94 2.84  1.94  1.38   0.974
+3 60435000     2019 2.48   1.86  3.03  3.65 2.11  1.29  0.896 NA    
+4 60435000     2018 2.61   2.13  2.55  2.08 1.33  0.840 0.478  0.351
+5 60435000     2017 0.876  2.26  1.53  1.26 0.708 0.446 0.266  0.142
+6 60435000     2016 3.90   2.67  2.27  1.23 0.933 0.517 0.306  0.176
+# … with 4 more variables: `9` &lt;dbl&gt;, `10` &lt;dbl&gt;, `11` &lt;dbl&gt;,
+#   `12` &lt;dbl&gt;</code></pre>
+</div>
+<p>Agora basta utiliza a função <code>heatmap()</code> para construir a
+Figura desejada,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>teste</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>teste</span><span class='op'>[</span>,<span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span> </span>
 <span></span>
 <span><span class='fu'><a href='https://rdrr.io/r/stats/heatmap.html'>heatmap</a></span><span class='op'>(</span><span class='va'>teste</span>, Colv <span class='op'>=</span> <span class='cn'>NA</span>, Rowv <span class='op'>=</span> <span class='cn'>NA</span>, scale <span class='op'>=</span> <span class='st'>"none"</span>,</span>
-<span>        labCol <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Jan"</span>, <span class='st'>"Feb"</span>, <span class='st'>"Mar"</span>, <span class='st'>"Abr"</span>, <span class='st'>"Jun"</span>, <span class='st'>"Jul"</span>,</span>
+<span>        labCol <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Jan"</span>, <span class='st'>"Fev"</span>, <span class='st'>"Mar"</span>, <span class='st'>"Abr"</span>, <span class='st'>"Mai"</span>, <span class='st'>"Jun"</span>, <span class='st'>"Jul"</span>,</span>
 <span>                   <span class='st'>"Ago"</span>, <span class='st'>"Set"</span>, <span class='st'>"Out"</span>, <span class='st'>"Nov"</span>, <span class='st'>"Dez"</span><span class='op'>)</span>,</span>
 <span>        labRow <span class='op'>=</span> <span class='fl'>2021</span><span class='op'>:</span><span class='fl'>1978</span><span class='op'>)</span></span></code></pre>
 </div>
-<p><img src="data_explore_files/figure-html5/heatmap-1.png" width="768" /></p>
+<p><img src="data_explore_files/figure-html5/heatmap,%20-1.png" width="768" /></p>
 </div>
+<p>Podemos perceber algumas características importantes nessa plotagem
+da disponibilidade dos dados de vazão da estação
+<strong>60435000</strong>.</p>
+<p>Logo na primeira linha, que representa o ano de 1978, podemos ver que
+não há dados nos 5 primeiros meses, já que temos a cor branca
+representando os valores de vazão. No restate dos anos, pode-se
+verificar a ocorrência de falhas em mais três oportunidades: dez/2008,
+jan/2009 e ago/2019.</p>
+<p>Além das falhas, a Figura indica vazões médias mensais mais baixas
+(tons mais suaves) no meio do ano, entre os meses de junho a outubro, e
+vazões mais altas (tons mais escuros) entre novembro e maio.</p>
 <h2 id="plotagem-da-série-histórica">Plotagem da série histórica</h2>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2732,7 +2793,7 @@ class="uri">http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf</a>
 &gt;&gt;&gt;&gt;&gt;&gt;&gt;
 2aa96fc38fa716a70fee28c186be23697f6320d1</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre
+<div class="sourceCode" id="cb7"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
