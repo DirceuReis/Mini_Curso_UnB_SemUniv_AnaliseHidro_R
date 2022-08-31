@@ -131,6 +131,10 @@ grid(nx = NA, ny = NULL,
 
 ```
 
+```{r,  fig.width = 8, fig.height = 6}
+hist(dados_60435000$Vazao,xlim = c(0, 40))
+rug(jitter(dados_60435000$Vazao))
+```
 
 ## Caracterização da distribuição
 
