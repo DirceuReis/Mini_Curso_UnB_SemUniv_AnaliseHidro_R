@@ -157,18 +157,31 @@ ggplot() +
 
 ## Plotagem da série histórica
 
-```{r grafico Dirceu, fig.width = 8, fig.height = 6}
-time <- as.Date(dados_60435000$Data)
-plot(time,dados_60435000$Vazao,type="l",
-     main = "Vazões diárias - estação 60435000",
-     xlab = "Anos",ylab = "Q (m3/s)")
+Como estamos  lidando com dadso de vazão, uma das primeira coisas a fazer é plotar a série histórica, o que permite visualizarmos a faxia de variação das vazões diárias, a presença de falhas na série e de valores muito diferentes do restante, podendo indicar a necessidade de uma verificação mais cuidados para confirmarmos que esses valores são realmente confiáveis.
+
+O **R-base** permite plotarmos facilmente a série histórica. O código abaixo é o mais simples de todo para realizar esse tipo de plotagem. Vea que informamos apenas as variáveis referentes aos eixos x e y.
+
+```{r grafico_1, fig.width = 8, fig.height = 6}
+plot(x = dados_60435000$Data,
+     y = dados_60435000$Vazao)
+```
+
+A Figura gerada não é das mais atraentes, já que o **R** faz suas próprias escolhas, já que não definimos uma gama enorme de argumentos existentes. É possível fazer um esforço na tentativa de gerar uma Figura um pouco mais atraente, incluindo nomes para os eixos e título da Figura, espessura da linha, linhas de grade etc,
+
+```{r grafico_2, , fig.width = 8, fig.height = 6}
+plot(x = dados_60435000$Data,
+     y = dados_60435000$Vazao,
+     main = "Estação 60435000",
+     xlab = "Tempo (anos)", ylab = "Vazão (m3/s)",
+     type = "l",
+     col = "blue")
 # Adiciona grid horizontal apenas
 grid(nx = NA, ny = NULL,
      lty = 2,      # Grid line type
      col = "gray", # Grid line color
      lwd = 2)      # Grid line width
-
 ```
+
 
 ```{r,  fig.width = 8, fig.height = 6}
 hist(dados_60435000$Vazao,xlim = c(0, 40))
@@ -196,21 +209,7 @@ rug(jitter(dados_60435000$Vazao))
 
 Diferentemente dos gráficos que podem ser feitos no **R base** (sem pacotes adicionais), o **ggplot2** atua um pouco diferente na forma em que é chamado. Por exemplo, se quisesse fazer um gráfico da série histórica da estação 60435000, poderíamos fazer sem pacotes.
 
-```{r grafico_1, fig.width = 8, fig.height = 6}
-plot(x = dados_60435000$Data,
-     y = dados_60435000$Vazao)
-```
 
-Também podemos mexer com alguns argumentos dessa função base para mudar coisas como o título, nome dos eixos, a cor e o tipo de gráfico (ponto x linha por exemplo).
-
-```{r grafico_2, , fig.width = 8, fig.height = 6}
-plot(x = dados_60435000$Data,
-     y = dados_60435000$Vazao,
-     main = "Estação 60435000",
-     xlab = "Datas", ylab = "Vazão",
-     type = "l",
-     col = "blue")
-```
 
 Já com a função `ggplot()` não adianta apenas definirmos em quem iremos mexer. Dentro dessa função existe um argumento chamado de **aes**. Ele vem do inglês, *aesthetics* e, como o nome diz, reflete a estética do gráfico, o que você vai mexer nele (cores, pontos, linhas...). Se chamarmos apenas o `ggplot()` com o argumento **aes** definido, nada será plotado, mas veremos os eixos e as grades (imagem abaixo). Lembrar que esses plots aparecerão no **RStudio** no canto inferior direito.
 
