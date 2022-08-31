@@ -80,34 +80,39 @@ head(dados_60435000)
 As duas colunas extras permitirão a realização do cálculo das vazões médias mensais para cada ano, sendo utilizadas as funções `group_by()`, `summarize()` e `mean()`. No final, rearrumamos as linhas em ordem decrescente de ano apenas para criarmos um **heatmap** que coloque os anos iniciais na parte de cima da Figura,
 
 ```{r vazão média}
-dados_60435000_v2 <-
+dados_60435000 <-
   dados_60435000 %>%
   group_by(Cod_estacao, Ano, Mes) %>%
   summarise(Vazao = mean(Vazao)) %>%
   arrange(desc(Ano))
-tail(dados_60435000_v2,12)
+  
+tail(dados_60435000_v2, 12)
 ```
 
 Com esse novo_dataframe em mãos, podemos construir a Figura desejada. Mas para utilizar a função `heatmap()`, precisamos fazer uma pequena reestruturação, já que esa função precisa receber uma matriz com os valores de vazão média mensal, organizados de forma que as linhas representem os anos, enquanto as colunas representam os meses. Essa reestruturação é feita com o código abaixo,
 
 ```{r reestrutura dataframe}
-teste <- pivot_wider(data = dados_60435000_v2,
-                     names_from = Mes,
-                     values_from = Vazao,
-                     names_sort = TRUE)
-head(teste)
+dados_heatmap <- pivot_wider(data = dados_60435000,
+                             names_from = Mes,
+                             values_from = Vazao,
+                             names_sort = TRUE)
+head(dados_heatmap)
 ```
 
-Agora basta utiliza a função `heatmap()` para construir a Figura desejada,
+Agora basta utiliza a função `heatmap()` para construir a Figura desejada. Primeiro apagamos as duas colunas dessa matriz, porque a primeira traz o código da estação e a segunda os anos. Para construção do gráfico abaixo, usando a função `heatmap()`, precisamos apenas de uma matriz com os valores a serem utilizados.
 
-```{r heatmap, , fig.width = 8, fig.height = 6}
-teste <- as.matrix(teste[,-c(1,2)]) 
+```{r heatmap, fig.width = 8, fig.height = 6}
+# Remoção das primeiras duas colunas
+dados_heatmap <- as.matrix(dados_heatmap[,-c(1,2)]) 
 
+# Legenda do eixo "x" (trocar números pela abreviação dos meses)
+meses <- c("Jan", "Feb", "Mar", "Abr", "Mai", "Jun",
+           "Jul", "Ago", "Set", "Out", "Nov", "Dez")
+           
+# Criação do heatmap
 heatmap(teste, Colv = NA, Rowv = NA, scale = "none",
-        labCol = c("Jan", "Fev", "Mar", "Abr", "Mai", "Jun", "Jul",
-                   "Ago", "Set", "Out", "Nov", "Dez"),
+        labCol = meses,
         labRow = 2021:1978)
-
 ```
 
 Podemos perceber algumas características importantes nessa plotagem da disponibilidade dos dados de vazão da estação **60435000**. 
@@ -116,9 +121,41 @@ Logo na primeira linha, que representa o ano de 1978, podemos ver que não há d
 
 Além das falhas, a Figura indica vazões médias mensais mais baixas (tons mais suaves) no meio do ano, entre os meses de junho a outubro, e vazões mais altas (tons mais escuros) entre novembro e maio.
 
+Outra maneira de fazermos o mesmo gráfico é usando o **ggplot2**, abaixo segue um código mostrando seu formato. Falaremos mais desse pacote, com suas funções e argumentos, ao decorrer deste módulo, portanto não se preocupe tanto com a notação abaixo - o importante é mostrar que podemos atingir o mesmo objetivo de diferentes formas usando diferentes funções dentro do **R**.
+
+```{r heatmap ggplot2, fig.width = 8, fig.height = 6}
+ggplot() +
+  
+  # gráfico em sí
+  geom_tile(data = dados_60435000,
+            aes(x = Mes, y = Ano, fill = Vazao)) +
+            
+  # o que vai estar no eixo-x:          
+  scale_x_discrete(limits = factor(1:12),
+                   labels = meses,
+                   na.translate = TRUE,
+                   expand = c(0, 0)) +
+                   
+  # escala do nosso eixo-y:                 
+  scale_y_continuous(breaks = 1978:2021,
+                     trans = "reverse", # Aqui deixamos o eixo na ordem decrescente
+                     expand = c(0, 0)) +
+  
+  # as cores de gradiente do nosso gráfico:
+  scale_fill_gradient(low = "lightblue", high = "darkblue",
+                      na.value = "yellow") +
+                      
+  # Deixamos aqui sem marcações de qualquer tipo no gráfico
+  # Além de colocarmos a cor de fundo amarela (para ficar igual aos valores NAs)
+  theme(axis.ticks = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(fill = "yellow"))
+```
+
 ## Plotagem da série histórica
 
-```{r grafico DIrceu, fig.width = 8, fig.height = 6}
+```{r grafico Dirceu, fig.width = 8, fig.height = 6}
 time <- as.Date(dados_60435000$Data)
 plot(time,dados_60435000$Vazao,type="l",
      main = "Vazões diárias - estação 60435000",
@@ -157,14 +194,14 @@ rug(jitter(dados_60435000$Vazao))
 
 Diferentemente dos gráficos que podem ser feitos no **R base** (sem pacotes adicionais), o **ggplot2** atua um pouco diferente na forma em que é chamado. Por exemplo, se quisesse fazer um gráfico da série histórica da estação 60435000, poderíamos fazer sem pacotes.
 
-```{r grafico_1, fig.width = 8, fig.height = 6, fig.cap = "Gráfico base no R"}
+```{r grafico_1, fig.width = 8, fig.height = 6}
 plot(x = dados_60435000$Data,
      y = dados_60435000$Vazao)
 ```
 
 Também podemos mexer com alguns argumentos dessa função base para mudar coisas como o título, nome dos eixos, a cor e o tipo de gráfico (ponto x linha por exemplo).
 
-```{r grafico_2, , fig.width = 8, fig.height = 6, fig.cap = "Gráfico base no R com alguns argumentos a mais"}
+```{r grafico_2, , fig.width = 8, fig.height = 6}
 plot(x = dados_60435000$Data,
      y = dados_60435000$Vazao,
      main = "Estação 60435000",
@@ -175,28 +212,28 @@ plot(x = dados_60435000$Data,
 
 Já com a função `ggplot()` não adianta apenas definirmos em quem iremos mexer. Dentro dessa função existe um argumento chamado de **aes**. Ele vem do inglês, *aesthetics* e, como o nome diz, reflete a estética do gráfico, o que você vai mexer nele (cores, pontos, linhas...). Se chamarmos apenas o `ggplot()` com o argumento **aes** definido, nada será plotado, mas veremos os eixos e as grades (imagem abaixo). Lembrar que esses plots aparecerão no **RStudio** no canto inferior direito.
 
-```{r grafico_3, , fig.width = 8, fig.height = 6, fig.cap = "Gráfico ggplot2 vazio!"}
+```{r grafico_3, , fig.width = 8, fig.height = 6}
 ggplot(dados_60435000, aes(x = Data, y = Vazao))
 ```
 
 No **ggplot2**, a escrita é um pouco diferente do **R base** e se assemelha ao que fizemos com o **pipe operator**. Escrevemos `ggplot()` e em seguida vamos somando o que queremos com o sinal de "**+**". Por exemplo, se quisermos um gráfico de linha vamos escrever `+ geom_line()`. Temos dois jeitos de escrever isso, um colocando os dados dentro do `ggplot()` e deixando o `geom_line()` em branco, ou o contrário. Ambos códigos abaixo retornam o mesmo gráfico.
 
-```{r grafico_4_escondido, echo = FALSE, fig.width = 8, fig.height = 6, fig.cap = "Gráfico ggplot2 básico"}
-ggplot(data = dados_60435000, aes(x = Data, y = Vazao)) +
-  geom_line()
-```
-```{r grafico_5, eval = FALSE}
+```{r grafico_4, eval = FALSE}
 ggplot(data = dados_60435000, aes(x = Data, y = Vazao)) +
   geom_line()
   
 ggplot() +
   geom_line(data = dados_60435000, aes(x = Data, y = Vazao))
 ```
+```{r grafico_5_escondido, echo = FALSE, fig.width = 8, fig.height = 6}
+ggplot(data = dados_60435000, aes(x = Data, y = Vazao)) +
+  geom_line()
+```
 
 Similar ao **R base**, podemos mexer em todos os aspectos gráficos aqui, como a cor dos pontos e o tema (***theme***). Esse tema refere a todos os detalhes gráficos (qual o tamanho das linhas do gráfico, tamanho das letras, do título, qual fonte...). Já existem diversos temas pré-programados com o ggplot2, como o tema *bw*
  (*black and white*, ou preto e branco).
  
-```{r grafico_6, fig.width = 8, fig.height = 6, fig.cap = "Gráfico ggplot2 com tema bw"}
+```{r grafico_6, fig.width = 8, fig.height = 6}
 ggplot() +
   geom_line(data = dados_60435000, aes(x = Data, y = Vazao), col = "blue") +
   labs(title = "Estação 60435000", subtitle = "série histórica",
@@ -205,7 +242,7 @@ ggplot() +
   theme_bw()
 ```
 
-```{r grafico_7, fig.width = 8, fig.height = 6, fig.cap = "Gráfico ggplot2 com tema bw e definições extras"}
+```{r grafico_7, fig.width = 8, fig.height = 6}
 ggplot() +
   geom_line(data = dados_60435000, aes(x = Data, y = Vazao), col = "blue") +
   labs(title = "Estação 60435000", subtitle = "série histórica",
@@ -219,7 +256,7 @@ ggplot() +
         axis.text.x = element_text(angle = 50, vjust = 0.5))
 ```
 
-```{r grafico_8, fig.width = 8, fig.height = 6, fig.cap = "Gráfico ggplot2 com tema feito por a gente"}
+```{r grafico_8, fig.width = 8, fig.height = 6}
 tema_top <-
   theme_bw() +
   theme(plot.title = element_text(size = 16, face = 2, hjust = 0.5),
@@ -236,7 +273,7 @@ ggplot() +
   tema_top
 ```
 
-```{r grafico_9, fig.width = 8, fig.height = 6, fig.cap = "Gráfico ggplot2 sem específicar o tema!"}
+```{r grafico_9, fig.width = 8, fig.height = 6}
 theme_set(tema_top)
 
 ggplot() +
@@ -248,7 +285,7 @@ ggplot() +
 ```
 
 ## Gráficos com as 4 estações
-```{r grafico_10, fig.width = 8, fig.height = 6, fig.cap = "Gráfico com as 4 estações"}
+```{r grafico_10, fig.width = 8, fig.height = 6}
 ggplot() +
   geom_line(data = dados_todas,
             aes(x = Data, y = Vazao, col = Cod_estacao)) +
@@ -261,7 +298,7 @@ ggplot() +
                      expand = c(0, 10))
 ```
 
-```{r grafico_11, fig.width = 8, fig.height = 6, fig.cap = "Gráfico com as 4 estações, definindo a cor da legenda e alterando o tema"}
+```{r grafico_11, fig.width = 8, fig.height = 6}
 ggplot() +
   geom_line(data = dados_todas,
             aes(x = Data, y = Vazao, col = Cod_estacao)) +
@@ -282,7 +319,7 @@ ggplot() +
                                         size = 0.25))
 ```
 
-```{r grafico_12, fig.width = 8, fig.height = 6, fig.cap = "Facet Wrap"}
+```{r grafico_12, fig.width = 8, fig.height = 6}
 ggplot() +
   geom_line(data = dados_todas, col = "blue",
             aes(x = Data, y = Vazao)) +
@@ -295,7 +332,7 @@ ggplot() +
   facet_wrap(~ Cod_estacao, nrow = 4)
 ```
 
-```{r grafico_13, fig.width = 8, fig.height = 6, fig.cap = "Facet Wrap com eixos livres"}
+```{r grafico_13, fig.width = 8, fig.height = 6}
 ggplot() +
   geom_line(data = dados_todas, col = "blue",
             aes(x = Data, y = Vazao)) +
@@ -306,7 +343,7 @@ ggplot() +
 ```
 
 ## Outros gráficos interessantes
-```{r boxplot_1, fig.width = 8, fig.height = 6, fig.cap = "BoxPlot com uma estação"}
+```{r boxplot_1, fig.width = 8, fig.height = 6}
 dados_60435000$Mes <- as.factor(month(dados_60435000$Data))
 
 boxplot(data = dados_60435000,
@@ -318,7 +355,7 @@ boxplot(data = dados_60435000,
         border = "brown")
 ```
 
-```{r boxplot_2, fig.width = 8, fig.height = 6, fig.cap = "BoxPlot com uma estação e linha média"}
+```{r boxplot_2, fig.width = 8, fig.height = 6}
 # Mudar os leveis do Fator mês!
 levels(dados_60435000$Mes)
 levels(dados_60435000$Mes) <-
@@ -341,21 +378,23 @@ grafico_boxplot_1
 ```
 
 ## Gráficos usando a tabela de resumo estatístico
-```{r ribbon_1, fig.width = 8, fig.height = 6, fig.cap = "Gráfico com a média das vazões por estação"}
-#ggplot(data = resumo_todas,
-#       aes(x = ano_hidro, y = media, col = Cod_estacao)) +
-#  geom_ribbon(aes(x = ano_hidro, fill = Cod_estacao,
-#                  ymax = maxima, ymin = minima),
-#              alpha = 0.5) +
-#  geom_line() +
-#  geom_point() +
-#  labs(title = "Estações - HidroWeb",
-#       caption = "fonte dos dados: ANA (2022)",
-#       x = "Ano hidrológico", y = "Vazão",
-#       fill = "Estação", color = "Estação")
+```{r ribbon_1, fig.width = 8, fig.height = 6}
+resumo_todas$Cod_estacao <- as.factor(resumo_todas$Cod_estacao)
+
+ggplot(data = resumo_todas,
+       aes(x = ano_hidro, y = media, col = Cod_estacao)) +
+  geom_ribbon(aes(x = ano_hidro, fill = Cod_estacao,
+                  ymax = maxima, ymin = minima),
+              alpha = 0.5) +
+  geom_line() +
+  geom_point() +
+  labs(title = "Estações - HidroWeb",
+       caption = "fonte dos dados: ANA (2022)",
+       x = "Ano hidrológico", y = "Vazão",
+       fill = "Estação", color = "Estação")
 ```
 
-```{r ribbon_2, fig.width = 8, fig.height = 6, fig.cap = "Gráfico com a média das vazões por estação"}
+```{r ribbon_2, fig.width = 8, fig.height = 6}
 ggplot(data = resumo_todas,
        aes(x = ano_hidro, y = media, col = Cod_estacao)) +
   geom_ribbon(aes(x = ano_hidro, fill = Cod_estacao,
