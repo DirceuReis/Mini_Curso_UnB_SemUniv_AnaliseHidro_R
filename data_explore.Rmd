@@ -24,7 +24,7 @@ Para carregar esses dados de vazão, precisamos ler os arquivos com extensão **
 
 Faremos isso com os três arquivos existentes, o primeiro que contém apenas a série histórica de uma estação específica, o segundo que consiste dos dados diários da série histórica de quatro estações, e por último, aquele com os valores de máximo, mínimo e média todos a nível anual. 
 
-Para não precisarmos redefinir a coluna de Datas como sendo do formato *Date* (lembrar que o **R** vai ler ela automaticamente como *character*), podemos usar o argumento **colClasses =** para avisar ao **R** a classe de cada coluna. Além disso, vamos aproveitar e transformar a coluna de código das estações como fator.
+Para não precisarmos redefinir a coluna de Datas como sendo do formato *Date* (lembrar que o **R** vai ler ela automaticamente como *character*), podemos usar o argumento **colClasses =** para avisar ao **R** a classe de cada coluna. Além disso, vamos aproveitar e transformar a coluna de código das estações como fator. Se não souber qual a classe uma coluna, pode-se botar **NA** - porém é importante notar que é **obrigatório** informar o tipo. Caso coloque menos argumentos no vetor do que o número de colunas, o **R** irá iterar sobre o vetor informado.
 
 ```{r dados_1}
 dados_60435000 <- read.table(file = "dados/60435000.txt",
@@ -39,7 +39,7 @@ dados_todas <- read.table(file = "dados/todas_estacoes.txt",
                           dec = ".",
                           header = T,
                           fileEncoding = "UTF-8",
-                          colClasses = c("factor", "Date", "numeric"))
+                          colClasses = c("factor", "Date", NA))
                           
 resumo_todas <- read.table(file = "dados/Resumo_estacoes.txt",
                            sep = "\t",
@@ -59,9 +59,9 @@ Mas mesmo que estejamos trabalhando com apenas uma estação, é sempre interess
 
 Iniciaremos essa visualização da disponibilidade dos dados com apenas uma estação. Na etapa seguinte, expandiremos para um conjunto de quatro estações selcionadas na aula anterior. 
 
-Faremos um gráfico do tipo **heatmap**, que é basicamente uma figura que coloca cores numa Tabela. Neste primeiro passo, para cada estação, faremos um **hetamap** das vazões médias mensais com os anos no eixo-y e os meses no eixo-x. A tonalidade das cores estará associada à magnitude da vazão média do mês em questão. Quando mês não possui vazão, a região do mês correspodente ficará branca.
+Faremos um gráfico do tipo **heatmap**, que é basicamente uma figura que coloca cores numa Tabela. Neste primeiro passo, para cada estação, faremos um **heatmap** das vazões médias mensais com os anos no eixo-y e os meses no eixo-x. A tonalidade das cores estará associada à magnitude da vazão média do mês em questão. Quando o mês não possui vazão, a região do mês correspodente ficará branca.
 
-O resulatdo final permite visualizar, dentro de uma faixa de anos, a maginitude das vazões por meio de cores, e também a ocorrência de falhas nos registros, permitindo reconhecer de cara a sazonalidade das vazões, com cores mais fortes no período úmido e cores mais suaves no período seco.
+O resultado final permite visualizar, dentro de uma faixa de anos, a magnitude das vazões por meio de cores, e também a ocorrência de falhas nos registros, permitindo reconhecer de cara a sazonalidade das vazões, com cores mais fortes no período úmido e cores mais suaves no período seco.
 
 Para construir essa Figura inicial com apenas uma estação, vamos trabalhar com o `dataframe` denominado `dados_60435000`, cujas primeiras observações podem ser vistas abaixo, onde observamos 3 colunas, o código da estação, a data, e o valor da vazão diária correspondente. 
 
@@ -194,7 +194,7 @@ rug(jitter(dados_60435000$Vazao))
 
 ## Caracterização gráfica com ggplot2
 
-Diferentemente dos gráficos que podem ser feitos no **R base** (sem pacotes adicionais), o **ggplot2** atua um pouco diferente na forma em que é chamado. Por exemplo, se quisesse fazer um gráfico da série histórica da estação 60435000, poderíamos fazer sem pacotes.
+Diferentemente dos gráficos que podem ser feitos no **R base** (sem pacotes adicionais), o **ggplot2** atua um pouco diferente na forma em que é chamado. Por exemplo, se quisesse fazer um gráfico da série histórica da estação **60435000**, poderíamos fazer sem pacotes.
 
 ```{r grafico_1, fig.width = 8, fig.height = 6}
 plot(x = dados_60435000$Data,
@@ -428,4 +428,3 @@ ggplot(data = resumo_todas,
 ### Todas as cores do R:
 
 - http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf
->>>>>>> 2aa96fc38fa716a70fee28c186be23697f6320d1
