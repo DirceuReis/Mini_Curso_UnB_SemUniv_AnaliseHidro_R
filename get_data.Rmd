@@ -20,13 +20,12 @@ Existem inúmeros repositórios contendo dados hidrológicos no mundo e no Brasi
 
 ## Obtenção de dados "tradicional"
 
-<<<<<<< HEAD
-Uma maneira de obter dados hidrológicos é simplesmente acessando de algum site oficial. Geralmente, o arquivo obtido baixado está no formato `.csv`, `.txt` ou `.xls` (excel) - esse último sendo menos comum. No próprio portal da ANA tem a opção de baixar os dados diretamente se souber a estação em questão ou utilizando um mapa dinâmico. Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o arquivo, é importante entender como ele está salvo, para isso podemos abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é mostrado na figura abaixo
-=======
-Uma maneira de obter dados é simplesmente baixando eles de algum site oficial. Geralmente o arquivo baixado está no formato `.csv`, `.txt` ou `.xls` (excel) - esse último sendo menos comum. No próprio portal da ANA tem a opção de baixar os dados diretamente se souber a estação em questão (https://www.snirh.gov.br/hidroweb/serieshistoricas) ou utilizando um mapa dinâmico (https://www.snirh.gov.br/hidroweb/mapa). Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o arquivo, é importante entender como ele está salvo, para isso podemos abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é mostrado na figura abaixo
->>>>>>> 2aa96fc38fa716a70fee28c186be23697f6320d1
 
-```{r obtencao_dados_trad_imagem_1, echo = FALSE, layout = "l-body-outset", fig.align = 'center', out.width = "100%", fig.cap = ""}
+Uma maneira de obter dados hidrológicos é simplesmente acessando de algum site oficial. Geralmente, o arquivo obtido baixado está no formato `.csv`, `.txt` ou `.xls` (excel) - esse último sendo menos comum. No próprio portal da ANA tem a opção de baixar os dados diretamente se souber a estação em questão ou utilizando um mapa dinâmico. Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o arquivo, é importante entender como ele está salvo, para isso podemos abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é mostrado na figura abaixo
+
+Uma maneira de obter dados é simplesmente baixando eles de algum site oficial. Geralmente o arquivo baixado está no formato `.csv`, `.txt` ou `.xls` (excel) - esse último sendo menos comum. No próprio portal da ANA tem a opção de baixar os dados diretamente se souber a estação em questão (https://www.snirh.gov.br/hidroweb/serieshistoricas) ou utilizando um mapa dinâmico (https://www.snirh.gov.br/hidroweb/mapa). Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o arquivo, é importante entender como ele está salvo, para isso podemos abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é mostrado na figura abaixo
+
+```{r obtencao_dados_trad_imagem_1, echo = FALSE, layout = "l-body-outset", fig.align = 'center', out.width = "100%"}
 knitr::include_graphics("images/arquivo_vazao_ANA_csv.png")
 ```
 
@@ -57,7 +56,7 @@ Em essência, o webservice é apenas um site que contém os dados. Porém, esses
 
 Quando acessamos esse endereço, somos levados para a página abaixo,
 
-```{r webservice_ANA, echo = FALSE, layout = "l-body-outset", fig.align = 'center', out.width = "100%", fig.cap = ""}
+```{r webservice_ANA, echo = FALSE, layout = "l-body-outset", fig.align = 'center', out.width = "100%"}
 knitr::include_graphics("images/webservice_ANA.png")
 ```
 
@@ -151,7 +150,7 @@ ANA_info <- function(status_codigo = "",
 
 Podemos simplesmente testar essa função criada chamando a função e atribuindo para um objeto qualquer (chamamos aqui de "teste") seu resultado. Em seguida falamos para o R printar as colunas desse dataframe.
 
-```{r teste_fun_puxad_info_ANA}
+```{r teste_fun_puxar_info_ANA}
 # Testar a função feita!
 teste <- ANA_info()
 colnames(teste)
@@ -372,9 +371,6 @@ dados_serie_ANA <- function(cod_estacao = NA,
   node_doc <- XML::getNodeSet(url_parse, "//SerieHistorica")
   dados_estacao <- XML::xmlToDataFrame(nodes = node_doc)
   
-  # Por algum motivo o hidroweb não está filtrando os dados pela consistencia
-  dados_estacao <- filter(dados_estacao, NivelConsistencia == nivel_consist)
-  
   # Separar data e hora
   dados_estacao$Data <- as.Date(substr(dados_estacao$DataHora, 1, 10))
   dados_estacao$Hora <- substr(dados_estacao$DataHora, 12, 19)
@@ -412,7 +408,7 @@ dados_60435000[10:15,]
 
 ### Salvar um arquivo único
 
-Uma etapa tão importante quanto baixar os próprios dados que se precisa é conseguir salvar eles antes ou depois de alguma manipulação feita. Isso pode ser feito pelo  **R** utilizando as funções `write.table()`, `write.csv()` ou variações delas - da mesma forma que haviam variações em `read.table()` `read.csv()`.
+Uma etapa tão importante quanto baixar os próprios dados que se precisa é conseguir salvar eles antes ou depois de alguma manipulação feita. Isso pode ser feito pelo **R** utilizando as funções `write.table()`, `write.csv()` ou variações delas - da mesma forma que haviam variações em `read.table()` `read.csv()`.
 
 Uma boa prática é deixar todos os argumentos mais importantes explícitos, para que não tenha dúvidas de qua função usar ou como se irá salvar. Assim deixa-se explícito abaixo o separador (*tab*), os decimais ("."), que não irá salvar o nome das linhas (elas não tem nome) e a codificação do arquivo (acentos e etc.).
 
