@@ -2205,16 +2205,18 @@ etapa de um estudo vai depender da natureza do estudo.</p>
 frequÊncia de cheias, nesta aula, apresentaremos algumas atividades mais
 gerais, que podem e devem ser utilizadas em outros tipos de estudo.</p>
 <p>Para iniciar essas atividades, vamos primeiro carregar os dados que
-obtivemos em aulas anteriores.</p>
+foram obtidos na aual anterior e gravados em arquivos no fomato
+texto.</p>
 <h2 id="leitura-dos-dados-gerados-na-última-aula">Leitura dos dados
 gerados na última aula</h2>
-<p>Vamos iniciar nossa exploração dos dados lendo os arquivos gerados
-quando da obtenção dos dados de vazão via webservide da ANA.</p>
-<p>Faremos isso com três arquivos, um contendo apenas a série histórica
-de uma estação, um segundo objeto contendo os dados da série histórica
-de todas as estações, e por último, a última variável contendo os dados
-anuais com valores tratados das estações (mínimo, máximo e média
-anual).</p>
+<p>Para carregar esses dados de vazão, precisamos ler os arquivos com
+extensão <strong>txt</strong>, que foram criados com os dados de vazão
+obtidos via webservide da ANA.</p>
+<p>Faremos isso com os três arquivos existentes, o primeiro que contém
+apenas a série histórica de uma estação específica, o segundo que
+consiste dos dados diários da série histórica de quatro estações, e por
+último, aquele com os valores de máximo, mínimo e média todos a nível
+anual.</p>
 <p>Para não precisarmos redefinir a coluna de Datas como sendo do
 formato <em>Date</em> (lembrar que o <strong>R</strong> vai ler ela
 automaticamente como <em>character</em>), podemos usar o argumento
@@ -2247,36 +2249,37 @@ código das estações como fator.</p>
 <h2 id="visualizar-a-disponibilidade-de-dados">Visualizar a
 disponibilidade de dados</h2>
 <p>É comum realizar estudos hidrológicos que contemplem, pelo menos num
-primeiro momento, um número elevado de estações que possam ser
-potencialmente utilizadas.</p>
+primeiro momento, um número elevado de estações que, em tese, podem ser
+utilizadas.</p>
 <p>Para termos uma visão de conjunto dos dados que estão disponíveis, é
 interessante fazer uma plotagem que permite entender o período de dados
 disponíveis em cada estação, bem como a ocorrência de falhas nas séries.
-Essa visão mais geral nos jauda a definir quais estações serão
-selecionadas, e possivelmente qual o período de dadso que deve ser
-empreagdo no estudo.</p>
-<p>Mas mesmo que estejamos trabalhando cm apenas uma estação, é sempre
+Essa visão mais geral nos ajuda a definir quais estações devem ser
+selecionadas, e possivelmente o período de dados mais adequado para o
+estudo.</p>
+<p>Mas mesmo que estejamos trabalhando com apenas uma estação, é sempre
 interessante visualizar o período disponível, bem como as falhas
 contidas no registro.</p>
-<p>Nesta etapa, iniciaremos uma análise de apenas uma estação. Na etapa
-seguinte, expandiremos para um conjunto de estações.</p>
-<p>Faremos um gráfico do tipo <strong>heatmap</strong>, que é uma figura
-que coloca cores numa Tabela. No nosso primeiro passo, para cada
-estação, faremos uma Figura com os anos no eixo-y e os meses no eixo-x,
-de forma que estaremos representadno as vazões na escala mensal. A
-tonalidade das cores está associada à magnitude da vazão média do mês em
-questão, e quando ocorre uma falha, a região do mês correspodente fica
+<p>Iniciaremos essa visualização da disponibilidade dos dados com apenas
+uma estação. Na etapa seguinte, expandiremos para um conjunto de quatro
+estações selcionadas na aula anterior.</p>
+<p>Faremos um gráfico do tipo <strong>heatmap</strong>, que é
+basicamente uma figura que coloca cores numa Tabela. Neste primeiro
+passo, para cada estação, faremos um <strong>hetamap</strong> das vazões
+médias mensais com os anos no eixo-y e os meses no eixo-x. A tonalidade
+das cores estará associada à magnitude da vazão média do mês em questão.
+Quando mês não possui vazão, a região do mês correspodente ficará
 branca.</p>
 <p>O resulatdo final permite visualizar, dentro de uma faixa de anos, a
 maginitude das vazões por meio de cores, e também a ocorrência de falhas
 nos registros, permitindo reconhecer de cara a sazonalidade das vazões,
 com cores mais fortes no período úmido e cores mais suaves no período
 seco.</p>
-<p>Para construir essa Figura inicial de paenas uma estação, vamos
-trabalhar inicialmente com o <code>dataframe</code> denominado
+<p>Para construir essa Figura inicial com apenas uma estação, vamos
+trabalhar com o <code>dataframe</code> denominado
 <code>dados_60435000</code>, cujas primeiras observações podem ser
-vistas abaixo, onde observamos 3 colunas, o código da estação, a data
-informando o dia, e o valore da vazão correspondente.</p>
+vistas abaixo, onde observamos 3 colunas, o código da estação, a data, e
+o valor da vazão diária correspondente.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>)</span></span></code></pre>
@@ -2290,8 +2293,8 @@ informando o dia, e o valore da vazão correspondente.</p>
 6    60435000 1978-05-06    NA</code></pre>
 </div>
 <p>Para facilitar a construção do <strong>heatmap</strong>, que precisa
-separa as informações de mês e ano, vamos criar um novo dataframe com
-mais duas colunas, uma com os meses e a outra com os anos, como pode ser
+separar as informações de mês e ano, vamos expandir o dataframe com mais
+duas colunas, uma com os meses e a outra com os anos, como pode ser
 visto na sequência,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2308,11 +2311,11 @@ visto na sequência,</p>
 6    60435000 1978-05-06    NA 1978   5</code></pre>
 </div>
 <p>As duas colunas extras permitirão a realização do cálculo das vazões
-médias mensais para cada ano, sendo utilizadas as funções
+médias mensais para cada ano. Para isso, utilizaremos as funções
 <code>group_by()</code>, <code>summarize()</code> e <code>mean()</code>.
-No final, rearrumamos as linhas em ordem decrescente de ano apenas para
+Ao final, rearrumamos as linhas em ordem decrescente de ano apenas para
 criarmos um <strong>heatmap</strong> que coloque os anos iniciais na
-parte de cima da Figura,</p>
+parte de cima da Figura, com veremos mais adiante,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_60435000_v2</span> <span class='op'>&lt;-</span></span>
@@ -2320,7 +2323,8 @@ parte de cima da Figura,</p>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Cod_estacao</span>, <span class='va'>Ano</span>, <span class='va'>Mes</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span>Vazao <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/arrange.html'>arrange</a></span><span class='op'>(</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/desc.html'>desc</a></span><span class='op'>(</span><span class='va'>Ano</span><span class='op'>)</span><span class='op'>)</span></span>
-<span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='va'>dados_60435000_v2</span>,<span class='fl'>12</span><span class='op'>)</span></span></code></pre>
+<span>  </span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='va'>dados_60435000_v2</span>, <span class='fl'>12</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code># A tibble: 12 × 4
 # Groups:   Cod_estacao, Ano [2]
@@ -2341,17 +2345,18 @@ parte de cima da Figura,</p>
 </div>
 <p>Com esse novo_dataframe em mãos, podemos construir a Figura desejada.
 Mas para utilizar a função <code>heatmap()</code>, precisamos fazer uma
-pequena reestruturação, já que esa função precisa receber uma matriz com
-os valores de vazão média mensal, organizados de forma que as linhas
-representem os anos, enquanto as colunas representam os meses. Essa
-reestruturação é feita com o código abaixo,</p>
+pequena reestruturação, já que essa função precisa receber uma matriz
+com os valores de vazão média mensal, que devem estar organizados de uma
+forma específica, com as linhas representando os anos e as colunas
+representando os meses. Essa reestruturação é feita com o código
+abaixo,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>teste</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>dados_60435000_v2</span>,</span>
-<span>                     names_from <span class='op'>=</span> <span class='va'>Mes</span>,</span>
-<span>                     values_from <span class='op'>=</span> <span class='va'>Vazao</span>,</span>
-<span>                     names_sort <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
-<span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>teste</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_heatmap</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>dados_60435000_v2</span>,</span>
+<span>                             names_from <span class='op'>=</span> <span class='va'>Mes</span>,</span>
+<span>                             values_from <span class='op'>=</span> <span class='va'>Vazao</span>,</span>
+<span>                             names_sort <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>dados_heatmap</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code># A tibble: 6 × 14
 # Groups:   Cod_estacao, Ano [6]
@@ -2367,29 +2372,77 @@ reestruturação é feita com o código abaixo,</p>
 #   `12` &lt;dbl&gt;</code></pre>
 </div>
 <p>Agora basta utiliza a função <code>heatmap()</code> para construir a
-Figura desejada,</p>
+Figura desejada. Primeiro apagamos as primeiras duas colunas dessa
+matriz, porque a primeira traz o código da estação e a segunda os anos,
+ambas desnecessárias para fazer a Figura.</p>
+<p>Para construção do gráfico abaixo, usando a função
+<code>heatmap()</code>, precisamos apenas de uma matriz com os valores a
+serem utilizados.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>teste</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>teste</span><span class='op'>[</span>,<span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span> </span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Remoção das primeiras duas colunas</span></span>
+<span><span class='va'>dados_heatmap</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>as.matrix</a></span><span class='op'>(</span><span class='va'>dados_heatmap</span><span class='op'>[</span>,<span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span> </span>
 <span></span>
-<span><span class='fu'><a href='https://rdrr.io/r/stats/heatmap.html'>heatmap</a></span><span class='op'>(</span><span class='va'>teste</span>, Colv <span class='op'>=</span> <span class='cn'>NA</span>, Rowv <span class='op'>=</span> <span class='cn'>NA</span>, scale <span class='op'>=</span> <span class='st'>"none"</span>,</span>
-<span>        labCol <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Jan"</span>, <span class='st'>"Fev"</span>, <span class='st'>"Mar"</span>, <span class='st'>"Abr"</span>, <span class='st'>"Mai"</span>, <span class='st'>"Jun"</span>, <span class='st'>"Jul"</span>,</span>
-<span>                   <span class='st'>"Ago"</span>, <span class='st'>"Set"</span>, <span class='st'>"Out"</span>, <span class='st'>"Nov"</span>, <span class='st'>"Dez"</span><span class='op'>)</span>,</span>
+<span><span class='co'># Legenda do eixo "x" (trocar números pela abreviação dos meses)</span></span>
+<span><span class='va'>meses</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Jan"</span>, <span class='st'>"Feb"</span>, <span class='st'>"Mar"</span>, <span class='st'>"Abr"</span>, <span class='st'>"Mai"</span>, <span class='st'>"Jun"</span>,</span>
+<span>           <span class='st'>"Jul"</span>, <span class='st'>"Ago"</span>, <span class='st'>"Set"</span>, <span class='st'>"Out"</span>, <span class='st'>"Nov"</span>, <span class='st'>"Dez"</span><span class='op'>)</span></span>
+<span>           </span>
+<span><span class='co'># Criação do heatmap</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/stats/heatmap.html'>heatmap</a></span><span class='op'>(</span><span class='va'>dados_heatmap</span>, Colv <span class='op'>=</span> <span class='cn'>NA</span>, Rowv <span class='op'>=</span> <span class='cn'>NA</span>, scale <span class='op'>=</span> <span class='st'>"none"</span>,</span>
+<span>        labCol <span class='op'>=</span> <span class='va'>meses</span>,</span>
 <span>        labRow <span class='op'>=</span> <span class='fl'>2021</span><span class='op'>:</span><span class='fl'>1978</span><span class='op'>)</span></span></code></pre>
 </div>
-<p><img src="data_explore_files/figure-html5/heatmap,%20-1.png" width="768" /></p>
+<p><img src="data_explore_files/figure-html5/heatmap-1.png" width="768" /></p>
 </div>
 <p>Podemos perceber algumas características importantes nessa plotagem
 da disponibilidade dos dados de vazão da estação
 <strong>60435000</strong>.</p>
 <p>Logo na primeira linha, que representa o ano de 1978, podemos ver que
 não há dados nos 5 primeiros meses, já que temos a cor branca
-representando os valores de vazão. No restate dos anos, pode-se
+representando os valores de vazão. No restante dos anos, pode-se
 verificar a ocorrência de falhas em mais três oportunidades: dez/2008,
 jan/2009 e ago/2019.</p>
 <p>Além das falhas, a Figura indica vazões médias mensais mais baixas
 (tons mais suaves) no meio do ano, entre os meses de junho a outubro, e
 vazões mais altas (tons mais escuros) entre novembro e maio.</p>
+<p>Outra maneira de fazermos o mesmo gráfico é usando o
+<strong>ggplot2</strong>, abaixo segue um código mostrando seu formato.
+Falaremos mais desse pacote, com suas funções e argumentos, ao decorrer
+deste módulo, portanto não se preocupe tanto com a notação abaixo - o
+importante é mostrar que podemos atingir o mesmo objetivo de diferentes
+formas usando diferentes funções dentro do <strong>R</strong>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  </span>
+<span>  <span class='co'># gráfico em sí</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_tile</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>dados_60435000_v2</span>,</span>
+<span>            <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Mes</span>, y <span class='op'>=</span> <span class='va'>Ano</span>, fill <span class='op'>=</span> <span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>            </span>
+<span>  <span class='co'># o que vai estar no eixo-x:          </span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_discrete.html'>scale_x_discrete</a></span><span class='op'>(</span>limits <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>12</span><span class='op'>)</span>,</span>
+<span>                   labels <span class='op'>=</span> <span class='va'>meses</span>,</span>
+<span>                   na.translate <span class='op'>=</span> <span class='cn'>TRUE</span>,</span>
+<span>                   expand <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>                   </span>
+<span>  <span class='co'># escala do nosso eixo-y:                 </span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_continuous</a></span><span class='op'>(</span>breaks <span class='op'>=</span> <span class='fl'>1978</span><span class='op'>:</span><span class='fl'>2021</span>,</span>
+<span>                     trans <span class='op'>=</span> <span class='st'>"reverse"</span>, <span class='co'># Aqui deixamos o eixo na ordem decrescente</span></span>
+<span>                     expand <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  </span>
+<span>  <span class='co'># as cores de gradiente do nosso gráfico:</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_gradient.html'>scale_fill_gradient</a></span><span class='op'>(</span>low <span class='op'>=</span> <span class='st'>"lightblue"</span>, high <span class='op'>=</span> <span class='st'>"darkblue"</span>,</span>
+<span>                      na.value <span class='op'>=</span> <span class='st'>"yellow"</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>                      </span>
+<span>  <span class='co'># Deixamos aqui sem marcações de qualquer tipo no gráfico</span></span>
+<span>  <span class='co'># Além de colocarmos a cor de fundo amarela (para ficar igual aos valores NAs)</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>axis.ticks <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>        panel.grid.major <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>        panel.grid.minor <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>        panel.background <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_rect</a></span><span class='op'>(</span>fill <span class='op'>=</span> <span class='st'>"yellow"</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="data_explore_files/figure-html5/heatmap%20ggplot2-1.png" width="768" /></p>
+</div>
 <h2 id="plotagem-da-série-histórica">Plotagem da série histórica</h2>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2403,7 +2456,14 @@ vazões mais altas (tons mais escuros) entre novembro e maio.</p>
 <span>     col <span class='op'>=</span> <span class='st'>"gray"</span>, <span class='co'># Grid line color</span></span>
 <span>     lwd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>      <span class='co'># Grid line width</span></span></code></pre>
 </div>
-<p><img src="data_explore_files/figure-html5/grafico%20DIrceu-1.png" width="768" /></p>
+<p><img src="data_explore_files/figure-html5/grafico%20Dirceu-1.png" width="768" /></p>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/hist.html'>hist</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Vazao</span>,xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>40</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/rug.html'>rug</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/jitter.html'>jitter</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="data_explore_files/figure-html5/unnamed-chunk-1-1.png" width="768" /></p>
 </div>
 <h2 id="caracterização-da-distribuição">Caracterização da
 distribuição</h2>
@@ -2428,12 +2488,7 @@ fazer sem pacotes.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Data</span>,</span>
 <span>     y <span class='op'>=</span> <span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span></span></code></pre>
 </div>
-<div class="figure">
-<img src="data_explore_files/figure-html5/grafico_1-1.png" alt="Gráfico base no R" width="768" />
-<p class="caption">
-(#fig:grafico_1)Gráfico base no R
-</p>
-</div>
+<p><img src="data_explore_files/figure-html5/grafico_1-1.png" width="768" /></p>
 </div>
 <p>Também podemos mexer com alguns argumentos dessa função base para
 mudar coisas como o título, nome dos eixos, a cor e o tipo de gráfico
@@ -2447,12 +2502,7 @@ mudar coisas como o título, nome dos eixos, a cor e o tipo de gráfico
 <span>     type <span class='op'>=</span> <span class='st'>"l"</span>,</span>
 <span>     col <span class='op'>=</span> <span class='st'>"blue"</span><span class='op'>)</span></span></code></pre>
 </div>
-<div class="figure">
-<img src="data_explore_files/figure-html5/grafico_2,%20-1.png" alt="Gráfico base no R com alguns argumentos a mais" width="768" />
-<p class="caption">
-(#fig:grafico_2, )Gráfico base no R com alguns argumentos a mais
-</p>
-</div>
+<p><img src="data_explore_files/figure-html5/grafico_2,%20-1.png" width="768" /></p>
 </div>
 <p>Já com a função <code>ggplot()</code> não adianta apenas definirmos
 em quem iremos mexer. Dentro dessa função existe um argumento chamado de
@@ -2466,12 +2516,7 @@ aparecerão no <strong>RStudio</strong> no canto inferior direito.</p>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>dados_60435000</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Data</span>, y <span class='op'>=</span> <span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
-<div class="figure">
-<img src="data_explore_files/figure-html5/grafico_3,%20-1.png" alt="Gráfico ggplot2 vazio!" width="768" />
-<p class="caption">
-(#fig:grafico_3, )Gráfico ggplot2 vazio!
-</p>
-</div>
+<p><img src="data_explore_files/figure-html5/grafico_3,%20-1.png" width="768" /></p>
 </div>
 <p>No <strong>ggplot2</strong>, a escrita é um pouco diferente do
 <strong>R base</strong> e se assemelha ao que fizemos com o <strong>pipe
@@ -2483,14 +2528,6 @@ colocando os dados dentro do <code>ggplot()</code> e deixando o
 <code>geom_line()</code> em branco, ou o contrário. Ambos códigos abaixo
 retornam o mesmo gráfico.</p>
 <div class="layout-chunk" data-layout="l-body">
-<div class="figure">
-<img src="data_explore_files/figure-html5/grafico_4_escondido-1.png" alt="Gráfico ggplot2 básico" width="768" />
-<p class="caption">
-(#fig:grafico_4_escondido)Gráfico ggplot2 básico
-</p>
-</div>
-</div>
-<div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>dados_60435000</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Data</span>, y <span class='op'>=</span> <span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span><span class='op'>)</span></span>
@@ -2498,6 +2535,9 @@ retornam o mesmo gráfico.</p>
 <span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>dados_60435000</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Data</span>, y <span class='op'>=</span> <span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<p><img src="data_explore_files/figure-html5/grafico_5_escondido-1.png" width="768" /></p>
 </div>
 <p>Similar ao <strong>R base</strong>, podemos mexer em todos os
 aspectos gráficos aqui, como a cor dos pontos e o tema
@@ -2515,12 +2555,7 @@ branco).</p>
 <span>       x <span class='op'>=</span> <span class='st'>"Datas"</span>, y <span class='op'>=</span> <span class='st'>"Vazão"</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span><span class='op'>(</span><span class='op'>)</span></span></code></pre>
 </div>
-<div class="figure">
-<img src="data_explore_files/figure-html5/grafico_6-1.png" alt="Gráfico ggplot2 com tema bw" width="768" />
-<p class="caption">
-(#fig:grafico_6)Gráfico ggplot2 com tema bw
-</p>
-</div>
+<p><img src="data_explore_files/figure-html5/grafico_6-1.png" width="768" /></p>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2536,12 +2571,7 @@ branco).</p>
 <span>        axis.ticks.y <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
 <span>        axis.text.x <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>angle <span class='op'>=</span> <span class='fl'>50</span>, vjust <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
-<div class="figure">
-<img src="data_explore_files/figure-html5/grafico_7-1.png" alt="Gráfico ggplot2 com tema bw e definições extras" width="768" />
-<p class="caption">
-(#fig:grafico_7)Gráfico ggplot2 com tema bw e definições extras
-</p>
-</div>
+<p><img src="data_explore_files/figure-html5/grafico_7-1.png" width="768" /></p>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2560,12 +2590,7 @@ branco).</p>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_continuous</a></span><span class='op'>(</span>expand <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='va'>tema_top</span></span></code></pre>
 </div>
-<div class="figure">
-<img src="data_explore_files/figure-html5/grafico_8-1.png" alt="Gráfico ggplot2 com tema feito por a gente" width="768" />
-<p class="caption">
-(#fig:grafico_8)Gráfico ggplot2 com tema feito por a gente
-</p>
-</div>
+<p><img src="data_explore_files/figure-html5/grafico_8-1.png" width="768" /></p>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2578,12 +2603,7 @@ branco).</p>
 <span>       x <span class='op'>=</span> <span class='st'>"Datas"</span>, y <span class='op'>=</span> <span class='st'>"Vazão"</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_continuous</a></span><span class='op'>(</span>expand <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
-<div class="figure">
-<img src="data_explore_files/figure-html5/grafico_9-1.png" alt="Gráfico ggplot2 sem específicar o tema!" width="768" />
-<p class="caption">
-(#fig:grafico_9)Gráfico ggplot2 sem específicar o tema!
-</p>
-</div>
+<p><img src="data_explore_files/figure-html5/grafico_9-1.png" width="768" /></p>
 </div>
 <h2 id="gráficos-com-as-4-estações">Gráficos com as 4 estações</h2>
 <div class="layout-chunk" data-layout="l-body">
@@ -2599,12 +2619,7 @@ branco).</p>
 <span>                     minor_breaks <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>300</span>, <span class='fl'>25</span><span class='op'>)</span>,</span>
 <span>                     expand <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
-<div class="figure">
-<img src="data_explore_files/figure-html5/grafico_10-1.png" alt="Gráfico com as 4 estações" width="768" />
-<p class="caption">
-(#fig:grafico_10)Gráfico com as 4 estações
-</p>
-</div>
+<p><img src="data_explore_files/figure-html5/grafico_10-1.png" width="768" /></p>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2627,13 +2642,7 @@ branco).</p>
 <span>                                        linetype<span class='op'>=</span><span class='st'>"dashed"</span>,</span>
 <span>                                        size <span class='op'>=</span> <span class='fl'>0.25</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
-<div class="figure">
-<img src="data_explore_files/figure-html5/grafico_11-1.png" alt="Gráfico com as 4 estações, definindo a cor da legenda e alterando o tema" width="768" />
-<p class="caption">
-(#fig:grafico_11)Gráfico com as 4 estações, definindo a cor da legenda e
-alterando o tema
-</p>
-</div>
+<p><img src="data_explore_files/figure-html5/grafico_11-1.png" width="768" /></p>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2648,12 +2657,7 @@ alterando o tema
 <span>                     expand <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span><span class='op'>(</span><span class='op'>~</span> <span class='va'>Cod_estacao</span>, nrow <span class='op'>=</span> <span class='fl'>4</span><span class='op'>)</span></span></code></pre>
 </div>
-<div class="figure">
-<img src="data_explore_files/figure-html5/grafico_12-1.png" alt="Facet Wrap" width="768" />
-<p class="caption">
-(#fig:grafico_12)Facet Wrap
-</p>
-</div>
+<p><img src="data_explore_files/figure-html5/grafico_12-1.png" width="768" /></p>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2665,12 +2669,7 @@ alterando o tema
 <span>       x <span class='op'>=</span> <span class='st'>"Datas"</span>, y <span class='op'>=</span> <span class='st'>"Vazão"</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span><span class='op'>(</span><span class='op'>~</span> <span class='va'>Cod_estacao</span>, nrow <span class='op'>=</span> <span class='fl'>4</span>, scales <span class='op'>=</span> <span class='st'>"free_y"</span><span class='op'>)</span></span></code></pre>
 </div>
-<div class="figure">
-<img src="data_explore_files/figure-html5/grafico_13-1.png" alt="Facet Wrap com eixos livres" width="768" />
-<p class="caption">
-(#fig:grafico_13)Facet Wrap com eixos livres
-</p>
-</div>
+<p><img src="data_explore_files/figure-html5/grafico_13-1.png" width="768" /></p>
 </div>
 <h2 id="outros-gráficos-interessantes">Outros gráficos
 interessantes</h2>
@@ -2686,12 +2685,7 @@ interessantes</h2>
 <span>        col <span class='op'>=</span> <span class='st'>"orange"</span>,</span>
 <span>        border <span class='op'>=</span> <span class='st'>"brown"</span><span class='op'>)</span></span></code></pre>
 </div>
-<div class="figure">
-<img src="data_explore_files/figure-html5/boxplot_1-1.png" alt="BoxPlot com uma estação" width="768" />
-<p class="caption">
-(#fig:boxplot_1)BoxPlot com uma estação
-</p>
-</div>
+<p><img src="data_explore_files/figure-html5/boxplot_1-1.png" width="768" /></p>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2721,29 +2715,27 @@ interessantes</h2>
 <span><span class='co'># Printar o ggplot na tela do computador</span></span>
 <span><span class='va'>grafico_boxplot_1</span></span></code></pre>
 </div>
-<div class="figure">
-<img src="data_explore_files/figure-html5/boxplot_2-1.png" alt="BoxPlot com uma estação e linha média" width="768" />
-<p class="caption">
-(#fig:boxplot_2)BoxPlot com uma estação e linha média
-</p>
-</div>
+<p><img src="data_explore_files/figure-html5/boxplot_2-1.png" width="768" /></p>
 </div>
 <h2 id="gráficos-usando-a-tabela-de-resumo-estatístico">Gráficos usando
 a tabela de resumo estatístico</h2>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>#ggplot(data = resumo_todas,</span></span>
-<span><span class='co'>#       aes(x = ano_hidro, y = media, col = Cod_estacao)) +</span></span>
-<span><span class='co'>#  geom_ribbon(aes(x = ano_hidro, fill = Cod_estacao,</span></span>
-<span><span class='co'>#                  ymax = maxima, ymin = minima),</span></span>
-<span><span class='co'>#              alpha = 0.5) +</span></span>
-<span><span class='co'>#  geom_line() +</span></span>
-<span><span class='co'>#  geom_point() +</span></span>
-<span><span class='co'>#  labs(title = "Estações - HidroWeb",</span></span>
-<span><span class='co'>#       caption = "fonte dos dados: ANA (2022)",</span></span>
-<span><span class='co'>#       x = "Ano hidrológico", y = "Vazão",</span></span>
-<span><span class='co'>#       fill = "Estação", color = "Estação")</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>resumo_todas</span><span class='op'>$</span><span class='va'>Cod_estacao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>resumo_todas</span><span class='op'>$</span><span class='va'>Cod_estacao</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>resumo_todas</span>,</span>
+<span>       <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>ano_hidro</span>, y <span class='op'>=</span> <span class='va'>media</span>, col <span class='op'>=</span> <span class='va'>Cod_estacao</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_ribbon.html'>geom_ribbon</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>ano_hidro</span>, fill <span class='op'>=</span> <span class='va'>Cod_estacao</span>,</span>
+<span>                  ymax <span class='op'>=</span> <span class='va'>maxima</span>, ymin <span class='op'>=</span> <span class='va'>minima</span><span class='op'>)</span>,</span>
+<span>              alpha <span class='op'>=</span> <span class='fl'>0.5</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_point.html'>geom_point</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>title <span class='op'>=</span> <span class='st'>"Estações - HidroWeb"</span>,</span>
+<span>       caption <span class='op'>=</span> <span class='st'>"fonte dos dados: ANA (2022)"</span>,</span>
+<span>       x <span class='op'>=</span> <span class='st'>"Ano hidrológico"</span>, y <span class='op'>=</span> <span class='st'>"Vazão"</span>,</span>
+<span>       fill <span class='op'>=</span> <span class='st'>"Estação"</span>, color <span class='op'>=</span> <span class='st'>"Estação"</span><span class='op'>)</span></span></code></pre>
 </div>
+<p><img src="data_explore_files/figure-html5/ribbon_1-1.png" width="768" /></p>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2760,12 +2752,7 @@ a tabela de resumo estatístico</h2>
 <span>       fill <span class='op'>=</span> <span class='st'>"Estação"</span>, color <span class='op'>=</span> <span class='st'>"Estação"</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/facet_wrap.html'>facet_wrap</a></span><span class='op'>(</span><span class='op'>~</span> <span class='va'>Cod_estacao</span>, nrow <span class='op'>=</span> <span class='fl'>4</span>, scales <span class='op'>=</span> <span class='st'>"free_y"</span><span class='op'>)</span></span></code></pre>
 </div>
-<div class="figure">
-<img src="data_explore_files/figure-html5/ribbon_2-1.png" alt="Gráfico com a média das vazões por estação" width="768" />
-<p class="caption">
-(#fig:ribbon_2)Gráfico com a média das vazões por estação
-</p>
-</div>
+<p><img src="data_explore_files/figure-html5/ribbon_2-1.png" width="768" /></p>
 </div>
 <h2 id="livros">Livros !</h2>
 <h3 id="livro-do-criador-do-ggplot2">Livro do criador do ggplot2:</h3>

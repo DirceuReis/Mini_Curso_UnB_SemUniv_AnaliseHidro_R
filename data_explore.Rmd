@@ -16,13 +16,13 @@ Não existe um conjunto único de atividades que define uma **análise explorat�
 
 Embora nossa atividade final é a de relaizar um estudo de análise de frequÊncia de cheias, nesta aula, apresentaremos algumas atividades mais gerais, que podem e devem ser utilizadas em outros tipos de estudo. 
 
-Para iniciar essas atividades, vamos primeiro carregar os dados que obtivemos em aulas anteriores.
+Para iniciar essas atividades, vamos primeiro carregar os dados que foram obtidos na aual anterior e gravados em arquivos no fomato texto.
 
 ## Leitura dos dados gerados na última aula
 
-Vamos iniciar nossa exploração dos dados lendo os arquivos gerados quando da obtenção dos dados de vazão via webservide da ANA.
+Para carregar esses dados de vazão, precisamos ler os arquivos com extensão **txt**, que foram criados com os dados de vazão obtidos via webservide da ANA.
 
-Faremos isso com três arquivos, um contendo apenas a série histórica de uma estação, um segundo objeto contendo os dados da série histórica de todas as estações, e por último, a última variável contendo os dados anuais com valores tratados das estações (mínimo, máximo e média anual). 
+Faremos isso com os três arquivos existentes, o primeiro que contém apenas a série histórica de uma estação específica, o segundo que consiste dos dados diários da série histórica de quatro estações, e por último, aquele com os valores de máximo, mínimo e média todos a nível anual. 
 
 Para não precisarmos redefinir a coluna de Datas como sendo do formato *Date* (lembrar que o **R** vai ler ela automaticamente como *character*), podemos usar o argumento **colClasses =** para avisar ao **R** a classe de cada coluna. Além disso, vamos aproveitar e transformar a coluna de código das estações como fator.
 
@@ -51,25 +51,25 @@ resumo_todas <- read.table(file = "dados/Resumo_estacoes.txt",
 
 ## Visualizar a disponibilidade de dados
 
-É comum realizar estudos hidrológicos que contemplem, pelo menos num primeiro momento, um número elevado de estações que possam ser potencialmente utilizadas. 
+É comum realizar estudos hidrológicos que contemplem, pelo menos num primeiro momento, um número elevado de estações que, em tese, podem ser utilizadas. 
 
-Para termos uma visão de conjunto dos dados que estão disponíveis, é interessante fazer uma plotagem que permite entender o período de dados disponíveis em cada estação, bem como a ocorrência de falhas nas séries. Essa visão mais geral nos jauda a definir quais estações serão selecionadas, e possivelmente qual o período de dadso que deve ser empreagdo no estudo.
+Para termos uma visão de conjunto dos dados que estão disponíveis, é interessante fazer uma plotagem que permite entender o período de dados disponíveis em cada estação, bem como a ocorrência de falhas nas séries. Essa visão mais geral nos ajuda a definir quais estações devem ser selecionadas, e possivelmente o período de dados mais adequado para o estudo.
 
-Mas mesmo que estejamos trabalhando cm apenas uma estação, é sempre interessante visualizar o período disponível, bem como as falhas contidas no registro.
+Mas mesmo que estejamos trabalhando com apenas uma estação, é sempre interessante visualizar o período disponível, bem como as falhas contidas no registro.
 
-Nesta etapa, iniciaremos uma análise de apenas uma estação. Na etapa seguinte, expandiremos para um conjunto de estações. 
+Iniciaremos essa visualização da disponibilidade dos dados com apenas uma estação. Na etapa seguinte, expandiremos para um conjunto de quatro estações selcionadas na aula anterior. 
 
-Faremos um gráfico do tipo **heatmap**, que é uma figura que coloca cores numa Tabela. No nosso primeiro passo, para cada estação, faremos uma Figura com os anos no eixo-y e os meses no eixo-x, de forma que estaremos representadno as vazões na escala mensal. A tonalidade das cores está associada à magnitude da vazão média do mês em questão, e quando ocorre uma falha, a região do mês correspodente fica branca.
+Faremos um gráfico do tipo **heatmap**, que é basicamente uma figura que coloca cores numa Tabela. Neste primeiro passo, para cada estação, faremos um **hetamap** das vazões médias mensais com os anos no eixo-y e os meses no eixo-x. A tonalidade das cores estará associada à magnitude da vazão média do mês em questão. Quando mês não possui vazão, a região do mês correspodente ficará branca.
 
 O resulatdo final permite visualizar, dentro de uma faixa de anos, a maginitude das vazões por meio de cores, e também a ocorrência de falhas nos registros, permitindo reconhecer de cara a sazonalidade das vazões, com cores mais fortes no período úmido e cores mais suaves no período seco.
 
-Para construir essa Figura inicial de paenas uma estação, vamos trabalhar inicialmente com o `dataframe` denominado `dados_60435000`, cujas primeiras observações podem ser vistas abaixo, onde observamos 3 colunas, o código da estação, a data informando o dia, e o valore da vazão correspondente. 
+Para construir essa Figura inicial com apenas uma estação, vamos trabalhar com o `dataframe` denominado `dados_60435000`, cujas primeiras observações podem ser vistas abaixo, onde observamos 3 colunas, o código da estação, a data, e o valor da vazão diária correspondente. 
 
 ```{r leitura dos dados}
 head(dados_60435000)
 ```
 
-Para facilitar a construção do **heatmap**, que precisa separa as informações de mês e ano, vamos criar um novo dataframe com mais duas colunas, uma com os meses e a outra com os anos, como pode ser visto na sequência,
+Para facilitar a construção do **heatmap**, que precisa separar as informações de mês e ano, vamos expandir o dataframe com mais duas colunas, uma com os meses e a outra com os anos, como pode ser visto na sequência,
 
 ```{r criação de colunas}
 dados_60435000$Ano <- year(dados_60435000$Data)
@@ -77,10 +77,10 @@ dados_60435000$Mes <- month(dados_60435000$Data)
 head(dados_60435000)
 ```
 
-As duas colunas extras permitirão a realização do cálculo das vazões médias mensais para cada ano, sendo utilizadas as funções `group_by()`, `summarize()` e `mean()`. No final, rearrumamos as linhas em ordem decrescente de ano apenas para criarmos um **heatmap** que coloque os anos iniciais na parte de cima da Figura,
+As duas colunas extras permitirão a realização do cálculo das vazões médias mensais para cada ano. Para isso, utilizaremos as funções `group_by()`, `summarize()` e `mean()`. Ao final, rearrumamos as linhas em ordem decrescente de ano apenas para criarmos um **heatmap** que coloque os anos iniciais na parte de cima da Figura, com veremos mais adiante,
 
 ```{r vazão média}
-dados_60435000 <-
+dados_60435000_v2 <-
   dados_60435000 %>%
   group_by(Cod_estacao, Ano, Mes) %>%
   summarise(Vazao = mean(Vazao)) %>%
@@ -89,17 +89,19 @@ dados_60435000 <-
 tail(dados_60435000_v2, 12)
 ```
 
-Com esse novo_dataframe em mãos, podemos construir a Figura desejada. Mas para utilizar a função `heatmap()`, precisamos fazer uma pequena reestruturação, já que esa função precisa receber uma matriz com os valores de vazão média mensal, organizados de forma que as linhas representem os anos, enquanto as colunas representam os meses. Essa reestruturação é feita com o código abaixo,
+Com esse novo_dataframe em mãos, podemos construir a Figura desejada. Mas para utilizar a função `heatmap()`, precisamos fazer uma pequena reestruturação, já que essa função precisa receber uma matriz com os valores de vazão média mensal, que devem estar organizados de uma forma específica, com as linhas representando os anos e as colunas representando os meses. Essa reestruturação é feita com o código abaixo,
 
 ```{r reestrutura dataframe}
-dados_heatmap <- pivot_wider(data = dados_60435000,
+dados_heatmap <- pivot_wider(data = dados_60435000_v2,
                              names_from = Mes,
                              values_from = Vazao,
                              names_sort = TRUE)
 head(dados_heatmap)
 ```
 
-Agora basta utiliza a função `heatmap()` para construir a Figura desejada. Primeiro apagamos as duas colunas dessa matriz, porque a primeira traz o código da estação e a segunda os anos. Para construção do gráfico abaixo, usando a função `heatmap()`, precisamos apenas de uma matriz com os valores a serem utilizados.
+Agora basta utiliza a função `heatmap()` para construir a Figura desejada. Primeiro apagamos as primeiras duas colunas dessa matriz, porque a primeira traz o código da estação e a segunda os anos, ambas desnecessárias para fazer a Figura. 
+
+Para construção do gráfico abaixo, usando a função `heatmap()`, precisamos apenas de uma matriz com os valores a serem utilizados.
 
 ```{r heatmap, fig.width = 8, fig.height = 6}
 # Remoção das primeiras duas colunas
@@ -110,14 +112,14 @@ meses <- c("Jan", "Feb", "Mar", "Abr", "Mai", "Jun",
            "Jul", "Ago", "Set", "Out", "Nov", "Dez")
            
 # Criação do heatmap
-heatmap(teste, Colv = NA, Rowv = NA, scale = "none",
+heatmap(dados_heatmap, Colv = NA, Rowv = NA, scale = "none",
         labCol = meses,
         labRow = 2021:1978)
 ```
 
 Podemos perceber algumas características importantes nessa plotagem da disponibilidade dos dados de vazão da estação **60435000**. 
 
-Logo na primeira linha, que representa o ano de 1978, podemos ver que não há dados nos 5 primeiros meses, já que temos a cor branca representando os valores de vazão. No restate dos anos, pode-se verificar a ocorrência de falhas em mais três oportunidades: dez/2008, jan/2009 e ago/2019.
+Logo na primeira linha, que representa o ano de 1978, podemos ver que não há dados nos 5 primeiros meses, já que temos a cor branca representando os valores de vazão. No restante dos anos, pode-se verificar a ocorrência de falhas em mais três oportunidades: dez/2008, jan/2009 e ago/2019.
 
 Além das falhas, a Figura indica vazões médias mensais mais baixas (tons mais suaves) no meio do ano, entre os meses de junho a outubro, e vazões mais altas (tons mais escuros) entre novembro e maio.
 
@@ -127,7 +129,7 @@ Outra maneira de fazermos o mesmo gráfico é usando o **ggplot2**, abaixo segue
 ggplot() +
   
   # gráfico em sí
-  geom_tile(data = dados_60435000,
+  geom_tile(data = dados_60435000_v2,
             aes(x = Mes, y = Ano, fill = Vazao)) +
             
   # o que vai estar no eixo-x:          
