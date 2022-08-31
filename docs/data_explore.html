@@ -2222,7 +2222,11 @@ formato <em>Date</em> (lembrar que o <strong>R</strong> vai ler ela
 automaticamente como <em>character</em>), podemos usar o argumento
 <strong>colClasses =</strong> para avisar ao <strong>R</strong> a classe
 de cada coluna. Além disso, vamos aproveitar e transformar a coluna de
-código das estações como fator.</p>
+código das estações como fator. Se não souber qual a classe uma coluna,
+pode-se botar <strong>NA</strong> - porém é importante notar que é
+<strong>obrigatório</strong> informar o tipo. Caso coloque menos
+argumentos no vetor do que o número de colunas, o <strong>R</strong> irá
+iterar sobre o vetor informado.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_60435000</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='st'>"dados/60435000.txt"</span>,</span>
@@ -2237,7 +2241,7 @@ código das estações como fator.</p>
 <span>                          dec <span class='op'>=</span> <span class='st'>"."</span>,</span>
 <span>                          header <span class='op'>=</span> <span class='cn'>T</span>,</span>
 <span>                          fileEncoding <span class='op'>=</span> <span class='st'>"UTF-8"</span>,</span>
-<span>                          colClasses <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"factor"</span>, <span class='st'>"Date"</span>, <span class='st'>"numeric"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>                          colClasses <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"factor"</span>, <span class='st'>"Date"</span>, <span class='cn'>NA</span><span class='op'>)</span><span class='op'>)</span></span>
 <span>                          </span>
 <span><span class='va'>resumo_todas</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='st'>"dados/Resumo_estacoes.txt"</span>,</span>
 <span>                           sep <span class='op'>=</span> <span class='st'>"\t"</span>,</span>
@@ -2265,13 +2269,13 @@ uma estação. Na etapa seguinte, expandiremos para um conjunto de quatro
 estações selcionadas na aula anterior.</p>
 <p>Faremos um gráfico do tipo <strong>heatmap</strong>, que é
 basicamente uma figura que coloca cores numa Tabela. Neste primeiro
-passo, para cada estação, faremos um <strong>hetamap</strong> das vazões
+passo, para cada estação, faremos um <strong>heatmap</strong> das vazões
 médias mensais com os anos no eixo-y e os meses no eixo-x. A tonalidade
 das cores estará associada à magnitude da vazão média do mês em questão.
-Quando mês não possui vazão, a região do mês correspodente ficará
+Quando o mês não possui vazão, a região do mês correspodente ficará
 branca.</p>
-<p>O resulatdo final permite visualizar, dentro de uma faixa de anos, a
-maginitude das vazões por meio de cores, e também a ocorrência de falhas
+<p>O resultado final permite visualizar, dentro de uma faixa de anos, a
+magnitude das vazões por meio de cores, e também a ocorrência de falhas
 nos registros, permitindo reconhecer de cara a sazonalidade das vazões,
 com cores mais fortes no período úmido e cores mais suaves no período
 seco.</p>
@@ -2444,19 +2448,43 @@ formas usando diferentes funções dentro do <strong>R</strong>.</p>
 <p><img src="data_explore_files/figure-html5/heatmap%20ggplot2-1.png" width="768" /></p>
 </div>
 <h2 id="plotagem-da-série-histórica">Plotagem da série histórica</h2>
+<p>Como estamos lidando com dadso de vazão, uma das primeira coisas a
+fazer é plotar a série histórica, o que permite visualizarmos a faxia de
+variação das vazões diárias, a presença de falhas na série e de valores
+muito diferentes do restante, podendo indicar a necessidade de uma
+verificação mais cuidados para confirmarmos que esses valores são
+realmente confiáveis.</p>
+<p>O <strong>R-base</strong> permite plotarmos facilmente a série
+histórica. O código abaixo é o mais simples de todo para realizar esse
+tipo de plotagem. Vea que informamos apenas as variáveis referentes aos
+eixos x e y.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>time</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span>
-<span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>time</span>,<span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Vazao</span>,type<span class='op'>=</span><span class='st'>"l"</span>,</span>
-<span>     main <span class='op'>=</span> <span class='st'>"Vazões diárias - estação 60435000"</span>,</span>
-<span>     xlab <span class='op'>=</span> <span class='st'>"Anos"</span>,ylab <span class='op'>=</span> <span class='st'>"Q (m3/s)"</span><span class='op'>)</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Data</span>,</span>
+<span>     y <span class='op'>=</span> <span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="data_explore_files/figure-html5/grafico_1-1.png" width="768" /></p>
+</div>
+<p>A Figura gerada não é das mais atraentes, já que o <strong>R</strong>
+faz suas próprias escolhas, já que não definimos uma gama enorme de
+argumentos existentes. É possível fazer um esforço na tentativa de gerar
+uma Figura um pouco mais atraente, incluindo nomes para os eixos e
+título da Figura, espessura da linha, linhas de grade etc,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Data</span>,</span>
+<span>     y <span class='op'>=</span> <span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Vazao</span>,</span>
+<span>     main <span class='op'>=</span> <span class='st'>"Estação 60435000"</span>,</span>
+<span>     xlab <span class='op'>=</span> <span class='st'>"Tempo (anos)"</span>, ylab <span class='op'>=</span> <span class='st'>"Vazão (m3/s)"</span>,</span>
+<span>     type <span class='op'>=</span> <span class='st'>"l"</span>,</span>
+<span>     col <span class='op'>=</span> <span class='st'>"blue"</span><span class='op'>)</span></span>
 <span><span class='co'># Adiciona grid horizontal apenas</span></span>
 <span><span class='fu'><a href='https://rdrr.io/r/graphics/grid.html'>grid</a></span><span class='op'>(</span>nx <span class='op'>=</span> <span class='cn'>NA</span>, ny <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
 <span>     lty <span class='op'>=</span> <span class='fl'>2</span>,      <span class='co'># Grid line type</span></span>
 <span>     col <span class='op'>=</span> <span class='st'>"gray"</span>, <span class='co'># Grid line color</span></span>
 <span>     lwd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>      <span class='co'># Grid line width</span></span></code></pre>
 </div>
-<p><img src="data_explore_files/figure-html5/grafico%20Dirceu-1.png" width="768" /></p>
+<p><img src="data_explore_files/figure-html5/grafico_2,%20-1.png" width="768" /></p>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2481,29 +2509,8 @@ ggplot2</h2>
 <p>Diferentemente dos gráficos que podem ser feitos no <strong>R
 base</strong> (sem pacotes adicionais), o <strong>ggplot2</strong> atua
 um pouco diferente na forma em que é chamado. Por exemplo, se quisesse
-fazer um gráfico da série histórica da estação 60435000, poderíamos
-fazer sem pacotes.</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Data</span>,</span>
-<span>     y <span class='op'>=</span> <span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span></span></code></pre>
-</div>
-<p><img src="data_explore_files/figure-html5/grafico_1-1.png" width="768" /></p>
-</div>
-<p>Também podemos mexer com alguns argumentos dessa função base para
-mudar coisas como o título, nome dos eixos, a cor e o tipo de gráfico
-(ponto x linha por exemplo).</p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Data</span>,</span>
-<span>     y <span class='op'>=</span> <span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Vazao</span>,</span>
-<span>     main <span class='op'>=</span> <span class='st'>"Estação 60435000"</span>,</span>
-<span>     xlab <span class='op'>=</span> <span class='st'>"Datas"</span>, ylab <span class='op'>=</span> <span class='st'>"Vazão"</span>,</span>
-<span>     type <span class='op'>=</span> <span class='st'>"l"</span>,</span>
-<span>     col <span class='op'>=</span> <span class='st'>"blue"</span><span class='op'>)</span></span></code></pre>
-</div>
-<p><img src="data_explore_files/figure-html5/grafico_2,%20-1.png" width="768" /></p>
-</div>
+fazer um gráfico da série histórica da estação
+<strong>60435000</strong>, poderíamos fazer sem pacotes.</p>
 <p>Já com a função <code>ggplot()</code> não adianta apenas definirmos
 em quem iremos mexer. Dentro dessa função existe um argumento chamado de
 <strong>aes</strong>. Ele vem do inglês, <em>aesthetics</em> e, como o
@@ -2776,9 +2783,7 @@ class="uri">https://ieeexplore.ieee.org/document/4118486</a></li>
 <h3 id="todas-as-cores-do-r">Todas as cores do R:</h3>
 <ul>
 <li><a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf"
-class="uri">http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf</a>
-&gt;&gt;&gt;&gt;&gt;&gt;&gt;
-2aa96fc38fa716a70fee28c186be23697f6320d1</li>
+class="uri">http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf</a></li>
 </ul>
 <div class="sourceCode" id="cb7"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
