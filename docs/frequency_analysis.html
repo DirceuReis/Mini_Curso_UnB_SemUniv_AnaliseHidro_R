@@ -2176,9 +2176,6 @@ ajuste</a></li>
 <li><a href="#ajuste-da-lognormal-e-estimativa-dos-quantis"
 id="toc-ajuste-da-lognormal-e-estimativa-dos-quantis">Ajuste da
 lognormal e estimativa dos quantis</a></li>
-<li><a href="#determinação-dos-quantis-de-cheia"
-id="toc-determinação-dos-quantis-de-cheia">Determinação dos quantis de
-cheia</a></li>
 </ul></li>
 <li><a href="#descrição-das-incertezas"
 id="toc-descrição-das-incertezas">Descrição das incertezas</a>
@@ -2188,39 +2185,6 @@ href="#lógica-da-construção-de-intervalos-de-confiança-aproximados"
 id="toc-lógica-da-construção-de-intervalos-de-confiança-aproximados">Lógica
 da construção de intervalos de confiança aproximados</a></li>
 </ul></li>
-<li><a href="#inferência" id="toc-inferência">Inferência</a>
-<ul>
-<li><a href="#cálculo-dos-momentos-l"
-id="toc-cálculo-dos-momentos-l">Cálculo dos momentos-L</a></li>
-<li><a href="#diagrama-de-momentos-l"
-id="toc-diagrama-de-momentos-l">Diagrama de momentos-L</a></li>
-<li><a href="#estimativa-dos-parâmetros-da-distribuição"
-id="toc-estimativa-dos-parâmetros-da-distribuição">Estimativa dos
-parâmetros da distribuição</a></li>
-<li><a href="#cálculo-dos-quantis-de-cheia"
-id="toc-cálculo-dos-quantis-de-cheia">Cálculo dos quantis de
-cheia</a></li>
-</ul></li>
-<li><a href="#construção-da-curva-de-frequência"
-id="toc-construção-da-curva-de-frequência">Construção da curva de
-frequência</a></li>
-<li><a href="#descrição-das-incertezas-intervalo-de-confiança"
-id="toc-descrição-das-incertezas-intervalo-de-confiança">Descrição das
-incertezas (intervalo de confiança)</a></li>
-<li><a href="#curva-de-frequência-final"
-id="toc-curva-de-frequência-final">Curva de frequência final</a></li>
-<li><a href="#detalhes-técnicos" id="toc-detalhes-técnicos">Detalhes
-técnicos</a>
-<ul>
-<li><a href="#distribuição-de-probabilidades"
-id="toc-distribuição-de-probabilidades">Distribuição de
-probabilidades</a></li>
-</ul></li>
-<li><a href="#detalhamento-de-posição-de-plotagem"
-id="toc-detalhamento-de-posição-de-plotagem">Detalhamento de posição de
-plotagem</a></li>
-<li><a href="#passos-a-serem-executados"
-id="toc-passos-a-serem-executados">Passos a serem executados</a></li>
 </ul>
 </nav>
 </div>
@@ -2303,7 +2267,7 @@ entrar em qualqer detalhes sobre seu funcionamento.</p>
 <span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlToDataFrame.html'>xmlToDataFrame</a></span><span class='op'>(</span>nodes <span class='op'>=</span> <span class='va'>node_doc</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Por algum motivo o hidroweb não está filtrando os dados pela consistencia</span></span>
-<span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>dados_estacao</span>, <span class='va'>NivelConsistencia</span> <span class='op'>==</span> <span class='va'>nivel_consist</span><span class='op'>)</span></span>
+<span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>dados_estacao</span>, <span class='va'>NivelConsistencia</span> <span class='op'>==</span> <span class='va'>nivel_consist</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Separar data e hora</span></span>
 <span>  <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span>, <span class='fl'>1</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
@@ -2311,7 +2275,7 @@ entrar em qualqer detalhes sobre seu funcionamento.</p>
 <span>  </span>
 <span>  <span class='co'># Fazer um dataframe só com datas e valores de vazão</span></span>
 <span>  <span class='va'>datas_dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,</span>
-<span>                        to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/pkg/lubridate/man/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
+<span>                        to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://lubridate.tidyverse.org/reference/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
 <span>                        by <span class='op'>=</span> <span class='st'>"day"</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>Cod_estacao <span class='op'>=</span> <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>EstacaoCodigo</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,</span>
@@ -2410,16 +2374,16 @@ função incluindo como argumento o mês de início do ano hidrológico.</p>
 <span>  <span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Definir se o mês em questão entra no ano atual ou no próximo ano</span></span>
-<span>  <span class='va'>desloc_ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/pkg/lubridate/man/month.html'>month</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='va'>comeco_ano_hidro</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span></span>
+<span>  <span class='va'>desloc_ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/month.html'>month</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='va'>comeco_ano_hidro</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Ano Hidro</span></span>
-<span>  <span class='va'>tabela</span><span class='op'>$</span><span class='va'>ano_hidro</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/pkg/lubridate/man/year.html'>year</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>desloc_ano</span></span>
+<span>  <span class='va'>tabela</span><span class='op'>$</span><span class='va'>ano_hidro</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/year.html'>year</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>desloc_ano</span></span>
 <span>  </span>
 <span>  <span class='co'># Fazer uma tabela final apenas com os máximos anuais</span></span>
 <span>  <span class='va'>max_anuais</span> <span class='op'>&lt;-</span></span>
 <span>    <span class='va'>tabela</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
-<span>    <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Cod_estacao</span>, <span class='va'>ano_hidro</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
-<span>    <span class='fu'><a href='https://rdrr.io/pkg/dplyr/man/summarise.html'>summarise</a></span><span class='op'>(</span>maxima <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Cod_estacao</span>, <span class='va'>ano_hidro</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span>maxima <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span></span>
 <span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
@@ -2464,7 +2428,7 @@ simplemente identificando o número de linhas no dataframe
 <pre><code>[1] 45</code></pre>
 </div>
 <p>Mas já sabemos que o ano de 1978 não contém o valor de vazão máxima
-porque a série de vazões diárias não estava complete. Será que há outros
+porque a série de vazões diárias não estava completa. Será que há outros
 anos no histórico com esse problema. Para identificar se há falha em
 outros anos, utilizaremos duas funções do R de forma conjunta,
 <code>is.na</code> e <code>which</code>. A função <code>is.na</code>
@@ -2493,7 +2457,7 @@ hidrológico, e associa à variável <code>index</code>. Na linha seguinte,
 criamos um novo dataframe com a informação dos anos em que temos falhas
 nos dados.</p>
 <p>É verdade que poderíamos ter escrito o código acima de uma forma mais
-compacta, porém ficaria mais difícil de entender. Veja o que vocÊ
+compacta, porém ficaria mais difícil de entender. Veja o que você
 acha?</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2514,7 +2478,7 @@ seguinte que é a de visualizar a série de máximos anuais.</p>
 <h3 id="visualização-da-série-de-máximos-anuais">Visualização da série
 de máximos anuais</h3>
 <p>Agora já podemos visualizar a série de máximos anuais que serivirão
-de base para a nossa análise de frequência. Essa visaulização pode ser
+de base para a nossa análise de frequência. Essa visualização pode ser
 feita com o código abaixo, que utiliza apenas o <code>R-base</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2535,8 +2499,8 @@ de frequência amostral</h2>
 <p>Para que possamos plotar os círculos azuis escuros da Figura
 apresentada anteriormente, para o caso do Rio Salado, que representam as
 vazões máximas anuais observadas na série histórica, precisamos
-determinar as chamadas posição de plotagem, que para a referida Figura é
-o tempo de recorrência estimado para cada um desses valores.</p>
+determinar as chamadas posição de plotagem, que servirão de base para o
+cálculo do tempo de recorrênciapara cada valor de vazão da amostra.</p>
 <p>Para que seja possível entender esta etapa, vale a pena investir um
 certo tempo do curso em alguns conceitos básicos.</p>
 <p>O tempo de recorrência associado a uma determinada magnitude de
@@ -2563,7 +2527,8 @@ basearemos na chamada distribuição empírica de frequência.</p>
 <p>A distribuição empírica de frequência relaciona cada valor de vazão
 máxima observada na série histórica, denominada aqui de <span
 class="math inline">\(q_i\)</span>, com sua frequência relativa
-acumulada, <span class="math inline">\(\hat{F}_Q(q_i)\)</span>, que
+acumulada, <span class="math inline">\(\hat{F}_Q(q_i)\)</span>. A
+quantidade <span class="math inline">\(\hat{F}_Q(q_i)\)</span>
 representa a nossa estimativa para a probabilidade da variável de
 interesse, <span class="math inline">\(Q\)</span>, ser menor ou igual ao
 valor amostral, <span class="math inline">\(q_i\)</span>,</p>
@@ -2572,15 +2537,16 @@ q_i)\]</span></p>
 <p>em que <span class="math inline">\(\hat{F}_Q\)</span> é a estimativa
 da frequência relativa acumulada da variável aleatória <span
 class="math inline">\(Q\)</span> baseada na amostra, enquanto <span
-class="math inline">\(q_i\)</span> reprenta o valor de uma dada
+class="math inline">\(q_i\)</span> representa o valor de uma dada
 observação <span class="math inline">\(i\)</span>. O uso do acento
 circunflexo na equação acima é uma convenção utilizada em estatística
 para mostrar que estamos nos referindo a uma estimativa da grandeza em
 questão baseada na amostra que se tem em mãos.</p>
-<p>Bem, quando falamos em <span class="math inline">\(T_r(q)\)</span>,
-nos referimos à probabilidade de excedência, que é na verdade o
-complemento de <span class="math inline">\(\hat{F}_Q(q_i)\)</span>, ou
-seja,</p>
+<p>Já dissemos acima que o tempo de recorrência <span
+class="math inline">\(T_r(q)\)</span> é função da probabilidade de
+excedência, que por sua vez pode ser interpretada como o complemento de
+<span class="math inline">\(F_Q(q_i)\)</span>. Dessa forma, podemos
+dizer que</p>
 <p><span class="math display">\[\hat{P}(Q \gt q_i) = 1 - \hat{P}(Q \le
 q_i)\]</span> de forma que</p>
 <p><span class="math display">\[\hat{T}_r(q_i) = \frac{1}{1-\hat{P}(Q
@@ -2599,8 +2565,8 @@ excedência utilizando a seguinte fórmula,</p>
 <p>em que <span class="math inline">\(q_{(i)}\)</span> representa a
 chamada estatística de ordem <span class="math inline">\(i\)</span>, em
 que <span class="math inline">\(q_{(1)}\gt q_{(2)}\gt \ldots \gt
-q_{(n)}\)</span>, de forma que <span
-class="math inline">\(q_{(1)}\)</span> e <span
+q_{(n)}\)</span> representa a série ordenada das vazões máximas anuais,
+de forma que <span class="math inline">\(q_{(1)}\)</span> e <span
 class="math inline">\(q_{(n)}\)</span> são, respectivamente, a maior e a
 menor observações da amostra. De acordo com essa expressão, por exemplo,
 numa amostra de tamanho 49, a probabilidade da vazão máxima anual ser
@@ -2881,20 +2847,18 @@ quantas linhas eu estou interessado em ver.</p>
 </div>
 <p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-13-1.png" width="768" /></p>
 </div>
-<h3 id="determinação-dos-quantis-de-cheia">Determinação dos quantis de
-cheia</h3>
 <h2 id="descrição-das-incertezas">Descrição das incertezas</h2>
 <p>Quando realizamos uma análise de frequência, além da estimativa dos
-quantis de cheia, precisamos ter uma ideia doo quão confiantes estamos
-em relação aos valores estimados. Sendo assim, precisamos entender como
+quantis de cheia, precisamos ter uma ideia do quão confiantes estamos em
+relação aos valores estimados. Sendo assim, precisamos entender como
 calcular a precisão dessas estimativas.</p>
 <p>Normalmente, a maneira que empregamos para descrever as incertezas
-nas estiamtovas dos quantis de cheias é por meio de intervalos de
-confiança.Neste nosso exercício aqui, aprenderemos como calcular
+nas estimativas dos quantis de cheias é por meio de intervalos de
+confiança. Neste nosso exercício aqui, aprenderemos como calcular
 intervalos de confiança associados à distribuição lognormal, que é a
-distribuição que está sendo utilizados por nós para construir a curva de
+distribuição que está sendo utilizada por nós para construir a curva de
 frequência.</p>
-<p>Existem duas maneiras de se calcular intervaloes de confiança para a
+<p>Existem duas maneiras de se calcular intervalos de confiança para a
 distribuição lognormal,</p>
 <ul>
 <li>intervalos aproximados</li>
@@ -2920,11 +2884,21 @@ comportamento pode se descrito por uma distribuição teórica de
 probabilidades.</p>
 <p>Bem, se <span class="math inline">\(\hat{W}_p\)</span> possui
 distribuição Normal e variância <span
-class="math inline">\(V(\hat{W}_p)\)</span>, então</p>
+class="math inline">\(V(\hat{W}_p)\)</span>, então nós já sabemos que se
+subtrairmos seu valor esperado, <span
+class="math inline">\(E[\hat{W}_p]\)</span>, e dividirmos o resulto pelo
+seu desvio-padrão, <span
+class="math inline">\(\sqrt{V(\hat{W}_p)}\)</span>, obteremos uma
+variável Normal-padrão, usualmente denominada de <span
+class="math inline">\(Z\)</span>,</p>
 <p><span class="math display">\[
 Z = \frac{\hat{W}_p-E[\hat{W}_p]}{\sqrt{V(\hat{W}_p)}}
 \]</span> Como <span class="math inline">\(Z\sim N(0,1)\)</span>,
-podemos afirmar que</p>
+podemos afirmar que a probabilidade de <span
+class="math inline">\(Z\)</span> estar entre os quantis <span
+class="math inline">\(Z_{\alpha/2}\)</span> e <span
+class="math inline">\(Z_{1-\alpha/2}\)</span> vale <span
+class="math inline">\(\alpha\)</span>,</p>
 <p><span class="math display">\[
 P(z_{\alpha/2}\le Z \le z_{1-\alpha/2}) = \alpha
 \]</span> Se substituirmos <span class="math inline">\(Z\)</span> da
@@ -2934,7 +2908,8 @@ P\Bigg(z_{\alpha/2}\le
 \frac{\hat{W}_p-E[\hat{W}_p]}{\sqrt{V(\hat{W}_p)}} \le
 z_{1-\alpha/2}\Bigg) = \alpha
 \]</span> Depois de algumas manipulações algébricas, e admitindo que o
-estimador _p é não-tendencioso, o que significa dizer que <span
+estimador <span class="math inline">\(\hat{W}_p\)</span> é
+não-tendencioso, o que significa dizer que <span
 class="math inline">\(E[\hat{W}_p]=W_p\)</span>, chegamos à afirmação
 abaixo,</p>
 <p><span class="math display">\[
@@ -2943,18 +2918,18 @@ P\Bigg(\hat{W}_p - z_{1-\alpha/2}\sqrt{V(\hat{W}_p)} \le W_p \le
 \]</span> que em bom português diz que a probabilidade do valor
 populacional de <span class="math inline">\(W_p\)</span> estar entre
 esses dois limites, <span class="math inline">\(\hat{W}_p \pm
-z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}\)</span> é igual à <span
-class="math inline">\(\alpha\)</span>. É essa afirmação matemática que
-nos permite estabelecer o intervalo de confiança de <span
-class="math inline">\(100(1-\alpha)\%\)</span> para <span
-class="math inline">\(W_p\)</span>, apresentado abaixo,</p>
+z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}\)</span>, é igual à <span
+class="math inline">\(\alpha\)</span>.</p>
+<p>É essa afirmação matemática que nos permite estabelecer o intervalo
+de confiança de <span class="math inline">\(100(1-\alpha)\%\)</span>
+para <span class="math inline">\(W_p\)</span>, apresentado abaixo,</p>
 <p><span class="math display">\[
 \Bigg[\hat{W}_p - z_{1-\alpha/2}\sqrt{V(\hat{W}_p)};\hat{W}_p +
 z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}\Bigg]
 \]</span></p>
 <p>Sendo assim, podemos construir o intervalo de confiança aproximado de
 <span class="math inline">\(Y_p=ln(Q_p)\)</span> e de <span
-class="math inline">\(Q_p\)</span>, que é o que de fato nos
+class="math inline">\(Q_p\)</span>, sendo esse último o que de fato nos
 interessa.</p>
 <p>Primeiro, constuímos o intervalo de confiança aproximado de <span
 class="math inline">\(Y_p\)</span>,</p>
@@ -2964,18 +2939,10 @@ z_{1-\alpha/2}\sqrt{V(\hat{Y}_p)}\Bigg]
 \]</span></p>
 <p>O problema aqui é que ainda precisamos saber quem é <span
 class="math inline">\(V(\hat{Y}_p)\)</span>. Este não é um curso de
-estatística, mas sim de <code>R</code> aplicado à Hidrologia. Por isso,
-deixarei a explicação de como determinar <span
-class="math inline">\(V(\hat{Y}_p)\)</span> num local separado,</p>
-<div class="infobox tip">
-<p>There is a lot of information within this practical book and
-<strong>we do not expect you to read everything we link to</strong>. You
-should attend each lecture, go through every practical and do some
-associated reading.</p>
-<p>This is a 15 credit module, equivalent to 150 hours of study
-(including the taught sessions). Outside of our lectures and practical
-sessions (3 hours a week) <strong>you should be spending an extra 12
-hours a week on this module</strong>.</p>
+estatística, mas sim de <code>R</code> aplicado à Hidrologia. De todo
+modo, deixarei aqui uma breve explicação de como obter <span
+class="math inline">\(V(\hat{Y}_p)\)</span> para aqueles interessados
+nos detalhes,</p>
 <p><span class="math display">\[
 \begin{align}
 V(\hat{Y}_p) &amp;= V(\hat{\mu}_y + z_p\hat{\sigma}_Y)\\
@@ -2984,18 +2951,9 @@ V(\hat{Y}_p) &amp;= V(\hat{\mu}_y + z_p\hat{\sigma}_Y)\\
              &amp;= \frac{\hat{\sigma}_Y^2}{n} + z_p^2V(\hat{\sigma}_Y)
 \end{align}
 \]</span></p>
-</div>
-<p><span class="math display">\[
-\begin{align}
-V(\hat{Y}_p) &amp;= V(\hat{\mu}_y + z_p\hat{\sigma}_Y)\\
-             &amp;= V(\hat{\mu}_y) + V(z_p\hat{\sigma}_Y)\\
-             &amp;= V(\hat{\mu}_y) + z_p^2V(\hat{\sigma}_Y)\\
-             &amp;= \frac{\hat{\sigma}_Y^2}{n} + z_p^2V(\hat{\sigma}_Y)
-\end{align}
-\]</span> Pode-se mostrar que <span
-class="math inline">\(V(\sigma_Y)\approx \hat{\sigma}_Y^2/(2n)\)</span>,
-o que resulta na seguinte expressão para <span
-class="math inline">\(V(\hat{Y}_p)\)</span>,</p>
+<p>Pode-se mostrar que <span class="math inline">\(V(\sigma_Y)\approx
+\hat{\sigma}_Y^2/(2n)\)</span>, o que resulta na seguinte expressão para
+<span class="math inline">\(V(\hat{Y}_p)\)</span>,</p>
 <p><span class="math display">\[
 V(\hat{Y}_p) \approx
 \frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)
@@ -3023,10 +2981,10 @@ z_{1-\alpha/2}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)}\Bi
 \]</span></p>
 <p>Por exemplo, suponha que queiramos estabelecer o intervalo de
 confiança de 95% para o quantil <span
-class="math inline">\(Q_99\)</span>, equivalente à cheia de 100 anos de
-recorrência. Nesse caso, <span class="math inline">\(\alpha =
+class="math inline">\(Q_{99}\)</span>, equivalente à cheia de 100 anos
+de recorrência. Nesse caso, <span class="math inline">\(\alpha =
 0.05\)</span> e <span class="math inline">\(p=0.99\)</span>, o que leva
-a seguinte intervalo de confiança,</p>
+ao seguinte intervalo de confiança,</p>
 <p><span class="math display">\[
 \begin{align}
 IC_{.95}(Q_{0.99}) &amp;= exp\Bigg[(\hat{\mu}_Y+z_{.99}\hat{\sigma}_y)
@@ -3035,7 +2993,9 @@ z_{.975}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_{.99}^2\Bigg)}\Bigg
                     &amp;=exp\Bigg[(\hat{\mu}_Y+2.326\hat{\sigma}_y) \pm
 1.96\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}2.326^2\Bigg)}\Bigg]
 \end{align}
-\]</span></p>
+\]</span> As linhas de código abaixo permitem calcular os limites
+inferior e superior do intervalo de confiança aproximado para os quantis
+da distribuição lognonal,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>alpha</span> <span class='op'>&lt;-</span> <span class='fl'>0.05</span></span>
@@ -3045,6 +3005,10 @@ z_{.975}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_{.99}^2\Bigg)}\Bigg
 <span><span class='va'>upper_IC</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span><span class='op'>(</span><span class='op'>(</span><span class='va'>mu_Y_hat</span> <span class='op'>+</span> <span class='va'>z_p</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>sigma2_hat</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>qnorm</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>-</span><span class='va'>alpha</span><span class='op'>/</span><span class='fl'>2</span>,<span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>var_yp</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
+<p>Podemos agora terminar a Figura com a nossa curva de frequência de
+cheias completa, incluindo os intervalor de confiança de <span
+class="math inline">\(95\%\)</span> representados com a linha
+tracejada.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span>,type <span class='op'>=</span> <span class='st'>"p"</span>,           <span class='co'># plota apenas pontos</span></span>
@@ -3077,202 +3041,6 @@ z_{.975}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_{.99}^2\Bigg)}\Bigg
 </div>
 <p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-15-1.png" width="960" /></p>
 </div>
-<h2 id="inferência">Inferência</h2>
-<h3 id="cálculo-dos-momentos-l">Cálculo dos momentos-L</h3>
-<h3 id="diagrama-de-momentos-l">Diagrama de momentos-L</h3>
-<h3 id="estimativa-dos-parâmetros-da-distribuição">Estimativa dos
-parâmetros da distribuição</h3>
-<h3 id="cálculo-dos-quantis-de-cheia">Cálculo dos quantis de cheia</h3>
-<h2 id="construção-da-curva-de-frequência">Construção da curva de
-frequência</h2>
-<h2 id="descrição-das-incertezas-intervalo-de-confiança">Descrição das
-incertezas (intervalo de confiança)</h2>
-<h2 id="curva-de-frequência-final">Curva de frequência final</h2>
-<h2 id="detalhes-técnicos">Detalhes técnicos</h2>
-<h3 id="distribuição-de-probabilidades">Distribuição de
-probabilidades</h3>
-<h4 id="para-que-servem">Para que servem?</h4>
-<p>O uso de uma distribuição teórica de probabilidades se justifica por
-três motivos,</p>
-<ul>
-<li>permite a extrapolação da curva, ou seja, torna possível a
-estimativa de uma vazão com 50 anos tempo de retorno mesmo quando temos
-apenas 20 anos de dados;</li>
-<li>pode ser utilizada como um interpolador de quantis de cheia, já que
-o uso da frequência amostral só permite estimar quantis para um número
-discreto, e nem sempre desejado, de períodos de retorno.</li>
-<li>é uma maneira de armazenar as infomações relevantes da série de
-máximos de maneira compacta, visto que basta guardar o valor dos
-parâmetro da distribuição para obter qualquer quantil de cheia que se
-tenha interesse.</li>
-</ul>
-<h2 id="detalhamento-de-posição-de-plotagem">Detalhamento de posição de
-plotagem</h2>
-<p>Embora não seja o objetivo aqui deste curso entender os detalhes
-deste procedimento, mas vale a pena dizer o seguinte: como a
-distribuição empírica de frequência depende da amostra que se tem em
-mãos, ela é na verdade uma variável aleatória, ou seja, ela pode variar
-de amostra para amostra, de modo que é razoável imaginar que ela possui
-uma distribuição de probabilidades.</p>
-<p>Suponha que fosse possível obter diversas amostras independentes da
-variável de interesse, todas de tamanho <span
-class="math inline">\(n\)</span> e oriundas de uma mesma distribuição de
-probabilidades. Vale lembrar que na prática apenas uma amostra está
-disponível. Embora não seja apresentado aqui o porquê, é possível
-mostrar que a probabilidade de não-excedência da estatística de ordem
-$X_{(i)}, <span class="math inline">\(Q_i = P(X \gt x_{(i)})\)</span> é
-também uma variável aleatória, pois depende da amostra. A distribuição
-de <span class="math inline">\(Q_i\)</span> é uma Beta (i.e., possui uma
-distribuição Beta) com valor esperado</p>
-<p><span class="math display">\[E[Q_i] = \frac{i}{n + 1}\]</span></p>
-<p>e variância</p>
-<p><span class="math display">\[V[Q_i] =
-\frac{n-i+1}{(n+1)^2(n+2)}\]</span> independetente da dsitribuiçao da
-variável de interesse.</p>
-<p>Isso significa, por exemplo, que numa amostra com 19 observações, o
-valor esperado da probabilididade da variável de interesse ser maior do
-que a segunda maior observação da referida amostra, <span
-class="math inline">\(Q_{(2)}\)</span>, é igual a</p>
-<p><span
-class="math display">\[E[Q_{(2)}]=\frac{2}{20}=0.10\]</span></p>
-<p>da mesma forma que o valor esperado da probabilididade da variável de
-interesse ser maior do que a maior observação da referida amostra, <span
-class="math inline">\(Q_{(1)}\)</span>, é igual a</p>
-<p><span
-class="math display">\[E[Q_{(1)}]=\frac{1}{20}=0.05\]</span></p>
-<p>Podemos concluir, portanto, que se estimarmos <span
-class="math inline">\(F_X(x_{(i)})\)</span> utilizando a expressão <span
-class="math inline">\(i/(n+1)\)</span>, em média, utilizando várias
-amostras, a média das estimativas de <span
-class="math inline">\(F_X(x_{(i)})\)</span> seria bem próxima do valor
-populacional, e o grau de proximidade aumenta com o tamanho da
-amostra.</p>
-<p>Porém, é importanter deixar claro que quando há apenas uma amostra,
-não é possível ter certeza de que a estimativa é correta, mas é
-intuitivo pensar que um estimador, que em média está correto, é de fato
-um bom estimador. Mais à frente na aula, retornaremos à discussão sobre
-estimadores e suas características. Mas vale introduzir o conceito de
-estimador não tendencioso, que é aquele que na média, ao longo de várias
-amostras, seu valor é igual ao valor populacional.</p>
-<p>Portanto, por se tratar de um estimador não-tendencioso da
-probabilidade de não-excedência da estatística de ordem de uma amostra,
-a expressão apresentada anteriormente é uma forte candidata a ser
-utilizada na construção da curva de distribuição empírica de frequência.
-Porém, como já mencionado anteriormente, há outras formas de se estimar
-<span class="math inline">\(F_X(x_{(i)})\)</span>, sendo que todas
-seguem a seguinte expressão, com diferença apenas para o valor do
-parâmetro <span class="math inline">\(a\)</span>.</p>
-<p><span class="math display">\[P(X \lt x_{(i)}) =
-\frac{i-a}{n+1-2a}\]</span></p>
-<p>A Tabela abaixo apresenta diversas expressões para o estimador de
-<span class="math inline">\(F_X(x_{(i)})\)</span>, incluindo a motivação
-de cada alternativa.</p>
-<table>
-<colgroup>
-<col style="width: 13%" />
-<col style="width: 23%" />
-<col style="width: 13%" />
-<col style="width: 18%" />
-<col style="width: 31%" />
-</colgroup>
-<thead>
-<tr class="header">
-<th>Nome</th>
-<th>Fórmula</th>
-<th><span class="math inline">\(a\)</span></th>
-<th><span class="math inline">\(T_n\)</span></th>
-<th>Motivação</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>Weibull</td>
-<td><span class="math inline">\(\frac{i}{n+1}\)</span></td>
-<td>0</td>
-<td><span class="math inline">\(n+1\)</span></td>
-<td>Est. não-tendenciosa da Prob. de não-excedência para qualquer
-distribuição teórica</td>
-</tr>
-<tr class="even">
-<td>Mediana</td>
-<td><span class="math inline">\(\frac{i-0.3175}{n+0.365}\)</span></td>
-<td>0.3175</td>
-<td><span class="math inline">\(1.47n+0.5\)</span></td>
-<td>Mediana das probabilidades</td>
-</tr>
-<tr class="odd">
-<td>APL</td>
-<td><span class="math inline">\(\frac{i-0.35}{n}\)</span></td>
-<td><span class="math inline">\(~0.35\)</span></td>
-<td><span class="math inline">\(1.54n\)</span></td>
-<td>Estimador baseado em momentos probabilísticos</td>
-</tr>
-<tr class="even">
-<td>Blom</td>
-<td><span class="math inline">\(\frac{i-3/8}{n+1/4}\)</span></td>
-<td>0.375</td>
-<td><span class="math inline">\(1.60n+0.4\)</span></td>
-<td>Quantis normais não-tendenciosos</td>
-</tr>
-<tr class="odd">
-<td>Cunnane</td>
-<td><span class="math inline">\(\frac{i-0.40}{n+0.2}\)</span></td>
-<td>0.40</td>
-<td><span class="math inline">\(1.67n+0.3\)</span></td>
-<td>Quantis aproximadamente não-tendenciosos</td>
-</tr>
-<tr class="even">
-<td>Grigorten</td>
-<td><span class="math inline">\(\frac{i-0.44}{n+0.12}\)</span></td>
-<td>0.44</td>
-<td><span class="math inline">\(1.79n+0.2\)</span></td>
-<td>Otimizada para distribuição Gumbel</td>
-</tr>
-<tr class="odd">
-<td>Hazen</td>
-<td><span class="math inline">\(\frac{i-0.5}{n}\)</span></td>
-<td>0.50</td>
-<td><span class="math inline">\(2n\)</span></td>
-<td>Escolha tradicional</td>
-</tr>
-</tbody>
-</table>
-<h4 id="quais-são-as-distribuições-mais-usadas">Quais são as
-distribuições mais usadas?</h4>
-<h4 id="como-avaliar-a-distribuição-mais-indicada">Como avaliar a
-distribuição mais indicada?</h4>
-<h4 id="ajuste-dos-parâmetros-da-distribuição">Ajuste dos parâmetros da
-distribuição</h4>
-<h4 id="estimativa-dos-quantis-de-cheia">Estimativa dos quantis de
-cheia</h4>
-<h4 id="descrição-das-incertezas-1">Descrição das incertezas</h4>
-<h2 id="passos-a-serem-executados">Passos a serem executados</h2>
-<ul>
-<li>Visualizar os dados
-<ul>
-<li>Escolha da estação fluviométrica</li>
-<li>Obtenção da série de máximos anuais</li>
-<li>Cálculo das posições de plotagem</li>
-<li>Construção de figura utilizando valores amostrais apenas</li>
-</ul></li>
-<li>Inferência
-<ul>
-<li>Cálculo dos momentos-L para fins de verificação da distribuição
-teórica de probabilidades</li>
-<li>Plotagem do diagrama de momentos-L das distribuições teóricas</li>
-<li>Ajuste dos parâmetros da distribuição teórica de probabilidades
-<ul>
-<li>Lognormal</li>
-<li>Generalizada de valores extremos</li>
-</ul></li>
-<li>Cálculo dos quantis de cheia<br />
-</li>
-</ul></li>
-<li>Curva de frequência sem incertezas</li>
-<li>Estimativa dos intervalos de confiança para a distribuição
-Lognormal</li>
-<li>Curva de frequência com intervalos de confiança</li>
-</ul>
 <div class="sourceCode" id="cb9"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
