@@ -59,12 +59,12 @@ Este é um curso introdutório sobre a linguagem R para aqueles interessados em 
 
 Durante o curso, os alunos irão aprender como utilizar a linguagem R para executar um conjunto de atividades que permitirão realizar uma análise de frequência de cheias para uma estação fluviométrica, cujos dados serão automaticamente obtidos do webservice da Agência Nacional de Águas. Ao final do curso, os alunos terão finalizado um estudo que permitirá relacionar a magnitude das vazões máximas anuais com sua probabilidade de excedência, relação primoridal para dimensionameno de diversas estrutaras de engenharia, gestão do risco de cheias e para o oredenamento do uso e ocupação do solo.   
 
-Este curso é o primeiro de um conjunto maior de cursos que estão sendo elaborados pelos seguintes professores do blog [Água e Modelagem](https://aguaemodelagem.wordpress.com):
+Este curso é o primeiro de um conjunto maior de cursos que estão sendo elaborados pelos seguintes professores do blog [Água e Modelagem](https://aguaemodelagem.wordpress.com), apresentados em ordem alfabética:
 
-- Dirceu S. Reis Jr.
-- Francisco Eustáquio
-- Pedro Chaffe
-- Wilson Fernandes
+- Dirceu S. Reis Jr. (UnB)
+- Francisco Eustáquio (UFMG)
+- Pedro Chaffe (UFSC)
+- Wilson Fernandes (UFMG) 
 
 ## Datas e local do curso
 
@@ -84,82 +84,7 @@ Como o número de vagas é limitado, recomenda-se que a inscrição seja feita o
 
 ## Antes do curso
 
-Apresar da sala onde será ministrado contenha computadores com os programas já instalados, que quiser utilizar seu prórpio computador será muito bem vindo. Nesse caso, sugerimos instalar tanto o **R** quanto o **RStudio**. Para isso, entre na aula **Conceitos Básicos em R** e siga as intruções de instalação.
+Os computadores da sala onde será ministrado o curso já tem os programas instalados. De todo modo, para que seja possível trabalhar fora do horario do curso, sugerimos que os participantes tenham os mesmos programas instalados em seu própio computador. 
+
+Sugerimos instalar tanto o **R** quanto o **RStudio**. Para isso, entre na aula **Conceitos Básicos em R** e siga as instruções de instalação.
    
-## Tópicos (em construção)
-
-### Conceitos básicos de R
-
-- Ambientação no **RStudio**
-- Primeiros passos e comandos
-- Criação de variáveis e atribuição de valores
-- Objetos do **R**
-   - Classes
-   - Vetores
-   - Fatores
-   - Coerção de variáveis
-   - Sequências
-   - Indexação
-- Operação com vetores
-- Outros tipos de objetos
-   - Matrizes
-   - Data frames
-   - Listas
-- Progamação básica
-   - Funções
-   - Estruturas condicionais
-   - Loops
-
-### Obtenção dos dados
-
-- Obtenção a partir de diversas fontes de informação
-  - AGência Nacional de Águas e Saneamento Básico (ANA)
-  - Operador Nacional do Sistema Elétrico (ONS)
-  - Bases da dados internacionais
-- Procedimentos para pré-selecionar estações 
-   - com base num Shapefile de uma bacia
-   - (IMPORTANTE: ir atrá disso) código Thiago: lat-lon -> trecho de rio -> trechos de montante -> estações flu
-- Obtenção de informações com bae em diferentes forms de filtros
-  - % falhas no ano
-  - número mínimo de anos sem falhas]
-  - número mínimo de anos sem falhas consecutivas
-  - outros
-
-### Manipulação dos dados
-
-- Reorganizar dados dependendo das especificidades do que se quer fazer
-- Gerar séries diárias, mensais e anuais (considerando ano hidrológico)
-- Gerar séries de Q7
-- Gerar séries de máximos anuais
-- Gerar séries acima de um determinado threshold (para análise PDS)
-- Determinação de veranicos (extensão e frequência) nos dados de chuva
-- outros?
-
-
-### Análise exploratória dos dados
-
-- Representação gráfica oriundas de um conjunto de estações
-  - em um mapa
-  - em um gráfico (e.g., boxplot)
-- Representação gráfica de uma única estação
-- Representação numérica
-  - Média
-  - desvio-padrão
-  - correlação temporal
-  - correlação espacial
-
-### Análise de frequência de cheias
-
-- Posição de plotagem
-- A distribuição de probabilidades
-- Ajuste da distribuição
-- Valores dos parâmetros
-- Determinação dos quantis de cheia
-- Determinação dos intervalos que descevem as incertezas na estimativa
-- Plotagem
-   - curva de frequência (Tr vs Q)
-- Tabelas com resutados
-
-   
-
-
