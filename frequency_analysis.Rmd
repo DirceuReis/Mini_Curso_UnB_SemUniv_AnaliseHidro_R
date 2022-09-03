@@ -288,9 +288,14 @@ axis(2, tck = 1, lty = 2, col = "gray")
 
 ## Ajuste de uma distribuição teórica de probabilidades
 
-Estudos de análise de frequência de cheias geralmente utilizam as seguintes distribuições teóricas de probabilidade: lognormal (LN), Generalizada de Valoes Extremos (GEV) e Log-Pearson Tipo 3 (LP3). 
+Estudos que realizam de análise de frequência de cheias geralmente utilizam as seguintes distribuições teóricas de probabilidade: 
 
-Como o intuito aqui não é o de se aprofundar nos detalhes técnicos de análise de frequência, o que exigiria um número muito miaor de horas de aula, mas de ter uma motivação maior para aprender a linguagem **R**, vamos realizar nossa análise com a distribuição lognormal, que é bastante simples de tratar.
+- Lognormal de 2 parâmetros (LN2)
+- Lognormal de 3 parâmetros (LN3)
+- Generalizada de Valoes Extremos (GEV)
+- Log-Pearson Tipo 3 (LP3). 
+
+Como o intuito aqui não é o de se aprofundar nos detalhes técnicos de análise de frequência, o que exigiria um número muito maior de horas de aula, mas de ter uma motivação maior para aprender a linguagem **R**, vamos realizar nossa análise de frequência de cheias com a distribuição lognormal de 2 parâmetros, que é bastante simples de tratar.
 
 ### A distribuição lognormal
 
