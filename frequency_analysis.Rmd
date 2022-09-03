@@ -17,7 +17,7 @@ O objetivo desta atividade é realizar uma análise de frequência de cheias a n
 
 Além de construirmos a relação entre a magnitude das vazões máximas anuais e a respectiva probabilidade de excedência, é importante saber estimar também o grau de incerteza nessas estimativas. Essas incertezas são usualmente representadas por intervalos de confiança, como veremos mais adianate. 
 
-Além de calcular essas quantidades, a curva de frequência, e suas respectivas incertezas, são representadas graficamente, como na figura abaixo, que mostra os resultados para um estudo de cheias numa seção do Rio Salado, localizada na província de Santa Fé, na Argentina, onde em 2003 ocorreu o rompimento de um dique que resultou em perde de vidas humanas e elevados prejuízos.  
+Além de calcular essas quantidades, a curva de frequência, e suas respectivas incertezas, são representadas graficamente, como na figura abaixo, que mostra os resultados para um estudo de cheias numa seção do Rio Salado, localizada na província de Santa Fé, na Argentina, onde em 2003 ocorreu o rompimento de um dique que resultou em perde de vidas humanas e elevados prejuízos. Nesse caso, utilizou-se a distribuição Generalizada de Valores Extremos (GEV), mas aqui no curso faremos uso de uma distribuição mais simples de se trabalhar, a lognormal. O objetivo aqui é ter uma motivação hidrológica para apreder a usar a linguagem R.  
 
 Contruiremos aqui no curso uma figura semelhante a esta, onde no eixo-x temos o tempo de recorrência e no eixo-y a magnitude das vazões máximas anuais. O tempo de recorrência apresentado no eixo-x é uma maneira de representar a probabilidade de excedência. A linha cheia em vermelho representa o valor esperado dos valores da vazão máxima anual em função do tempo de recorrência, enquanto as linhas tracejadas representam os intervalos de confiança de 95%, ilustrando as incertezas envolvidas nessas estimativas. Os círculos azuis escuros representam as vazões máximas anuais registradas no passado, enquanto o círculo azul claro mostra a cheia destruidora de 2003. 
 
@@ -96,9 +96,9 @@ dados_serie_ANA <- function(cod_estacao = NA,
 }
 ```
 
-Precisamos escolher uma estação fluviométrica para realizar nossa análise. SUgiro utilizar a estação  **60435000**, localizada na bacia do Rio Descoberto, que drena uma área de $113.2 km^2$, mas vocês têm a indepedência de escolhar qualquer outras estação que esteja no banco de dados da Agência Nacional de Águas.
+Precisamos escolher uma estação fluviométrica para realizar nossa análise. Sugiro utilizar a estação  **60435000**, localizada na bacia do Rio Descoberto, que drena uma área de 113.2 km$^2$, mas vocês têm a indepedência de escolhar qualquer outras estação que esteja no banco de dados da Agência Nacional de Águas.
 
-Para obter a série diária da estação escolhida, basta chamar a função acima passando o argumento necessário, que é simplesmente o código da estação desejada. A função devolve um dataframe com a série de máximos anuais. 
+Para obter a série diária da estação escolhida, basta chamar a função acima passando o argumento necessário, que é simplesmente o código da estação desejada. A função devolve um dataframe com a série de vazões médias diárias. 
 
 Para fins de visualização, utilizamos a função `head(nome_do_dataframe)` do R, como mostrado abaixo, que nos mostra as primeiras 6 linhas do dataframe.
 
@@ -111,7 +111,7 @@ head(dados_60435000)
 
 Além disso, é sempre importante visualizar os dados para que se teha uma ideia geral da faixa de variação das vazões, sazonalidade e outras padrões que possa ser percebidos num gráfico. 
 
-Aqui, nós plotaremos a série completa das vazões diárias da estação **60435000** utilizando o código abaixo, que emprega o chamado R-base, ao invés de pacote `ggplot2`.
+Aqui, nós plotaremos a série completa das vazões diárias da estação **60435000** utilizando o código abaixo, que emprega o chamado R-base, ao invés de pacote `ggplot2`, visto na aula anterior. Mas se preferir utilizar o `ggplot2` para realizar esta plotagem, fique à vontade.
 
 ```{r, fig.width = 8, fig.height = 6}
 time <- as.Date(dados_60435000$Data)
@@ -126,11 +126,9 @@ grid(nx = NA, ny = NULL,
 ```
 
 
-Pode-se notar que nos seis primeiros dias dos dados, que se inicia em maio de 1978, não temos valores registrados de vazão. 
-
 ### Extração da série de vazões máximas anuais
 
-Com a série de vazões diárias, passamos ao segundo passo que é o de construir a série de máximos anuais com base no ano hidrológico. Para isso, utilizaremos uma outra função, que é apresentada abaixo. Veja que a função internamente considera o ano hidrológico com início no mês de agosto. O mês de início do ano hidrológico pode ser facilmente alterado, se for o desejo do analista. Uma outra solução seria reesecrever a função incluindo como argumento o mês de início do ano hidrológico.
+Com a série de vazões diárias, passamos ao segundo passo que é o de construir a série de máximos anuais com base no ano hidrológico. Para isso, utilizaremos uma outra função, que é apresentada abaixo. Veja que a função tem como *default* o ano hidrológico com início no mês de agosto. Mas o mês de início do ano hidrológico pode ser facilmente alterado, bastando aicionar esse argumento quando chamar a função.
 
 ```{r}
 # Contrução da série de máximos anuais a partir de um ano hidrológico ####
@@ -164,7 +162,7 @@ head(Q_max)
 
 A função `fun_max_ano` foi escrita de forma que qualquer falha na série de vazões diárias num dado ano hidrológico resulta numa falha na série de máximos anuais. Isso nem semrpe é necessário, já que falhas no período de estiagem não indicam falhas nas séries de máximos, mas creio que a função nos serve bem para este curso. 
 
-Podemos notar a presença de um `NA` na nossa plotagem acima. É interessante verificar o número total de anos disponíveis com dados diários de vazão, bem como o número de anos com falaha na série de máximos anuais. 
+Podemos notar a presença de um `NA` na nossa plotagem acima. É interessante verificar o número total de anos disponíveis com dados diários de vazão, bem como o número de anos com falha na série de máximos anuais. 
 
 O número de anos com dados de vazões diárias pode ser obtidos simplemente identificando o número de linhas no dataframe `Q_max`, e para isso utilizamos o código abaixo,
 
@@ -172,7 +170,7 @@ O número de anos com dados de vazões diárias pode ser obtidos simplemente ide
 n_anos <- nrow(Q_max)
 n_anos
 ```
-Mas já sabemos que o ano de 1978 não contém o valor de vazão máxima porque a série de vazões diárias não estava completa. Será que há outros anos no histórico com esse problema. Para identificar se há falha em outros anos, utilizaremos duas funções do R de forma conjunta, `is.na` e `which`. A função `is.na` identifica se o elemento é um `NA` ou não, retornando um valor lógico, `TRUE` ou `FALSE`, enquanto a função `which` permite identificar a posição de uma dada condição. O código abaixo permite identificar em quais anos ocorrem falhas na série de máximos anuais,
+Mas já sabemos que o ano de 1978 não contém o valor de vazão máxima porque a série de vazões diárias não estava completa. Será que há outros anos no histórico com esse problema? Para identificar se há falha em outros anos, utilizaremos duas funções do **R** de forma conjunta, `is.na` e `which`. A função `is.na` identifica se o elemento é um `NA` ou não, retornando um valor lógico, `TRUE` ou `FALSE`, enquanto a função `which` permite identificar a posição de uma dada condição. O código abaixo permite identificar em quais anos ocorrem falhas na série de máximos anuais,
 
 ```{r}
 index <- which(is.na(Q_max[,3]==TRUE))
@@ -181,18 +179,18 @@ anos_falha
 ```
 A primeira linha de código identifica as posições em que há a presença de `NA` na terceira coluna do dataframe, que é a coluna com as informações sobre as vazões máximas de cada ano hidrológico, e associa à variável `index`. Na linha seguinte, criamos um novo dataframe com a informação dos anos em que temos falhas nos dados.
 
-É verdade que poderíamos ter escrito o código acima de uma forma mais compacta, porém ficaria mais difícil de entender. Veja o que você acha? 
+É verdade que poderíamos ter escrito o código acima de uma forma mais compacta, porém ficaria mais difícil de entender. Veja o que você acha.
 
 ```{r}
 anos_falha <- Q_max[which(is.na(Q_max[,3]==TRUE)),2:3]
 anos_falha
 ```
 
-Mais à frente, quando tivermos que fazer os cálculos necessários para realizar a naálise de frequência, teremos que nos livrar desses anos com falhas. Mas por enquanto vamos deixá-los ocmo estão, e passemos a etapa seguinte que é a de visualizar a série de máximos anuais.
+Mais à frente, quando tivermos que fazer os cálculos necessários para realizar a análise de frequência, teremos que nos livrar desses anos com falhas. Mas por enquanto, vamos deixá-los como estão, e passemos `a etapa seguinte que é a de visualizar a série de máximos anuais.
 
 ### Visualização da série de máximos anuais
 
-Agora já podemos visualizar a série de máximos anuais que serivirão de base para a nossa análise de frequência. Essa visualização pode ser feita com o código abaixo, que utiliza apenas o `R-base`.
+Agora já podemos visualizar a série de máximos anuais que serivirão de base para a nossa análise de frequência. Essa visualização pode ser feita com o código abaixo, que utiliza apenas o `R-base`. Mais uma vex, se desejar utilizar o `ggplot2` para essa plotagem, fique à vontade.
 
 ```{r, fig.width = 8, fig.height = 6}
 plot(Q_max$ano_hidro,Q_max$maxima,type = "o",
@@ -209,7 +207,7 @@ grid(nx = NULL, ny = NULL,
 
 ### Posição de plotagem
 
-Para que possamos plotar os círculos azuis escuros da Figura apresentada anteriormente, para o caso do Rio Salado, que representam as vazões máximas anuais observadas na série histórica, precisamos determinar as chamadas posição de plotagem, que servirão de base para o cálculo do tempo de recorrênciapara cada valor de vazão da amostra.
+Para que possamos plotar os círculos azuis escuros da Figura apresentada anteriormente, para o caso do Rio Salado, que representam as vazões máximas anuais observadas na série histórica, precisamos determinar as chamadas posição de plotagem, que servirão de base para o cálculo do tempo de recorrência empírico para cada valor de vazão da amostra.
 
 Para que seja possível entender esta etapa, vale a pena investir um certo tempo do curso em alguns conceitos básicos.
 
@@ -234,7 +232,7 @@ de forma que
 
 $$\hat{T}_r(q_i) = \frac{1}{1-\hat{P}(Q \le q_i)}$$
 
-Pode parecer estranho se você estiver vendo isso pela primeira vez, mas a verdade é que há diferentes maneiras de se estimar a distribuição empírica de frequência das observações de uma amostra,$\hat{P}(Q\le q_i)$, ou seu complemento, $\hat{P}(Q\gt q_i)$.
+Pode parecer estranho se você estiver vendo isso pela primeira vez, mas a verdade é que há diferentes maneiras de se estimar a distribuição empírica de frequência das observações de uma amostra, $\hat{P}(Q\le q_i)$, ou seu complemento, $\hat{P}(Q\gt q_i)$.
 
 Uma maneira bem comum de estimar tais probabilidades, quando se tem uma amostra de tamanho $n$, consiste em ordenar a série em ordem decrescente e determinar a probabilidade de excedência utilizando a seguinte fórmula,
 
@@ -243,7 +241,9 @@ $$\hat{P}(Q > q_{(i)}) = 1 - \hat{F}_Q(q_{(i)}) = \frac{i}{n+1}$$
 em que $q_{(i)}$ representa a chamada estatística de ordem $i$, em que $q_{(1)}\gt q_{(2)}\gt \ldots \gt q_{(n)}$ representa a série ordenada das vazões máximas anuais, de forma que $q_{(1)}$ e $q_{(n)}$ são, respectivamente, a maior e a menor observações da amostra. De acordo com essa expressão, por exemplo, numa amostra de tamanho 49, a probabilidade da vazão máxima anual ser maior do que a maior observação da amostra vale $P(Q>q_{(1)})=0.02$), o que resulta num tempo de recorrência de $T_r(q_{(1)})=50$ anos.
 
 
-Não se preocupe tanto se esse conceito de posição de plotagem não ficou totalmente claro. Basta saber que plotaremos os valores de máximos anuais da amostra na curva de frequência utilizando a posição de plotagem de Weibull. 
+Não se preocupe tanto se esse conceito de posição de plotagem não ficou totalmente claro. Basta saber que plotaremos os valores de máximos anuais da amostra na curva de frequência utilizando a posição de plotagem de Weibull, que é o nome que se dá à posição de plotagem $i/(n+1)$.
+
+### Plotagem da amostra na Figura
 
 Na verdade, utilizaremos o tempo de recorrência, $T_r$, para plotagem, lembrando que o $T_r$ é simplemenste o inverso da probabilidade de excedência, representada pela posição de plotagem de Weibull.
 
@@ -288,6 +288,10 @@ axis(2, tck = 1, lty = 2, col = "gray")
 
 ## Ajuste de uma distribuição teórica de probabilidades
 
+Estudos de análise de frequência de cheias geralmente utilizam as seguintes distribuições teóricas de probabilidade: lognormal (LN), Generalizada de Valoes Extremos (GEV) e Log-Pearson Tipo 3 (LP3). 
+
+Como o intuito aqui não é o de se aprofundar nos detalhes técnicos de análise de frequência, o que exigiria um número muito miaor de horas de aula, mas de ter uma motivação maior para aprender a linguagem **R**, vamos realizar nossa análise com a distribuição lognormal, que é bastante simples de tratar.
+
 ### A distribuição lognormal
 
 Se considerarmos que as vazões máximas anuais $(Q)$ possuem uma distribuição lognormal, então os logaritmos de $Q$, chamados aqui de $Y = ln(Q)$, terão, por definição, uma distribuição normal,
@@ -297,13 +301,13 @@ Y = ln(Q) \sim N(\mu_Y,\sigma_Y^2)
 $$
 o que significa dizer que os logarítmicos das vazões máximas anuais são bem representados por uma distribuição Normal com parâmetros $\mu_Y$ e $\sigma_Y^2$, que, para quem não lembra, representam a média e a variância populacionais.
 
-O adjetivo populacional utilizado aqui é para lembrarmos que essas caracerísticas da distribuição são, na verdade, desconhecidas. A única pista que temos sobre o valor desses parâmetros está contida na amostra que temos, formada por um conjunto de vazões máximas anuais. A maneira que utilizaremos a amostra para tentar compreender essa distribuição é o assunto da próxima seção. 
+O adjetivo populacional utilizado aqui é para lembrarmos que essas caracerísticas da distribuição são, na verdade, desconhecidas. A única pista que temos sobre o valor desses parâmetros está contida na amostra que temos, formada por um conjunto de vazões máximas anuais. A maneira que utilizaremos a amostra para tentar compreender essa distribuição é o assunto da seção **Método de ajuste**. 
 
 ### Quantis de cheia da lognormal
 
 É muito provável que vocês não se recordem, mas a distribuição Normal possui uma caracterísitca bastante interessante. Se aplicarmos uma transformação linear numa variável normalmente distribuída, a nova variável continua sendo normalmente distribuída, porém com diferentes valores para os parâmetros da distribuição.
 
-Uma transformação bastante útil é aquela em que a variável é transformada numa variável normal-padrão, usualmente representada pela letra $Z$. A variável normal-padrão $Z$ possui média zero e variância unitária, $Z \sim N(0,1)$. Qualquer variável que possui distribuiçao Normal pode ser transformada numa variável normal-padrão, bastando subtrair sua média e dividir pelo seu desvio-padrão,
+Uma transformação bastante útil é aquela em que a variável é transformada numa variável normal-padrão, usualmente representada pela letra $Z$. A variável normal-padrão $Z$ possui média zero e variância unitária, $Z \sim N(0,1)$. Qualquer variável que possui distribuição Normal pode ser transformada numa variável normal-padrão, bastando subtrair sua média e dividir pelo seu desvio-padrão,
 
 $$
 Z = \frac{Y-\mu_Y}{\sigma_Y}\sim N(0,1)
@@ -332,11 +336,11 @@ em que $Q_p$ é o quantil populacional da variável aleatória $Q$, que represen
 
 ### Método de ajuste
 
-Existem diversos métodos para ajustar uma distribuição teórica de probabilidades aos dados que se tem em mãos. Para o caso da distribuição lognormal com 2 parâmetros, sabe-se que a forma mais eficiente de estimar os parâmetros $\mu_Y$ e $\sigma_Y^2$ é por meio do método dos momentos, que será explicado na sequência.
+Existem diversos métodos para ajustar uma distribuição teórica de probabilidades aos dados que se tem em mãos. Para o caso da distribuição lognormal com 2 parâmetros, sabe-se que uma forma eficiente de estimar os parâmetros $\mu_Y$ e $\sigma_Y^2$ é por meio do método dos momentos, que será explicado na sequência.
 
 Com base numa série de vazões máximas anuais $\{Q_1,Q_2,\ldots,Q_n\}$, determinamos uma nova série com base no logarítmos da série original, $Y = \{Y_1,Y_2,\ldots,Y_n\}$.
 
-Em seguida, aplicamos o métodos dos momentos para estimar $\mu_Y,\sigma_Y^2$, o que consiste em igual esses parâmetros aos seus valores amostrias, ou seja, 
+Em seguida, aplicamos o métodos dos momentos para estimar $\mu_Y,\sigma_Y^2$, o que consiste em igualar esses parâmetros aos seus valores amostrias, ou seja, 
 
 $$
 \hat{\mu}_Y = \bar{Y} = \frac{\sum_1^n y_i}{n}
@@ -403,6 +407,8 @@ tail(Quantis_Q,5)
 
 O número `5` no código acima serve para especificar quantas linhas eu estou interessado em ver.
 
+FInalizamos esta parte da análise com a plotagem dos quantis de cheias estimados com base na distribuição lognormal,
+
 ```{r, fig.width = 8, fig.height = 6}
 
 plot(Q_max_ord$Tr,Q_max_ord$maxima,type = "p", pch = 19,cex = 1.5,col = "blue",
@@ -439,32 +445,33 @@ Aqui aprenderemos como determinar intervalos de confiança aproximados para os q
 
 ### Lógica da construção de intervalos de confiança aproximados
 
-Suponha que tenhamos uma estimador qualquer denominado $\hat{W}_p$. Estou usando a variável $W$ apenas para reforçar a ideia de que não precisa ser aquele estimador apresentado anteriormente, que chamamos de $\hat{Q}_p$, embora possa ser.
+Suponha que tenhamos uma estimador qualquer denominado $\hat{W}_p$. Estou usando a variável $W$ apenas para reforçar a ideia de que não precisa ser aquele estimador apresentado anteriormente, $\hat{Q}_p = exp(\hat{\mu}_Y + Z_p\hat{\sigma}_Y)$, embora possa ser.
 
-Para a quase totalidade de possíveis estimadores, quando $n\rightarrow \infty$, ou em outras palavras, à medida que a amostra aumenta e passa a ter um número bem grande de observações, esses estimadores tendem a ter uma distribuição Normal. 
 Como um estimador depende da amostra que se tem em mãos, ele é também uma variável aleatória. E como toda variável aleatória, seu comportamento pode se descrito por uma distribuição teórica de probabilidades.
+
+Para a quase totalidade de possíveis estimadores, quando $n\rightarrow \infty$, ou em outras palavras, à medida que a amostra aumenta e passa a ter um número bem grande de observações, esses estimadores tendem a ter uma distribuição Normal.
 
 Bem, se $\hat{W}_p$ possui distribuição Normal e variância $V(\hat{W}_p)$, então nós já sabemos que se subtrairmos seu valor esperado, $E[\hat{W}_p]$, e dividirmos o resulto pelo seu desvio-padrão, $\sqrt{V(\hat{W}_p)}$, obteremos uma variável Normal-padrão, usualmente denominada de $Z$,  
 
 $$
 Z = \frac{\hat{W}_p-E[\hat{W}_p]}{\sqrt{V(\hat{W}_p)}}
 $$
-Como $Z\sim N(0,1)$, podemos afirmar que a probabilidade de $Z$ estar entre os quantis $Z_{\alpha/2}$ e $Z_{1-\alpha/2}$ vale $\alpha$,
+Como $Z\sim N(0,1)$, podemos afirmar que a probabilidade de $Z$ estar entre os quantis $Z_{\alpha/2}$ e $Z_{1-\alpha/2}$ vale $1-\alpha$,
 
 $$
-P(z_{\alpha/2}\le Z \le z_{1-\alpha/2}) = \alpha
+P(z_{\alpha/2}\le Z \le z_{1-\alpha/2}) = 1-\alpha
 $$
 Se substituirmos $Z$ da equação acima pela equação anterior, obtemos
 
 $$
-P\Bigg(z_{\alpha/2}\le \frac{\hat{W}_p-E[\hat{W}_p]}{\sqrt{V(\hat{W}_p)}} \le z_{1-\alpha/2}\Bigg) = \alpha
+P\Bigg(z_{\alpha/2}\le \frac{\hat{W}_p-E[\hat{W}_p]}{\sqrt{V(\hat{W}_p)}} \le z_{1-\alpha/2}\Bigg) = 1-\alpha
 $$
 Depois de algumas manipulações algébricas, e admitindo que o estimador $\hat{W}_p$ é não-tendencioso, o que significa dizer que $E[\hat{W}_p]=W_p$, chegamos à afirmação abaixo,
 
 $$
-P\Bigg(\hat{W}_p - z_{1-\alpha/2}\sqrt{V(\hat{W}_p)} \le W_p \le \hat{W}_p + z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}\Bigg) = \alpha
+P\Bigg(\hat{W}_p - z_{1-\alpha/2}\sqrt{V(\hat{W}_p)} \le W_p \le \hat{W}_p + z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}\Bigg) = 1-\alpha
 $$
-que em bom português diz que a probabilidade do valor populacional de $W_p$ estar entre esses dois limites, $\hat{W}_p \pm z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}$, é igual à $\alpha$. 
+que em bom português diz que a probabilidade do valor populacional de $W_p$ estar entre esses dois limites, $\hat{W}_p \pm z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}$, é igual à $1-\alpha$. Quando $\alpha = 0.05$, essa probabilidade vale 0.95. 
 
 É essa afirmação matemática que nos permite estabelecer o intervalo de confiança de $100(1-\alpha)\%$ para $W_p$, apresentado abaixo,
 
@@ -472,7 +479,9 @@ $$
 \Bigg[\hat{W}_p - z_{1-\alpha/2}\sqrt{V(\hat{W}_p)};\hat{W}_p + z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}\Bigg]
 $$
 
-Sendo assim, podemos construir o intervalo de confiança aproximado de $Y_p=ln(Q_p)$ e de $Q_p$, sendo esse último o que de fato nos interessa.
+### Estimadores intervalares para $Y_p$ e $Q_p$
+
+A expressão acima pode ser utilizada para construir o intervalo de confiança aproximado de $Y_p=ln(Q_p)$ e de $Q_p$, sendo esse último o que de fato nos interessa.
 
 Primeiro, constuímos o intervalo de confiança aproximado de $Y_p$,
 
@@ -480,7 +489,9 @@ $$
 \Bigg[\hat{Y}_p - z_{1-\alpha/2}\sqrt{V(\hat{Y}_p)};\hat{Y}_p + z_{1-\alpha/2}\sqrt{V(\hat{Y}_p)}\Bigg]
 $$
 
-O problema aqui é que ainda precisamos saber quem é $V(\hat{Y}_p)$. Este não é um curso de estatística, mas sim de `R` aplicado à Hidrologia. De todo modo, deixarei aqui uma breve explicação de como obter $V(\hat{Y}_p)$ para aqueles interessados nos detalhes,
+Mas veja que embora tenhamos definido quem é $V(\hat{Y}_p)$, ainda não comentamos como podemos calcular essa grandeza, e sem ela não temos como determinar, de fato, o intervalo de confiança.
+
+Este não é um curso de estatística, mas sim de `R` aplicado à Hidrologia. De todo modo, deixarei aqui uma breve explicação de como obter $V(\hat{Y}_p)$ para aqueles interessados nos detalhes da metodologia,
 
 
 $$
@@ -492,19 +503,19 @@ V(\hat{Y}_p) &= V(\hat{\mu}_y + z_p\hat{\sigma}_Y)\\
 \end{align}
 $$
 
-Pode-se mostrar que $V(\sigma_Y)\approx \hat{\sigma}_Y^2/(2n)$, o que resulta na seguinte expressão para $V(\hat{Y}_p)$,
+Para finalmente encontrar uma expressão para $V(\hat{Y}_p)$, precisamos ainda entender como determinar $V(\hat{\sigma}_Y)$. Para isso, recorremos ao trabalho de Ahn & Fessler (2003), que nos mostraram que $V(\sigma_Y)\approx \hat{\sigma}_Y^2/(2n)$, o que resulta na seguinte expressão para $V(\hat{Y}_p)$,
 
 $$
 V(\hat{Y}_p) \approx \frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)
 $$
 
-Dessa forma, o intervalo de confiança de $100(1-\alpha)\%$ para $Y_p$ pode ser descrito como
+Dessa forma, o intervalo de confiança de $100(1-\alpha)\%$ aproximado para $Y_p$ pode ser descrito como
 
 $$
 \Bigg[\hat{Y}_p - z_{1-\alpha/2}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)};\hat{Y}_p + z_{1-\alpha/2}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)}\Bigg]
 $$
 
-Para determinar o o intervalo de confiança de $100(1-\alpha)\%$ para $Q_p$, basta exponenciar o intervalo acima,
+Para determinar o intervalo de confiança de $100(1-\alpha)\%$ aproximado para $Q_p$, basta exponenciar o intervalo acima,
 
 $$
 \begin{align}
@@ -521,7 +532,7 @@ IC_{.95}(Q_{0.99}) &= exp\Bigg[(\hat{\mu}_Y+z_{.99}\hat{\sigma}_y) \pm z_{.975}\
                     &=exp\Bigg[(\hat{\mu}_Y+2.326\hat{\sigma}_y) \pm 1.96\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}2.326^2\Bigg)}\Bigg]
 \end{align}
 $$
-As linhas de código abaixo permitem calcular os limites inferior e superior do intervalo de confiança aproximado para os quantis da distribuição lognonal,
+As linhas de código abaixo permitem calcular os limites inferior e superior do intervalo de confiança aproximado para os quantis da distribuição lognornal,
 
 ```{r}
 alpha <- 0.05
@@ -531,6 +542,8 @@ lower_IC <- exp((mu_Y_hat + z_p*sqrt(sigma2_hat)) - qnorm(1-alpha/2,0,1)*sqrt(va
 upper_IC <- exp((mu_Y_hat + z_p*sqrt(sigma2_hat)) + qnorm(1-alpha/2,0,1)*sqrt(var_yp))
 
 ```
+
+## Plotagem final da curva de frequência
 
 Podemos agora terminar a Figura com a nossa curva de frequência de cheias completa, incluindo os intervalor de confiança de $95\%$ representados com a linha tracejada.
 

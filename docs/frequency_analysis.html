@@ -2161,6 +2161,9 @@ de frequência amostral</a>
 <ul>
 <li><a href="#posição-de-plotagem" id="toc-posição-de-plotagem">Posição
 de plotagem</a></li>
+<li><a href="#plotagem-da-amostra-na-figura"
+id="toc-plotagem-da-amostra-na-figura">Plotagem da amostra na
+Figura</a></li>
 </ul></li>
 <li><a href="#ajuste-de-uma-distribuição-teórica-de-probabilidades"
 id="toc-ajuste-de-uma-distribuição-teórica-de-probabilidades">Ajuste de
@@ -2184,7 +2187,14 @@ id="toc-descrição-das-incertezas">Descrição das incertezas</a>
 href="#lógica-da-construção-de-intervalos-de-confiança-aproximados"
 id="toc-lógica-da-construção-de-intervalos-de-confiança-aproximados">Lógica
 da construção de intervalos de confiança aproximados</a></li>
+<li><a href="#estimadores-intervalares-para-y_p-e-q_p"
+id="toc-estimadores-intervalares-para-y_p-e-q_p">Estimadores
+intervalares para <span class="math inline">\(Y_p\)</span> e <span
+class="math inline">\(Q_p\)</span></a></li>
 </ul></li>
+<li><a href="#plotagem-final-da-curva-de-frequência"
+id="toc-plotagem-final-da-curva-de-frequência">Plotagem final da curva
+de frequência</a></li>
 </ul>
 </nav>
 </div>
@@ -2206,7 +2216,11 @@ respectivas incertezas, são representadas graficamente, como na figura
 abaixo, que mostra os resultados para um estudo de cheias numa seção do
 Rio Salado, localizada na província de Santa Fé, na Argentina, onde em
 2003 ocorreu o rompimento de um dique que resultou em perde de vidas
-humanas e elevados prejuízos.</p>
+humanas e elevados prejuízos. Nesse caso, utilizou-se a distribuição
+Generalizada de Valores Extremos (GEV), mas aqui no curso faremos uso de
+uma distribuição mais simples de se trabalhar, a lognormal. O objetivo
+aqui é ter uma motivação hidrológica para apreder a usar a linguagem
+R.</p>
 <p>Contruiremos aqui no curso uma figura semelhante a esta, onde no
 eixo-x temos o tempo de recorrência e no eixo-y a magnitude das vazões
 máximas anuais. O tempo de recorrência apresentado no eixo-x é uma
@@ -2306,15 +2320,15 @@ entrar em qualqer detalhes sobre seu funcionamento.</p>
 </div>
 </div>
 <p>Precisamos escolher uma estação fluviométrica para realizar nossa
-análise. SUgiro utilizar a estação <strong>60435000</strong>, localizada
-na bacia do Rio Descoberto, que drena uma área de <span
-class="math inline">\(113.2 km^2\)</span>, mas vocês têm a indepedência
-de escolhar qualquer outras estação que esteja no banco de dados da
-Agência Nacional de Águas.</p>
+análise. Sugiro utilizar a estação <strong>60435000</strong>, localizada
+na bacia do Rio Descoberto, que drena uma área de 113.2 km<span
+class="math inline">\(^2\)</span>, mas vocês têm a indepedência de
+escolhar qualquer outras estação que esteja no banco de dados da Agência
+Nacional de Águas.</p>
 <p>Para obter a série diária da estação escolhida, basta chamar a função
 acima passando o argumento necessário, que é simplesmente o código da
-estação desejada. A função devolve um dataframe com a série de máximos
-anuais.</p>
+estação desejada. A função devolve um dataframe com a série de vazões
+médias diárias.</p>
 <p>Para fins de visualização, utilizamos a função
 <code>head(nome_do_dataframe)</code> do R, como mostrado abaixo, que nos
 mostra as primeiras 6 linhas do dataframe.</p>
@@ -2338,7 +2352,9 @@ uma ideia geral da faixa de variação das vazões, sazonalidade e outras
 padrões que possa ser percebidos num gráfico.</p>
 <p>Aqui, nós plotaremos a série completa das vazões diárias da estação
 <strong>60435000</strong> utilizando o código abaixo, que emprega o
-chamado R-base, ao invés de pacote <code>ggplot2</code>.</p>
+chamado R-base, ao invés de pacote <code>ggplot2</code>, visto na aula
+anterior. Mas se preferir utilizar o <code>ggplot2</code> para realizar
+esta plotagem, fique à vontade.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>time</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span>
@@ -2353,17 +2369,14 @@ chamado R-base, ao invés de pacote <code>ggplot2</code>.</p>
 </div>
 <p><img src="frequency_analysis_files/figure-html5/unnamed-chunk-1-1.png" width="768" /></p>
 </div>
-<p>Pode-se notar que nos seis primeiros dias dos dados, que se inicia em
-maio de 1978, não temos valores registrados de vazão.</p>
 <h3 id="extração-da-série-de-vazões-máximas-anuais">Extração da série de
 vazões máximas anuais</h3>
 <p>Com a série de vazões diárias, passamos ao segundo passo que é o de
 construir a série de máximos anuais com base no ano hidrológico. Para
 isso, utilizaremos uma outra função, que é apresentada abaixo. Veja que
-a função internamente considera o ano hidrológico com início no mês de
-agosto. O mês de início do ano hidrológico pode ser facilmente alterado,
-se for o desejo do analista. Uma outra solução seria reesecrever a
-função incluindo como argumento o mês de início do ano hidrológico.</p>
+a função tem como <em>default</em> o ano hidrológico com início no mês
+de agosto. Mas o mês de início do ano hidrológico pode ser facilmente
+alterado, bastando aicionar esse argumento quando chamar a função.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Contrução da série de máximos anuais a partir de um ano hidrológico ####</span></span>
@@ -2415,7 +2428,7 @@ falhas no período de estiagem não indicam falhas nas séries de máximos,
 mas creio que a função nos serve bem para este curso.</p>
 <p>Podemos notar a presença de um <code>NA</code> na nossa plotagem
 acima. É interessante verificar o número total de anos disponíveis com
-dados diários de vazão, bem como o número de anos com falaha na série de
+dados diários de vazão, bem como o número de anos com falha na série de
 máximos anuais.</p>
 <p>O número de anos com dados de vazões diárias pode ser obtidos
 simplemente identificando o número de linhas no dataframe
@@ -2429,14 +2442,14 @@ simplemente identificando o número de linhas no dataframe
 </div>
 <p>Mas já sabemos que o ano de 1978 não contém o valor de vazão máxima
 porque a série de vazões diárias não estava completa. Será que há outros
-anos no histórico com esse problema. Para identificar se há falha em
-outros anos, utilizaremos duas funções do R de forma conjunta,
-<code>is.na</code> e <code>which</code>. A função <code>is.na</code>
-identifica se o elemento é um <code>NA</code> ou não, retornando um
-valor lógico, <code>TRUE</code> ou <code>FALSE</code>, enquanto a função
-<code>which</code> permite identificar a posição de uma dada condição. O
-código abaixo permite identificar em quais anos ocorrem falhas na série
-de máximos anuais,</p>
+anos no histórico com esse problema? Para identificar se há falha em
+outros anos, utilizaremos duas funções do <strong>R</strong> de forma
+conjunta, <code>is.na</code> e <code>which</code>. A função
+<code>is.na</code> identifica se o elemento é um <code>NA</code> ou não,
+retornando um valor lógico, <code>TRUE</code> ou <code>FALSE</code>,
+enquanto a função <code>which</code> permite identificar a posição de
+uma dada condição. O código abaixo permite identificar em quais anos
+ocorrem falhas na série de máximos anuais,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>index</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>[</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>==</span><span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span></span>
@@ -2458,7 +2471,7 @@ criamos um novo dataframe com a informação dos anos em que temos falhas
 nos dados.</p>
 <p>É verdade que poderíamos ter escrito o código acima de uma forma mais
 compacta, porém ficaria mais difícil de entender. Veja o que você
-acha?</p>
+acha.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>anos_falha</span> <span class='op'>&lt;-</span> <span class='va'>Q_max</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>[</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>==</span><span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>,<span class='fl'>2</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span></span>
@@ -2472,14 +2485,16 @@ acha?</p>
 3      2020     NA</code></pre>
 </div>
 <p>Mais à frente, quando tivermos que fazer os cálculos necessários para
-realizar a naálise de frequência, teremos que nos livrar desses anos com
-falhas. Mas por enquanto vamos deixá-los ocmo estão, e passemos a etapa
-seguinte que é a de visualizar a série de máximos anuais.</p>
+realizar a análise de frequência, teremos que nos livrar desses anos com
+falhas. Mas por enquanto, vamos deixá-los como estão, e passemos `a
+etapa seguinte que é a de visualizar a série de máximos anuais.</p>
 <h3 id="visualização-da-série-de-máximos-anuais">Visualização da série
 de máximos anuais</h3>
 <p>Agora já podemos visualizar a série de máximos anuais que serivirão
 de base para a nossa análise de frequência. Essa visualização pode ser
-feita com o código abaixo, que utiliza apenas o <code>R-base</code>.</p>
+feita com o código abaixo, que utiliza apenas o <code>R-base</code>.
+Mais uma vex, se desejar utilizar o <code>ggplot2</code> para essa
+plotagem, fique à vontade.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>$</span><span class='va'>ano_hidro</span>,<span class='va'>Q_max</span><span class='op'>$</span><span class='va'>maxima</span>,type <span class='op'>=</span> <span class='st'>"o"</span>,</span>
@@ -2500,7 +2515,8 @@ de frequência amostral</h2>
 apresentada anteriormente, para o caso do Rio Salado, que representam as
 vazões máximas anuais observadas na série histórica, precisamos
 determinar as chamadas posição de plotagem, que servirão de base para o
-cálculo do tempo de recorrênciapara cada valor de vazão da amostra.</p>
+cálculo do tempo de recorrência empírico para cada valor de vazão da
+amostra.</p>
 <p>Para que seja possível entender esta etapa, vale a pena investir um
 certo tempo do curso em alguns conceitos básicos.</p>
 <p>O tempo de recorrência associado a uma determinada magnitude de
@@ -2553,7 +2569,7 @@ q_i)\]</span> de forma que</p>
 \le q_i)}\]</span></p>
 <p>Pode parecer estranho se você estiver vendo isso pela primeira vez,
 mas a verdade é que há diferentes maneiras de se estimar a distribuição
-empírica de frequência das observações de uma amostra,<span
+empírica de frequência das observações de uma amostra, <span
 class="math inline">\(\hat{P}(Q\le q_i)\)</span>, ou seu complemento,
 <span class="math inline">\(\hat{P}(Q\gt q_i)\)</span>.</p>
 <p>Uma maneira bem comum de estimar tais probabilidades, quando se tem
@@ -2577,7 +2593,10 @@ class="math inline">\(T_r(q_{(1)})=50\)</span> anos.</p>
 <p>Não se preocupe tanto se esse conceito de posição de plotagem não
 ficou totalmente claro. Basta saber que plotaremos os valores de máximos
 anuais da amostra na curva de frequência utilizando a posição de
-plotagem de Weibull.</p>
+plotagem de Weibull, que é o nome que se dá à posição de plotagem <span
+class="math inline">\(i/(n+1)\)</span>.</p>
+<h3 id="plotagem-da-amostra-na-figura">Plotagem da amostra na
+Figura</h3>
 <p>Na verdade, utilizaremos o tempo de recorrência, <span
 class="math inline">\(T_r\)</span>, para plotagem, lembrando que o <span
 class="math inline">\(T_r\)</span> é simplemenste o inverso da
@@ -2647,6 +2666,14 @@ valores amostrais das vazões máximas serão apresentados.</p>
 </div>
 <h2 id="ajuste-de-uma-distribuição-teórica-de-probabilidades">Ajuste de
 uma distribuição teórica de probabilidades</h2>
+<p>Estudos de análise de frequência de cheias geralmente utilizam as
+seguintes distribuições teóricas de probabilidade: lognormal (LN),
+Generalizada de Valoes Extremos (GEV) e Log-Pearson Tipo 3 (LP3).</p>
+<p>Como o intuito aqui não é o de se aprofundar nos detalhes técnicos de
+análise de frequência, o que exigiria um número muito miaor de horas de
+aula, mas de ter uma motivação maior para aprender a linguagem
+<strong>R</strong>, vamos realizar nossa análise com a distribuição
+lognormal, que é bastante simples de tratar.</p>
 <h3 id="a-distribuição-lognormal">A distribuição lognormal</h3>
 <p>Se considerarmos que as vazões máximas anuais <span
 class="math inline">\((Q)\)</span> possuem uma distribuição lognormal,
@@ -2665,7 +2692,7 @@ caracerísticas da distribuição são, na verdade, desconhecidas. A única
 pista que temos sobre o valor desses parâmetros está contida na amostra
 que temos, formada por um conjunto de vazões máximas anuais. A maneira
 que utilizaremos a amostra para tentar compreender essa distribuição é o
-assunto da próxima seção.</p>
+assunto da seção <strong>Método de ajuste</strong>.</p>
 <h3 id="quantis-de-cheia-da-lognormal">Quantis de cheia da
 lognormal</h3>
 <p>É muito provável que vocês não se recordem, mas a distribuição Normal
@@ -2678,7 +2705,7 @@ transformada numa variável normal-padrão, usualmente representada pela
 letra <span class="math inline">\(Z\)</span>. A variável normal-padrão
 <span class="math inline">\(Z\)</span> possui média zero e variância
 unitária, <span class="math inline">\(Z \sim N(0,1)\)</span>. Qualquer
-variável que possui distribuiçao Normal pode ser transformada numa
+variável que possui distribuição Normal pode ser transformada numa
 variável normal-padrão, bastando subtrair sua média e dividir pelo seu
 desvio-padrão,</p>
 <p><span class="math display">\[
@@ -2723,8 +2750,8 @@ class="math inline">\(\sigma_Y\)</span>.</p>
 <h3 id="método-de-ajuste">Método de ajuste</h3>
 <p>Existem diversos métodos para ajustar uma distribuição teórica de
 probabilidades aos dados que se tem em mãos. Para o caso da distribuição
-lognormal com 2 parâmetros, sabe-se que a forma mais eficiente de
-estimar os parâmetros <span class="math inline">\(\mu_Y\)</span> e <span
+lognormal com 2 parâmetros, sabe-se que uma forma eficiente de estimar
+os parâmetros <span class="math inline">\(\mu_Y\)</span> e <span
 class="math inline">\(\sigma_Y^2\)</span> é por meio do método dos
 momentos, que será explicado na sequência.</p>
 <p>Com base numa série de vazões máximas anuais <span
@@ -2732,8 +2759,8 @@ class="math inline">\(\{Q_1,Q_2,\ldots,Q_n\}\)</span>, determinamos uma
 nova série com base no logarítmos da série original, <span
 class="math inline">\(Y = \{Y_1,Y_2,\ldots,Y_n\}\)</span>.</p>
 <p>Em seguida, aplicamos o métodos dos momentos para estimar <span
-class="math inline">\(\mu_Y,\sigma_Y^2\)</span>, o que consiste em igual
-esses parâmetros aos seus valores amostrias, ou seja,</p>
+class="math inline">\(\mu_Y,\sigma_Y^2\)</span>, o que consiste em
+igualar esses parâmetros aos seus valores amostrias, ou seja,</p>
 <p><span class="math display">\[
 \hat{\mu}_Y = \bar{Y} = \frac{\sum_1^n y_i}{n}
 \]</span> e</p>
@@ -2826,6 +2853,8 @@ da parte inicial. Essa função é chamada de
 </div>
 <p>O número <code>5</code> no código acima serve para especificar
 quantas linhas eu estou interessado em ver.</p>
+<p>FInalizamos esta parte da análise com a plotagem dos quantis de
+cheias estimados com base na distribuição lognormal,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span>,type <span class='op'>=</span> <span class='st'>"p"</span>, pch <span class='op'>=</span> <span class='fl'>19</span>,cex <span class='op'>=</span> <span class='fl'>1.5</span>,col <span class='op'>=</span> <span class='st'>"blue"</span>,</span>
@@ -2872,16 +2901,18 @@ da construção de intervalos de confiança aproximados</h3>
 <p>Suponha que tenhamos uma estimador qualquer denominado <span
 class="math inline">\(\hat{W}_p\)</span>. Estou usando a variável <span
 class="math inline">\(W\)</span> apenas para reforçar a ideia de que não
-precisa ser aquele estimador apresentado anteriormente, que chamamos de
-<span class="math inline">\(\hat{Q}_p\)</span>, embora possa ser.</p>
+precisa ser aquele estimador apresentado anteriormente, <span
+class="math inline">\(\hat{Q}_p = exp(\hat{\mu}_Y +
+Z_p\hat{\sigma}_Y)\)</span>, embora possa ser.</p>
+<p>Como um estimador depende da amostra que se tem em mãos, ele é também
+uma variável aleatória. E como toda variável aleatória, seu
+comportamento pode se descrito por uma distribuição teórica de
+probabilidades.</p>
 <p>Para a quase totalidade de possíveis estimadores, quando <span
 class="math inline">\(n\rightarrow \infty\)</span>, ou em outras
 palavras, à medida que a amostra aumenta e passa a ter um número bem
 grande de observações, esses estimadores tendem a ter uma distribuição
-Normal. Como um estimador depende da amostra que se tem em mãos, ele é
-também uma variável aleatória. E como toda variável aleatória, seu
-comportamento pode se descrito por uma distribuição teórica de
-probabilidades.</p>
+Normal.</p>
 <p>Bem, se <span class="math inline">\(\hat{W}_p\)</span> possui
 distribuição Normal e variância <span
 class="math inline">\(V(\hat{W}_p)\)</span>, então nós já sabemos que se
@@ -2898,15 +2929,15 @@ podemos afirmar que a probabilidade de <span
 class="math inline">\(Z\)</span> estar entre os quantis <span
 class="math inline">\(Z_{\alpha/2}\)</span> e <span
 class="math inline">\(Z_{1-\alpha/2}\)</span> vale <span
-class="math inline">\(\alpha\)</span>,</p>
+class="math inline">\(1-\alpha\)</span>,</p>
 <p><span class="math display">\[
-P(z_{\alpha/2}\le Z \le z_{1-\alpha/2}) = \alpha
+P(z_{\alpha/2}\le Z \le z_{1-\alpha/2}) = 1-\alpha
 \]</span> Se substituirmos <span class="math inline">\(Z\)</span> da
 equação acima pela equação anterior, obtemos</p>
 <p><span class="math display">\[
 P\Bigg(z_{\alpha/2}\le
 \frac{\hat{W}_p-E[\hat{W}_p]}{\sqrt{V(\hat{W}_p)}} \le
-z_{1-\alpha/2}\Bigg) = \alpha
+z_{1-\alpha/2}\Bigg) = 1-\alpha
 \]</span> Depois de algumas manipulações algébricas, e admitindo que o
 estimador <span class="math inline">\(\hat{W}_p\)</span> é
 não-tendencioso, o que significa dizer que <span
@@ -2914,12 +2945,14 @@ class="math inline">\(E[\hat{W}_p]=W_p\)</span>, chegamos à afirmação
 abaixo,</p>
 <p><span class="math display">\[
 P\Bigg(\hat{W}_p - z_{1-\alpha/2}\sqrt{V(\hat{W}_p)} \le W_p \le
-\hat{W}_p + z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}\Bigg) = \alpha
+\hat{W}_p + z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}\Bigg) = 1-\alpha
 \]</span> que em bom português diz que a probabilidade do valor
 populacional de <span class="math inline">\(W_p\)</span> estar entre
 esses dois limites, <span class="math inline">\(\hat{W}_p \pm
 z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}\)</span>, é igual à <span
-class="math inline">\(\alpha\)</span>.</p>
+class="math inline">\(1-\alpha\)</span>. Quando <span
+class="math inline">\(\alpha = 0.05\)</span>, essa probabilidade vale
+0.95.</p>
 <p>É essa afirmação matemática que nos permite estabelecer o intervalo
 de confiança de <span class="math inline">\(100(1-\alpha)\%\)</span>
 para <span class="math inline">\(W_p\)</span>, apresentado abaixo,</p>
@@ -2927,22 +2960,27 @@ para <span class="math inline">\(W_p\)</span>, apresentado abaixo,</p>
 \Bigg[\hat{W}_p - z_{1-\alpha/2}\sqrt{V(\hat{W}_p)};\hat{W}_p +
 z_{1-\alpha/2}\sqrt{V(\hat{W}_p)}\Bigg]
 \]</span></p>
-<p>Sendo assim, podemos construir o intervalo de confiança aproximado de
-<span class="math inline">\(Y_p=ln(Q_p)\)</span> e de <span
-class="math inline">\(Q_p\)</span>, sendo esse último o que de fato nos
-interessa.</p>
+<h3 id="estimadores-intervalares-para-y_p-e-q_p">Estimadores
+intervalares para <span class="math inline">\(Y_p\)</span> e <span
+class="math inline">\(Q_p\)</span></h3>
+<p>A expressão acima pode ser utilizada para construir o intervalo de
+confiança aproximado de <span class="math inline">\(Y_p=ln(Q_p)\)</span>
+e de <span class="math inline">\(Q_p\)</span>, sendo esse último o que
+de fato nos interessa.</p>
 <p>Primeiro, constuímos o intervalo de confiança aproximado de <span
 class="math inline">\(Y_p\)</span>,</p>
 <p><span class="math display">\[
 \Bigg[\hat{Y}_p - z_{1-\alpha/2}\sqrt{V(\hat{Y}_p)};\hat{Y}_p +
 z_{1-\alpha/2}\sqrt{V(\hat{Y}_p)}\Bigg]
 \]</span></p>
-<p>O problema aqui é que ainda precisamos saber quem é <span
-class="math inline">\(V(\hat{Y}_p)\)</span>. Este não é um curso de
-estatística, mas sim de <code>R</code> aplicado à Hidrologia. De todo
-modo, deixarei aqui uma breve explicação de como obter <span
-class="math inline">\(V(\hat{Y}_p)\)</span> para aqueles interessados
-nos detalhes,</p>
+<p>Mas veja que embora tenhamos definido quem é <span
+class="math inline">\(V(\hat{Y}_p)\)</span>, ainda não comentamos como
+podemos calcular essa grandeza, e sem ela não temos como determinar, de
+fato, o intervalo de confiança.</p>
+<p>Este não é um curso de estatística, mas sim de <code>R</code>
+aplicado à Hidrologia. De todo modo, deixarei aqui uma breve explicação
+de como obter <span class="math inline">\(V(\hat{Y}_p)\)</span> para
+aqueles interessados nos detalhes da metodologia,</p>
 <p><span class="math display">\[
 \begin{align}
 V(\hat{Y}_p) &amp;= V(\hat{\mu}_y + z_p\hat{\sigma}_Y)\\
@@ -2951,7 +2989,11 @@ V(\hat{Y}_p) &amp;= V(\hat{\mu}_y + z_p\hat{\sigma}_Y)\\
              &amp;= \frac{\hat{\sigma}_Y^2}{n} + z_p^2V(\hat{\sigma}_Y)
 \end{align}
 \]</span></p>
-<p>Pode-se mostrar que <span class="math inline">\(V(\sigma_Y)\approx
+<p>Para finalmente encontrar uma expressão para <span
+class="math inline">\(V(\hat{Y}_p)\)</span>, precisamos ainda entender
+como determinar <span class="math inline">\(V(\hat{\sigma}_Y)\)</span>.
+Para isso, recorremos ao trabalho de Ahn &amp; Fessler (2003), que nos
+mostraram que <span class="math inline">\(V(\sigma_Y)\approx
 \hat{\sigma}_Y^2/(2n)\)</span>, o que resulta na seguinte expressão para
 <span class="math inline">\(V(\hat{Y}_p)\)</span>,</p>
 <p><span class="math display">\[
@@ -2959,7 +3001,7 @@ V(\hat{Y}_p) \approx
 \frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)
 \]</span></p>
 <p>Dessa forma, o intervalo de confiança de <span
-class="math inline">\(100(1-\alpha)\%\)</span> para <span
+class="math inline">\(100(1-\alpha)\%\)</span> aproximado para <span
 class="math inline">\(Y_p\)</span> pode ser descrito como</p>
 <p><span class="math display">\[
 \Bigg[\hat{Y}_p -
@@ -2967,8 +3009,8 @@ z_{1-\alpha/2}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)};\h
 +
 z_{1-\alpha/2}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_p^2\Bigg)}\Bigg]
 \]</span></p>
-<p>Para determinar o o intervalo de confiança de <span
-class="math inline">\(100(1-\alpha)\%\)</span> para <span
+<p>Para determinar o intervalo de confiança de <span
+class="math inline">\(100(1-\alpha)\%\)</span> aproximado para <span
 class="math inline">\(Q_p\)</span>, basta exponenciar o intervalo
 acima,</p>
 <p><span class="math display">\[
@@ -2995,7 +3037,7 @@ z_{.975}\sqrt{\frac{\hat{\sigma}_Y^2}{n}\Bigg(1+\frac{1}{2}Z_{.99}^2\Bigg)}\Bigg
 \end{align}
 \]</span> As linhas de código abaixo permitem calcular os limites
 inferior e superior do intervalo de confiança aproximado para os quantis
-da distribuição lognonal,</p>
+da distribuição lognornal,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>alpha</span> <span class='op'>&lt;-</span> <span class='fl'>0.05</span></span>
@@ -3005,6 +3047,8 @@ da distribuição lognonal,</p>
 <span><span class='va'>upper_IC</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span><span class='op'>(</span><span class='op'>(</span><span class='va'>mu_Y_hat</span> <span class='op'>+</span> <span class='va'>z_p</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>sigma2_hat</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>qnorm</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>-</span><span class='va'>alpha</span><span class='op'>/</span><span class='fl'>2</span>,<span class='fl'>0</span>,<span class='fl'>1</span><span class='op'>)</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>var_yp</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
+<h2 id="plotagem-final-da-curva-de-frequência">Plotagem final da curva
+de frequência</h2>
 <p>Podemos agora terminar a Figura com a nossa curva de frequência de
 cheias completa, incluindo os intervalor de confiança de <span
 class="math inline">\(95\%\)</span> representados com a linha
