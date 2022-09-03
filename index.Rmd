@@ -86,7 +86,7 @@ serão dadas  nos seguintes horários:
 - 29/08 a 01/09 das 8h00 às 10h00
 - 02/09 das 12h00 às 14h00. 
 
-#### Inscriçõs
+#### Inscrições
 
 As inscrições poderão ser feitas entre os dias 01 e 28 de agosto por este [link da Semana Universitária](https://sig.unb.br/sigaa/public/extensao/paginaListaPeriodosInscricoesAtividadesPublico.jsf?aba=p-extensao). Vale notar que este curso só estará disponível na lista fornecido pelo link acima a partir do dia 01 de agosto.
 
@@ -98,7 +98,7 @@ Os computadores da sala onde será ministrado o curso já tem os programas insta
 
 Sugerimos instalar tanto o **R** quanto o **RStudio**. Para isso, entre na aula **Conceitos Básicos em R** e siga as instruções de instalação.
 
-#### Códigos em **R** das auals dadas
+#### Códigos em **R** das aulas dadas
 
 Os códigos criados durante as aulas serão em breve disponibilizados aqui.
    
