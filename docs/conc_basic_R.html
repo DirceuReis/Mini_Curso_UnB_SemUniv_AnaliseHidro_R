@@ -2468,17 +2468,19 @@ diferente de 2,</p>
 <ul>
 <li>Caractere (letras);</li>
 <li>Numérico (real);</li>
+<li>Datas;</li>
 <li>Inteiro;</li>
 <li>Complexo;</li>
 <li>Fator (classes);</li>
 <li>Lógico (<code>TRUE/FALSE</code>).</li>
 </ul>
-<p>Para sabermos qual classe cada objeto é, podemos utilizar uma função
-interna ao <strong>R</strong> chamada <code>class()</code>. Usualmente,
+<p>Para sabermos a classe de um objeto, podemos utilizar uma função
+interna do <strong>R</strong> chamada <code>class()</code>. Usualmente,
 as funções vão sempre terminar com um parêntesis <code>()</code>, sendo
-que dentro dele botamos os argumentos da função - o que ela precisa
-(nesse caso, o objeto). Mais a frente falaremos com maiores detalhes
-sobre esses argumentos, funções em geral e até como criar uma sua.</p>
+que dentro dele incluímos os argumentos da função - o que ela precisa
+(nesse caso, o nome do objeto). Mais `a frente no curso, falaremos com
+maiores detalhes sobre esses argumentos, funções em geral, e até mesmo
+como criar sua própria função.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>2</span></span>
@@ -2599,6 +2601,7 @@ tipo:</p>
 <ul>
 <li><code>as.numeric()</code>;</li>
 <li><code>as.character()</code>;</li>
+<li><code>as.Date()</code>;</li>
 <li><code>as.logical()</code>;</li>
 <li><code>as.factor()</code>;</li>
 <li><code>as.complex()</code>.</li>
@@ -2623,7 +2626,7 @@ alguns tratamentos utilizados em texto.</p>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>+</span> <span class='fl'>1</span></span></code></pre>
 </div>
-<pre><code>Error in x + 1: non-numeric argument to binary operator</code></pre>
+<pre><code>Error in x + 1: argumento não-numérico para operador binário</code></pre>
 </div>
 <p>Pdemos fazer a mesma coerção para que o vetor seja numérico. Assim
 iremos transformar tudo dentro do vetor como classe numérico. Nesse
@@ -2634,7 +2637,7 @@ valor <code>NA</code> (<em>Not Available</em>):</p>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ola"</span>, <span class='fl'>1</span>, <span class='st'>"dia"</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
-<pre><code>Warning: NAs introduced by coercion</code></pre>
+<pre><code>Warning: NAs introduzidos por coerção</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span></span></code></pre>
 </div>
@@ -2923,17 +2926,17 @@ duas dimensões:</p>
 <span><span class='va'>uniao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span></span>
 <span><span class='va'>uniao</span></span></code></pre>
 </div>
-<pre><code>       x          y
- [1,]  1 17.1460967
- [2,]  2  1.6894210
- [3,]  3 13.9688241
- [4,]  4 -3.5342734
- [5,]  5  1.7062229
- [6,]  6  0.3694579
- [7,]  7  5.4473491
- [8,]  8 12.7948408
- [9,]  9  9.0779082
-[10,] 10 15.9105311</code></pre>
+<pre><code>       x         y
+ [1,]  1 14.790820
+ [2,]  2 15.059377
+ [3,]  3  8.687436
+ [4,]  4  2.942017
+ [5,]  5  2.585525
+ [6,]  6  6.091911
+ [7,]  7 13.275119
+ [8,]  8 11.980374
+ [9,]  9 12.793738
+[10,] 10  6.989249</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>uniao</span><span class='op'>)</span></span></code></pre>
 </div>
@@ -2948,12 +2951,12 @@ duas dimensões:</p>
 <span><span class='va'>uniao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span></span>
 <span><span class='va'>uniao</span></span></code></pre>
 </div>
-<pre><code>     [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]
-x  1.0000  2.00000  3.00000  4.00000  5.00000  6.00000  7.00000
-y 28.7989 11.62114 21.53587 18.96327 17.33439 20.95428 18.61884
-     [,8]     [,9]  [,10]
-x  8.0000  9.00000 10.000
-y 21.1532 17.07201 13.602</code></pre>
+<pre><code>      [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]
+x  1.00000  2.00000  3.00000  4.00000  5.00000  6.00000  7.00000
+y 14.08831 16.66879 23.89875 24.46193 24.35338 18.97105 16.72019
+      [,8]     [,9]    [,10]
+x  8.00000  9.00000 10.00000
+y 20.78218 17.67861 13.08566</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>uniao</span><span class='op'>)</span></span></code></pre>
 </div>
@@ -3077,13 +3080,13 @@ outra função!</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>fun_area_circulo</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>raio</span><span class='op'>)</span><span class='op'>{</span></span>
-<span>  <span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>2</span><span class='op'>*</span><span class='va'>pi</span><span class='op'>*</span><span class='va'>raio</span></span>
-<span>  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span></span>
+<span>  <span class='va'>area</span> <span class='op'>&lt;-</span> <span class='va'>pi</span><span class='op'>*</span><span class='va'>raio</span><span class='op'>^</span><span class='fl'>2</span></span>
+<span>  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>area</span><span class='op'>)</span></span>
 <span><span class='op'>}</span></span>
 <span></span>
 <span><span class='fu'>fun_area_circulo</span><span class='op'>(</span><span class='fl'>5</span><span class='op'>)</span></span></code></pre>
 </div>
-<pre><code>[1] 31.41593</code></pre>
+<pre><code>[1] 78.53982</code></pre>
 </div>
 <h3 id="estruturas-condicionais-ifelse">Estruturas condicionais
 (ifelse)</h3>

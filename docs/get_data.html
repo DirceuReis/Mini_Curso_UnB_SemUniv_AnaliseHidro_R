@@ -2178,21 +2178,20 @@ no Brasil. Alguns exemplos são:</p>
 </ul>
 <h2 id="obtenção-de-dados-tradicional">Obtenção de dados
 “tradicional”</h2>
-<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD Uma maneira de obter dados
-hidrológicos é simplesmente acessando de algum site oficial. Geralmente,
-o arquivo obtido baixado está no formato <code>.csv</code>,
+<p>Uma maneira de obter dados hidrológicos é simplesmente acessando de
+algum site oficial. Geralmente, o arquivo obtido baixado está no formato
+<code>.csv</code>, <code>.txt</code> ou <code>.xls</code> (excel) - esse
+último sendo menos comum. No próprio portal da ANA tem a opção de baixar
+os dados diretamente se souber a estação em questão ou utilizando um
+mapa dinâmico. Fazemos o exemplo abaixo para a estação 60435000. Ao
+baixar o arquivo, é importante entender como ele está salvo, para isso
+podemos abrir o arquivo pelo bloco de notas por exemplo. O arquivo em
+questão é mostrado na figura abaixo</p>
+<p>Uma maneira de obter dados é simplesmente baixando eles de algum site
+oficial. Geralmente o arquivo baixado está no formato <code>.csv</code>,
 <code>.txt</code> ou <code>.xls</code> (excel) - esse último sendo menos
 comum. No próprio portal da ANA tem a opção de baixar os dados
-diretamente se souber a estação em questão ou utilizando um mapa
-dinâmico. Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o
-arquivo, é importante entender como ele está salvo, para isso podemos
-abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é
-mostrado na figura abaixo ======= Uma maneira de obter dados é
-simplesmente baixando eles de algum site oficial. Geralmente o arquivo
-baixado está no formato <code>.csv</code>, <code>.txt</code> ou
-<code>.xls</code> (excel) - esse último sendo menos comum. No próprio
-portal da ANA tem a opção de baixar os dados diretamente se souber a
-estação em questão (<a
+diretamente se souber a estação em questão (<a
 href="https://www.snirh.gov.br/hidroweb/serieshistoricas"
 class="uri">https://www.snirh.gov.br/hidroweb/serieshistoricas</a>) ou
 utilizando um mapa dinâmico (<a
@@ -2201,8 +2200,7 @@ class="uri">https://www.snirh.gov.br/hidroweb/mapa</a>). Fazemos o
 exemplo abaixo para a estação 60435000. Ao baixar o arquivo, é
 importante entender como ele está salvo, para isso podemos abrir o
 arquivo pelo bloco de notas por exemplo. O arquivo em questão é mostrado
-na figura abaixo &gt;&gt;&gt;&gt;&gt;&gt;&gt;
-2aa96fc38fa716a70fee28c186be23697f6320d1</p>
+na figura abaixo</p>
 <div class="layout-chunk" data-layout="l-body-outset">
 <p><img src="images/arquivo_vazao_ANA_csv.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
@@ -2870,9 +2868,6 @@ processo para outras estações.</p>
 <span>  <span class='va'>url_parse</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlTreeParse.html'>xmlParse</a></span><span class='op'>(</span><span class='va'>url_base</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span>
 <span>  <span class='va'>node_doc</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/getNodeSet.html'>getNodeSet</a></span><span class='op'>(</span><span class='va'>url_parse</span>, <span class='st'>"//SerieHistorica"</span><span class='op'>)</span></span>
 <span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlToDataFrame.html'>xmlToDataFrame</a></span><span class='op'>(</span>nodes <span class='op'>=</span> <span class='va'>node_doc</span><span class='op'>)</span></span>
-<span>  </span>
-<span>  <span class='co'># Por algum motivo o hidroweb não está filtrando os dados pela consistencia</span></span>
-<span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>dados_estacao</span>, <span class='va'>NivelConsistencia</span> <span class='op'>==</span> <span class='va'>nivel_consist</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='co'># Separar data e hora</span></span>
 <span>  <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span>, <span class='fl'>1</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
