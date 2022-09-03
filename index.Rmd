@@ -59,7 +59,7 @@ Este é um curso introdutório sobre a linguagem R para aqueles interessados em 
 
 O curso foi oferecido pela primeira vez muito recentemete, durante a [Semana Universitária da Universidade de Brasília](http://dex.unb.br/semanaunb2022), que ocorreu entre os dias 29/08 e 02/09 de 2022.
 
-Este mesmo curso deve ser replicado mais vezes no futuro próximo. Os alunos qye venham a fazer este curso irão aprender como utilizar a linguagem R para executar um conjunto de atividades que permitirão realizar uma análise de frequência de cheias para uma estação fluviométrica, cujos dados serão automaticamente obtidos do webservice da Agência Nacional de Águas. 
+Este mesmo curso deve ser replicado mais vezes no futuro próximo. Os alunos que venham a fazer este curso irão aprender como utilizar a linguagem R para executar um conjunto de atividades que permitirão realizar uma análise de frequência de cheias para uma estação fluviométrica, cujos dados serão automaticamente obtidos do webservice da Agência Nacional de Águas. 
 
 Ao final do curso, os alunos terão finalizado um estudo que permitirá relacionar a magnitude das vazões máximas anuais com sua probabilidade de excedência, relação primoridal para dimensionameno de diversas estrutaras de engenharia, gestão do risco de cheias e para o oredenamento do uso e ocupação do solo.   
 
@@ -70,9 +70,9 @@ Este curso é o primeiro de um conjunto maior de cursos que estão sendo elabora
 - Pedro Chaffe (UFSC)
 - Wilson Fernandes (UFMG) 
 
-## Datas e local do curso
+## Datas previstas e realizações anteriores
 
-### Próxima data
+### Próxima realização do curso
 
 Assim que tivermos a data da próxima realização do curso, colocaremos aqui neste site.
 
