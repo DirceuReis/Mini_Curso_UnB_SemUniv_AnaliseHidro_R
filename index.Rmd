@@ -55,9 +55,13 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Apresentação
 
-Este é um curso introdutório sobre a linguagem R para aqueles interessados em realizar análises hidrológicas. Será oferecido pela primeira vez durante a [Semana Universitária da Universidade de Brasília](http://dex.unb.br/semanaunb2022), que acontecerá entre os dias 29/08 e 02/09 de 2022.
+Este é um curso introdutório sobre a linguagem R para aqueles interessados em realizar análises hidrológicas. 
 
-Durante o curso, os alunos irão aprender como utilizar a linguagem R para executar um conjunto de atividades que permitirão realizar uma análise de frequência de cheias para uma estação fluviométrica, cujos dados serão automaticamente obtidos do webservice da Agência Nacional de Águas. Ao final do curso, os alunos terão finalizado um estudo que permitirá relacionar a magnitude das vazões máximas anuais com sua probabilidade de excedência, relação primoridal para dimensionameno de diversas estrutaras de engenharia, gestão do risco de cheias e para o oredenamento do uso e ocupação do solo.   
+O curso foi oferecido pela primeira vez muito recentemete, durante a [Semana Universitária da Universidade de Brasília](http://dex.unb.br/semanaunb2022), que ocorreu entre os dias 29/08 e 02/09 de 2022.
+
+Este mesmo curso deve ser replicado mais vezes no futuro próximo. Os alunos qye venham a fazer este curso irão aprender como utilizar a linguagem R para executar um conjunto de atividades que permitirão realizar uma análise de frequência de cheias para uma estação fluviométrica, cujos dados serão automaticamente obtidos do webservice da Agência Nacional de Águas. 
+
+Ao final do curso, os alunos terão finalizado um estudo que permitirá relacionar a magnitude das vazões máximas anuais com sua probabilidade de excedência, relação primoridal para dimensionameno de diversas estrutaras de engenharia, gestão do risco de cheias e para o oredenamento do uso e ocupação do solo.   
 
 Este curso é o primeiro de um conjunto maior de cursos que estão sendo elaborados pelos seguintes professores do blog [Água e Modelagem](https://aguaemodelagem.wordpress.com), apresentados em ordem alfabética:
 
@@ -68,6 +72,12 @@ Este curso é o primeiro de um conjunto maior de cursos que estão sendo elabora
 
 ## Datas e local do curso
 
+### Próxima data
+
+Assim que tivermos a data da próxima realização do curso, colocaremos aqui neste site.
+
+### Semana Universitária da UnB de 2022
+
 O curso será dado na Sala 5 do Laboratório Central de Computação Científica da Faculdade de Tecnologia da Universidade de Brasília (LCCC ULEG-FT), que fica localizado no prédio da Unidade de Laboratórios de Ensino de Graduação da Faculdade de Tecnologia (ULEG/FT).
 
 O curso será dividido em 5 aulas de 2 horas cada, totalizando 10 horas. As aulas
@@ -76,13 +86,13 @@ serão dadas  nos seguintes horários:
 - 29/08 a 01/09 das 8h00 às 10h00
 - 02/09 das 12h00 às 14h00. 
 
-## Como se inscrever
+### Inscriçõs
 
 As inscrições poderão ser feitas entre os dias 01 e 28 de agosto por este [link da Semana Universitária](https://sig.unb.br/sigaa/public/extensao/paginaListaPeriodosInscricoesAtividadesPublico.jsf?aba=p-extensao). Vale notar que este curso só estará disponível na lista fornecido pelo link acima a partir do dia 01 de agosto.
 
 Como o número de vagas é limitado, recomenda-se que a inscrição seja feita o quanto antes.
 
-## Antes do curso
+#### Antes do curso
 
 Os computadores da sala onde será ministrado o curso já tem os programas instalados. De todo modo, para que seja possível trabalhar fora do horario do curso, sugerimos que os participantes tenham os mesmos programas instalados em seu própio computador. 
 
