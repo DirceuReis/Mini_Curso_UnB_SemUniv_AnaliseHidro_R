@@ -97,4 +97,8 @@ Como o número de vagas é limitado, recomenda-se que a inscrição seja feita o
 Os computadores da sala onde será ministrado o curso já tem os programas instalados. De todo modo, para que seja possível trabalhar fora do horario do curso, sugerimos que os participantes tenham os mesmos programas instalados em seu própio computador. 
 
 Sugerimos instalar tanto o **R** quanto o **RStudio**. Para isso, entre na aula **Conceitos Básicos em R** e siga as instruções de instalação.
+
+#### Códigos em **R** das auals dadas
+
+Os códigos criados durante as aulas serão em breve disponibilizados aqui.
    
