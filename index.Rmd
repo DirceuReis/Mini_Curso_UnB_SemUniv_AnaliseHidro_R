@@ -61,7 +61,9 @@ O curso foi oferecido pela primeira vez muito recentemete, durante a [Semana Uni
 
 Este mesmo curso deve ser replicado mais vezes no futuro próximo. Os alunos que venham a fazer este curso irão aprender como utilizar a linguagem R para executar um conjunto de atividades que permitirão realizar uma análise de frequência de cheias para uma estação fluviométrica, cujos dados serão automaticamente obtidos do webservice da Agência Nacional de Águas. 
 
-Ao final do curso, os alunos terão finalizado um estudo que permitirá relacionar a magnitude das vazões máximas anuais com sua probabilidade de excedência, relação primoridal para dimensionameno de diversas estrutaras de engenharia, gestão do risco de cheias e para o oredenamento do uso e ocupação do solo.   
+Ao final do curso, os alunos terão finalizado um estudo que permitirá relacionar a magnitude das vazões máximas anuais com sua probabilidade de excedência, relação primordial para dimensionameno de diversas estrutaras de engenharia, gestão do risco de cheias e para o oredenamento do uso e ocupação do solo. 
+
+A realização da análise de frequência de cheias é um fator motivador do curso, cujo foco é no aprendizado da linguagem **R**. Cursos com o foco em análise de frequência serão dados no futuro para aqueles que tenham interesse em se apronfudar no assunto.
 
 Este curso é o primeiro de um conjunto maior de cursos que estão sendo elaborados pelos seguintes professores do blog [Água e Modelagem](https://aguaemodelagem.wordpress.com), apresentados em ordem alfabética:
 
@@ -70,11 +72,11 @@ Este curso é o primeiro de um conjunto maior de cursos que estão sendo elabora
 - Pedro Chaffe (UFSC)
 - Wilson Fernandes (UFMG) 
 
-## Datas previstas e realizações anteriores
-
-### Próxima realização do curso
+## Previsão para os próximos cursos
 
 Assim que tivermos a data da próxima realização do curso, colocaremos aqui neste site.
+
+## Realizaçoes anteriores
 
 ### Semana Universitária da UnB de 2022
 
@@ -100,5 +102,5 @@ Sugerimos instalar tanto o **R** quanto o **RStudio**. Para isso, entre na aula 
 
 #### Códigos em **R** das aulas dadas
 
-Os códigos criados durante as aulas serão em breve disponibilizados aqui.
+Alguns scripts desenvolvidos durante as aula spodem ser encontrados [aqui](aulas_anteriores/aula_semana_universitaria_2022.R).
    
