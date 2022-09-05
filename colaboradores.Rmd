@@ -6,11 +6,11 @@ description: Exclusivo para a Semana Universitária
 ```{r setup, include=FALSE}
 library(knitr)
 ```
-Apesar deste curso ser uma iniciativa do grupo [Água e Modelagem](https://aguaemodelagem.wordpress.com), contamos com a participação exclusiva para a Semana Universtária da UnB de dois integrantes: 
+Apesar deste curso ser uma iniciativa do grupo [Água e Modelagem](https://aguaemodelagem.wordpress.com), contamos com a participação exclusiva para a Semana Universtária da UnB de três integrantes: 
 
 ## Thiago Lappicy
 
-Thiago Lappicy é aluno de mestrado do Programa de Engenharia Civil e Ambiental da Universidade de Brasília (PTARH/UnB).
+Thiago Lappicy é aluno de mestrado do Programa de Pós-Graduação em Tecnologia Ambiental e Recursos Hídricos da Universidade de Brasília (PTARH/UnB).
 
 ## Saulo Aires de Souza
 
