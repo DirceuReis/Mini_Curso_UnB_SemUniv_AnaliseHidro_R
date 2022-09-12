@@ -1,0 +1,257 @@
+---
+title: "Análise exploratória dos dados: Parte 2"
+description: Rascunho de novas análises com **R**
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(lubridate)
+```
+
+## Apresentação
+
+Esta página pode ser vista como um rascunho de uma segunda aula em **Análise Exploratória de Dados**, o que significa dizer que ainda está em construção.
+
+A ideia é iniciar com a leitura de dados diários de vazão de uma dada estação, e a partir daí, realizar uma séries de atividades que se constitui basicamente da construção de gráficos que permitam caracterizar, de uma forma geral, o comportamentos das vazões no local.
+
+Segue abaixo, uma lista das análises que se pretende realizar nesta aula:
+
+- Construção de curva de permanência a nível diário em três estágios acumulativos:
+  - com todos os anos do histórico de uma só vez
+  - uma curva para cada ano
+  - identificação da curva de permanência dos anos mais úmido e mais seco
+- Sazonalidade das máximas anuais (esécie de rosas dos ventos para vazões)
+- Construção das mínimas para um dado número de dias consecutivos
+
+## Leitura dos dados diários
+
+Iniciamos esta aula fazendo a leitura do arquivo `txt` que contém os dados de vazão média diária obtidos anteriormente.   
+
+```{r leitura_txt}
+## Leitura do arquivo de vazões médias diárias
+Qd <- read.table(file = "dados/60435000.txt",
+                             sep = "\t",
+                             dec = ".",
+                             header = T,
+                             fileEncoding = "UTF-8",
+                             colClasses = c("factor", "Date", "numeric"))
+head(Qd,10)
+```
+
+
+## Curva de permanência
+
+A curva de permanência de vazões relaciona os valores de vazão registrados na estação com as respectivas probabilidade de serem excedidos. Costuma-se representar os valores de vazão no eixo-y e a probabilide de excedência no eixo-x. Costuma-se interpretar a probabilidade de excedência como o percentual do tempo em que se observa valores de vazão maior ou iguais ao valor em questão.
+
+Para construrios uma curva de permanência com os dados apresentados acima, criaremos uma nova coluna no nosso `dataframe`, denominado `Qd`, com os valores do ano corrspondente, informação disponível na coluna de `Data`. Isso nos ajudará nas etapas posteriores de cálculo. 
+
+Além disso, removeremos os anos em que haja falha nos dados de vazão, evitando distorções no cálculo dos percentis de vazão, necessários para a criação da curva de permanência. Essas duas etapas são realizadas no código abaixo, 
+
+```{R preparo_data}
+## Criação de coluna com os anos
+Qd <- Qd %>% 
+  mutate(Ano = year(Data))
+
+## Remoção de anos que contenham dias com falha
+Anos_falha <- unique(Qd$Ano[is.na(Qd$Vazao)])
+Anos_falha
+Qd <- Qd %>% 
+          filter(!(Ano %in% Anos_falha))
+tibble(Qd)
+```
+
+Podemos notar que os anos `r Anos_falha` continham falhas e foram removidos de nossa análise. A série restante contém um total de `r nrow(Qd)` observações, relativas a `r length(unique(Qd$Ano))` anos de dados sem falhas, com início em `r Qd$Ano[1]` e fim em `r Qd$Ano[nrow(Qd)]`. 
+
+Constuiremos primeiro a curva de permanência tradicional, aquela em que as obervações de todos os anos do histórico são empregadas no cálculo da probabilidade de excedência. Aqui, utilizaremos a chamada posição de plotagem de Weibull, conforme equação abaixo,
+
+$$
+P(Q>q_{(i)})=\frac{i}{n+1}
+$$
+
+em que $q_{(i)}$ é a i-ésima maior vazão observada, $i$ é o posto (*ranking*) da observação, e $n$ é o número de observações. Só para deixar claro, a probabilidade da vazão média diária ultrapassar a maior vazão média diária já registrada vale
+
+$$
+P(Q>q_{(1)}) = \frac{1}{n+1}
+$$
+
+Utilizamos o código abaixo, escrito em `R-base`, para realizar esse cálculo. AO final, apresentamos as primeiras 10 linhas do `dataframe` denominado `Qperm_all`, com os valores da probabilidade de excedência localizados na última coluna. 
+
+Note que as vazões estão ordenadas de forma decrescentte, com o maior valor do histórico tendo ocorrido em `r Qperm_all$Data[1]`. 
+
+```{r Perm_all}
+# Permanência calculada com todos os anos juntos 
+# Uso do R-base apenas
+Qperm_all <- Qd[order(Qd$Vazao, decreasing = TRUE), ]
+Qperm_all$index <- 1:nrow(Qperm_all)
+Qperm_all$weibull <- Qperm_all$index/(nrow(Qperm_all)+1) 
+tibble(Qperm_all)
+```
+Poderíamos ter obtido o mesmo resultado utilizando o pacote `tidyverse`, como pode ser observado abaixo. É sempre bom saber realizar algo de manieras diferentes. Utilize a que você achar mais fácil.
+
+```{r perm-all-tidy}
+Qperm_allt <- Qd %>% 
+  arrange(desc(Vazao)) %>%
+  mutate(index = rank(-Vazao)) %>%
+  mutate(weibull = index/(n()+1))
+tibble(Qperm_allt)
+```
+
+Agora já temos os elementos necessários para realizar a plotagem da curva de permanência, quais sejam: a vazão média diária (eixo-y), armazenada na coluna `Vazao` de nosso `dataframe`, e a probabilidade de excedênia (eixo-x), armazeada na coluna `weibull`.
+
+O código abaixo faz a plotagem utilizando o pacote `ggplot2`. Plotamos a vazão na escala logarítmica para facilitar a visualização. 
+
+```{r plot-perm-all, warning=FALSE,fig.width = 8, fig.height = 6}
+ggplot() +
+  geom_line(data = Qperm_all,aes(weibull,Vazao),colour = 'black', size = 1) +
+  scale_y_continuous(name = 'Vazão média diária (m3/s)',
+                     trans = 'log10', 
+                     breaks = c(0.01, 0.1, 1, 10, 100, 1000, 10000),
+                     limits = c(0.05, 20),
+                     labels = c(0.01, 0.1, 1, 10, 100, 1000, '10,000')) +
+    scale_x_continuous(name = 'Percentual do tempo acima',
+                     limits = c(0.01,0.99),
+                     breaks = c(0.01, 0.05,0.1,0.25,0.5,0.75, 0.9,0.95, 0.99),
+                     labels = c('1%','5%', '10%', '25%', '50%', '75%', '90%','95%', '99%'))
+```
+
+O próximo passo é determinar as curvas de permanência para cada uma dos anos do histórico, e plotá-las junto com a curva acima. Isso nos dará uma ideia do grau de variabilidade da curva de permanência de ano para ano. 
+
+Aqui, nos restringiremos a usar o pacote `tidyverse` para rearrumar o `dataframe` e realizar as operações necessárias. Como faremos uma curva de permanência para cada ano do histórico, precisaremos calcular as probabilidades de excedência de forma separada para cada ano. Faremos isso utilizando a função `grup_by`, como apresentado no código abaixo,
+
+```{r}
+# Permanência calculada para cada ano
+# Uso do tidyverse e pipe
+Qperm_ano <- Qd %>% 
+  arrange(Ano, desc(Vazao)) %>%
+  group_by(Ano) %>%
+  mutate(index = rank(-Vazao)) %>%
+  mutate(weibull = index/(n()+1))
+tibble(Qperm_ano)
+```
+
+Só nos resta agora fazer a plotagem. Como incluiremos 40 novas curvas, é importante que utilizemos uma linha bem fina e uma cor bastante suave. Utilizaremos a cor `ray70` com tamanho `0.2`. Você pode experimentar as diferentes possibilidades que o `ggplot2` oferece.
+
+O código para a plotagem segue abaixo,
+
+```{r plot-perm-all-anos, warning=FALSE,fig.width = 8, fig.height = 6}
+ggplot() +
+  geom_line(data = p1,aes(x = weibull, y = Vazao,group = Ano),
+              colour = 'grey70', size = 0.2) +
+  geom_line(data = Qperm_all,aes(weibull,Vazao),colour = 'black', size = 1) +
+    scale_y_continuous(name = 'Vazão média diária (m3/s)',
+                     trans = 'log10', 
+                     breaks = c(0.01, 0.1, 1, 10, 100, 1000, 10000),
+                     limits = c(0.05, 20),
+                     labels = c(0.01, 0.1, 1, 10, 100, 1000, '10,000')) +
+    scale_x_continuous(name = 'Percentual do tempo acima',
+                     limits = c(0.01,0.99),
+                     breaks = c(0.01, 0.05,0.1,0.25,0.5,0.75, 0.9,0.95, 0.99),
+                     labels = c('1%','5%', '10%', '25%', '50%', '75%', '90%','95%', '99%'))
+```
+
+Podemos perceber uma faixa de variação relativamente grande de ano para ano para os diferentes valores de percentis. 
+
+Para faciliatr a visualização, faremos duas modificações na Figura acima. Primeiro, vamos alterar a linha de grade, tornando-a mais refinada. Depois, iremos fazer uma transformação no eixo-x para deixar mais claro o comportamento dessas curvas nas regiões extremas da probabilidade de excedência.
+
+Para a primeira parte, utilizaremos a função abaixo, que constrói um novo conjunto de linhas de grade na escala logarítmica, código este que foi retirado do link abaixo. Para a segunda parte, empregaremos uma transformação do tipo `probit` aos valores de probabilidade, transformando essas porbabilidades em quantis da distribuição normal-padrão.
+
+```{r}
+# Function to plot minor breaks at a log scale
+# https://stackoverflow.com/questions/30179442/plotting-minor-breaks-on-a-log-scale-with-ggplot
+log10_minor_break = function (...){
+  function(x) {
+    minx         = floor(min(log10(x), na.rm=T))-1;
+    maxx         = ceiling(max(log10(x), na.rm=T))+1;
+    n_major      = maxx-minx+1;
+    major_breaks = seq(minx, maxx, by=1)
+    minor_breaks = 
+      rep(log10(seq(1, 9, by=1)), times = n_major)+
+      rep(major_breaks, each = 9)
+    return(10^(minor_breaks))
+  }
+}
+
+log10_major_break = function (...){
+  function(x) {
+    minx         = floor(min(log10(x), na.rm=T))-1;
+    maxx         = ceiling(max(log10(x), na.rm=T))+1;
+    n_major      = maxx-minx+1;
+    major_breaks = seq(minx, maxx, by=1)
+    return(10^(major_breaks))
+  }
+}
+
+```
+
+O código para a nova Figura segue na sequência,
+
+```{r plot-perm-all-anos-v2, warning=FALSE,fig.width = 8, fig.height = 6}
+ggplot() +
+  geom_line(data = p1,aes(x = weibull, y = Vazao,group = Ano),
+              colour = 'grey70', size = 0.2) +
+  geom_line(data = Qperm_all,aes(weibull,Vazao),colour = 'black', size = 1) +
+    scale_y_continuous(name = 'Vazão média diária (m3/s)',
+                     trans = 'log10', 
+                     breaks = c(0.01, 0.1, 1, 10, 100, 1000, 10000),
+                     minor_breaks = log10_minor_break(),
+                     limits = c(0.05, 20),
+                     labels = c(0.01, 0.1, 1, 10, 100, 1000, '10,000')) +
+    scale_x_continuous(name = 'Percentual do tempo acima',
+                     trans = 'probit', 
+                     limits = c(0.01,0.99),
+                     breaks = c(0.01, 0.05,0.1,0.25,0.5,0.75, 0.9,0.95, 0.99),
+                     labels = c('1%','5%', '10%', '25%', '50%', '75%', '90%','95%', '99%'))
+```
+Veja que as mudanças implementadas permitiram visualizar melhor os resultados, principalmente para os quantis acima de 90%. 
+
+Dá para notar, por exemplo, que a $Q_{0.95}$ vale 0.38 m$^3$/s quando se emprega todo o conjunto de anos do histórico, muito embora, numa análise a nível anual,  seu valor pode variar entre entre 1.48 m$^3$/s e 0.07 m$^3$/s.
+
+Para finalizar este esta atividade em relação à curva de permanência, e para chamar a atenção para essa variabilidade de ano para ano, vamos identificar o ano mais seco e o ano mais úmido, e diferenciá-los na Figura acima. 
+
+Para isso, precisamos identificar quem são esses anos. Vamos utilizar como métrica para a definição do ano mais e do ano mais seco, a vazão média anual.
+
+O código abaixo mostra com essa identificação pode ser feita,
+
+```{R anos-seco-umido}
+## Determina o ano mais úmido e o ano mais seco
+Qanual <- Qd %>%
+  group_by(Ano) %>%
+  summarise(Qano = mean(Vazao))
+ano_seco <- as.numeric(Qanual[which.min(Qanual$Qano),1])
+ano_seco
+ano_umido <- as.numeric(Qanual[which.max(Qanual$Qano),1])
+ano_umido
+```
+Para tornar as curvas de permanência de 1983 e 2017 mais proeminentes na Figura acima, basta colorí-las. Fazemos isso no código abaixo, incluindo uma legenda para identificar quem é quem.
+
+```{r, warning = FALSE,fig.width = 8, fig.height = 6}
+# Plotagem
+  ggplot() +
+    geom_line(data = p1,aes(x = weibull, y = Vazao,group = Ano),
+              colour = 'grey70', size = 0.2) +   
+    geom_line(data = Qd_ord,aes(weibull,Vazao),colour = 'black', size = 1) +
+    geom_line(data = p2, aes(x = weibull, y = Vazao, colour = factor(Ano)), size = 1) +
+    scale_colour_discrete(name = NULL) +
+    theme(legend.position = 'bottom',text = element_text(size = 10)) +
+    scale_y_continuous(name = 'Vazão média diária (m3/s)',
+                     trans = 'log10', 
+                     breaks = c(0.01, 0.1, 1, 10, 100, 1000, 10000),
+                     minor_breaks = log10_minor_break(),
+                     limits = c(0.05, 20),
+                     labels = c(0.01, 0.1, 1, 10, 100, 1000, '10,000')) +
+    scale_x_continuous(name = 'Percentual do tempo acima',
+                     trans = 'probit', 
+                     limits = c(0.01,0.99),
+                     breaks = c(0.01, 0.05,0.1,0.25,0.5,0.75, 0.9,0.95, 0.99),
+                     labels = c('1%','5%', '10%', '25%', '50%', '75%', '90%','95%', '99%'))
+
+```
+
+
+## Fontes de consulta
+
+- O site [Visualizing hydrologic data](https://tonyladson.wordpress.com/2018/12/02/visualising-hydrologic-data/), escrito por [Tony Ladson](https://tonyladson.wordpress.com/tests/), além de conter exemplos interessantes de plotagem em Hidrologia, disponibiliza os códigos usados na linguagem **R**.
+
+  - [Curva de permanência (Flow duration curve)](https://tonyladson.wordpress.com/2018/12/04/flow-duration-curves/)
+  - [Momento do ano das máximas anuais](https://tonyladson.wordpress.com/2016/06/01/what-time-of-year-does-it-flood/)
