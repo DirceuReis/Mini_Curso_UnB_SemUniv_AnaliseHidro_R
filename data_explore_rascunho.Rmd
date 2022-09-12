@@ -77,8 +77,6 @@ $$
 
 Utilizamos o código abaixo, escrito em `R-base`, para realizar esse cálculo. AO final, apresentamos as primeiras 10 linhas do `dataframe` denominado `Qperm_all`, com os valores da probabilidade de excedência localizados na última coluna. 
 
-Note que as vazões estão ordenadas de forma decrescentte, com o maior valor do histórico tendo ocorrido em `r Qperm_all$Data[1]`. 
-
 ```{r Perm_all}
 # Permanência calculada com todos os anos juntos 
 # Uso do R-base apenas
@@ -87,6 +85,9 @@ Qperm_all$index <- 1:nrow(Qperm_all)
 Qperm_all$weibull <- Qperm_all$index/(nrow(Qperm_all)+1) 
 tibble(Qperm_all)
 ```
+
+Note que as vazões estão ordenadas de forma decrescentte, com o maior valor do histórico tendo ocorrido em `r Qperm_all$Data[1]`. 
+
 Poderíamos ter obtido o mesmo resultado utilizando o pacote `tidyverse`, como pode ser observado abaixo. É sempre bom saber realizar algo de manieras diferentes. Utilize a que você achar mais fácil.
 
 ```{r perm-all-tidy}
@@ -117,7 +118,7 @@ ggplot() +
 
 O próximo passo é determinar as curvas de permanência para cada uma dos anos do histórico, e plotá-las junto com a curva acima. Isso nos dará uma ideia do grau de variabilidade da curva de permanência de ano para ano. 
 
-Aqui, nos restringiremos a usar o pacote `tidyverse` para rearrumar o `dataframe` e realizar as operações necessárias. Como faremos uma curva de permanência para cada ano do histórico, precisaremos calcular as probabilidades de excedência de forma separada para cada ano. Faremos isso utilizando a função `grup_by`, como apresentado no código abaixo,
+Aqui, nos restringiremos a usar o pacote `tidyverse` para rearrumar o `dataframe` e realizar as operações necessárias. Como faremos uma curva de permanência para cada ano do histórico, precisaremos calcular as probabilidades de excedência de forma separada para cada ano. Faremos isso utilizando a função `group_by`, como apresentado no código abaixo,
 
 ```{r}
 # Permanência calculada para cada ano
@@ -136,7 +137,7 @@ O código para a plotagem segue abaixo,
 
 ```{r plot-perm-all-anos, warning=FALSE,fig.width = 8, fig.height = 6}
 ggplot() +
-  geom_line(data = p1,aes(x = weibull, y = Vazao,group = Ano),
+  geom_line(data = Qperm_ano,aes(x = weibull, y = Vazao,group = Ano),
               colour = 'grey70', size = 0.2) +
   geom_line(data = Qperm_all,aes(weibull,Vazao),colour = 'black', size = 1) +
     scale_y_continuous(name = 'Vazão média diária (m3/s)',
@@ -188,7 +189,7 @@ O código para a nova Figura segue na sequência,
 
 ```{r plot-perm-all-anos-v2, warning=FALSE,fig.width = 8, fig.height = 6}
 ggplot() +
-  geom_line(data = p1,aes(x = weibull, y = Vazao,group = Ano),
+  geom_line(data = Qperm_ano,aes(x = weibull, y = Vazao,group = Ano),
               colour = 'grey70', size = 0.2) +
   geom_line(data = Qperm_all,aes(weibull,Vazao),colour = 'black', size = 1) +
     scale_y_continuous(name = 'Vazão média diária (m3/s)',
@@ -223,15 +224,29 @@ ano_seco
 ano_umido <- as.numeric(Qanual[which.max(Qanual$Qano),1])
 ano_umido
 ```
-Para tornar as curvas de permanência de 1983 e 2017 mais proeminentes na Figura acima, basta colorí-las. Fazemos isso no código abaixo, incluindo uma legenda para identificar quem é quem.
+Para tornar as curvas de permanência de 1983 e 2017 mais proeminentes na Figura acima, basta colorí-las. 
+
+Para isso, vamos construir um novo `dataframe` apenas ocm esses anos,
+
+```{r}
+anos_extremos <- Qd %>% 
+  filter(Ano %in% c(ano_seco, ano_umido)) %>% 
+  arrange(Ano, desc(Vazao)) %>%
+  group_by(Ano) %>% 
+  mutate(index = rank(-Vazao)) %>%
+  mutate(weibull = index/(n()+1))
+tibble(anos_extremos)
+```
+
+Fazemos isso no código abaixo, incluindo uma legenda para identificar quem é quem.
 
 ```{r, warning = FALSE,fig.width = 8, fig.height = 6}
 # Plotagem
   ggplot() +
-    geom_line(data = p1,aes(x = weibull, y = Vazao,group = Ano),
+    geom_line(data = Qperm_ano,aes(x = weibull, y = Vazao,group = Ano),
               colour = 'grey70', size = 0.2) +   
-    geom_line(data = Qd_ord,aes(weibull,Vazao),colour = 'black', size = 1) +
-    geom_line(data = p2, aes(x = weibull, y = Vazao, colour = factor(Ano)), size = 1) +
+    geom_line(data = Qperm_all,aes(weibull,Vazao),colour = 'black', size = 1) +
+    geom_line(data = anos_extremos, aes(x = weibull, y = Vazao, colour = factor(Ano)), size = 1) +
     scale_colour_discrete(name = NULL) +
     theme(legend.position = 'bottom',text = element_text(size = 10)) +
     scale_y_continuous(name = 'Vazão média diária (m3/s)',

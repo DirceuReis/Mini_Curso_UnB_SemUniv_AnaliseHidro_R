@@ -20,6 +20,8 @@ navbar:
           href: data_manip.html
         - text: "Análise exploratória"
           href: data_explore.html
+        - text: "Análise exploratória 2"
+          href: data_explore_rascunho.html
         - text: "Análise de frequência"
           href: frequency_analysis.html
     - text: "Colaboradores"

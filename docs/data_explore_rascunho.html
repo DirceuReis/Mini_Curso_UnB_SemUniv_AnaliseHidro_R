@@ -2111,6 +2111,7 @@ Aulas
 <a href="get_data.html">Obtenção de dados</a>
 <a href="data_manip.html">Manipulação de dados</a>
 <a href="data_explore.html">Análise exploratória</a>
+<a href="data_explore_rascunho.html">Análise exploratória 2</a>
 <a href="frequency_analysis.html">Análise de frequência</a>
 </div>
 </div>
@@ -2270,8 +2271,6 @@ P(Q&gt;q_{(1)}) = \frac{1}{n+1}
 realizar esse cálculo. AO final, apresentamos as primeiras 10 linhas do
 <code>dataframe</code> denominado <code>Qperm_all</code>, com os valores
 da probabilidade de excedência localizados na última coluna.</p>
-<p>Note que as vazões estão ordenadas de forma decrescentte, com o maior
-valor do histórico tendo ocorrido em 2004-02-23.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Permanência calculada com todos os anos juntos </span></span>
@@ -2296,6 +2295,8 @@ valor do histórico tendo ocorrido em 2004-02-23.</p>
 10 60435000    2016-01-20  17.8  2016    10 0.000686 
 # … with 14,569 more rows</code></pre>
 </div>
+<p>Note que as vazões estão ordenadas de forma decrescentte, com o maior
+valor do histórico tendo ocorrido em 2004-02-23.</p>
 <p>Poderíamos ter obtido o mesmo resultado utilizando o pacote
 <code>tidyverse</code>, como pode ser observado abaixo. É sempre bom
 saber realizar algo de manieras diferentes. Utilize a que você achar
@@ -2355,7 +2356,7 @@ para ano.</p>
 rearrumar o <code>dataframe</code> e realizar as operações necessárias.
 Como faremos uma curva de permanência para cada ano do histórico,
 precisaremos calcular as probabilidades de excedência de forma separada
-para cada ano. Faremos isso utilizando a função <code>grup_by</code>,
+para cada ano. Faremos isso utilizando a função <code>group_by</code>,
 como apresentado no código abaixo,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2392,7 +2393,7 @@ que o <code>ggplot2</code> oferece.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
-<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>p1</span>,<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>weibull</span>, y <span class='op'>=</span> <span class='va'>Vazao</span>,group <span class='op'>=</span> <span class='va'>Ano</span><span class='op'>)</span>,</span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>Qperm_ano</span>,<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>weibull</span>, y <span class='op'>=</span> <span class='va'>Vazao</span>,group <span class='op'>=</span> <span class='va'>Ano</span><span class='op'>)</span>,</span>
 <span>              colour <span class='op'>=</span> <span class='st'>'grey70'</span>, size <span class='op'>=</span> <span class='fl'>0.2</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>Qperm_all</span>,<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>weibull</span>,<span class='va'>Vazao</span><span class='op'>)</span>,colour <span class='op'>=</span> <span class='st'>'black'</span>, size <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_continuous</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>'Vazão média diária (m3/s)'</span>,</span>
@@ -2452,7 +2453,7 @@ normal-padrão.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
-<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>p1</span>,<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>weibull</span>, y <span class='op'>=</span> <span class='va'>Vazao</span>,group <span class='op'>=</span> <span class='va'>Ano</span><span class='op'>)</span>,</span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>Qperm_ano</span>,<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>weibull</span>, y <span class='op'>=</span> <span class='va'>Vazao</span>,group <span class='op'>=</span> <span class='va'>Ano</span><span class='op'>)</span>,</span>
 <span>              colour <span class='op'>=</span> <span class='st'>'grey70'</span>, size <span class='op'>=</span> <span class='fl'>0.2</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>Qperm_all</span>,<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>weibull</span>,<span class='va'>Vazao</span><span class='op'>)</span>,colour <span class='op'>=</span> <span class='st'>'black'</span>, size <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_continuous</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>'Vazão média diária (m3/s)'</span>,</span>
@@ -2502,16 +2503,44 @@ média anual.</p>
 <pre><code>[1] 1983</code></pre>
 </div>
 <p>Para tornar as curvas de permanência de 1983 e 2017 mais proeminentes
-na Figura acima, basta colorí-las. Fazemos isso no código abaixo,
-incluindo uma legenda para identificar quem é quem.</p>
+na Figura acima, basta colorí-las.</p>
+<p>Para isso, vamos construir um novo <code>dataframe</code> apenas ocm
+esses anos,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>anos_extremos</span> <span class='op'>&lt;-</span> <span class='va'>Qd</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>Ano</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>ano_seco</span>, <span class='va'>ano_umido</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/arrange.html'>arrange</a></span><span class='op'>(</span><span class='va'>Ano</span>, <span class='fu'><a href='https://dplyr.tidyverse.org/reference/desc.html'>desc</a></span><span class='op'>(</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Ano</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>index <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rank.html'>rank</a></span><span class='op'>(</span><span class='op'>-</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>weibull <span class='op'>=</span> <span class='va'>index</span><span class='op'>/</span><span class='op'>(</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/context.html'>n</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>+</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>anos_extremos</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code># A tibble: 730 × 6
+   Cod_estacao Data       Vazao   Ano index weibull
+   &lt;fct&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;   &lt;dbl&gt;
+ 1 60435000    1983-02-10 25.3   1983     1 0.00273
+ 2 60435000    1983-02-11 24.6   1983     2 0.00546
+ 3 60435000    1983-02-09 15.6   1983     3 0.00820
+ 4 60435000    1983-01-23 14.7   1983     4 0.0109 
+ 5 60435000    1983-02-12 14.6   1983     5 0.0137 
+ 6 60435000    1983-03-26 14.3   1983     6 0.0164 
+ 7 60435000    1983-03-22 12.1   1983     7 0.0191 
+ 8 60435000    1983-03-27 10.9   1983     8 0.0219 
+ 9 60435000    1983-01-02 10.4   1983     9 0.0246 
+10 60435000    1983-02-08  9.95  1983    10 0.0273 
+# … with 720 more rows</code></pre>
+</div>
+<p>Fazemos isso no código abaixo, incluindo uma legenda para identificar
+quem é quem.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Plotagem</span></span>
 <span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
-<span>    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>p1</span>,<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>weibull</span>, y <span class='op'>=</span> <span class='va'>Vazao</span>,group <span class='op'>=</span> <span class='va'>Ano</span><span class='op'>)</span>,</span>
+<span>    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>Qperm_ano</span>,<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>weibull</span>, y <span class='op'>=</span> <span class='va'>Vazao</span>,group <span class='op'>=</span> <span class='va'>Ano</span><span class='op'>)</span>,</span>
 <span>              colour <span class='op'>=</span> <span class='st'>'grey70'</span>, size <span class='op'>=</span> <span class='fl'>0.2</span><span class='op'>)</span> <span class='op'>+</span>   </span>
-<span>    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>Qd_ord</span>,<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>weibull</span>,<span class='va'>Vazao</span><span class='op'>)</span>,colour <span class='op'>=</span> <span class='st'>'black'</span>, size <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span></span>
-<span>    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>p2</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>weibull</span>, y <span class='op'>=</span> <span class='va'>Vazao</span>, colour <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>Ano</span><span class='op'>)</span><span class='op'>)</span>, size <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>Qperm_all</span>,<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span><span class='va'>weibull</span>,<span class='va'>Vazao</span><span class='op'>)</span>,colour <span class='op'>=</span> <span class='st'>'black'</span>, size <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_path.html'>geom_line</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>anos_extremos</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>weibull</span>, y <span class='op'>=</span> <span class='va'>Vazao</span>, colour <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='va'>Ano</span><span class='op'>)</span><span class='op'>)</span>, size <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_colour_discrete.html'>scale_colour_discrete</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='cn'>NULL</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>legend.position <span class='op'>=</span> <span class='st'>'bottom'</span>,text <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>size <span class='op'>=</span> <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
 <span>    <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_continuous</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>'Vazão média diária (m3/s)'</span>,</span>
@@ -2526,7 +2555,7 @@ incluindo uma legenda para identificar quem é quem.</p>
 <span>                     breaks <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.01</span>, <span class='fl'>0.05</span>,<span class='fl'>0.1</span>,<span class='fl'>0.25</span>,<span class='fl'>0.5</span>,<span class='fl'>0.75</span>, <span class='fl'>0.9</span>,<span class='fl'>0.95</span>, <span class='fl'>0.99</span><span class='op'>)</span>,</span>
 <span>                     labels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>'1%'</span>,<span class='st'>'5%'</span>, <span class='st'>'10%'</span>, <span class='st'>'25%'</span>, <span class='st'>'50%'</span>, <span class='st'>'75%'</span>, <span class='st'>'90%'</span>,<span class='st'>'95%'</span>, <span class='st'>'99%'</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
-<p><img src="data_explore_rascunho_files/figure-html5/unnamed-chunk-3-1.png" width="768" /></p>
+<p><img src="data_explore_rascunho_files/figure-html5/unnamed-chunk-4-1.png" width="768" /></p>
 </div>
 <h2 id="fontes-de-consulta">Fontes de consulta</h2>
 <ul>
@@ -2544,7 +2573,7 @@ de permanência (Flow duration curve)</a></li>
 href="https://tonyladson.wordpress.com/2016/06/01/what-time-of-year-does-it-flood/">Momento
 do ano das máximas anuais</a></li>
 </ul>
-<div class="sourceCode" id="cb9"><pre
+<div class="sourceCode" id="cb10"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div></li>
 </ul>
 <!--radix_placeholder_article_footer-->
