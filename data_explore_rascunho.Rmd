@@ -131,7 +131,7 @@ Qperm_ano <- Qd %>%
 tibble(Qperm_ano)
 ```
 
-Só nos resta agora fazer a plotagem. Como incluiremos 40 novas curvas, é importante que utilizemos uma linha bem fina e uma cor bastante suave. Utilizaremos a cor `ray70` com tamanho `0.2`. Você pode experimentar as diferentes possibilidades que o `ggplot2` oferece.
+Só nos resta agora fazer a plotagem. Como incluiremos 40 novas curvas, é importante que utilizemos uma linha bem fina e uma cor bastante suave. Utilizaremos a cor `gryy70` com tamanho `0.2`. Você pode experimentar as diferentes possibilidades que o `ggplot2` oferece.
 
 O código para a plotagem segue abaixo,
 
@@ -364,7 +364,7 @@ ggplot(Q_max,aes(x=rad, y=maxima)) +
   scale_y_continuous(name = bquote('Máximas anuais (m' ^3 *'s' ^-1 *')')) +
   theme_bw() +
   theme(
-    panel.background = element_rect(fill="gray99"),
+    panel.background = element_rect(fill="gryy99"),
     axis.title.x = element_text(colour="grey20", size=12, margin=margin(20,0,0,0)),
     axis.text.x = element_text(colour="grey20",size=8),
     axis.title.y = element_text(colour="grey20",size=12, margin = margin(0,20,0,0)),
