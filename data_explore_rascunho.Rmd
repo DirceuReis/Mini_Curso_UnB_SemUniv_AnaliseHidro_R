@@ -364,7 +364,7 @@ ggplot(Q_max,aes(x=rad, y=maxima)) +
   scale_y_continuous(name = bquote('Máximas anuais (m' ^3 *'s' ^-1 *')')) +
   theme_bw() +
   theme(
-    panel.background = element_rect(fill="gryy99"),
+    panel.background = element_rect(fill="grey99"),
     axis.title.x = element_text(colour="grey20", size=12, margin=margin(20,0,0,0)),
     axis.text.x = element_text(colour="grey20",size=8),
     axis.title.y = element_text(colour="grey20",size=12, margin = margin(0,20,0,0)),
