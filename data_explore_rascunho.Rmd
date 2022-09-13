@@ -263,6 +263,118 @@ Fazemos isso no código abaixo, incluindo uma legenda para identificar quem é q
 
 ```
 
+## Sazonalidade das vazões máximas anuais
+
+Quando o interesse se dá na modelagem das vazões máximas de um dada estação fluviométrica, é importante compreender quando, ao longo do ano, esses eventos mais extremos ocorrem, de forma a analisar os possíveis mecanismos geradores dessas grandes cheias. 
+
+Na modelagem estatística de eventos de cheia, costuma-se assumir, a priori, que a série de máximos é homogênea, o que justifica o uso de apenas uma distribuição teórica de probabilidades. 
+
+Entretanto, isso nem sempre é verdade, pois é possível que haja diferentes mecanismos físicos geradores das vazões mais altas. Esses mecanismos podem ocorrer em diferentes épocas do ano, de forma que num dado ano, digamos, a maior cheia possa ter ocorrido devido ao mecanismo **A**, enquanto que no ano seguinte, tenha sido o resultado do mecanismo gerador **B**. Em casos como esse, o mais indicado é modelar as vazões máximas como uma combinação de duas distribuições distintas, uma para cada mecanismo gerador.
+
+Visualizar quando as grandes cheias usualmente ocorrem ao longo do ano é um primeiro passo nesse tipo de análise, e isso é exatamente o que faremos aqui.
+
+Iniciamos esta atividade criando um novo `dataframe`, baseado no `dataframe` de vazões média diárias sem falhas, `Qd` (ver **Curva de Permanência**).
+
+Este novo `dataframe` irá conter quatro colunas:
+
+- col1: código da estação
+- col2: ano hidrológico
+- col3: vazão máxima daquele ano hidrológico
+- col4: data da ocorrênca da vazão máxima
+
+Para isso, utilizaremos a função `fun_max_ano`, apresentada abaixo,
+
+```{r}
+# Contrução da série de máximos anuais a partir de um ano hidrológico ####
+fun_max_ano <- function(tabela = NA,
+                        comeco_ano_hidro = 8){
+  
+  # Transformar a coluna Data em "Dates" (caso esteja em character)
+  tabela$Data <- as.Date(tabela$Data)
+  
+  # Definir se o mês em questão entra no ano atual ou no próximo ano
+  desloc_ano <- ifelse(month(tabela$Data) < comeco_ano_hidro, 0, 1)
+  
+  # Ano Hidro
+  tabela$ano_hidro <- year(tabela$Data) + desloc_ano
+  
+  # Fazer uma tabela final apenas com os máximos anuais e a respectiva data de ocorrência
+  max_anuais <-
+    tabela %>%
+    group_by(Cod_estacao, ano_hidro) %>%
+    summarise(maxima = max(Vazao),
+              data_maxima = Data[which.max(Vazao)])
+}
+
+```
+
+Veja que a função `fun_max_ano` assume que o ano hidrológico começa no mês de agosto, o que parece razoável para a estação que estamos utilizando. Se você achar que o ano hidrológico deve começar em outro mês, defina o mês quando chamar a função.
+
+Chamamos a referida função e criamos o `dataframe` denominado `Q_max`, cujas primiras linhas podem ser observadas na sequência.
+
+```{r , message=FALSE}
+Q_max <- fun_max_ano(Qd)
+tibble(Q_max)
+```
+Agora que já temos a data completa da ocorrência de cada uma das vazões máximas anuais, precisamos mapeá-las para coordenada polar de forma que seja possível construir uma espécie de rosa dos ventos, mas para as vazões máximas anuais.
+
+A lógica dessa rosa das vazões é que cada ocorrência seja representada por duas variáveis: a magnitude da vazão, representada pelo tamanho do segmento, e a data de ocorrência dentro do ano, representada pela direção do segmento. Aqui, representaremos uma cheia no dia 01 de janeiro com um segmento na direção Note-Sul apontando para cima. Em outras palavras, a duração de cada ano do histórico será representada por uma volta inteira no círculo, enquanto a ocorrência de uma cheia numa data específica será mapeada para um ângulo em radianos.
+
+Para realizar tal mapeamento, faremos uso da função `Date.to.Angle`, apresentada abaixo, gentilmente compartilhada por Tony Ladson em sua conta de GitHub, cujo endereço aparece no início da função.
+
+```{r}
+# Função compartihada por Tony Ladson
+# https://gist.github.com/TonyLadson/843410a1f9e1f1bbf1f48eeeee79a007
+Date_to_Angle <- function(my.date){
+  
+  start.year <- floor_date(my.date, 'year')
+  end.year <- ceiling_date(my.date, 'year')
+  length.year <- as.numeric(difftime(end.year, start.year, units = 'sec'))
+  time.since.year.start <- as.numeric(difftime(my.date, start.year, units = 'sec'))
+  
+  2 * pi * time.since.year.start/length.year # date as angle
+  
+}
+```
+
+A função `Date.to.Angle` lê as datas de ocorrência das máximas anuais, e para cada um dos anos, determina o tempo decorrido, em segundos, guardando a resposta na variável `time.since.year.start`. Isso permite lidar de forma adequada com os anos bissextos que por ventura apareçam. 
+
+Na sequência, a função mapeia cada uma das vazões máximas para um ângulo em radianos, assumindo que $2\pi$ radianos tenha exatamente a extensão do ano em segundos.
+
+Com essa função em mãos, podemos criar uma nova coluna do `dataframe` `Q_max` com os ângulos em radianos, e isso é feito no código abaixo, que determina também, nas duas primeiras linhas, quais seriam os valores, em radianos, das datas de início de cada mês do ano, informação necessária para construir a nossa rosa das vazões. 
+
+```{r map-data-radiano}
+# gera sequência e calcula ângulo para informações mês a mês
+month.start <- yday(seq(as.Date('2010-01-01'),as.Date('2010-12-31'), by='1 months'))
+month.start.radians <- 2*pi*month.start/365.25 
+
+# Gera ângulo para cada vazão máxima anual do histórico
+Q_max <- Q_max %>% 
+  mutate(rad = Date_to_Angle(data_maxima))
+
+```
+
+Para realizar a plotagem, vamos mais uma vez usufruir da generosidade de [Tony Ladson](https://gist.github.com/TonyLadson/843410a1f9e1f1bbf1f48eeeee79a007), que nos fornece o script para a plotagem. Fizemos pequenas adaptações no script original, mas em essência, o script é o mesmo.
+
+```{r, fig.width = 8, fig.height = 6}
+ggplot(Q_max,aes(x=rad, y=maxima)) + 
+  coord_polar('x', start = 0, direction = 1) + 
+  geom_segment(aes(y = 0, xend = rad, yend = maxima)) +
+  scale_x_continuous(name = 'Ocorrência das máximas anuais', breaks = month.start.radians, labels = month.name, limits = c(0, 2*pi)) +
+  scale_y_continuous(name = bquote('Máximas anuais (m' ^3 *'s' ^-1 *')')) +
+  theme_bw() +
+  theme(
+    panel.background = element_rect(fill="gray99"),
+    axis.title.x = element_text(colour="grey20", size=12, margin=margin(20,0,0,0)),
+    axis.text.x = element_text(colour="grey20",size=8),
+    axis.title.y = element_text(colour="grey20",size=12, margin = margin(0,20,0,0)),
+    axis.text.y = element_text(colour="grey20",size=8),
+    legend.title = element_text(colour="grey20",size=12),
+    plot.margin = unit(c(0.5, 0.5, 1, 0.5), "cm")) # top, right, bottom, left
+
+```
+
+Embora haja espaço para melhorias nessa plotagem, podemos ver claramente que as grandes cheias nesta estação fluviométrica ocorrem entre os meses de dezembro e março, com honrosas exceções em outubro e abril, mas sempre com magnitudes menores. 
 
 ## Fontes de consulta
 

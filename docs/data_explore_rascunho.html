@@ -2145,6 +2145,9 @@ Aulas
 id="toc-leitura-dos-dados-diários">Leitura dos dados diários</a></li>
 <li><a href="#curva-de-permanência" id="toc-curva-de-permanência">Curva
 de permanência</a></li>
+<li><a href="#sazonalidade-das-vazões-máximas-anuais"
+id="toc-sazonalidade-das-vazões-máximas-anuais">Sazonalidade das vazões
+máximas anuais</a></li>
 <li><a href="#fontes-de-consulta" id="toc-fontes-de-consulta">Fontes de
 consulta</a></li>
 </ul>
@@ -2557,6 +2560,175 @@ quem é quem.</p>
 </div>
 <p><img src="data_explore_rascunho_files/figure-html5/unnamed-chunk-4-1.png" width="768" /></p>
 </div>
+<h2 id="sazonalidade-das-vazões-máximas-anuais">Sazonalidade das vazões
+máximas anuais</h2>
+<p>Quando o interesse se dá na modelagem das vazões máximas de um dada
+estação fluviométrica, é importante compreender quando, ao longo do ano,
+esses eventos mais extremos ocorrem, de forma a analisar os possíveis
+mecanismos geradores dessas grandes cheias.</p>
+<p>Na modelagem estatística de eventos de cheia, costuma-se assumir, a
+priori, que a série de máximos é homogênea, o que justifica o uso de
+apenas uma distribuição teórica de probabilidades.</p>
+<p>Entretanto, isso nem sempre é verdade, pois é possível que haja
+diferentes mecanismos físicos geradores das vazões mais altas. Esses
+mecanismos podem ocorrer em diferentes épocas do ano, de forma que num
+dado ano, digamos, a maior cheia possa ter ocorrido devido ao mecanismo
+<strong>A</strong>, enquanto que no ano seguinte, tenha sido o resultado
+do mecanismo gerador <strong>B</strong>. Em casos como esse, o mais
+indicado é modelar as vazões máximas como uma combinação de duas
+distribuições distintas, uma para cada mecanismo gerador.</p>
+<p>Visualizar quando as grandes cheias usualmente ocorrem ao longo do
+ano é um primeiro passo nesse tipo de análise, e isso é exatamente o que
+faremos aqui.</p>
+<p>Iniciamos esta atividade criando um novo <code>dataframe</code>,
+baseado no <code>dataframe</code> de vazões média diárias sem falhas,
+<code>Qd</code> (ver <strong>Curva de Permanência</strong>).</p>
+<p>Este novo <code>dataframe</code> irá conter quatro colunas:</p>
+<ul>
+<li>col1: código da estação</li>
+<li>col2: ano hidrológico</li>
+<li>col3: vazão máxima daquele ano hidrológico</li>
+<li>col4: data da ocorrênca da vazão máxima</li>
+</ul>
+<p>Para isso, utilizaremos a função <code>fun_max_ano</code>,
+apresentada abaixo,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Contrução da série de máximos anuais a partir de um ano hidrológico ####</span></span>
+<span><span class='va'>fun_max_ano</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>tabela</span> <span class='op'>=</span> <span class='cn'>NA</span>,</span>
+<span>                        <span class='va'>comeco_ano_hidro</span> <span class='op'>=</span> <span class='fl'>8</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  </span>
+<span>  <span class='co'># Transformar a coluna Data em "Dates" (caso esteja em character)</span></span>
+<span>  <span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Definir se o mês em questão entra no ano atual ou no próximo ano</span></span>
+<span>  <span class='va'>desloc_ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/month.html'>month</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='va'>comeco_ano_hidro</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Ano Hidro</span></span>
+<span>  <span class='va'>tabela</span><span class='op'>$</span><span class='va'>ano_hidro</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/year.html'>year</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>desloc_ano</span></span>
+<span>  </span>
+<span>  <span class='co'># Fazer uma tabela final apenas com os máximos anuais e a respectiva data de ocorrência</span></span>
+<span>  <span class='va'>max_anuais</span> <span class='op'>&lt;-</span></span>
+<span>    <span class='va'>tabela</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Cod_estacao</span>, <span class='va'>ano_hidro</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span>maxima <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>Vazao</span><span class='op'>)</span>,</span>
+<span>              data_maxima <span class='op'>=</span> <span class='va'>Data</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.min.html'>which.max</a></span><span class='op'>(</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span></span>
+<span><span class='op'>}</span></span></code></pre>
+</div>
+</div>
+<p>Veja que a função <code>fun_max_ano</code> assume que o ano
+hidrológico começa no mês de agosto, o que parece razoável para a
+estação que estamos utilizando. Se você achar que o ano hidrológico deve
+começar em outro mês, defina o mês quando chamar a função.</p>
+<p>Chamamos a referida função e criamos o <code>dataframe</code>
+denominado <code>Q_max</code>, cujas primiras linhas podem ser
+observadas na sequência.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>Q_max</span> <span class='op'>&lt;-</span> <span class='fu'>fun_max_ano</span><span class='op'>(</span><span class='va'>Qd</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code># A tibble: 43 × 4
+   Cod_estacao ano_hidro maxima data_maxima
+   &lt;fct&gt;           &lt;dbl&gt;  &lt;dbl&gt; &lt;date&gt;     
+ 1 60435000         1979  16.1  1979-01-20 
+ 2 60435000         1980  28.9  1980-02-19 
+ 3 60435000         1981  11.1  1981-03-20 
+ 4 60435000         1982  12.8  1982-01-20 
+ 5 60435000         1983  25.3  1983-02-10 
+ 6 60435000         1984   9.25 1983-10-22 
+ 7 60435000         1985   8.91 1985-01-27 
+ 8 60435000         1986  10.4  1986-01-29 
+ 9 60435000         1987  12.4  1986-12-30 
+10 60435000         1988  17.1  1988-03-13 
+# … with 33 more rows</code></pre>
+</div>
+<p>Agora que já temos a data completa da ocorrência de cada uma das
+vazões máximas anuais, precisamos mapeá-las para coordenada polar de
+forma que seja possível construir uma espécie de rosa dos ventos, mas
+para as vazões máximas anuais.</p>
+<p>A lógica dessa rosa das vazões é que cada ocorrência seja
+representada por duas variáveis: a magnitude da vazão, representada pelo
+tamanho do segmento, e a data de ocorrência dentro do ano, representada
+pela direção do segmento. Aqui, representaremos uma cheia no dia 01 de
+janeiro com um segmento na direção Note-Sul apontando para cima. Em
+outras palavras, a duração de cada ano do histórico será representada
+por uma volta inteira no círculo, enquanto a ocorrência de uma cheia
+numa data específica será mapeada para um ângulo em radianos.</p>
+<p>Para realizar tal mapeamento, faremos uso da função
+<code>Date.to.Angle</code>, apresentada abaixo, gentilmente
+compartilhada por Tony Ladson em sua conta de GitHub, cujo endereço
+aparece no início da função.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Função compartihada por Tony Ladson</span></span>
+<span><span class='co'># https://gist.github.com/TonyLadson/843410a1f9e1f1bbf1f48eeeee79a007</span></span>
+<span><span class='va'>Date_to_Angle</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>my.date</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  </span>
+<span>  <span class='va'>start.year</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/round_date.html'>floor_date</a></span><span class='op'>(</span><span class='va'>my.date</span>, <span class='st'>'year'</span><span class='op'>)</span></span>
+<span>  <span class='va'>end.year</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/round_date.html'>ceiling_date</a></span><span class='op'>(</span><span class='va'>my.date</span>, <span class='st'>'year'</span><span class='op'>)</span></span>
+<span>  <span class='va'>length.year</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/difftime.html'>difftime</a></span><span class='op'>(</span><span class='va'>end.year</span>, <span class='va'>start.year</span>, units <span class='op'>=</span> <span class='st'>'sec'</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  <span class='va'>time.since.year.start</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/difftime.html'>difftime</a></span><span class='op'>(</span><span class='va'>my.date</span>, <span class='va'>start.year</span>, units <span class='op'>=</span> <span class='st'>'sec'</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='fl'>2</span> <span class='op'>*</span> <span class='va'>pi</span> <span class='op'>*</span> <span class='va'>time.since.year.start</span><span class='op'>/</span><span class='va'>length.year</span> <span class='co'># date as angle</span></span>
+<span>  </span>
+<span><span class='op'>}</span></span></code></pre>
+</div>
+</div>
+<p>A função <code>Date.to.Angle</code> lê as datas de ocorrência das
+máximas anuais, e para cada um dos anos, determina o tempo decorrido, em
+segundos, guardando a resposta na variável
+<code>time.since.year.start</code>. Isso permite lidar de forma adequada
+com os anos bissextos que por ventura apareçam.</p>
+<p>Na sequência, a função mapeia cada uma das vazões máximas para um
+ângulo em radianos, assumindo que <span
+class="math inline">\(2\pi\)</span> radianos tenha exatamente a extensão
+do ano em segundos.</p>
+<p>Com essa função em mãos, podemos criar uma nova coluna do
+<code>dataframe</code> <code>Q_max</code> com os ângulos em radianos, e
+isso é feito no código abaixo, que determina também, nas duas primeiras
+linhas, quais seriam os valores, em radianos, das datas de início de
+cada mês do ano, informação necessária para construir a nossa rosa das
+vazões.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># gera sequência e calcula ângulo para informações mês a mês</span></span>
+<span><span class='va'>month.start</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/day.html'>yday</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>'2010-01-01'</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>'2010-12-31'</span><span class='op'>)</span>, by<span class='op'>=</span><span class='st'>'1 months'</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='va'>month.start.radians</span> <span class='op'>&lt;-</span> <span class='fl'>2</span><span class='op'>*</span><span class='va'>pi</span><span class='op'>*</span><span class='va'>month.start</span><span class='op'>/</span><span class='fl'>365.25</span> </span>
+<span></span>
+<span><span class='co'># Gera ângulo para cada vazão máxima anual do histórico</span></span>
+<span><span class='va'>Q_max</span> <span class='op'>&lt;-</span> <span class='va'>Q_max</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>rad <span class='op'>=</span> <span class='fu'>Date_to_Angle</span><span class='op'>(</span><span class='va'>data_maxima</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p>Para realizar a plotagem, vamos mais uma vez usufruir da generosidade
+de <a
+href="https://gist.github.com/TonyLadson/843410a1f9e1f1bbf1f48eeeee79a007">Tony
+Ladson</a>, que nos fornece o script para a plotagem. Fizemos pequenas
+adaptações no script original, mas em essência, o script é o mesmo.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>Q_max</span>,<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x<span class='op'>=</span><span class='va'>rad</span>, y<span class='op'>=</span><span class='va'>maxima</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> </span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/coord_polar.html'>coord_polar</a></span><span class='op'>(</span><span class='st'>'x'</span>, start <span class='op'>=</span> <span class='fl'>0</span>, direction <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span> <span class='op'>+</span> </span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_segment.html'>geom_segment</a></span><span class='op'>(</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>y <span class='op'>=</span> <span class='fl'>0</span>, xend <span class='op'>=</span> <span class='va'>rad</span>, yend <span class='op'>=</span> <span class='va'>maxima</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_x_continuous</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>'Ocorrência das máximas anuais'</span>, breaks <span class='op'>=</span> <span class='va'>month.start.radians</span>, labels <span class='op'>=</span> <span class='va'>month.name</span>, limits <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='fl'>2</span><span class='op'>*</span><span class='va'>pi</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_continuous</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/bquote.html'>bquote</a></span><span class='op'>(</span><span class='st'>'Máximas anuais (m'</span> <span class='op'>^</span><span class='fl'>3</span> <span class='op'>*</span><span class='st'>'s'</span> <span class='op'>^</span><span class='op'>-</span><span class='fl'>1</span> <span class='op'>*</span><span class='st'>')'</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_bw</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span></span>
+<span>    panel.background <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_rect</a></span><span class='op'>(</span>fill<span class='op'>=</span><span class='st'>"gray99"</span><span class='op'>)</span>,</span>
+<span>    axis.title.x <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>colour<span class='op'>=</span><span class='st'>"grey20"</span>, size<span class='op'>=</span><span class='fl'>12</span>, margin<span class='op'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>margin</a></span><span class='op'>(</span><span class='fl'>20</span>,<span class='fl'>0</span>,<span class='fl'>0</span>,<span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span>    axis.text.x <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>colour<span class='op'>=</span><span class='st'>"grey20"</span>,size<span class='op'>=</span><span class='fl'>8</span><span class='op'>)</span>,</span>
+<span>    axis.title.y <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>colour<span class='op'>=</span><span class='st'>"grey20"</span>,size<span class='op'>=</span><span class='fl'>12</span>, margin <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>margin</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>20</span>,<span class='fl'>0</span>,<span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span>    axis.text.y <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>colour<span class='op'>=</span><span class='st'>"grey20"</span>,size<span class='op'>=</span><span class='fl'>8</span><span class='op'>)</span>,</span>
+<span>    legend.title <span class='op'>=</span> <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>colour<span class='op'>=</span><span class='st'>"grey20"</span>,size<span class='op'>=</span><span class='fl'>12</span><span class='op'>)</span>,</span>
+<span>    plot.margin <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/grid/unit.html'>unit</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0.5</span>, <span class='fl'>0.5</span>, <span class='fl'>1</span>, <span class='fl'>0.5</span><span class='op'>)</span>, <span class='st'>"cm"</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># top, right, bottom, left</span></span></code></pre>
+</div>
+<p><img src="data_explore_rascunho_files/figure-html5/unnamed-chunk-8-1.png" width="768" /></p>
+</div>
+<p>Embora haja espaço para melhorias nessa plotagem, podemos ver
+claramente que as grandes cheias nesta estação fluviométrica ocorrem
+entre os meses de dezembro e março, com honrosas exceções em outubro e
+abril, mas sempre com magnitudes menores.</p>
 <h2 id="fontes-de-consulta">Fontes de consulta</h2>
 <ul>
 <li><p>O site <a
@@ -2573,7 +2745,7 @@ de permanência (Flow duration curve)</a></li>
 href="https://tonyladson.wordpress.com/2016/06/01/what-time-of-year-does-it-flood/">Momento
 do ano das máximas anuais</a></li>
 </ul>
-<div class="sourceCode" id="cb10"><pre
+<div class="sourceCode" id="cb11"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div></li>
 </ul>
 <!--radix_placeholder_article_footer-->
