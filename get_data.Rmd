@@ -242,9 +242,7 @@ tipo_dados <- 3
 nivel_consist <- 1
 ```
 
-Em seguida, esses objetos são utilizados para criar um *url* para podermos acessar os dados do HidroWeb. Após é feito o mesmo que a cima em outros portais dentro do portal da ANA, fazendo então um `XML::xmlParse()`, seguido por um `XML::getNodeSet()` e `XML::xmlToDataFrame()`. Assim como anteriormente, faz-se também a separação da coluna de data em duas, uma contendo a data e outra contendo a hora. Na coluna de Data é feita a transformação de *character* para *Date* de modo que possamos fazer algumas operações com ela depois.
-
-obs: Por algum motivo o hidroweb não está filtrando os dados pela consistencia, sendo necessária essa etapa abaixo (um filtro).
+Em seguida, esses objetos são utilizados para criar um *url* para podermos acessar os dados do HidroWeb. Após é feito o mesmo que a cima em outros portais dentro do portal da ANA, fazendo então um `XML::xmlParse()`, seguido por um `XML::getNodeSet()` e `XML::xmlToDataFrame()`. Diferentemente do que foi feito anteriormente, não foi feita aqui a separação da coluna de data em duas, uma contendo a data e outra contendo a hora. Na coluna de Data é feita a transformação de *character* para *Date* de modo que possamos fazer algumas operações com ela depois.
 
 ```{r serie_historica_2}
 # Puxar dados do url e transformar em dataframe
@@ -260,10 +258,6 @@ url_base <-
 url_parse <- XML::xmlParse(url_base, encoding = "UTF-8")
 node_doc <- XML::getNodeSet(url_parse, "//SerieHistorica")
 dados_estacao <- XML::xmlToDataFrame(nodes = node_doc)
-
-# Separar data e hora
-dados_estacao$Data <- as.Date(substr(dados_estacao$DataHora, 1, 10))
-dados_estacao$Hora <- substr(dados_estacao$DataHora, 12, 19)
 ```
 
 É interessante lembrar um pouco como funciona esse formato de datas aqui. As datas podem vir de inúmeras formas diferentes de algum banco de dados. Elas podem vir com "dia - mês - ano", com o ano podendo ser escrito com todos os dígitos (2022) ou apenas os últimos dois (22). Outra coisa que pode ser alterada é a ordem ("dia - mês - ano" ou "ano - mês - dia" ou qualquer variação desses três. Ainda podemos encontrar em bases de dados o mês escrito por extenso ou abreviado como "01/Jan/1990". Isso sem contar com o separador dessas datass ("/", "-", um espaço em branco...). Podemos definir isso dentro da função `as.Date()`, utilizando como argumento a seguinte convenção:
@@ -282,69 +276,67 @@ as.Date("2021-11-01", format = "%Y-%m-%d")
 as.Date("01/Jan/70", format = "%d/%b/%y")
 ```
 
-Nesse arquivo temos a necessidade de uma nova etapa. Ao olhar um pouco como os dados estão oganizados, percebemos que existem 78 colunas. Ao invés dos dados de vazão estarem todos em uma mesma coluna, eles estão espaçados por coluna, contendo 1 mês completo para cada linha do dataframe. Isso é um pouco problemático, pois não podemos simplesmente puxar todas as colunas visto que cada mês vai ter datas diferentes (fevereiro podendo até mudar dependendo do ano bisexto). Para resolver isso, primeiro criamos um vetor/objeto contendo **todas** as datas desde o primeiro mês em questão, até o útimo dia do último mês.
+Nesse arquivo temos a necessidade de uma nova etapa. Ao olhar um pouco como os dados estão oganizados, percebemos que existem 78 colunas. Ao invés dos dados de vazão estarem todos em uma mesma coluna, eles estão espaçados por coluna, contendo 1 mês completo para cada linha do dataframe. Isso é um pouco problemático, pois ao puxarmos todas as 31 colunas de dados, estaremos puxandos datas inexistentes como dia 31 de fevereiro. O que fazemos no código abaixo é aplicar (usando a função **sapply**) uma função para cada linha dos dados da série histórica, e portanto para cada mês. Para cada linha, puxaremos apenas a parte da data contendo o ano e o mês, e em seguida colaremos os valores de 1 a 31 neles. Ao transformarmos esses caracteres em data, utilizando o **as.Date**, o **R** fara uma coerção, como comentado anteriormente. Tudo aquilo que ee não conseguir colocar no formato de datas (como o dia 31 de fevereiro), sera retornado como **NA**. Assim teremos um vetor com as datas corretas, e as dadtas fictícias que criamos e que não existem, estarão como **NA**.
 
 ```{r serie_historica_4}
-datas_dia <- seq.Date(from = min(dados_estacao$Data),
-                      to = max(dados_estacao$Data) %m+% months(1) - 1,
-                      by = "day")
+Data_proxy <-
+  as.Date(c(sapply(length(dados_estacao$DataHora):1, FUN = function(x){
+    paste0(as.character(format(as.Date(dados_estacao[x, 3]), "%Y-%m")),
+           "-",1:31)
+  })))
 ```
 
-É extremamente interessante notar duas coisas aqui. Primeiro, sempre temos diferentes formas de fazer um código, isso vai variar muito com a lógica de cada programador. Acima utilizamos uma função feita do pacote **lubridate** para somar um mês a uma certa data. Porém, podemos fazer o mesmo sem utilizar pacotes adicionais. Apesar deles ajudarem, podem tornar a manutenção do seu código algo essencial - as vezes o pacote pode alterar funções com atualizações ou até mesmo tornarem algumas obsoletas! Abaixo então fazemos a mesma sequência de outra forma, e ao final comparamos se ambas são idênticas.
+Em seguida puxamos os dados. Esses podem vir apenas como a transposta das colunas correspondentes, que são as colunas 16 até a 46. Após pegar a transposta dessas colunas de cada linha de data, concatenamos isso em um vetor e transformamos no formato numérico. Sempre deixar seu código pensando em contas matriciais é muito útil (como pegar a transposta), pois o computador consegue fazer essas contas de forma muito eficiente.
+É extremamente interessante notar que sempre temos diferentes formas de fazer um código, isso vai variar muito com a lógica de cada programador e esse é apenas um exemplo de como podemos pegar esses dados da **ANA**. 
 
 ```{r serie_historica_5}
-datas_i <- min(dados_estacao$Data)
-datas_f <- seq.Date(max(dados_estacao$Data), by = "month", length.out = 2)[2] - 1
-
-datas_dia_v2 <- seq.Date(from = datas_i,
-                         to = datas_f,
-                         by = "day")
-                         
-#identical(datas_dia,datas_dia_V2)
+Dados_proxy <-
+  as.numeric(c(t(dados_estacao[length(dados_estacao$DataHora):1, 16:46])))
 ```
 
-Em seguida fazemos um dataframe vazio, contendo 3 colunas. A primeira possui o código da estação sendo avaliado (como repete para todas as linhas, podemos pegar apenas o primeiro valor). A segunda as datas, no formato *character* (útil para manipulação de texto), e a última sendo a coluna com os dados de vazão que está, por hora, vazio.
+Em seguida fazemos um dataframe vazio, contendo 3 colunas. A primeira possui o código da estação sendo avaliado (como repete para todas as linhas, podemos pegar apenas o primeiro valor). A segunda as datas e a última sendo a coluna com os dados de vazão que está, por hora, vazio.
 
 ```{r serie_historica_6}
 tabela_final <- data.frame(Cod_estacao = dados_estacao$EstacaoCodigo[1],
-                           Data = as.character(datas_dia),
-                           Vazao = as.numeric(NA))
+                           Data = Data_proxy),
+                           Vazao = Dados_proxy)
 ```
 
-Agora vamos preencher essa tabela com os dados de vazão do arquivo acessado. Uma maneira de fazer isso é fazendo um *loop* para cada linha dessa tabela. Para cada linha, acessamos o dia em questão (o dia é sempre os últimos 2 caracteres da coluna data). Em seguida obtemos o mês e ano dessa data (os primeiros oito caracteres da coluna de data) e adicionamos o dia "-01" a eles (isso para sabermos em qual linha do arquivo da ANA está o dado) - para isso criamos o objeto *linha_dado*. Por último rodamos um `ifelse()` do tipo: se eu não tiver essa *linha_dado*, ou seja, se não houver medição desse mês na ANA, eu coloco um `NA` (*Not Available*) na tabela final, caso o contrário é pego o valor na linha definida e na coluna do dia + 15 (é somado 15 porque as colunas de dia começam a partir da coluna 16).
+Agora temos que retirar todas as linhas desse *data.frame* que estão como formato **NA**, pois são as datas fictícias criadas por a gente e que de fato não existem (lembram que para criar o vetor **Data_proxy** nós criamos os dias 1 a 31 de todos os meses?). Portanto retiramos (usando o símbolo de "-") essas linhas da nossa tabela_final.
 
 ```{r serie_historica_7}
-for(i in 1:nrow(tabela_final)){
-  # Dia em análise
-  dia <- as.numeric(substr(tabela_final$Data[i], 9, 10))
-    
-  # Mês e ano em análise
-  mes_ano <- as.Date(paste0(substr(tabela_final$Data[i], 1, 8), "01"))
+tabela_final <- tabela_final[-which(is.na(tabela_final$Data)),]
+```
+
+Ainda temos um grande problema nessa situação. Existem casos em que uma estação não terá dados de um mês inteiro. Nesses casos não haverá linha para criarmos as datas fictícias. Portanto, para garantir que a nossa série estará com TODAS as datas, fazemos uma sequência que começa da menor data em nossa tabela e vai até a maior. Em seguida vemos quais as datas faltantes na nossa tabela e, caso existam essas datas faltantes, completamos nossa tabela. Isso é feito criando um data.frame com as mesmas colunas (Cod_estacao, Data e Dados) e depois juntando ambas tabelas com a função **rbind**. Como essas datas não foram coletadas informações a respeito das vazões (ou cotas), preenchemos a tabela com os dados sendo **NA**.
+
+```{r serie_historica_8}
+# Preencher as datas faltantes
+datas_completas <-
+  seq.Date(from = min(tabela_final$Data),
+           to = max(tabela_final$Data),
+           by = "day")
+
+datas_faltantes <-
+  datas_completas[!(datas_completas %in% tabela_final$Data)]
+
+# Só rodar se tiver datas faltantes
+if(length(datas_faltantes) != 0){
+  tabela_faltante <-
+    data.frame(Cod_estacao = cod_estacao,
+               Data = datas_faltantes,
+               Dados = NA)
   
-  # Olhar a linha do mes e ano e escolher a coluna pelo dia + 15
-  linha_dado <- which(dados_estacao$Data == mes_ano)
-  
-  # Se não tiver o mês nos dados da estação, colocar valor NA
-  ifelse(length(linha_dado) == 0,
-         tabela_final$Vazao[i] <- NA,
-         tabela_final$Vazao[i] <-
-           as.numeric(dados_estacao[linha_dado, (dia + 15)]))
-    
+  tabela_final <- rbind(tabela_final, tabela_faltante)
 }
 ```
 
-Novamente, poderíamos fazer esse código acima utilizando pacotes para "facilitar a nossa vida" (o *lubridate* para mexer com datas). Por exemplo, poderíamos usar a função `day()` para puxar o dia de cada linha (usando a coluna no formato de *Date*) ao invés de fazer uma manipulação de texto. Aqui não vemos se são idênticos porque não são (a função `day()` retorna números inteiros), portanto utilizamos a função `all.equal()` que avalia, até certo ponto, se são praticamente iguais.
 
-```{r serie_historica_8}
-exemplo_dia <- as.numeric(substr(tabela_final$Data, 9, 10))
-exemplo_dia_v2 <- day(as.Date(tabela_final$Data))
- 
-all.equal(exemplo_dia, exemplo_dia_v2)
-```
-
-Pronto, agora podemos ver, por exemplo, as primeiras 5 medições que não são `NA`
+Por fim colocamos essa tabela_final na ordem correta das datas (quando colamos com o **rbind** a ordem não fica como queremos) e pronto! Agora podemos ver, por exemplo, as primeiras 5 medições que não são `NA`
 
 ```{r serie_historica_9}
+tabela_final <- tabela_final[order(tabela_final$Data),]
+    
 head(tabela_final[!is.na(tabela_final$Vazao),])
 ```
 
@@ -358,41 +350,56 @@ dados_serie_ANA <- function(cod_estacao = NA,
                             nivel_consist = 1){
   
   # Puxar dados do url e transformar em dataframe
-  url_base <-
-    paste0("http://telemetriaws1.ana.gov.br/ServiceANA.asmx/",
-           "HidroSerieHistorica?",
-           "codEstacao=", cod_estacao,
-           "&dataInicio=", data_inicio,
-           "&dataFim=", data_fim,
-           "&tipoDados=", tipo_dados,
-           "&nivelConsistencia=", nivel_consist)
+  url_base <- paste0("http://telemetriaws1.ana.gov.br/ServiceANA.asmx/",
+                     "HidroSerieHistorica?",
+                     "codEstacao=", cod_estacao,
+                     "&dataInicio=", data_inicio,
+                     "&dataFim=", data_fim,
+                     "&tipoDados=", tipo_dados,
+                     "&nivelConsistencia=", nivel_consist)
   
   url_parse <- XML::xmlParse(url_base, encoding = "UTF-8")
   node_doc <- XML::getNodeSet(url_parse, "//SerieHistorica")
   dados_estacao <- XML::xmlToDataFrame(nodes = node_doc)
   
-  # Separar data e hora
-  dados_estacao$Data <- as.Date(substr(dados_estacao$DataHora, 1, 10))
-  dados_estacao$Hora <- substr(dados_estacao$DataHora, 12, 19)
+  # Criamos datas fictícias com base nas linhas do arquivo XML da ANA
+  Data_proxy <-
+    as.Date(c(sapply(length(dados_estacao$DataHora):1, FUN = function(x){
+      paste0(as.character(format(as.Date(dados_estacao[x, 3]), "%Y-%m")),
+             "-",1:31)})))
+    
+  # Puxamos os dados de vazão com a transposta de cada linha (colunas 16-46)  
+  Dados_proxy <- as.numeric(c(t(dados_estacao[length(dados_estacao$DataHora):1, 16:46])))
   
-  # Fazer um dataframe só com datas e valores de vazão
-  datas_dia <- seq.Date(from = min(dados_estacao$Data),
-                        to = max(dados_estacao$Data) %m+% months(1) - 1,
-                        by = "day")
+  # É feito um dataframe só com datas e valores de vazão
   tabela_final <- data.frame(Cod_estacao = dados_estacao$EstacaoCodigo[1],
-                             Data = as.character(datas_dia),
-                             Vazao = as.numeric(NA))
+                             Data = Data_proxy,
+                             Vazao = Dados_proxy)
+                             
+  # Retira-se as datas com valores NA
+  tabela_final <- tabela_final[-which(is.na(tabela_final$Data)),]
+  
+  # Preencher as datas faltantes
+  datas_completas <- seq.Date(from = min(tabela_final$Data),
+                              to = max(tabela_final$Data),
+                              by = "day")
+  
+  datas_faltantes <- datas_completas[!(datas_completas %in% tabela_final$Data)]
   
   
-  for(i in 1:nrow(tabela_final)){
-    dia <- as.numeric(substr(tabela_final$Data[i], 9, 10))
-    mes_ano <- as.Date(paste0(substr(tabela_final$Data[i], 1, 8), "01"))
-    linha_dado <- which(dados_estacao$Data == mes_ano)
-    ifelse(length(linha_dado) == 0,
-           tabela_final$Vazao[i] <- NA,
-           tabela_final$Vazao[i] <-
-             as.numeric(dados_estacao[linha_dado, (dia + 15)])) 
-  } # fim do loop
+  # Só rodar se tiver datas faltantes
+  if(length(datas_faltantes) != 0){
+    tabela_faltante <- data.frame(Cod_estacao = cod_estacao,
+                                  Data = datas_faltantes,
+                                  Vazao = NA)
+    
+    tabela_final <- rbind(tabela_final, tabela_faltante)
+  }
+
+  # Ordem correta
+  tabela_final <- tabela_final[order(tabela_final$Data),]
+  
+  # O que é retornado pela função
   return(tabela_final)
 }
 ```
