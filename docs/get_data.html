@@ -2420,7 +2420,7 @@ linhas delem usando a função <code>head()</code>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>estacoes_bsb</span> <span class='op'>&lt;-</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>cadastro_estacoes</span>, <span class='va'>`Municipio-UF`</span> <span class='op'>==</span> <span class='st'>"BRASÍLIA-DF"</span><span class='op'>)</span></span>
 <span><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>estacoes_bsb</span><span class='op'>)</span></span></code></pre>
 </div>
-<pre><code>&#39;data.frame&#39;:   48 obs. of  14 variables:
+<pre><code>&#39;data.frame&#39;:   50 obs. of  14 variables:
  $ NomeEstacao  : chr  &quot;ANA SEDE (COTA ONLINE)&quot; &quot;ANA SEDE - TELEMÉTRICA&quot; &quot;RIBEIRÃO PALMEIRAS&quot; &quot;SONHEM&quot; ...
  $ CodEstacao   : chr  &quot;01547032&quot; &quot;01547079&quot; &quot;20000950&quot; &quot;20001050&quot; ...
  $ Bacia        : chr  &quot;6&quot; &quot;6&quot; &quot;2&quot; &quot;2&quot; ...
@@ -2433,7 +2433,7 @@ linhas delem usando a função <code>head()</code>.</p>
  $ Altitude     : chr  &quot;1150.00&quot; &quot;1150.00&quot; &quot;0.00&quot; &quot;0.00&quot; ...
  $ CodRio       : chr  &quot;0&quot; &quot;0&quot; &quot;20003000&quot; &quot;20030000&quot; ...
  $ NomeRio      : chr  &quot;&quot; &quot;&quot; &quot;RIBEIRÃO PALMEIRAS&quot; &quot;RIO SONHEM&quot; ...
- $ Origem       : chr  &quot;CotaOnline&quot; &quot;RHN&quot; &quot;Setor de Saneamento&quot; &quot;Setor de Saneamento&quot; ...
+ $ Origem       : chr  &quot;CotaOnline&quot; &quot;RHN&quot; &quot;Setores Regulados&quot; &quot;Setores Regulados&quot; ...
  $ StatusEstacao: chr  &quot;Ativo&quot; &quot;Ativo&quot; &quot;Ativo&quot; &quot;Ativo&quot; ...</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>estacoes_bsb</span><span class='op'>)</span></span></code></pre>
@@ -2466,13 +2466,13 @@ linhas delem usando a função <code>head()</code>.</p>
 4  BRASÍLIA-DF -15.52310 -47.81580     0.00 20030000
 5  BRASÍLIA-DF -15.50080 -47.85420     0.00 20050000
 6  BRASÍLIA-DF -15.58560 -47.33330   870.00 42250100
-               NomeRio              Origem StatusEstacao
-1                               CotaOnline         Ativo
-2                                      RHN         Ativo
-3   RIBEIRÃO PALMEIRAS Setor de Saneamento         Ativo
-4           RIO SONHEM Setor de Saneamento         Ativo
-5 RIBEIRÃO DA CONTAGEM                 RHN         Ativo
-6  RIBEIRÃO SANTA RITA                 RHN         Ativo</code></pre>
+               NomeRio            Origem StatusEstacao
+1                             CotaOnline         Ativo
+2                                    RHN         Ativo
+3   RIBEIRÃO PALMEIRAS Setores Regulados         Ativo
+4           RIO SONHEM Setores Regulados         Ativo
+5 RIBEIRÃO DA CONTAGEM               RHN         Ativo
+6  RIBEIRÃO SANTA RITA               RHN         Ativo</code></pre>
 </div>
 <p>Lembrando que isso tudo nos dá apenas a lista com informações sobre
 as estações telemétricas. Para de fato termos acesso aos dados dessas
@@ -2569,12 +2569,12 @@ retorna, podemos pedir ao R as primeiras 6 linhas desse dataframe.</p>
 <span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>dados_FAL</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>  CodEstacao             DataHora Vazao Nivel Chuva
-1   60478482 2022-07-04 23:00:00        27.00  0.00
-2   60478482 2022-07-04 22:45:00        27.00  0.00
-3   60478482 2022-07-04 22:30:00        27.00  0.00
-4   60478482 2022-07-04 22:15:00        27.00  0.00
-5   60478482 2022-07-04 22:00:00        27.00  0.00
-6   60478482 2022-07-04 21:45:00        27.00  0.00</code></pre>
+1   60478482 2022-10-10 15:00:00        32.00  0.00
+2   60478482 2022-10-10 14:45:00        33.00  0.00
+3   60478482 2022-10-10 14:30:00        33.00  0.00
+4   60478482 2022-10-10 14:15:00        33.00  0.00
+5   60478482 2022-10-10 14:00:00        33.00  0.00
+6   60478482 2022-10-10 13:45:00        33.00  0.00</code></pre>
 </div>
 <p>Percebemos aqui um “problema”. A data e a hora estão na mesma coluna
 e idealmente queremos deixar em colunas separadas (uma contendo a data e
@@ -2621,12 +2621,12 @@ desse dataframe.</p>
 <span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>dados_FAL</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>  CodEstacao       Data     Hora Vazao Nivel Chuva
-1   60478482 2022-07-04 23:00:00       27.00  0.00
-2   60478482 2022-07-04 22:45:00       27.00  0.00
-3   60478482 2022-07-04 22:30:00       27.00  0.00
-4   60478482 2022-07-04 22:15:00       27.00  0.00
-5   60478482 2022-07-04 22:00:00       27.00  0.00
-6   60478482 2022-07-04 21:45:00       27.00  0.00</code></pre>
+1   60478482 2022-10-10 15:00:00       32.00  0.00
+2   60478482 2022-10-10 14:45:00       33.00  0.00
+3   60478482 2022-10-10 14:30:00       33.00  0.00
+4   60478482 2022-10-10 14:15:00       33.00  0.00
+5   60478482 2022-10-10 14:00:00       33.00  0.00
+6   60478482 2022-10-10 13:45:00       33.00  0.00</code></pre>
 </div>
 <p>Aqui rodamos a função apenas para uma estação. Mas se quisermos rodar
 para várias estações, basta utilizar um loop (for) ou até mesmo a função
@@ -2666,12 +2666,11 @@ para podermos acessar os dados do HidroWeb. Após é feito o mesmo que a
 cima em outros portais dentro do portal da ANA, fazendo então um
 <code>XML::xmlParse()</code>, seguido por um
 <code>XML::getNodeSet()</code> e <code>XML::xmlToDataFrame()</code>.
-Assim como anteriormente, faz-se também a separação da coluna de data em
-duas, uma contendo a data e outra contendo a hora. Na coluna de Data é
-feita a transformação de <em>character</em> para <em>Date</em> de modo
-que possamos fazer algumas operações com ela depois.</p>
-<p>obs: Por algum motivo o hidroweb não está filtrando os dados pela
-consistencia, sendo necessária essa etapa abaixo (um filtro).</p>
+Diferentemente do que foi feito anteriormente, não foi feita aqui a
+separação da coluna de data em duas, uma contendo a data e outra
+contendo a hora. Na coluna de Data é feita a transformação de
+<em>character</em> para <em>Date</em> de modo que possamos fazer algumas
+operações com ela depois.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Puxar dados do url e transformar em dataframe</span></span>
@@ -2686,11 +2685,7 @@ consistencia, sendo necessária essa etapa abaixo (um filtro).</p>
 <span>         </span>
 <span><span class='va'>url_parse</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlTreeParse.html'>xmlParse</a></span><span class='op'>(</span><span class='va'>url_base</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span>
 <span><span class='va'>node_doc</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/getNodeSet.html'>getNodeSet</a></span><span class='op'>(</span><span class='va'>url_parse</span>, <span class='st'>"//SerieHistorica"</span><span class='op'>)</span></span>
-<span><span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlToDataFrame.html'>xmlToDataFrame</a></span><span class='op'>(</span>nodes <span class='op'>=</span> <span class='va'>node_doc</span><span class='op'>)</span></span>
-<span></span>
-<span><span class='co'># Separar data e hora</span></span>
-<span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span>, <span class='fl'>1</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
-<span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Hora</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span>, <span class='fl'>12</span>, <span class='fl'>19</span><span class='op'>)</span></span></code></pre>
+<span><span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlToDataFrame.html'>xmlToDataFrame</a></span><span class='op'>(</span>nodes <span class='op'>=</span> <span class='va'>node_doc</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
 <p>É interessante lembrar um pouco como funciona esse formato de datas
@@ -2733,108 +2728,109 @@ código.</p>
 pouco como os dados estão oganizados, percebemos que existem 78 colunas.
 Ao invés dos dados de vazão estarem todos em uma mesma coluna, eles
 estão espaçados por coluna, contendo 1 mês completo para cada linha do
-dataframe. Isso é um pouco problemático, pois não podemos simplesmente
-puxar todas as colunas visto que cada mês vai ter datas diferentes
-(fevereiro podendo até mudar dependendo do ano bisexto). Para resolver
-isso, primeiro criamos um vetor/objeto contendo <strong>todas</strong>
-as datas desde o primeiro mês em questão, até o útimo dia do último
-mês.</p>
+dataframe. Isso é um pouco problemático, pois ao puxarmos todas as 31
+colunas de dados, estaremos puxandos datas inexistentes como dia 31 de
+fevereiro. O que fazemos no código abaixo é aplicar (usando a função
+<strong>sapply</strong>) uma função para cada linha dos dados da série
+histórica, e portanto para cada mês. Para cada linha, puxaremos apenas a
+parte da data contendo o ano e o mês, e em seguida colaremos os valores
+de 1 a 31 neles. Ao transformarmos esses caracteres em data, utilizando
+o <strong>as.Date</strong>, o <strong>R</strong> fara uma coerção, como
+comentado anteriormente. Tudo aquilo que ee não conseguir colocar no
+formato de datas (como o dia 31 de fevereiro), sera retornado como
+<strong>NA</strong>. Assim teremos um vetor com as datas corretas, e as
+dadtas fictícias que criamos e que não existem, estarão como
+<strong>NA</strong>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>datas_dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,</span>
-<span>                      to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://lubridate.tidyverse.org/reference/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
-<span>                      by <span class='op'>=</span> <span class='st'>"day"</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>Data_proxy</span> <span class='op'>&lt;-</span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span><span class='op'>)</span><span class='op'>:</span><span class='fl'>1</span>, FUN <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>    <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>[</span><span class='va'>x</span>, <span class='fl'>3</span><span class='op'>]</span><span class='op'>)</span>, <span class='st'>"%Y-%m"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span>           <span class='st'>"-"</span>,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>31</span><span class='op'>)</span></span>
+<span>  <span class='op'>}</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<p>É extremamente interessante notar duas coisas aqui. Primeiro, sempre
-temos diferentes formas de fazer um código, isso vai variar muito com a
-lógica de cada programador. Acima utilizamos uma função feita do pacote
-<strong>lubridate</strong> para somar um mês a uma certa data. Porém,
-podemos fazer o mesmo sem utilizar pacotes adicionais. Apesar deles
-ajudarem, podem tornar a manutenção do seu código algo essencial - as
-vezes o pacote pode alterar funções com atualizações ou até mesmo
-tornarem algumas obsoletas! Abaixo então fazemos a mesma sequência de
-outra forma, e ao final comparamos se ambas são idênticas.</p>
+<p>Em seguida puxamos os dados. Esses podem vir apenas como a transposta
+das colunas correspondentes, que são as colunas 16 até a 46. Após pegar
+a transposta dessas colunas de cada linha de data, concatenamos isso em
+um vetor e transformamos no formato numérico. Sempre deixar seu código
+pensando em contas matriciais é muito útil (como pegar a transposta),
+pois o computador consegue fazer essas contas de forma muito eficiente.
+É extremamente interessante notar que sempre temos diferentes formas de
+fazer um código, isso vai variar muito com a lógica de cada programador
+e esse é apenas um exemplo de como podemos pegar esses dados da
+<strong>ANA</strong>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>datas_i</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span>
-<span><span class='va'>datas_f</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>, by <span class='op'>=</span> <span class='st'>"month"</span>, length.out <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>]</span> <span class='op'>-</span> <span class='fl'>1</span></span>
-<span></span>
-<span><span class='va'>datas_dia_v2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='va'>datas_i</span>,</span>
-<span>                         to <span class='op'>=</span> <span class='va'>datas_f</span>,</span>
-<span>                         by <span class='op'>=</span> <span class='st'>"day"</span><span class='op'>)</span></span>
-<span>                         </span>
-<span><span class='co'>#identical(datas_dia,datas_dia_V2)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>Dados_proxy</span> <span class='op'>&lt;-</span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span><span class='op'>)</span><span class='op'>:</span><span class='fl'>1</span>, <span class='fl'>16</span><span class='op'>:</span><span class='fl'>46</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
 <p>Em seguida fazemos um dataframe vazio, contendo 3 colunas. A primeira
 possui o código da estação sendo avaliado (como repete para todas as
-linhas, podemos pegar apenas o primeiro valor). A segunda as datas, no
-formato <em>character</em> (útil para manipulação de texto), e a última
-sendo a coluna com os dados de vazão que está, por hora, vazio.</p>
+linhas, podemos pegar apenas o primeiro valor). A segunda as datas e a
+última sendo a coluna com os dados de vazão que está, por hora,
+vazio.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>Cod_estacao <span class='op'>=</span> <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>EstacaoCodigo</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,</span>
-<span>                           Data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='va'>datas_dia</span><span class='op'>)</span>,</span>
-<span>                           Vazao <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='cn'>NA</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+<span>                           Data <span class='op'>=</span> <span class='va'>Data_proxy</span>,</span>
+<span>                           Vazao <span class='op'>=</span> <span class='va'>Dados_proxy</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<p>Agora vamos preencher essa tabela com os dados de vazão do arquivo
-acessado. Uma maneira de fazer isso é fazendo um <em>loop</em> para cada
-linha dessa tabela. Para cada linha, acessamos o dia em questão (o dia é
-sempre os últimos 2 caracteres da coluna data). Em seguida obtemos o mês
-e ano dessa data (os primeiros oito caracteres da coluna de data) e
-adicionamos o dia “-01” a eles (isso para sabermos em qual linha do
-arquivo da ANA está o dado) - para isso criamos o objeto
-<em>linha_dado</em>. Por último rodamos um <code>ifelse()</code> do
-tipo: se eu não tiver essa <em>linha_dado</em>, ou seja, se não houver
-medição desse mês na ANA, eu coloco um <code>NA</code> (<em>Not
-Available</em>) na tabela final, caso o contrário é pego o valor na
-linha definida e na coluna do dia + 15 (é somado 15 porque as colunas de
-dia começam a partir da coluna 16).</p>
+<p>Agora temos que retirar todas as linhas desse <em>data.frame</em> que
+estão como formato <strong>NA</strong>, pois são as datas fictícias
+criadas por a gente e que de fato não existem (lembram que para criar o
+vetor <strong>Data_proxy</strong> nós criamos os dias 1 a 31 de todos os
+meses?). Portanto retiramos (usando o símbolo de “-”) essas linhas da
+nossa tabela_final.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'>for</span><span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
-<span>  <span class='co'># Dia em análise</span></span>
-<span>  <span class='va'>dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span>, <span class='fl'>9</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
-<span>    </span>
-<span>  <span class='co'># Mês e ano em análise</span></span>
-<span>  <span class='va'>mes_ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span>, <span class='fl'>1</span>, <span class='fl'>8</span><span class='op'>)</span>, <span class='st'>"01"</span><span class='op'>)</span><span class='op'>)</span></span>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='va'>tabela_final</span><span class='op'>[</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span><span class='op'>)</span>,<span class='op'>]</span></span></code></pre>
+</div>
+</div>
+<p>Ainda temos um grande problema nessa situação. Existem casos em que
+uma estação não terá dados de um mês inteiro. Nesses casos não haverá
+linha para criarmos as datas fictícias. Portanto, para garantir que a
+nossa série estará com TODAS as datas, fazemos uma sequência que começa
+da menor data em nossa tabela e vai até a maior. Em seguida vemos quais
+as datas faltantes na nossa tabela e, caso existam essas datas
+faltantes, completamos nossa tabela. Isso é feito criando um data.frame
+com as mesmas colunas (Cod_estacao, Data e Dados) e depois juntando
+ambas tabelas com a função <strong>rbind</strong>. Como essas datas não
+foram coletadas informações a respeito das vazões (ou cotas),
+preenchemos a tabela com os dados sendo <strong>NA</strong>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Preencher as datas faltantes</span></span>
+<span><span class='va'>datas_completas</span> <span class='op'>&lt;-</span></span>
+<span>  <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,</span>
+<span>           to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,</span>
+<span>           by <span class='op'>=</span> <span class='st'>"day"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>datas_faltantes</span> <span class='op'>&lt;-</span></span>
+<span>  <span class='va'>datas_completas</span><span class='op'>[</span><span class='op'>!</span><span class='op'>(</span><span class='va'>datas_completas</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span><span class='op'>]</span></span>
+<span></span>
+<span><span class='co'># Só rodar se tiver datas faltantes</span></span>
+<span><span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>datas_faltantes</span><span class='op'>)</span> <span class='op'>!=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  <span class='va'>tabela_faltante</span> <span class='op'>&lt;-</span></span>
+<span>    <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>Cod_estacao <span class='op'>=</span> <span class='va'>cod_estacao</span>,</span>
+<span>               Data <span class='op'>=</span> <span class='va'>datas_faltantes</span>,</span>
+<span>               Vazao <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></span>
 <span>  </span>
-<span>  <span class='co'># Olhar a linha do mes e ano e escolher a coluna pelo dia + 15</span></span>
-<span>  <span class='va'>linha_dado</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>==</span> <span class='va'>mes_ano</span><span class='op'>)</span></span>
-<span>  </span>
-<span>  <span class='co'># Se não tiver o mês nos dados da estação, colocar valor NA</span></span>
-<span>  <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>linha_dado</span><span class='op'>)</span> <span class='op'>==</span> <span class='fl'>0</span>,</span>
-<span>         <span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NA</span>,</span>
-<span>         <span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span> <span class='op'>&lt;-</span></span>
-<span>           <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>[</span><span class='va'>linha_dado</span>, <span class='op'>(</span><span class='va'>dia</span> <span class='op'>+</span> <span class='fl'>15</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span></span>
-<span>    </span>
+<span>  <span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>tabela_final</span>, <span class='va'>tabela_faltante</span><span class='op'>)</span></span>
 <span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
-<p>Novamente, poderíamos fazer esse código acima utilizando pacotes para
-“facilitar a nossa vida” (o <em>lubridate</em> para mexer com datas).
-Por exemplo, poderíamos usar a função <code>day()</code> para puxar o
-dia de cada linha (usando a coluna no formato de <em>Date</em>) ao invés
-de fazer uma manipulação de texto. Aqui não vemos se são idênticos
-porque não são (a função <code>day()</code> retorna números inteiros),
-portanto utilizamos a função <code>all.equal()</code> que avalia, até
-certo ponto, se são praticamente iguais.</p>
+<p>Por fim colocamos essa tabela_final na ordem correta das datas
+(quando colamos com o <strong>rbind</strong> a ordem não fica como
+queremos) e pronto! Agora podemos ver, por exemplo, as primeiras 5
+medições que não são <code>NA</code></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>exemplo_dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span>, <span class='fl'>9</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
-<span><span class='va'>exemplo_dia_v2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/day.html'>day</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span><span class='op'>)</span></span>
-<span> </span>
-<span><span class='fu'><a href='https://rdrr.io/r/base/all.equal.html'>all.equal</a></span><span class='op'>(</span><span class='va'>exemplo_dia</span>, <span class='va'>exemplo_dia_v2</span><span class='op'>)</span></span></code></pre>
-</div>
-<pre><code>[1] TRUE</code></pre>
-</div>
-<p>Pronto, agora podemos ver, por exemplo, as primeiras 5 medições que
-não são <code>NA</code></p>
-<div class="layout-chunk" data-layout="l-body">
-<div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>[</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span>,<span class='op'>]</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='va'>tabela_final</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/order.html'>order</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,<span class='op'>]</span></span>
+<span>    </span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>[</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span>,<span class='op'>]</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>   Cod_estacao       Data  Vazao
 12    60435000 1978-05-12 2.5342
@@ -2857,41 +2853,56 @@ processo para outras estações.</p>
 <span>                            <span class='va'>nivel_consist</span> <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>{</span></span>
 <span>  </span>
 <span>  <span class='co'># Puxar dados do url e transformar em dataframe</span></span>
-<span>  <span class='va'>url_base</span> <span class='op'>&lt;-</span></span>
-<span>    <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"http://telemetriaws1.ana.gov.br/ServiceANA.asmx/"</span>,</span>
-<span>           <span class='st'>"HidroSerieHistorica?"</span>,</span>
-<span>           <span class='st'>"codEstacao="</span>, <span class='va'>cod_estacao</span>,</span>
-<span>           <span class='st'>"&amp;dataInicio="</span>, <span class='va'>data_inicio</span>,</span>
-<span>           <span class='st'>"&amp;dataFim="</span>, <span class='va'>data_fim</span>,</span>
-<span>           <span class='st'>"&amp;tipoDados="</span>, <span class='va'>tipo_dados</span>,</span>
-<span>           <span class='st'>"&amp;nivelConsistencia="</span>, <span class='va'>nivel_consist</span><span class='op'>)</span></span>
+<span>  <span class='va'>url_base</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"http://telemetriaws1.ana.gov.br/ServiceANA.asmx/"</span>,</span>
+<span>                     <span class='st'>"HidroSerieHistorica?"</span>,</span>
+<span>                     <span class='st'>"codEstacao="</span>, <span class='va'>cod_estacao</span>,</span>
+<span>                     <span class='st'>"&amp;dataInicio="</span>, <span class='va'>data_inicio</span>,</span>
+<span>                     <span class='st'>"&amp;dataFim="</span>, <span class='va'>data_fim</span>,</span>
+<span>                     <span class='st'>"&amp;tipoDados="</span>, <span class='va'>tipo_dados</span>,</span>
+<span>                     <span class='st'>"&amp;nivelConsistencia="</span>, <span class='va'>nivel_consist</span><span class='op'>)</span></span>
 <span>  </span>
 <span>  <span class='va'>url_parse</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlTreeParse.html'>xmlParse</a></span><span class='op'>(</span><span class='va'>url_base</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span>
 <span>  <span class='va'>node_doc</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/getNodeSet.html'>getNodeSet</a></span><span class='op'>(</span><span class='va'>url_parse</span>, <span class='st'>"//SerieHistorica"</span><span class='op'>)</span></span>
 <span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlToDataFrame.html'>xmlToDataFrame</a></span><span class='op'>(</span>nodes <span class='op'>=</span> <span class='va'>node_doc</span><span class='op'>)</span></span>
 <span>  </span>
-<span>  <span class='co'># Separar data e hora</span></span>
-<span>  <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span>, <span class='fl'>1</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
-<span>  <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Hora</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span>, <span class='fl'>12</span>, <span class='fl'>19</span><span class='op'>)</span></span>
+<span>  <span class='co'># Criamos datas fictícias com base nas linhas do arquivo XML da ANA</span></span>
+<span>  <span class='va'>Data_proxy</span> <span class='op'>&lt;-</span></span>
+<span>    <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/lapply.html'>sapply</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span><span class='op'>)</span><span class='op'>:</span><span class='fl'>1</span>, FUN <span class='op'>=</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>      <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/format.html'>format</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>[</span><span class='va'>x</span>, <span class='fl'>3</span><span class='op'>]</span><span class='op'>)</span>, <span class='st'>"%Y-%m"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span>             <span class='st'>"-"</span>,<span class='fl'>1</span><span class='op'>:</span><span class='fl'>31</span><span class='op'>)</span><span class='op'>}</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>    </span>
+<span>  <span class='co'># Puxamos os dados de vazão com a transposta de cada linha (colunas 16-46)  </span></span>
+<span>  <span class='va'>Dados_proxy</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span><span class='op'>)</span><span class='op'>:</span><span class='fl'>1</span>, <span class='fl'>16</span><span class='op'>:</span><span class='fl'>46</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
 <span>  </span>
-<span>  <span class='co'># Fazer um dataframe só com datas e valores de vazão</span></span>
-<span>  <span class='va'>datas_dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,</span>
-<span>                        to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://lubridate.tidyverse.org/reference/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
-<span>                        by <span class='op'>=</span> <span class='st'>"day"</span><span class='op'>)</span></span>
+<span>  <span class='co'># É feito um dataframe só com datas e valores de vazão</span></span>
 <span>  <span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>Cod_estacao <span class='op'>=</span> <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>EstacaoCodigo</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,</span>
-<span>                             Data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='va'>datas_dia</span><span class='op'>)</span>,</span>
-<span>                             Vazao <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='cn'>NA</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>                             Data <span class='op'>=</span> <span class='va'>Data_proxy</span>,</span>
+<span>                             Vazao <span class='op'>=</span> <span class='va'>Dados_proxy</span><span class='op'>)</span></span>
+<span>                             </span>
+<span>  <span class='co'># Retira-se as datas com valores NA</span></span>
+<span>  <span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='va'>tabela_final</span><span class='op'>[</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span><span class='op'>)</span>,<span class='op'>]</span></span>
+<span>  </span>
+<span>  <span class='co'># Preencher as datas faltantes</span></span>
+<span>  <span class='va'>datas_completas</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,</span>
+<span>                              to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,</span>
+<span>                              by <span class='op'>=</span> <span class='st'>"day"</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='va'>datas_faltantes</span> <span class='op'>&lt;-</span> <span class='va'>datas_completas</span><span class='op'>[</span><span class='op'>!</span><span class='op'>(</span><span class='va'>datas_completas</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span><span class='op'>]</span></span>
 <span>  </span>
 <span>  </span>
-<span>  <span class='kw'>for</span><span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
-<span>    <span class='va'>dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span>, <span class='fl'>9</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
-<span>    <span class='va'>mes_ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span>, <span class='fl'>1</span>, <span class='fl'>8</span><span class='op'>)</span>, <span class='st'>"01"</span><span class='op'>)</span><span class='op'>)</span></span>
-<span>    <span class='va'>linha_dado</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>==</span> <span class='va'>mes_ano</span><span class='op'>)</span></span>
-<span>    <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>linha_dado</span><span class='op'>)</span> <span class='op'>==</span> <span class='fl'>0</span>,</span>
-<span>           <span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NA</span>,</span>
-<span>           <span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span> <span class='op'>&lt;-</span></span>
-<span>             <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>[</span><span class='va'>linha_dado</span>, <span class='op'>(</span><span class='va'>dia</span> <span class='op'>+</span> <span class='fl'>15</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span> </span>
-<span>  <span class='op'>}</span> <span class='co'># fim do loop</span></span>
+<span>  <span class='co'># Só rodar se tiver datas faltantes</span></span>
+<span>  <span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>datas_faltantes</span><span class='op'>)</span> <span class='op'>!=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>    <span class='va'>tabela_faltante</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>Cod_estacao <span class='op'>=</span> <span class='va'>cod_estacao</span>,</span>
+<span>                                  Data <span class='op'>=</span> <span class='va'>datas_faltantes</span>,</span>
+<span>                                  Vazao <span class='op'>=</span> <span class='cn'>NA</span><span class='op'>)</span></span>
+<span>    </span>
+<span>    <span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>tabela_final</span>, <span class='va'>tabela_faltante</span><span class='op'>)</span></span>
+<span>  <span class='op'>}</span></span>
+<span></span>
+<span>  <span class='co'># Ordem correta</span></span>
+<span>  <span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='va'>tabela_final</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/order.html'>order</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,<span class='op'>]</span></span>
+<span>  </span>
+<span>  <span class='co'># O que é retornado pela função</span></span>
 <span>  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>)</span></span>
 <span><span class='op'>}</span></span></code></pre>
 </div>
@@ -2998,7 +3009,7 @@ esse último exemplo.</p>
 <span>            fileEncoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<div class="sourceCode" id="cb12"><pre
+<div class="sourceCode" id="cb11"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

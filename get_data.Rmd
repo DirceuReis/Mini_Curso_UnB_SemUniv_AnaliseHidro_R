@@ -298,7 +298,7 @@ Em seguida fazemos um dataframe vazio, contendo 3 colunas. A primeira possui o c
 
 ```{r serie_historica_6}
 tabela_final <- data.frame(Cod_estacao = dados_estacao$EstacaoCodigo[1],
-                           Data = Data_proxy),
+                           Data = Data_proxy,
                            Vazao = Dados_proxy)
 ```
 
@@ -325,7 +325,7 @@ if(length(datas_faltantes) != 0){
   tabela_faltante <-
     data.frame(Cod_estacao = cod_estacao,
                Data = datas_faltantes,
-               Dados = NA)
+               Vazao = NA)
   
   tabela_final <- rbind(tabela_final, tabela_faltante)
 }
