@@ -2148,6 +2148,41 @@ de permanência</a></li>
 <li><a href="#sazonalidade-das-vazões-máximas-anuais"
 id="toc-sazonalidade-das-vazões-máximas-anuais">Sazonalidade das vazões
 máximas anuais</a></li>
+<li><a href="#análise-de-veranicos-de-chuva"
+id="toc-análise-de-veranicos-de-chuva">Análise de veranicos de chuva</a>
+<ul>
+<li><a href="#baixar-dados-de-chuva"
+id="toc-baixar-dados-de-chuva">Baixar dados de chuva</a></li>
+<li><a href="#identificar-veranicos"
+id="toc-identificar-veranicos">Identificar veranicos</a></li>
+<li><a href="#plotagem-de-período-de-veranicos"
+id="toc-plotagem-de-período-de-veranicos">Plotagem de período de
+veranicos</a></li>
+<li><a href="#frequência-de-veranicos-de-uma-dada-extensão"
+id="toc-frequência-de-veranicos-de-uma-dada-extensão">Frequência de
+veranicos de uma dada extensão</a></li>
+</ul></li>
+<li><a href="#análise-de-seca" id="toc-análise-de-seca">Análise de
+seca</a>
+<ul>
+<li><a href="#baixar-dados-de-vazão"
+id="toc-baixar-dados-de-vazão">Baixar dados de vazão</a></li>
+<li><a href="#identificar-status-da-vazão-seco-ou-úmido"
+id="toc-identificar-status-da-vazão-seco-ou-úmido">Identificar status da
+vazão (seco ou úmido)</a></li>
+<li><a href="#plotagem-dos-períodos-secos-e-períodos-úmidos"
+id="toc-plotagem-dos-períodos-secos-e-períodos-úmidos">Plotagem dos
+períodos secos e períodos úmidos</a></li>
+<li><a href="#frequência-e-extensão-dos-períodos-secos-dry-spells"
+id="toc-frequência-e-extensão-dos-períodos-secos-dry-spells">Frequência
+e extensão dos períodos secos (<em>dry spells</em>)</a></li>
+<li><a href="#cálculo-e-análise-do-volume-de-deficit"
+id="toc-cálculo-e-análise-do-volume-de-deficit">Cálculo e análise do
+volume de deficit</a></li>
+<li><a href="#identificar-veranicos-1"
+id="toc-identificar-veranicos-1">Identificar veranicos</a></li>
+<li><a href="#section" id="toc-section"></a></li>
+</ul></li>
 <li><a href="#fontes-de-consulta" id="toc-fontes-de-consulta">Fontes de
 consulta</a></li>
 </ul>
@@ -2729,6 +2764,513 @@ adaptações no script original, mas em essência, o script é o mesmo.</p>
 claramente que as grandes cheias nesta estação fluviométrica ocorrem
 entre os meses de dezembro e março, com honrosas exceções em outubro e
 abril, mas sempre com magnitudes menores.</p>
+<h2 id="análise-de-veranicos-de-chuva">Análise de veranicos de
+chuva</h2>
+<h3 id="baixar-dados-de-chuva">Baixar dados de chuva</h3>
+<h3 id="identificar-veranicos">Identificar veranicos</h3>
+<h3 id="plotagem-de-período-de-veranicos">Plotagem de período de
+veranicos</h3>
+<h3 id="frequência-de-veranicos-de-uma-dada-extensão">Frequência de
+veranicos de uma dada extensão</h3>
+<h2 id="análise-de-seca">Análise de seca</h2>
+<h3 id="baixar-dados-de-vazão">Baixar dados de vazão</h3>
+<p>Iniciamos com a leitura dos dados de vazão. Vamos mais uma vez
+utilizar os dados da estação fluviométrica <strong>60435000</strong>,
+que já foram gravados num arquivo do tipo <code>txt</code>.</p>
+<p>Apesar de já termos utilizado esses dados nas atividades anteriores,
+vamos lê-los de novo, pois nós havíamos anteriormente elimanados os anos
+que continham falhas, o que não é exatamente o que queremos aqui, pelo
+menos nessa primeira atividade.</p>
+<p>O código abaixo apresenta a maneira como lemos um arquivo
+<code>txt</code> utilizando a função <code>read.table</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Leitura do arquivo de vazões médias diárias</span></span>
+<span><span class='va'>Qd</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='st'>"dados/60435000.txt"</span>,</span>
+<span>                             sep <span class='op'>=</span> <span class='st'>"\t"</span>,</span>
+<span>                             dec <span class='op'>=</span> <span class='st'>"."</span>,</span>
+<span>                             header <span class='op'>=</span> <span class='cn'>T</span>,</span>
+<span>                             fileEncoding <span class='op'>=</span> <span class='st'>"UTF-8"</span>,</span>
+<span>                             colClasses <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"factor"</span>, <span class='st'>"Date"</span>, <span class='st'>"numeric"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>Qd</span>,<span class='fl'>10</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>   Cod_estacao       Data Vazao
+1     60435000 1978-05-01    NA
+2     60435000 1978-05-02    NA
+3     60435000 1978-05-03    NA
+4     60435000 1978-05-04    NA
+5     60435000 1978-05-05    NA
+6     60435000 1978-05-06    NA
+7     60435000 1978-05-07    NA
+8     60435000 1978-05-08    NA
+9     60435000 1978-05-09    NA
+10    60435000 1978-05-10    NA</code></pre>
+</div>
+<p>Como podemos ver, o <code>dataframe</code> denominado <code>Qd</code>
+contém três colunas, o código da estação, as datas, e os valores diários
+de vazão. Nós forçamos que o código da estação seja um
+<code>factor</code> e que as datas sejam da classe
+<code>date</code>.</p>
+<h3 id="identificar-status-da-vazão-seco-ou-úmido">Identificar status da
+vazão (seco ou úmido)</h3>
+<p>O primeiro passo nessa análise é identificar os períodos em que as
+vazões diárias estão acima ou abaixo de um valor-limite pré-especificado
+de vazão.</p>
+<p>Essa análise é bastante importante para estudos relacionados a secas
+e avaliação de impactos causados pelas secas. Dias consecutivos com
+vazões diárias inferiores ao valor-limite formam os chamdos períodos
+<strong>secos</strong>, geralmente chamados na literatura inglesa de
+<em>dry spells</em>.</p>
+<p>Estimar a frequência de períodos <strong>secos</strong> (<em>dry
+spells</em>) com diferentes comprimentos, assim como descrever o padrão
+estatístico dos chamados <strong>volumes de defcit</strong>, são
+procedimentos importantes para entender a extensão de problemas
+relacionados `a seca numa dada região, desde que o valor-limite de vazão
+escolhido para realizar a análise tenha alguma relação com a seca
+local.</p>
+<p>De todo modo, essas grandezas são muitas vezes empregadas para
+caracterizar o comportamento hidrológica da região, principalmente a
+propensão a longos períodos com vazões baixas, o que pode representar
+problemas de escassez hídrica.</p>
+<p>A escolha desse valor-limite varia de estudo para estudo. É normal
+escolher um quantil específico da série de vazões, como a mediana,
+embora a média também possa ser empregada. Em estudos mais específicos,
+é comum utilizar a demanda estimada de água para asbastecimento de uma
+cidade, por exemplo, como o valor-limite de vazão.</p>
+<p>O <strong>volume de defcit</strong>, mencionado anteriormente, é
+simplesmente o volume total acumulado ao longo do período seco,
+calculado como a diferença entre o volume associado à vazão-limite e o
+volume que de fato escoou no rio. Essa variável expressa a diferença
+entre o que se deseja em termos de volume num determinado período e o
+volume que rio de fato forneceu nesse mesmo período, daí a expressão
+<strong>volume de defcit</strong>.</p>
+<p>Mas o primeiro passo nessa análise é identificar o <em>status</em> da
+vazão do rio, em cada dia, ao longo do histórico. Se a vazão do rio for
+menor do que a vazão-limite pré-estabelecida, diz-se que o
+<em>status</em> desse dia é seco, caso contrário identificamos esse dia
+como úmido.</p>
+<p>Isso é relativamente fácil de fazer utilizando a linguagem
+<strong>R</strong>, como podemos ver abaixo. Para fins de ilustração,
+estamos utilizando o valor de 1 m<span
+class="math inline">\(^3\)</span>/s como valor-limite, que é um valor
+bem próximo do primeiro quartil para esse conjunto de dados. Isso
+significa que em aproximadamente 25% dos dias, a vazões são inferiores a
+esse valor.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Define valor-limite</span></span>
+<span><span class='va'>limite</span> <span class='op'>&lt;-</span> <span class='fl'>1</span></span>
+<span></span>
+<span><span class='co'># Testando o código</span></span>
+<span></span>
+<span><span class='co'>#Vazao &lt;- c(12,15,20,16,10,9,8,7,12,25,43,34,22,21,20,19,18,17,25,34,55,43,14,13)</span></span>
+<span><span class='co'>#index &lt;- 1:length(Vazao)</span></span>
+<span><span class='co'>#data &lt;- seq(ymd('2012-04-01'),ymd('2012-04-24'), by = '1 day')</span></span>
+<span><span class='co'>#Qd &lt;- data.frame(index,data,Vazao)</span></span>
+<span></span>
+<span><span class='co'>## identifica dias em que vazão é inferior ao limite estabelecido</span></span>
+<span><span class='co'>## e cria nova coluna no daaframe</span></span>
+<span><span class='va'>Qd</span><span class='op'>$</span><span class='va'>status</span> <span class='op'>&lt;-</span> <span class='va'>Qd</span><span class='op'>$</span><span class='va'>Vazao</span> <span class='op'>&lt;</span> <span class='va'>limite</span></span>
+<span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>Qd</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code># A tibble: 15,920 × 4
+   Cod_estacao Data       Vazao status
+   &lt;fct&gt;       &lt;date&gt;     &lt;dbl&gt; &lt;lgl&gt; 
+ 1 60435000    1978-05-01    NA NA    
+ 2 60435000    1978-05-02    NA NA    
+ 3 60435000    1978-05-03    NA NA    
+ 4 60435000    1978-05-04    NA NA    
+ 5 60435000    1978-05-05    NA NA    
+ 6 60435000    1978-05-06    NA NA    
+ 7 60435000    1978-05-07    NA NA    
+ 8 60435000    1978-05-08    NA NA    
+ 9 60435000    1978-05-09    NA NA    
+10 60435000    1978-05-10    NA NA    
+# … with 15,910 more rows</code></pre>
+</div>
+<p>Embora não seja possível visualizar nas primeiras 10 linhas da Tabela
+cima, a coluna <code>status</code> contém <code>FALSE</code> quando o
+dia é considerado <strong>úmido</strong> e <code>TRUE</code> quando o
+dia é considerado <strong>seco</strong>. E como pode ser visto,
+<code>status = NA</code> quando há falha nos dados de vazão.</p>
+<h3 id="plotagem-dos-períodos-secos-e-períodos-úmidos">Plotagem dos
+períodos secos e períodos úmidos</h3>
+<p>Com o que temos até aqui, o que não é muito, já é possível visualizar
+a ocorrência e o comprimento dos períodos secos e períodos úmidos ao
+longo da série histórica.</p>
+<p>Para isso, utilizaremos o <code>geom_tile</code> do pacote
+<code>ggplot2</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Plotagem dos períodos secos e úmidos</span></span>
+<span></span>
+<span><span class='co'># Identifica o dia de início de cada mês para fins de plotagem</span></span>
+<span><span class='va'>month_starts</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/day.html'>yday</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>'1978-01-01'</span><span class='op'>)</span> <span class='op'><a href='https://lubridate.tidyverse.org/reference/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>0</span><span class='op'>:</span><span class='fl'>11</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Função para definir a mudança de ano</span></span>
+<span><span class='va'>Year_break</span> <span class='op'>=</span> <span class='kw'>function</span> <span class='op'>(</span><span class='va'>...</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  <span class='kw'>function</span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span> <span class='op'>{</span></span>
+<span>    <span class='va'>minx</span>         <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>floor</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>;</span>
+<span>    <span class='va'>maxx</span>         <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Round.html'>ceiling</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>x</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> <span class='fl'>1</span>;</span>
+<span>    <span class='va'>major_breaks</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='va'>minx</span>, <span class='va'>maxx</span>, by<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span></span>
+<span>    <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>major_breaks</span><span class='op'>)</span></span>
+<span>  <span class='op'>}</span></span>
+<span><span class='op'>}</span></span>
+<span></span>
+<span><span class='co'># Definição da cor das letras na Figura</span></span>
+<span><span class='va'>textcol</span> <span class='op'>&lt;-</span> <span class='st'>"grey40"</span></span>
+<span></span>
+<span><span class='co'># Inicia a plotagem</span></span>
+<span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  </span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_tile.html'>geom_tile</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>Qd</span>,</span>
+<span>            <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/day.html'>yday</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>)</span>, y <span class='op'>=</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/year.html'>year</a></span><span class='op'>(</span><span class='va'>Data</span><span class='op'>)</span>, fill <span class='op'>=</span> <span class='va'>status</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  </span>
+<span>  <span class='co'># Plota linhas verticais no início de cada mês para facilitar visualização</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_abline.html'>geom_vline</a></span><span class='op'>(</span>xintercept <span class='op'>=</span> <span class='va'>month_starts</span>,color <span class='op'>=</span> <span class='st'>"white"</span>, size<span class='op'>=</span><span class='fl'>0.5</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  </span>
+<span>  <span class='co'># Título da Figura e da legenda</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/guides.html'>guides</a></span><span class='op'>(</span>fill<span class='op'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/guide_legend.html'>guide_legend</a></span><span class='op'>(</span>title<span class='op'>=</span><span class='st'>"Status do período"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/labs.html'>labs</a></span><span class='op'>(</span>x<span class='op'>=</span><span class='st'>""</span>, y<span class='op'>=</span><span class='st'>""</span>, title<span class='op'>=</span><span class='st'>"Períodos seco (Q &lt; 1 m3/s) e úmido (Q &gt; 1 m3/s)"</span><span class='op'>)</span><span class='op'>+</span></span>
+<span> </span>
+<span>   <span class='co'># Cores para seco, úmido e NA</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_brewer.html'>scale_fill_brewer</a></span><span class='op'>(</span>palette <span class='op'>=</span> <span class='st'>"Pastel1"</span>,</span>
+<span>                    breaks <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='cn'>FALSE</span>,<span class='cn'>TRUE</span>, <span class='cn'>NA</span><span class='op'>)</span>, </span>
+<span>                    labels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Úmido"</span>, <span class='st'>"Seco"</span>, <span class='st'>"Falha"</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  </span>
+<span>  <span class='co'># Especificações dos eixos</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_x_continuous</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>''</span>, breaks <span class='op'>=</span> <span class='va'>month_starts</span>, labels<span class='op'>=</span> <span class='va'>month.abb</span>, expand <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>0</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/scale_continuous.html'>scale_y_continuous</a></span><span class='op'>(</span>name <span class='op'>=</span> <span class='st'>''</span>, breaks <span class='op'>=</span> <span class='fu'>Year_break</span><span class='op'>(</span><span class='op'>)</span>, expand <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>,<span class='fl'>0</span><span class='op'>)</span>,trans <span class='op'>=</span> <span class='st'>"reverse"</span> <span class='op'>)</span> <span class='op'>+</span></span>
+<span>  </span>
+<span>  <span class='co'># Vários detalhes da plotagem</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggtheme.html'>theme_grey</a></span><span class='op'>(</span>base_size<span class='op'>=</span><span class='fl'>10</span><span class='op'>)</span><span class='op'>+</span></span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/theme.html'>theme</a></span><span class='op'>(</span>legend.position<span class='op'>=</span><span class='st'>"right"</span>, legend.direction<span class='op'>=</span><span class='st'>"vertical"</span>,</span>
+<span>        legend.title<span class='op'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>colour<span class='op'>=</span><span class='va'>textcol</span><span class='op'>)</span>,</span>
+<span>        legend.margin<span class='op'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>margin</a></span><span class='op'>(</span><span class='fu'>grid</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/grid/unit.html'>unit</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='st'>"cm"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span>        legend.text<span class='op'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>colour<span class='op'>=</span><span class='va'>textcol</span>, size<span class='op'>=</span><span class='fl'>7</span>, face<span class='op'>=</span><span class='st'>"bold"</span><span class='op'>)</span>,</span>
+<span>        legend.key.height<span class='op'>=</span><span class='fu'>grid</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/grid/unit.html'>unit</a></span><span class='op'>(</span><span class='fl'>0.8</span>, <span class='st'>"cm"</span><span class='op'>)</span>,</span>
+<span>        legend.key.width<span class='op'>=</span><span class='fu'>grid</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/r/grid/unit.html'>unit</a></span><span class='op'>(</span><span class='fl'>0.4</span>, <span class='st'>"cm"</span><span class='op'>)</span>,</span>
+<span>        axis.text.x<span class='op'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>size<span class='op'>=</span><span class='fl'>10</span>, colour<span class='op'>=</span><span class='va'>textcol</span><span class='op'>)</span>,</span>
+<span>        axis.text.y<span class='op'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>vjust<span class='op'>=</span><span class='fl'>0.2</span>, colour<span class='op'>=</span><span class='va'>textcol</span><span class='op'>)</span>,</span>
+<span>        axis.ticks<span class='op'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_line</a></span><span class='op'>(</span>size<span class='op'>=</span><span class='fl'>0.4</span><span class='op'>)</span>,</span>
+<span>        plot.background<span class='op'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>        panel.border<span class='op'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_blank</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>        plot.margin<span class='op'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>margin</a></span><span class='op'>(</span><span class='fl'>0.7</span>, <span class='fl'>0.4</span>, <span class='fl'>0.1</span>, <span class='fl'>0.2</span>, <span class='st'>"cm"</span><span class='op'>)</span>,</span>
+<span>        plot.title<span class='op'>=</span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/element.html'>element_text</a></span><span class='op'>(</span>colour<span class='op'>=</span><span class='va'>textcol</span>, hjust<span class='op'>=</span><span class='fl'>0</span>, size<span class='op'>=</span><span class='fl'>12</span>, face<span class='op'>=</span><span class='st'>"bold"</span><span class='op'>)</span></span>
+<span>      <span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="data_explore_rascunho_files/figure-html5/heatmap%20ggplot2-1.png" width="768" /></p>
+</div>
+<p>Podemos observar que, de uma forma geral, os períodos
+<strong>secos</strong>, aqueles com dias consecutivos com vazão inferior
+a 1 m<span class="math inline">\(^3\)</span>/s, ocorrem normalmente
+entre os meses de julho e novembro.</p>
+<p>Mas é também interessante notar que a partir do meio da década de
+1990, pelo menos é essa a aimpressão que passa, essas vazões mais baixas
+se tornaram mais frequentes, com períodos secos mais extensos, com
+ocorrência também em dezembro e janeiro.</p>
+<h3 id="frequência-e-extensão-dos-períodos-secos-dry-spells">Frequência
+e extensão dos períodos secos (<em>dry spells</em>)</h3>
+<p>Agora que já temos uma boa noção de quando os períodos secos e úmidos
+ocorreram ao longo do período histórico, passemos para uma análise
+quantitativa um pouco mais detalhada.</p>
+<p>Iniciaremos esta nova etapa com uma descrição da frequência dos
+períodos secos com diferentes comprimentos. Podemos fazer a mesma coisa
+para os períodos <strong>úmidos</strong>, mas vamos nos limitar aqui
+nesta aula aos períodos <strong>secos</strong>.</p>
+<p>Podemos iniciar esta etapa identificando os dias em que houve mudança
+de <em>status</em>, ou seja, quando o período passou de
+<strong>seco</strong> para <strong>úmido</strong> e vice-versa.</p>
+<p>Para isso, iremos comparar o <em>status</em> da vazão de um dia, com
+o <em>status</em> da vazão do dia seguinte. Se os <em>status</em> forem
+diferentes, significa que houve mudança de <em>status</em>. Óbvio,
+não?</p>
+<p>Mas existe um pequeno complicador nessa história, pois além dos
+<em>status</em> <code>TRUE</code> (<strong>seco</strong>) e
+<code>FALSE</code> (<strong>úmido</strong>), temos também o
+<em>status</em> <code>NA</code> (<strong>Falha</strong>). Para evitar
+possíveis complicações com o uso de <code>NA</code> nas funções a serem
+empregadas mais adiante, vamos substituir o <code>status = NA</code> no
+dataframe <code>Qd</code> por <code>status = -1</code>.</p>
+<p>Feita essa subtituição, utilizaremos a função <code>which</code>, em
+conjunto com um operador lógico que compara se os <em>status</em> de
+dois dias consecutivos são diferentes, para obter o índice de cada uma
+das mudanças que ocorreram na série histórica, como mostrado abaixo,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## identifica quando ocorre mudança de status na vazão </span></span>
+<span><span class='co'>## Qd$status = 0 (wet)</span></span>
+<span><span class='co'>## Qd$status = 1 (dry)</span></span>
+<span><span class='co'>## Qd$status = -1 (Falha)</span></span>
+<span><span class='va'>n</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Qd</span><span class='op'>)</span></span>
+<span><span class='va'>i_NA</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>Qd</span><span class='op'>$</span><span class='va'>status</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='va'>Qd</span><span class='op'>$</span><span class='va'>status</span><span class='op'>[</span><span class='va'>i_NA</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='op'>-</span><span class='fl'>1</span></span>
+<span><span class='va'>i_change</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>Qd</span><span class='op'>$</span><span class='va'>status</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='va'>n</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>]</span> <span class='op'>!=</span> <span class='va'>Qd</span><span class='op'>$</span><span class='va'>status</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>:</span><span class='va'>n</span><span class='op'>]</span><span class='op'>)</span>, <span class='va'>n</span><span class='op'>)</span> </span></code></pre>
+</div>
+</div>
+<p>Os 400 valores contidos no vetor <code>i_change</code>, apresentados
+abaixo, indicam a última posição de cada um dos 400 períodos contidos no
+histórico. Podemos ver, por exemplo, que o primeiro período se encerra
+na posição (dia) 11 e o segundo na posição (dia) 1593.</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre><code>  [1]    11  1593  1597  1600  1606  1641  1642  2285  2309  2316
+ [11]  2322  2327  2343  2345  2359  2363  2365  2376  2404  2406
+ [21]  2409  2410  2414  2426  2432  2670  2671  2673  2705  2707
+ [31]  2717  2734  2736  2760  2761  2767  2768  2994  3035  3038
+ [41]  3039  3042  3100  3108  3118  3121  3123  3124  3135  3142
+ [51]  3151  3155  3156  3340  3342  3348  3436  3438  3441  3446
+ [61]  3472  3473  3480  3774  3812  3815  3819  3821  3828  4124
+ [71]  4133  4141  4142  4148  4159  4165  4171  4175  4179  4180
+ [81]  4181  4542  4551  4881  4884  4919  4920  4921  4934  5607
+ [91]  5624  5642  5647  5651  5652  5661  5664  5667  5669  5673
+[101]  5684  5694  5698  6033  6039  6298  6405  6407  6411  6610
+[111]  6730  6731  6757  6758  6778  6807  6808  7017  7020  7032
+[121]  7085  7089  7091  7092  7123  7124  7143  7147  7148  7149
+[131]  7150  7166  7168  7177  7182  7183  7193  7298  7304  7306
+[141]  7307  7308  7313  7317  7488  7489  7493  7497  7498  7515
+[151]  7517  7730  7733  7734  7826  7827  7849  7856  7860  8124
+[161]  8157  8180  8218  8460  8558  8560  8572  8578  8586  8848
+[171]  8849  8850  8886  8889  8895  8897  8912  8917  8953  8959
+[181]  8968  8969  8973  8976  8991  9195  9322  9323  9330  9331
+[191]  9333  9340  9341  9342  9345  9356  9371  9620  9672  9683
+[201]  9696  9706  9709  9716  9720  9980 10050 10051 10056 10310
+[211] 10388 10445 10446 10660 10779 10792 10801 10809 10810 10812
+[221] 10815 11046 11153 11172 11195 11196 11218 11416 11438 11444
+[231] 11452 11458 11466 11475 11476 11729 11843 11844 11860 11862
+[241] 11866 12111 12218 12219 12220 12228 12231 12232 12234 12241
+[251] 12244 12504 12603 12866 12941 12947 12951 12954 12958 12959
+[261] 12965 12968 12976 12978 12980 12981 12991 13002 13003 13224
+[271] 13275 13276 13340 13342 13350 13351 13356 13390 13431 13437
+[281] 13442 13447 13453 13462 13466 13554 13697 13700 13721 13722
+[291] 13724 13732 13734 13738 13740 13744 13746 13747 13755 13756
+[301] 13757 13760 13761 13762 13766 13869 13878 13885 14037 14038
+[311] 14061 14062 14075 14076 14077 14078 14083 14086 14087 14092
+[321] 14096 14098 14103 14105 14106 14107 14109 14110 14119 14121
+[331] 14137 14138 14144 14145 14146 14149 14151 14153 14162 14231
+[341] 14241 14242 14454 14455 14456 14457 14458 14464 14465 14467
+[351] 14468 14644 14781 14782 14786 14788 14799 15046 15067 15098
+[361] 15164 15167 15176 15177 15178 15181 15185 15186 15188 15189
+[371] 15190 15434 15435 15448 15484 15485 15504 15505 15512 15513
+[381] 15514 15523 15525 15552 15564 15570 15576 15580 15581 15585
+[391] 15588 15590 15594 15606 15620 15760 15893 15895 15897 15920</code></pre>
+</div>
+<p>Embora saibamos quando a mudança de <em>status</em> ocorre, ou seja,
+quando os períodos mudam, não sabemos ainda o <em>status</em> de cada
+uma dos períodos identificados.</p>
+<p>Mas antes de determinar o tipo de período, podemos já calcular seus
+comprimentos. Para isso, acrescentamos o valor <code>0</code> como
+primeiro elemento do vetor <code>i_change</code> de modo que as
+diferenças de seus elementos consecutivos sejam iguais aos comprimentos
+dos períodos,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Determina o comprimento de cada período (seco, úmido ou NA)</span></span>
+<span></span>
+<span><span class='va'>l_spell</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/diff.html'>diff</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='va'>i_change</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p>O vetor <code>l_spell</code> armazena os comprimentos de todos os 400
+períodos, como pode ser visto abaixo,</p>
+<div class="layout-chunk" data-layout="l-body">
+<pre><code>  [1]   11 1582    4    3    6   35    1  643   24    7    6    5   16
+ [14]    2   14    4    2   11   28    2    3    1    4   12    6  238
+ [27]    1    2   32    2   10   17    2   24    1    6    1  226   41
+ [40]    3    1    3   58    8   10    3    2    1   11    7    9    4
+ [53]    1  184    2    6   88    2    3    5   26    1    7  294   38
+ [66]    3    4    2    7  296    9    8    1    6   11    6    6    4
+ [79]    4    1    1  361    9  330    3   35    1    1   13  673   17
+ [92]   18    5    4    1    9    3    3    2    4   11   10    4  335
+[105]    6  259  107    2    4  199  120    1   26    1   20   29    1
+[118]  209    3   12   53    4    2    1   31    1   19    4    1    1
+[131]    1   16    2    9    5    1   10  105    6    2    1    1    5
+[144]    4  171    1    4    4    1   17    2  213    3    1   92    1
+[157]   22    7    4  264   33   23   38  242   98    2   12    6    8
+[170]  262    1    1   36    3    6    2   15    5   36    6    9    1
+[183]    4    3   15  204  127    1    7    1    2    7    1    1    3
+[196]   11   15  249   52   11   13   10    3    7    4  260   70    1
+[209]    5  254   78   57    1  214  119   13    9    8    1    2    3
+[222]  231  107   19   23    1   22  198   22    6    8    6    8    9
+[235]    1  253  114    1   16    2    4  245  107    1    1    8    3
+[248]    1    2    7    3  260   99  263   75    6    4    3    4    1
+[261]    6    3    8    2    2    1   10   11    1  221   51    1   64
+[274]    2    8    1    5   34   41    6    5    5    6    9    4   88
+[287]  143    3   21    1    2    8    2    4    2    4    2    1    8
+[300]    1    1    3    1    1    4  103    9    7  152    1   23    1
+[313]   13    1    1    1    5    3    1    5    4    2    5    2    1
+[326]    1    2    1    9    2   16    1    6    1    1    3    2    2
+[339]    9   69   10    1  212    1    1    1    1    6    1    2    1
+[352]  176  137    1    4    2   11  247   21   31   66    3    9    1
+[365]    1    3    4    1    2    1    1  244    1   13   36    1   19
+[378]    1    7    1    1    9    2   27   12    6    6    4    1    4
+[391]    3    2    4   12   14  140  133    2    2   23</code></pre>
+</div>
+<p>Para realizar a identifcação do tipo de cada período, utilizaremos
+conjuntamente os índices de onde as mudanças ocorrem
+(<code>i_change</code>) e os respectivos <em>status</em>, armazenados na
+columa <code>Qd$status</code> do nosso <code>dataframe</code>
+<code>Qd</code>.</p>
+<p>Essa operação nos retorna um vetor com os seguintes possíveis
+valores: <code>-1, 0, 1</code>. O valor <code>-1</code> indica que o
+período em questão é de <strong>falhas</strong> apenas. Por outro lado,
+os valores <code>0</code> e<code>1</code> indicam, respectivamente,
+períodos <strong>úmidos</strong> e <strong>secos</strong>.</p>
+<p>No nosso código abaixo, esses valores são armazenados no vetor
+<code>spell_type</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## identifica se é um dry spell, wet spell ou período de falhas</span></span>
+<span><span class='co'>## spell_type = TRUE: dry spell</span></span>
+<span><span class='co'>## spell_type = FALSE: wet spell</span></span>
+<span></span>
+<span><span class='va'>spell_type</span> <span class='op'>&lt;-</span> <span class='va'>Qd</span><span class='op'>$</span><span class='va'>status</span><span class='op'>[</span><span class='va'>i_change</span><span class='op'>]</span></span></code></pre>
+</div>
+</div>
+<p>Podemos ver com base no elementos do vetor <code>spell_type</code>,
+apresentado abaxio, que para os dados que estamos trabalhando, temos um
+total de 400 períodos, sendo que o primeiro período está indicado como
+-1, o que significa dizer que é um período de falhas.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>spell_type</span></span></code></pre>
+</div>
+<pre><code>  [1] -1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1
+ [22]  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0
+ [43]  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1
+ [64]  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0
+ [85]  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1
+[106]  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0
+[127]  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1
+[148]  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0
+[169]  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1
+[190]  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0
+[211]  1  0  1  0  1  0  1  0  1  0  1  0  1  0 -1  0 -1  0  1  0  1
+[232]  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0
+[253]  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1
+[274]  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0
+[295]  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1
+[316]  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0
+[337]  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1
+[358]  0  1 -1  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0
+[379]  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1
+[400]  0</code></pre>
+</div>
+<p>Esse vetor <code>spell_type</code> é utilizado então para
+identificarmos os índices para cada tipo de período,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Identifica índices dos três tipos de períodos</span></span>
+<span></span>
+<span><span class='va'>i_dry</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>spell_type</span> <span class='op'>==</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+<span><span class='va'>i_dry</span></span></code></pre>
+</div>
+<pre><code>  [1]   3   5   7   9  11  13  15  17  19  21  23  25  27  29  31  33
+ [17]  35  37  39  41  43  45  47  49  51  53  55  57  59  61  63  65
+ [33]  67  69  71  73  75  77  79  81  83  85  87  89  91  93  95  97
+ [49]  99 101 103 105 107 109 111 113 115 117 119 121 123 125 127 129
+ [65] 131 133 135 137 139 141 143 145 147 149 151 153 155 157 159 161
+ [81] 163 165 167 169 171 173 175 177 179 181 183 185 187 189 191 193
+ [97] 195 197 199 201 203 205 207 209 211 213 215 217 219 221 223 229
+[113] 231 233 235 237 239 241 243 245 247 249 251 253 255 257 259 261
+[129] 263 265 267 269 271 273 275 277 279 281 283 285 287 289 291 293
+[145] 295 297 299 301 303 305 307 309 311 313 315 317 319 321 323 325
+[161] 327 329 331 333 335 337 339 341 343 345 347 349 351 353 355 357
+[177] 359 361 363 365 367 369 371 373 375 377 379 381 383 385 387 389
+[193] 391 393 395 397 399</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>i_wet</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>spell_type</span> <span class='op'>==</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
+<span><span class='va'>i_wet</span></span></code></pre>
+</div>
+<pre><code>  [1]   2   4   6   8  10  12  14  16  18  20  22  24  26  28  30  32
+ [17]  34  36  38  40  42  44  46  48  50  52  54  56  58  60  62  64
+ [33]  66  68  70  72  74  76  78  80  82  84  86  88  90  92  94  96
+ [49]  98 100 102 104 106 108 110 112 114 116 118 120 122 124 126 128
+ [65] 130 132 134 136 138 140 142 144 146 148 150 152 154 156 158 160
+ [81] 162 164 166 168 170 172 174 176 178 180 182 184 186 188 190 192
+ [97] 194 196 198 200 202 204 206 208 210 212 214 216 218 220 222 224
+[113] 226 228 230 232 234 236 238 240 242 244 246 248 250 252 254 256
+[129] 258 260 262 264 266 268 270 272 274 276 278 280 282 284 286 288
+[145] 290 292 294 296 298 300 302 304 306 308 310 312 314 316 318 320
+[161] 322 324 326 328 330 332 334 336 338 340 342 344 346 348 350 352
+[177] 354 356 358 362 364 366 368 370 372 374 376 378 380 382 384 386
+[193] 388 390 392 394 396 398 400</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>i_falha</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>spell_type</span> <span class='op'>==</span> <span class='op'>-</span><span class='fl'>1</span><span class='op'>)</span></span>
+<span><span class='va'>i_falha</span></span></code></pre>
+</div>
+<pre><code>[1]   1 225 227 360</code></pre>
+</div>
+<p>Sabendo os índices associados a cada tipo de período, podemos
+relacionar com os valores de comprimentos de períodos armazenados no
+vetor <code>l_spell</code> e finalmente determinar os diversos
+comprimentos dos períodos secos, úmidos e de falhas.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Extensão dos spells</span></span>
+<span><span class='va'>l_dry</span> <span class='op'>&lt;-</span> <span class='va'>l_spell</span><span class='op'>[</span><span class='va'>i_dry</span><span class='op'>]</span></span>
+<span><span class='va'>l_wet</span> <span class='op'>&lt;-</span> <span class='va'>l_spell</span><span class='op'>[</span><span class='va'>i_wet</span><span class='op'>]</span></span>
+<span><span class='va'>l_falha</span> <span class='op'>&lt;-</span> <span class='va'>l_spell</span><span class='op'>[</span><span class='va'>i_falha</span><span class='op'>]</span></span>
+<span></span>
+<span><span class='va'>l_dry</span></span></code></pre>
+</div>
+<pre><code>  [1]   4   6   1  24   6  16  14   2  28   3   4   6   1  32  10   2
+ [17]   1   1  41   1  58  10   2  11   9   1   2  88   3  26   7  38
+ [33]   4   7   9   1  11   6   4   1   9   3   1  13  17   5   1   3
+ [49]   2  11   4   6 107   4 120  26  20   1   3  53   2  31  19   1
+ [65]   1   2   5  10   6   1   5 171   4   1   2   3  92  22   4  33
+ [81]  38  98  12   8   1  36   6  15  36   9   4  15 127   7   2   1
+ [97]   3  15  52  13   3   4  70   5  78   1 119   9   1   3 107  22
+[113]   8   8   1 114  16   4 107   1   3   2   3  99  75   4   4   6
+[129]   8   2  10   1  51  64   8   5  41   5   6   4 143  21   2   2
+[145]   2   2   8   1   1   4   9 152  23  13   1   5   1   4   5   1
+[161]   2   9  16   6   1   2   9  10 212   1   1   1   1 137   4  11
+[177]  21  66   9   1   4   2   1   1  36  19   7   1   2  12   6   1
+[193]   3   4  14 133   2</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>l_wet</span></span></code></pre>
+</div>
+<pre><code>  [1] 1582    3   35  643    7    5    2    4   11    2    1   12  238
+ [14]    2    2   17   24    6  226    3    3    8    3    1    7    4
+ [27]  184    6    2    5    1  294    3    2  296    8    6    6    4
+ [40]    1  361  330   35    1  673   18    4    9    3    4   10  335
+ [53]  259    2  199    1    1   29  209   12    4    1    1    4    1
+ [66]   16    9    1  105    2    1    4    1    4   17  213    1    1
+ [79]    7  264   23  242    2    6  262    1    3    2    5    6    1
+ [92]    3  204    1    1    7    1   11  249   11   10    7  260    1
+[105]  254   57  214   13    8    2  231   19    1  198    6    6    9
+[118]  253    1    2  245    1    8    1    7  260  263    6    3    1
+[131]    3    2    1   11  221    1    2    1   34    6    5    9   88
+[144]    3    1    8    4    4    1    1    3    1  103    7    1    1
+[157]    1    1    3    5    2    2    1    1    2    1    1    3    2
+[170]   69    1    1    1    6    2  176    1    2  247    3    1    3
+[183]    1    1  244   13    1    1    1    9   27    6    4    4    2
+[196]   12  140    2   23</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>l_falha</span></span></code></pre>
+</div>
+<pre><code>[1] 11 23 22 31</code></pre>
+</div>
+<p>Embora não seja muito fácil de visualizar, creio que valha a pena
+tentar entender os números apresentados acima, que representam os
+comprimentos dos 197 períodos <strong>secos</strong>, 199 períodos
+<strong>úmidos</strong> e 4 períodos de <strong>falhas</strong>.</p>
+<p>Para deixar registrado os achados, vamos criar um
+<code>dataframe</code> com os resultados relacionados aos períodos
+secos. O nosso <code>dataframe</code> será denominado
+<code>dry_spell</code> e conterá as seguintes colunas: <code>ano</code>,
+<code>data_inicio_dry</code>, e <code>comprimento</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Construção de um novo dataframe com os dados de dry spell</span></span>
+<span><span class='va'>data_inicio_dry</span> <span class='op'>&lt;-</span> <span class='va'>Qd</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i_change</span><span class='op'>[</span><span class='va'>i_dry</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>-</span> <span class='va'>l_dry</span></span>
+<span><span class='va'>dry_spell</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>ano <span class='op'>=</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/year.html'>year</a></span><span class='op'>(</span><span class='va'>Qd</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i_change</span><span class='op'>[</span><span class='va'>i_dry</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>,</span>
+<span>                        data_inicio_dry <span class='op'>=</span> <span class='va'>Qd</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i_change</span><span class='op'>[</span><span class='va'>i_dry</span><span class='op'>]</span><span class='op'>]</span>,</span>
+<span>                        comprimento <span class='op'>=</span> <span class='va'>l_dry</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<h3 id="cálculo-e-análise-do-volume-de-deficit">Cálculo e análise do
+volume de deficit</h3>
+<h3 id="identificar-veranicos-1">Identificar veranicos</h3>
+<h3 id="section"></h3>
 <h2 id="fontes-de-consulta">Fontes de consulta</h2>
 <ul>
 <li><p>O site <a
@@ -2745,7 +3287,7 @@ de permanência (Flow duration curve)</a></li>
 href="https://tonyladson.wordpress.com/2016/06/01/what-time-of-year-does-it-flood/">Momento
 do ano das máximas anuais</a></li>
 </ul>
-<div class="sourceCode" id="cb11"><pre
+<div class="sourceCode" id="cb22"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div></li>
 </ul>
 <!--radix_placeholder_article_footer-->

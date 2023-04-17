@@ -5,6 +5,10 @@ description: Rascunho de novas análises com **R**
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+#knitr::knit_hooks$set(inline = function(x) {
+#  x <- sprintf("%1.2f", x)
+#  paste(x, collapse = ", ")
+#})
 library(tidyverse)
 library(lubridate)
 ```
@@ -376,6 +380,270 @@ ggplot(Q_max,aes(x=rad, y=maxima)) +
 
 Embora haja espaço para melhorias nessa plotagem, podemos ver claramente que as grandes cheias nesta estação fluviométrica ocorrem entre os meses de dezembro e março, com honrosas exceções em outubro e abril, mas sempre com magnitudes menores. 
 
+## Análise de veranicos de chuva
+
+### Baixar dados de chuva
+
+### Identificar veranicos
+
+### Plotagem de período de veranicos
+
+### Frequência de veranicos de uma dada extensão
+
+## Análise de seca
+
+### Baixar dados de vazão
+
+Iniciamos com a leitura dos dados de vazão. Vamos mais uma vez utilizar os dados da estação fluviométrica **60435000**, que já foram gravados num arquivo do tipo `txt`. 
+
+Apesar de já termos utilizado esses dados nas atividades anteriores, vamos lê-los de novo, pois nós havíamos anteriormente elimanados os anos que continham falhas, o que não é exatamente o que queremos aqui, pelo menos nessa primeira atividade. 
+
+O código abaixo apresenta a maneira como lemos um arquivo `txt` utilizando a função `read.table`.
+
+```{r leitura_txt2}
+## Leitura do arquivo de vazões médias diárias
+Qd <- read.table(file = "dados/60435000.txt",
+                             sep = "\t",
+                             dec = ".",
+                             header = T,
+                             fileEncoding = "UTF-8",
+                             colClasses = c("factor", "Date", "numeric"))
+head(Qd,10)
+```
+
+Como podemos ver, o `dataframe` denominado `Qd` contém três colunas, o código da estação, as datas, e os valores diários de vazão. Nós forçamos que o código da estação seja um `factor` e que as datas sejam da classe `date`.
+
+### Identificar status da vazão (seco ou úmido)
+
+O primeiro passo nessa análise é identificar os períodos em que as vazões diárias estão acima ou abaixo de um valor-limite pré-especificado de vazão.
+
+Essa análise é bastante importante para estudos relacionados a secas e avaliação de impactos causados pelas secas. Dias consecutivos com vazões diárias inferiores ao valor-limite formam os chamdos períodos **secos**, geralmente chamados na literatura inglesa de *dry spells*.
+
+Estimar a frequência de períodos **secos** (*dry spells*) com diferentes comprimentos, assim como descrever o padrão estatístico dos chamados **volumes de defcit**, são procedimentos importantes para entender a extensão de problemas relacionados `a seca numa dada região, desde que o valor-limite de vazão escolhido para realizar a análise tenha alguma relação com a seca local. 
+
+De todo modo, essas grandezas são muitas vezes empregadas para caracterizar o comportamento hidrológica da região, principalmente a propensão a longos períodos com vazões baixas, o que pode representar problemas de escassez hídrica.
+
+A escolha desse valor-limite varia de estudo para estudo. É normal escolher um quantil específico da série de vazões, como a mediana, embora a média também possa ser empregada. Em estudos mais específicos, é comum utilizar a demanda estimada de água para asbastecimento de uma cidade, por exemplo, como o valor-limite de vazão.
+
+O **volume de defcit**, mencionado anteriormente, é simplesmente o volume total acumulado ao longo do período seco, calculado como a diferença entre o volume associado à vazão-limite e o volume que de fato escoou no rio. Essa variável expressa a diferença entre o que se deseja em termos de volume num determinado período e o volume que rio de fato forneceu nesse mesmo período, daí a expressão **volume de defcit**.
+
+Mas o primeiro passo nessa análise é identificar o *status* da vazão do rio, em cada dia, ao longo do histórico. Se a vazão do rio for menor do que a vazão-limite pré-estabelecida, diz-se que o *status* desse dia é seco, caso contrário identificamos esse dia como úmido.
+
+Isso é relativamente fácil de fazer utilizando a linguagem **R**, como podemos ver abaixo. Para fins de ilustração, estamos utilizando o valor de 1 m$^3$/s como valor-limite, que é um valor bem próximo do primeiro quartil para esse conjunto de dados. Isso significa que em aproximadamente 25% dos dias, a vazões são inferiores a esse valor.  
+
+```{r status-definicao}
+
+# Define valor-limite
+limite <- 1
+
+# Testando o código
+
+#Vazao <- c(12,15,20,16,10,9,8,7,12,25,43,34,22,21,20,19,18,17,25,34,55,43,14,13)
+#index <- 1:length(Vazao)
+#data <- seq(ymd('2012-04-01'),ymd('2012-04-24'), by = '1 day')
+#Qd <- data.frame(index,data,Vazao)
+
+## identifica dias em que vazão é inferior ao limite estabelecido
+## e cria nova coluna no daaframe
+Qd$status <- Qd$Vazao < limite
+tibble(Qd)
+
+```
+
+Embora não seja possível visualizar nas primeiras 10 linhas da Tabela cima, a coluna `status` contém `FALSE` quando o dia é considerado **úmido** e `TRUE` quando o dia é considerado **seco**. E como pode ser visto, `status = NA` quando há falha nos dados de vazão. 
+
+### Plotagem dos períodos secos e períodos úmidos
+
+Com o que temos até aqui, o que não é muito, já é possível visualizar a ocorrência e o comprimento dos períodos secos e períodos úmidos ao longo da série histórica. 
+
+Para isso, utilizaremos o `geom_tile` do pacote `ggplot2`.
+
+```{r heatmap ggplot2, fig.width = 8, fig.height = 8}
+## Plotagem dos períodos secos e úmidos
+
+# Identifica o dia de início de cada mês para fins de plotagem
+month_starts <- yday(as.Date('1978-01-01') %m+% months(0:11))
+
+# Função para definir a mudança de ano
+Year_break = function (...){
+  function(x) {
+    minx         = floor(min(x)) - 1;
+    maxx         = ceiling(max(x)) + 1;
+    major_breaks = seq(minx, maxx, by=1)
+    return(major_breaks)
+  }
+}
+
+# Definição da cor das letras na Figura
+textcol <- "grey40"
+
+# Inicia a plotagem
+ggplot() +
+  
+  geom_tile(data = Qd,
+            aes(x = yday(Data), y = year(Data), fill = status)) +
+  
+  # Plota linhas verticais no início de cada mês para facilitar visualização
+  geom_vline(xintercept = month_starts,color = "white", size=0.5) +
+  
+  # Título da Figura e da legenda
+  guides(fill=guide_legend(title="Status do período"))+
+  labs(x="", y="", title="Períodos seco (Q < 1 m3/s) e úmido (Q > 1 m3/s)")+
+ 
+   # Cores para seco, úmido e NA
+  scale_fill_brewer(palette = "Pastel1",
+                    breaks = c(FALSE,TRUE, NA), 
+                    labels = c("Úmido", "Seco", "Falha")) +
+  
+  # Especificações dos eixos
+  scale_x_continuous(name = '', breaks = month_starts, labels= month.abb, expand = c(0,0)) +
+  scale_y_continuous(name = '', breaks = Year_break(), expand = c(0,0),trans = "reverse" ) +
+  
+  # Vários detalhes da plotagem
+  theme_grey(base_size=10)+
+  theme(legend.position="right", legend.direction="vertical",
+        legend.title=element_text(colour=textcol),
+        legend.margin=margin(grid::unit(0, "cm")),
+        legend.text=element_text(colour=textcol, size=7, face="bold"),
+        legend.key.height=grid::unit(0.8, "cm"),
+        legend.key.width=grid::unit(0.4, "cm"),
+        axis.text.x=element_text(size=10, colour=textcol),
+        axis.text.y=element_text(vjust=0.2, colour=textcol),
+        axis.ticks=element_line(size=0.4),
+        plot.background=element_blank(),
+        panel.border=element_blank(),
+        plot.margin=margin(0.7, 0.4, 0.1, 0.2, "cm"),
+        plot.title=element_text(colour=textcol, hjust=0, size=12, face="bold")
+      )
+```
+Podemos observar que, de uma forma geral, os períodos **secos**, aqueles com dias consecutivos com vazão inferior a `r limite` m$^3$/s, ocorrem normalmente entre os meses de julho e novembro. 
+
+Mas é também interessante notar que a partir do meio da década de 1990, pelo menos é essa a aimpressão que passa, essas vazões mais baixas se tornaram mais frequentes, com períodos secos mais extensos, com ocorrência também em dezembro e janeiro. 
+
+### Frequência e extensão dos períodos secos (*dry spells*)
+
+Agora que já temos uma boa noção de quando os períodos secos e úmidos ocorreram ao longo do período histórico, passemos para uma análise quantitativa um pouco mais detalhada. 
+
+Iniciaremos esta nova etapa com uma descrição da frequência dos períodos secos com diferentes comprimentos. Podemos fazer a mesma coisa para os períodos **úmidos**, mas vamos nos limitar aqui nesta aula aos períodos **secos**.
+
+Podemos iniciar esta etapa identificando os dias em que houve mudança de *status*, ou seja, quando o período passou de **seco** para **úmido** e vice-versa.  
+
+Para isso, iremos comparar o *status* da vazão de um dia, com o *status* da vazão do dia seguinte. Se os *status* forem diferentes, significa que houve mudança de *status*. Óbvio, não? 
+
+Mas existe um pequeno complicador nessa história, pois além dos *status* `TRUE` (**seco**) e `FALSE` (**úmido**), temos também o *status* `NA` (**Falha**). Para evitar possíveis complicações com o uso de `NA` nas funções a serem empregadas mais adiante, vamos substituir o `status = NA` no dataframe `Qd` por `status = -1`. 
+
+Feita essa subtituição, utilizaremos a função `which`, em conjunto com um operador lógico que compara se os *status* de dois dias consecutivos são diferentes, para obter o índice de cada uma das mudanças que ocorreram na série histórica, como mostrado abaixo, 
+
+```{r}
+## identifica quando ocorre mudança de status na vazão 
+## Qd$status = 0 (wet)
+## Qd$status = 1 (dry)
+## Qd$status = -1 (Falha)
+n <- nrow(Qd)
+i_NA <- which(is.na(Qd$status))
+Qd$status[i_NA] <- -1
+i_change <- c(which(Qd$status[1:n-1] != Qd$status[2:n]), n) 
+
+```
+
+Os `r formatC(length(i_change), format = "d")` valores contidos no vetor `i_change`, apresentados abaixo, indicam a última posição de cada um dos `r formatC(length(i_change), format = "d")` períodos contidos no histórico. Podemos ver, por exemplo, que o primeiro período se encerra na posição (dia) `r formatC(i_change[1],format = "d")` e o segundo na posição (dia) `r formatC(i_change[2],format = "d")`.   
+
+```{r i-change, echo=FALSE}
+i_change
+```
+
+Embora saibamos quando a mudança de *status* ocorre, ou seja, quando os períodos mudam, não sabemos ainda o *status* de cada uma dos períodos identificados.
+
+Mas antes de determinar o tipo de período, podemos já calcular seus comprimentos. Para isso, acrescentamos o valor `0` como primeiro elemento do vetor `i_change` de modo que as diferenças de seus elementos consecutivos sejam iguais aos comprimentos dos períodos,
+
+```{r comprimentos-spell}
+## Determina o comprimento de cada período (seco, úmido ou NA)
+
+l_spell <- diff(c(0, i_change))
+
+```
+
+O vetor `l_spell` armazena os comprimentos de todos os `r formatC(length(l_spell), format = "d")` períodos, como pode ser visto abaixo,
+
+```{r l-spell, echo=FALSE, class.source = 'fold-hide'}
+l_spell
+```
+
+
+Para realizar a identifcação do tipo de cada período, utilizaremos conjuntamente os índices de onde as mudanças ocorrem (`i_change`) e os respectivos *status*, armazenados na columa `Qd$status` do nosso `dataframe` `Qd`. 
+
+Essa operação nos retorna um vetor com os seguintes possíveis valores: `-1, 0, 1`. O valor `-1` indica que o período em questão é de **falhas** apenas. Por outro lado, os valores `0` e`1` indicam, respectivamente, períodos **úmidos** e **secos**.
+
+No nosso código abaixo, esses valores são armazenados no vetor `spell_type`. 
+
+```{r spell-type}
+
+## identifica se é um dry spell, wet spell ou período de falhas
+## spell_type = TRUE: dry spell
+## spell_type = FALSE: wet spell
+
+spell_type <- Qd$status[i_change]
+```
+
+Podemos ver com base no elementos do vetor `spell_type`, apresentado abaxio, que para os dados que estamos trabalhando, temos um total de 400 períodos, sendo que o primeiro período está indicado como `r formatC(spell_type[1], format = "d")`, o que significa dizer que é um período de falhas.
+
+```{r spell-type-print}
+spell_type
+```
+
+Esse vetor `spell_type` é utilizado então para identificarmos os índices para cada tipo de período,
+
+```{r indices-por-type}
+## Identifica índices dos três tipos de períodos
+
+i_dry <- which(spell_type == TRUE)
+i_dry
+i_wet <- which(spell_type == FALSE)
+i_wet
+i_falha <- which(spell_type == -1)
+i_falha
+```
+
+Sabendo os índices associados a cada tipo de período, podemos relacionar com os valores de comprimentos de períodos armazenados no vetor `l_spell` e finalmente determinar os diversos comprimentos dos períodos secos, úmidos e de falhas. 
+
+```{r}
+## Extensão dos spells
+l_dry <- l_spell[i_dry]
+l_wet <- l_spell[i_wet]
+l_falha <- l_spell[i_falha]
+
+l_dry
+l_wet
+l_falha
+```
+
+Embora não seja muito fácil de visualizar, creio que valha a pena tentar entender os números apresentados acima, que representam os comprimentos dos `r length(l_dry)` períodos **secos**, `r length(l_wet)` períodos **úmidos** e `r length(l_falha)` períodos de **falhas**.
+
+Para deixar registrado os achados, vamos criar um `dataframe` com os resultados relacionados aos períodos secos. O nosso `dataframe` será denominado `dry_spell` e conterá as seguintes colunas: `ano`, `data_inicio_dry`, e `comprimento`.
+
+```{r construcao-dataframe-dry-spells}
+## Construção de um novo dataframe com os dados de dry spell
+data_inicio_dry <- Qd$Data[i_change[i_dry]] - l_dry
+dry_spell <- data.frame(ano = year(Qd$Data[i_change[i_dry]]),
+                        data_inicio_dry = Qd$Data[i_change[i_dry]],
+                        comprimento = l_dry)
+tibble(dry_spell)
+```
+  
+```{r plot-hist-dry-spell}
+ggplot(dry_spell, aes(x=comprimento)) + 
+  geom_density()
+
+```
+
+### Cálculo e análise do volume de deficit
+
+### Identificar veranicos
+
+
+
+
+### 
 ## Fontes de consulta
 
 - O site [Visualizing hydrologic data](https://tonyladson.wordpress.com/2018/12/02/visualising-hydrologic-data/), escrito por [Tony Ladson](https://tonyladson.wordpress.com/tests/), além de conter exemplos interessantes de plotagem em Hidrologia, disponibiliza os códigos usados na linguagem **R**.
