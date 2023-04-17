@@ -39,7 +39,6 @@ output:
   distill::distill_article:
     toc: true
 site: distill::distill_website
-
 ---
 
 ```{r setup, include=FALSE}
@@ -55,23 +54,22 @@ knitr::opts_chunk$set(echo = FALSE)
 
 ## Apresentação
 
-Este é um curso introdutório sobre a linguagem R para aqueles interessados em realizar análises hidrológicas. 
+Este é um curso introdutório sobre a linguagem R para aqueles interessados em realizar análises hidrológicas.
 
-O curso foi oferecido pela primeira vez durante a [Semana Universitária da Universidade de Brasília](http://dex.unb.br/semanaunb2022), que ocorreu entre os dias 29/08 e 02/09 de 2022.
-Em novembro do mesmo ano, o curso foi novamente ofertado, porém durante a Semana 19ª Semana de Ensino, Pesquisa, Extensão e Inovação - SEPEX/UFSC da UFSC.
+O curso foi oferecido pela primeira vez durante a [Semana Universitária da Universidade de Brasília](http://dex.unb.br/semanaunb2022), que ocorreu entre os dias 29/08 e 02/09 de 2022. Em novembro do mesmo ano, o curso foi novamente ofertado, porém durante a Semana 19ª Semana de Ensino, Pesquisa, Extensão e Inovação - SEPEX/UFSC da UFSC.
 
-Os alunos que venham a fazer este curso irão aprender como utilizar a linguagem R para executar um conjunto de atividades que permitirão realizar uma análise de frequência de cheias para uma estação fluviométrica, cujos dados serão automaticamente obtidos do webservice da Agência Nacional de Águas. 
+Os alunos que venham a fazer este curso irão aprender como utilizar a linguagem R para executar um conjunto de atividades que permitirão realizar uma análise de frequência de cheias para uma estação fluviométrica, cujos dados serão automaticamente obtidos do webservice da Agência Nacional de Águas.
 
-Ao final do curso, os alunos terão finalizado um estudo que permitirá relacionar a magnitude das vazões máximas anuais com sua probabilidade de excedência, relação primordial para dimensionameno de diversas estrutaras de engenharia, gestão do risco de cheias e para o oredenamento do uso e ocupação do solo. 
+Ao final do curso, os alunos terão finalizado um estudo que permitirá relacionar a magnitude das vazões máximas anuais com sua probabilidade de excedência, relação primordial para dimensionameno de diversas estrutaras de engenharia, gestão do risco de cheias e para o oredenamento do uso e ocupação do solo.
 
 A realização da análise de frequência de cheias é um fator motivador do curso, cujo foco é no aprendizado da linguagem **R**. Cursos com o foco em análise de frequência serão dados no futuro para aqueles que tenham interesse em se apronfudar no assunto.
 
 Este curso é o primeiro de um conjunto maior de cursos que estão sendo elaborados pelos seguintes professores do blog [Água e Modelagem](https://aguaemodelagem.wordpress.com), apresentados em ordem alfabética:
 
-- Dirceu S. Reis Jr. (UnB)
-- Francisco Eustáquio (UFMG)
-- Pedro Chaffe (UFSC)
-- Wilson Fernandes (UFMG) 
+-   Dirceu S. Reis Jr. (UnB)
+-   Francisco Eustáquio (UFMG)
+-   Pedro Chaffe (UFSC)
+-   Wilson Fernandes (UFMG)
 
 ## Previsão para os próximos cursos
 
@@ -85,11 +83,10 @@ Assim que tivermos a data da próxima realização do curso, colocaremos aqui ne
 
 O curso será dado na Sala 5 do Laboratório Central de Computação Científica da Faculdade de Tecnologia da Universidade de Brasília (LCCC ULEG-FT), que fica localizado no prédio da Unidade de Laboratórios de Ensino de Graduação da Faculdade de Tecnologia (ULEG/FT).
 
-O curso será dividido em 5 aulas de 2 horas cada, totalizando 10 horas. As aulas
-serão dadas  nos seguintes horários:
+O curso será dividido em 5 aulas de 2 horas cada, totalizando 10 horas. As aulas serão dadas nos seguintes horários:
 
-- 29/08 a 01/09 das 8h00 às 10h00
-- 02/09 das 12h00 às 14h00. 
+-   29/08 a 01/09 das 8h00 às 10h00
+-   02/09 das 12h00 às 14h00.
 
 #### Inscrições
 
@@ -99,11 +96,10 @@ Como o número de vagas é limitado, recomenda-se que a inscrição seja feita o
 
 #### Antes do curso
 
-Os computadores da sala onde será ministrado o curso já tem os programas instalados. De todo modo, para que seja possível trabalhar fora do horario do curso, sugerimos que os participantes tenham os mesmos programas instalados em seu própio computador. 
+Os computadores da sala onde será ministrado o curso já tem os programas instalados. De todo modo, para que seja possível trabalhar fora do horario do curso, sugerimos que os participantes tenham os mesmos programas instalados em seu própio computador.
 
 Sugerimos instalar tanto o **R** quanto o **RStudio**. Para isso, entre na aula **Conceitos Básicos em R** e siga as instruções de instalação.
 
 #### Códigos em **R** das aulas dadas
 
 Alguns scripts desenvolvidos durante as aula spodem ser encontrados [aqui](aulas_anteriores/aula_semana_universitaria_2022.R).
-   
