@@ -27,6 +27,7 @@ author:
     url: https://github.com/rich-iannone
     affiliation: Mestrando PTARH/UnB
     affiliation_url: http://ptarh.unb.br/
+    orcid_id: 0000-0003-1307-3885 
   - name: "Saulo AIres de Souza"
     affiliation: Agência Nacional de Águas e Saneamento Básico (ANA)
     affiliation_url: https://www.gov.br/ana/pt-br
