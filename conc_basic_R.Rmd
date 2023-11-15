@@ -39,7 +39,7 @@ Mas para não fugir da pergunta, seguem abaixo alguns motivos para usar a lingua
 
 ### Instalação do programa
 
-Os computadores da sala de aula do curso já têm instalado o **R**, assim como o **RStudio**. Entretanto, para que você possa se desenvolver rapidamente na linguagem, é muito importante que você tenha acesso a esses programs fora do horário do curso, ou apos a Semana Universitária. 
+Os computadores da sala de aula do curso já têm instalado o **R**, assim como o **RStudio**. Entretanto, para que você possa se desenvolver rapidamente na linguagem, é muito importante que você tenha acesso a esses programs fora do horário do curso, ou após a Semana Universitária. 
 
 Dessa forma, sugerimos que você instale os dois programas no seu computador pessoal seguindo as instruções fornecidas nos links abaixo. 
 
@@ -51,7 +51,11 @@ urlRstudio <- "https://rstudio.com/wp-content/uploads/2018/10/RStudio-Logo-Flat.
 
 Download de 2 programas: **R** e **RStudio**
 
-- <a href="https://cran.r-project.org/bin/windows/base/"> R </a>
+- <a href="https://cran.r-project.org/bin/windows/base/"> R para Windows </a>
+
+<center><img src="`r urlR`" height="100"></center>
+
+- <a href="https://cran.r-project.org/"> R para MacOS ou Linux </a>
 
 <center><img src="`r urlR`" height="100"></center>
 
@@ -59,7 +63,7 @@ Download de 2 programas: **R** e **RStudio**
 
 <center><img src="`r urlRstudio`" height="100"></center>
 
-*<font size="5">RStudio é uma plataforma com inúmeras ferramentas úteis e que roda a linguagem R. É possível usar só o R por sua interface, mas só é possível usar o RStudio com o R instalado na máquina.</font>*
+*<font size="5"> O RStudio é uma plataforma com inúmeras ferramentas úteis e que roda a linguagem R. É possível usar só o R por sua interface, mas só é possível usar o RStudio com o R instalado na máquina. Por isso, recomenda-se baixar primeiro o R e depois o RStudio. </font>*
 
 ### Interface do R e RStudio
 
@@ -80,7 +84,7 @@ Os dois comandos abaixo ajudam nesse processo:
 
 - `getwd()`: informa em qual diretório você está fazendo suas atividades;
 - `setwd()`: define um diretório de trabalho onde seus *scripts* ficarão alojados;
-- `dir()`: informa quais arquivos estão contidos nesse diretório;
+- `dir()` ou list.files()`: informa quais arquivos estão contidos nesse diretório;
 - `source()`: vai puxar e rodar um arquivo **R** com esse nome que está no diretório;
 
 ```{r primeiros_passos_1, echo = TRUE}
@@ -90,9 +94,9 @@ Os dois comandos abaixo ajudam nesse processo:
 #source("soma.R")
 ```
 
-O **R** pode ser utilizável como uma calculadora, com os operadores aritméticos que se conhece, embora os benefícios da linguagem vai mito além dos de uma simples calculadora. 
+O **R** pode ser utilizável como uma calculadora, com os operadores aritméticos que se conhece, embora os benefícios da linguagem vão muito além dos de uma simples calculadora. 
 
-MAs vamos começar pelas operações básicas da matemática. Para multiplicação utilizamos `*`, para divisão `/`, para expoentes `^` e para raiz quadrada usamos `sqrt()` - do inglês *square root*.
+Mas vamos começar pelas operações básicas da matemática. Para multiplicação utilizamos o símbolo `*`, para divisão `/`, para expoentes `^` e para raiz quadrada usamos `sqrt()` - do inglês *square root*.
 
 ```{r primeiros_passos_2, echo = TRUE}
 1 + 2
@@ -114,7 +118,7 @@ MAs vamos começar pelas operações básicas da matemática. Para multiplicaç�
 sqrt(9)
 ```
 
-O R trabalha igualmente com vetores e escalares. ABaixo, criamos e somamos dois vetores,
+O R trabalha igualmente com vetores e escalares. Abaixo, criamos e somamos dois vetores por exemplo.
 
 ```{r primeiros_passos_7, echo = TRUE}
 c(1, 3, 5, 7, 9) + c(2, 4, 6, 8, 10)
@@ -160,9 +164,9 @@ x
 ```
 
 Alguns dos operadores que existem no R são: `<-`, `=` e `==`.
-Como já comentado, os operadores `<-` e `=` podem ser usados para atribuir valores a variáveis/objetos, mas recomendamos utilizar smepre o `<-` porque o `=` também  serve para outras coisas (falaremos disso mais a frente quando formos criar funções!). 
+Como já comentado, os operadores `<-` e `=` podem ser usados para atribuir valores a variáveis/objetos, mas recomendamos utilizar sempre o `<-` porque o `=` também  serve para outras coisas (falaremos disso mais a frente quando formos criar funções!). 
 
-Já o símbolo `==` funciona para avaliar uma igualdade e não para atribuir um valor a um elemento do R. QUando utilizamos `==`, o **R** retorna uma variável lógica, podendo ser `TRUE` ou `FALSE`. Por exemplo:
+Já o símbolo `==` funciona para avaliar uma igualdade e não para atribuir um valor a um elemento do R. Quando utilizamos `==`, o **R** retorna uma variável lógica, podendo ser `TRUE` (verdadeiro) ou `FALSE` (falso). Por exemplo:
 
 ```{r criar_var_4, echo = TRUE}
 x = 2
@@ -171,7 +175,7 @@ x == 2
 
 A segunda linha de código acima pode ser interpretada como uma pergunta que fazemos ao **R**, `x` é igual a 2? E ele responde em termos de `TRUE` ou `FALSE`. 
 
-Como neste momento, `x=2`, se perguntarmos, `x` é igua a 3? Qual deve ser a resposta?
+Como neste momento, `x=2`, se perguntarmos se `x` é igual a 3, qual deve ser a resposta?
 
 ```{r criar_var_5, echo = TRUE}
 x == 3
@@ -205,7 +209,7 @@ Existem diversas **classes** de objetos dentro do **R**, alguns dos principais t
 - Fator (classes);
 - Lógico (`TRUE/FALSE`).
 
-Para sabermos a classe de um objeto, podemos utilizar uma função interna do **R** chamada `class()`. Usualmente, as funções vão sempre terminar com um parêntesis `()`, sendo que dentro dele incluímos os argumentos da função - o que ela precisa (nesse caso, o nome do objeto). Mais `a frente no curso, falaremos com maiores detalhes sobre esses argumentos, funções em geral, e até mesmo como criar sua própria função.
+Para sabermos a classe de um objeto, podemos utilizar uma função interna do **R** chamada `class()`. Usualmente, as funções vão sempre terminar com um parêntesis `()`, sendo que dentro dele incluímos os argumentos da função - o que ela precisa (nesse caso, o nome do objeto). Mais à frente no curso, falaremos com maiores detalhes sobre esses argumentos, funções em geral e até mesmo como criar sua própria função.
 
 ```{r objetos_1, echo = TRUE}
 x <- 2
@@ -261,6 +265,18 @@ x
 table(x)
 ```
 
+Não apenas isso, mas podemos também ordenar essas classes de alguma forma, utilizando o argumento `levels =` para definir quais são os níveis e o argumento `ordered = TRUE` para mostrar que há ordem nos níveis pré-definidos.
+
+```{r fatores_2, echo = TRUE}
+y <- factor(c("normal", "atenção", "alerta", "inundação",
+              "inundação severa", "inundação", "atenção",
+              "normal", "inundação", "normal", "alerta"),
+            levels = c("normal", "atenção", "alerta", "inundação", "inundação severa"),
+            ordered = T)
+y
+```
+
+
 ### Coerção de variáveis
 
 Quando se tem diferentes tipos de classes dentro de um vetor, é feita uma coerção automática para que tudo fique com a mesma classe. Dessa forma, ao criar um vetor contendo dados do tipo caractere e numérico, o **R** supõe que todas as informações eram para ser do tipo caractere:
@@ -300,7 +316,7 @@ class(x)
 
 ### Sequências
 
-Para criar vetores sequenciais podemos fazer manualmente.
+Podemos criar vetores sequenciais manualmente ao escrever o vetor que queremos com todos seus elementos.
 
 ```{r seq_1, echo = TRUE}
 x <- c(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
@@ -352,7 +368,9 @@ x <- c(1:5)
 sqrt(2*x/4)
 ```
 
-É possível inclusive fazer operações entre vetores. Porém, caso os vetores não sejam do mesmo tamanho teremos um problema ao fazer a operação elemento a elemento (vai acabar faltando algum). O **R**, nesse caso, vai fazer a operação até onde ele conseguir e irá retornar uma mensagem de aviso (*Warning*) - mas a conta será feita! Abaixo tentamos somar os vetores `x` e `y`. Como o vetor `y` tem um elemento a menos que `x`, a soma vai ser feita normalmente para os primeiros 4 elementos de `x`, ao fazer o quinto, porém, o **R** vai voltar ao inicio do `y` - somando então o quinto elemento de `x` com o primeiro do `y`.
+É possível inclusive fazer operações entre vetores. Porém, caso os vetores não sejam do mesmo tamanho teremos um problema ao fazer a operação elemento a elemento (vai acabar faltando algum). O **R**, nesse caso, vai fazer a operação até onde ele conseguir e irá retornar uma mensagem de aviso (*Warning*) - mas a conta será feita!
+
+Abaixo tentamos somar os vetores `x` e `y`. Como o vetor `y` tem um elemento a menos que `x`, a soma vai ser feita normalmente para os primeiros 4 elementos de `x`, ao fazer o quinto, porém, o **R** vai voltar ao inicio do `y` - somando então o quinto elemento de `x` com o primeiro do `y`.
 
 ```{r operacao_vet_3, echo = TRUE}
 y <- c(1:4)
@@ -365,17 +383,24 @@ Podemos misturar essas operações com o *indexing* comentado anteriormente. Por
 x > 6
 ```
 
-Se quiser saber quantos valores dentro do meu vetor são maiores do que 6, ao invés de contar na mão posso usar a função `sum()`! Isso acontece porque os valores lógicos também funcionam como número, valores `TRUE` são equivalentes a 1 e valores `FALSE` são iguais a 0. Assim somando os valores `TRUE`, conseguimos saber quantos números dentro do vetor `x` são maiores que 6.
+Se quiser saber quantos valores dentro do meu vetor são maiores do que 4, ao invés de contar na mão posso usar a função `sum()`! Isso acontece porque os valores lógicos também funcionam como números, os valores `TRUE` são equivalentes a 1 e valores `FALSE` são iguais a 0. Assim somando os valores `TRUE`, conseguimos saber quantos números dentro do vetor `x` são maiores que 4.
 
 ```{r operacao_vet_5, echo = TRUE}
-sum(x > 6)
+sum(x > 4)
 ```
 
-Abaixo, fazemos quais são os valores desse vetor que são maiores do que 6.
+Abaixo, fazemos quais são os valores desse vetor que são maiores do que 4.
 
 ```{r operacao_vet_6, echo = TRUE}
-x[x > 6]
+x[x > 4]
 ```
+
+Também podemos juntar diversos operadores lógicos com os símbolos de `&` (E) e `|` (OU). Por exemplo, queremos saber quais elementos do vetor `x` são maiores do que 2 E menores que 4.
+ 
+```{r operacao_vet_7, echo = TRUE}
+x > 2 & x < 4
+```
+
 
 ## Outros tipos de dados (Data Frames, matrizes e listas)
 
@@ -502,7 +527,7 @@ Uma coisa essencial em qualquer linguagem de programação é a criação e util
 log(10)
 ```
 
-Para saber o que é preciso colocar dentro dos parênteses, ou seja, quais os argumentos (*inputs*) que cada função toma, podemos utilizar a função `args()`. Usando ela com o log (dessa vez sem parênteses) dentro, podemos ver que a função toma dois argumentos: o `x` (valor em que se calcula o logaritmo) e a `base` que já vem com um valor definido de exponencial. Para se ter mais informações sobre alguma função, podemos, além de usar `args()` utilizar uma interrogação anterior ao nome da função (sem parêntesis), ou usar a função `help()`. Essas duas últimas opções são equivalentes e nos mostram a documentação feita para essa função no **R**.
+Para saber o que é preciso colocar dentro dos parênteses, ou seja, quais os argumentos (ou *inputs*) que cada função toma, podemos utilizar a função `args()`. Usando ela com o log (dessa vez sem parênteses) dentro, podemos ver que a função toma dois argumentos: o `x` (valor em que se calcula o logaritmo) e a `base` que já vem com um valor definido de exponencial. Para se ter mais informações sobre alguma função, podemos, além de usar `args()` utilizar uma interrogação anterior ao nome da função (sem parêntesis), ou usar a função `help()`. Essas duas últimas opções são equivalentes e nos mostram a documentação feita para essa função no **R**.
 
 ```{r funcoes_2, echo = TRUE, eval = FALSE}
 args(log)
@@ -510,7 +535,9 @@ args(log)
 help(log)
 ```
 
-O segundo argumento do `log()` pode ser modificado, basta deixar ele explícito ao chamar a função. Não precisamos escrever qual argumento estamos utilizando desde que se siga a ordem da função (mostrada anteriormente). Caso se queira escrever os argumentos em outra ordem, é possível, mas é necessário escrever cada um deles. Veja melhor o exemplo abaixo. O primeiro não definimos a base, portanto é usada a pré definida (exponencial). No segundo log feito, não escrevemos qual a base e qual o número que queremos o logaritmo, portanto o **R** assume que estamos escrevendo na ordem da função, que toma como primeiro argumento o valor e o segundo argumento a base. No terceiro exemplo trocamos as ordens dos argumentos, mas para isso precisamos deixar explícito (escrito) quem é cada um.
+O segundo argumento do `log()` pode ser modificado, basta deixar ele explícito ao chamar a função. Não precisamos escrever qual argumento estamos utilizando desde que se siga a ordem da função (mostrada anteriormente). Caso se queira escrever os argumentos em outra ordem, é possível, mas é necessário escrever cada um deles.
+
+Veja melhor o exemplo abaixo. O primeiro não definimos a base, portanto é usada a pré definida (exponencial). No segundo log feito, não escrevemos qual a base e qual o número que queremos o logaritmo, portanto o **R** assume que estamos escrevendo na ordem da função, que toma como primeiro argumento o valor e o segundo argumento a base. No terceiro exemplo trocamos as ordens dos argumentos, mas para isso precisamos deixar explícito (escrito) quem é cada um.
 
 ```{r funcoes_3, echo = TRUE}
 log(100)
@@ -518,7 +545,7 @@ log(100, 10)
 log(base = 10, x = 100)
 ```
 
-Agora vamos fazer nossa própria função dentro do **R**. Para isso, primeiro definimos um nome para ser o nome da função (como fizemos com criação de variáveis / objetos), por exemplo "fun_area_circulo". Em seguida devemos dizer que vamos criar uma função e quais os argumentos que ela toma. Para fazer o exemplo, a área de um círculo, precisamos apenas de uma informação - o raio desse círculo. Podemos fazer quantas operações quisermos dentro da função, no final o último valor será retornado por ela (podemos deixar isso explícito escrevendo `return`) nela. Depois chamamos ela como qualquer outra função!
+Agora vamos fazer nossa própria função dentro do **R**. Para isso, primeiro definimos um nome para ser o nome da função (como fizemos com criação de variáveis / objetos), por exemplo "fun_area_circulo". Em seguida devemos dizer que vamos criar uma função e quais os argumentos que ela toma. Para fazer o exemplo, a área de um círculo, precisamos apenas de uma informação - o raio desse círculo. Podemos fazer quantas operações quisermos dentro da função, no final o último valor será retornado por ela (podemos deixar isso explícito escrevendo `return` nela). Depois chamamos ela como qualquer outra função!
 
 ```{r funcoes_4, echo = TRUE}
 fun_area_circulo <- function(raio){
@@ -531,7 +558,7 @@ fun_area_circulo(5)
 
 ### Estruturas condicionais (ifelse)
 
-Em programação, algo extremamente importante e útil são os comandos `if` e `else` (*e* / *se*). Com esses comandos, é possível rodar um código apenas se uma condição for cumprida. Esse comando no **R** funciona similar a uma função, sendo então o `ifelse()` (tudo junto!), e toma três argumentos - um lógico (uma condição), o que fazer se o lógico for `TRUE` e o que fazer se o lógico for `FALSE`. Abaixo fazemos um exemplo utilizando o `ifelse` para verificar se o `X` é maior ou menor do que 100.
+Em programação, algo extremamente importante e útil são os comandos `if` e `else` (*e* / *se*). Com esses comandos, é possível rodar um pedaço de código apenas se uma condição for cumprida. Esse comando no **R** funciona similar a uma função, sendo então o `ifelse()` (tudo junto!), e toma três argumentos - um lógico (uma condição), o que fazer se o lógico for `TRUE` e o que fazer se o lógico for `FALSE`. Abaixo fazemos um exemplo utilizando o `ifelse` para verificar se o `X` é maior ou menor do que 100.
 
 ```{r ifelse_1, echo = TRUE}
 x <- 10
@@ -557,7 +584,7 @@ A última coisa a se falar do **R** "básico" é a construção de *loops*. Eles
 
 #### for
 
-O `for()` utiliza 2 argumentos. O primeiro fala qua objeto vai ser iterado várias vezes, e o outro a faixa de valores (quantas vezes ele vai ser iterado praticamente). No exemplo abaixo vamos por exemplo variar o `i` (criado dentro do próprio *loop*) na sequência de 1 até 5. Isso é o mais importante desse tipo de *loop*, **precisamos** saber quantas vezes (`1:5`) iterar essa variável (nesse caso `i`). O resto da função é simplesmente o que vai ser iterado. No exemplo abaixo apenas printamos o valor de `i` quando ele varia de 1 a 5.
+O `for()` utiliza 2 argumentos separados por `in`. O primeiro fala qual objeto vai ser iterado várias vezes, e o outro a faixa de valores (quantas vezes ele vai ser iterado praticamente). No exemplo abaixo vamos por exemplo variar o `i` (criado dentro do próprio *loop*) na sequência de 1 até 5. Isso é o mais importante desse tipo de *loop*, **precisamos** saber quantas vezes (`1:5`) iterar essa variável (nesse caso `i`). O resto da função é simplesmente o que vai ser iterado. No exemplo abaixo apenas printamos o valor de `i` quando ele varia de 1 a 5.
 
 ```{r loops_for_1, echo = TRUE}
 for(i in 1:5){
