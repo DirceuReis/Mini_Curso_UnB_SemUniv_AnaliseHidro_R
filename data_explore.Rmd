@@ -188,28 +188,10 @@ hist(dados_60435000$Vazao,xlim = c(0, 40))
 rug(jitter(dados_60435000$Vazao))
 ```
 
-## Caracterização da distribuição
-
-### Diagramas de caixa (*boxplot*)
-
-### Histograma
-
-### Funções de densidade
-
-## Frequência amostral
-
-## Curva de permanência
-
-## Avaliação de tendência monotônica
-
-## Medidas de associação
-=======
 
 ## Caracterização gráfica com ggplot2
 
 Diferentemente dos gráficos que podem ser feitos no **R base** (sem pacotes adicionais), o **ggplot2** atua um pouco diferente na forma em que é chamado. Por exemplo, se quisesse fazer um gráfico da série histórica da estação **60435000**, poderíamos fazer sem pacotes.
-
-
 
 Já com a função `ggplot()` não adianta apenas definirmos em quem iremos mexer. Dentro dessa função existe um argumento chamado de **aes**. Ele vem do inglês, *aesthetics* e, como o nome diz, reflete a estética do gráfico, o que você vai mexer nele (cores, pontos, linhas...). Se chamarmos apenas o `ggplot()` com o argumento **aes** definido, nada será plotado, mas veremos os eixos e as grades (imagem abaixo). Lembrar que esses plots aparecerão no **RStudio** no canto inferior direito.
 
@@ -230,7 +212,6 @@ ggplot() +
 ggplot(data = dados_60435000, aes(x = Data, y = Vazao)) +
   geom_line()
 ```
-
 Similar ao **R base**, podemos mexer em todos os aspectos gráficos aqui, como a cor dos pontos e o tema (***theme***). Esse tema refere a todos os detalhes gráficos (qual o tamanho das linhas do gráfico, tamanho das letras, do título, qual fonte...). Já existem diversos temas pré-programados com o ggplot2, como o tema *bw*
  (*black and white*, ou preto e branco).
  
