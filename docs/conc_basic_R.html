@@ -2243,7 +2243,7 @@ R in Hydrology </a>, Slater, et al., Hydrol. Earth Syst. Sci., 23,
 <strong>R</strong>, assim como o <strong>RStudio</strong>. Entretanto,
 para que você possa se desenvolver rapidamente na linguagem, é muito
 importante que você tenha acesso a esses programs fora do horário do
-curso, ou apos a Semana Universitária.</p>
+curso, ou após a Semana Universitária.</p>
 <p>Dessa forma, sugerimos que você instale os dois programas no seu
 computador pessoal seguindo as instruções fornecidas nos links
 abaixo.</p>
@@ -2253,7 +2253,15 @@ abaixo.</p>
 <p>Download de 2 programas: <strong>R</strong> e
 <strong>RStudio</strong></p>
 <ul>
-<li><a href="https://cran.r-project.org/bin/windows/base/"> R </a></li>
+<li><a href="https://cran.r-project.org/bin/windows/base/"> R para
+Windows </a></li>
+</ul>
+<center>
+<img src="https://www.r-project.org/logo/Rlogo.png" height="100">
+</center>
+<ul>
+<li><a href="https://cran.r-project.org/"> R para MacOS ou Linux
+</a></li>
 </ul>
 <center>
 <img src="https://www.r-project.org/logo/Rlogo.png" height="100">
@@ -2265,10 +2273,11 @@ abaixo.</p>
 <center>
 <img src="https://rstudio.com/wp-content/uploads/2018/10/RStudio-Logo-Flat.png" height="100">
 </center>
-<p><em><font size="5">RStudio é uma plataforma com inúmeras ferramentas
-úteis e que roda a linguagem R. É possível usar só o R por sua
-interface, mas só é possível usar o RStudio com o R instalado na
-máquina.</font></em></p>
+<p><em><font size="5"> O RStudio é uma plataforma com inúmeras
+ferramentas úteis e que roda a linguagem R. É possível usar só o R por
+sua interface, mas só é possível usar o RStudio com o R instalado na
+máquina. Por isso, recomenda-se baixar primeiro o R e depois o RStudio.
+</font></em></p>
 <h3 id="interface-do-r-e-rstudio">Interface do R e RStudio</h3>
 <p>Abaixo temos a interface do <strong>R</strong> quando o baixamos. Ele
 é de fato o programa que rodamos e programamos com ele.
@@ -2293,8 +2302,8 @@ do seu computador.</p>
 suas atividades;</li>
 <li><code>setwd()</code>: define um diretório de trabalho onde seus
 <em>scripts</em> ficarão alojados;</li>
-<li><code>dir()</code>: informa quais arquivos estão contidos nesse
-diretório;</li>
+<li><code>dir()</code> ou list.files()`: informa quais arquivos estão
+contidos nesse diretório;</li>
 <li><code>source()</code>: vai puxar e rodar um arquivo
 <strong>R</strong> com esse nome que está no diretório;</li>
 </ul>
@@ -2308,11 +2317,11 @@ diretório;</li>
 </div>
 <p>O <strong>R</strong> pode ser utilizável como uma calculadora, com os
 operadores aritméticos que se conhece, embora os benefícios da linguagem
-vai mito além dos de uma simples calculadora.</p>
-<p>MAs vamos começar pelas operações básicas da matemática. Para
-multiplicação utilizamos <code>*</code>, para divisão <code>/</code>,
-para expoentes <code>^</code> e para raiz quadrada usamos
-<code>sqrt()</code> - do inglês <em>square root</em>.</p>
+vão muito além dos de uma simples calculadora.</p>
+<p>Mas vamos começar pelas operações básicas da matemática. Para
+multiplicação utilizamos o símbolo <code>*</code>, para divisão
+<code>/</code>, para expoentes <code>^</code> e para raiz quadrada
+usamos <code>sqrt()</code> - do inglês <em>square root</em>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fl'>1</span> <span class='op'>+</span> <span class='fl'>2</span></span></code></pre>
@@ -2343,8 +2352,8 @@ para expoentes <code>^</code> e para raiz quadrada usamos
 </div>
 <pre><code>[1] 3</code></pre>
 </div>
-<p>O R trabalha igualmente com vetores e escalares. ABaixo, criamos e
-somamos dois vetores,</p>
+<p>O R trabalha igualmente com vetores e escalares. Abaixo, criamos e
+somamos dois vetores por exemplo.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>5</span>, <span class='fl'>7</span>, <span class='fl'>9</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>6</span>, <span class='fl'>8</span>, <span class='fl'>10</span><span class='op'>)</span></span></code></pre>
@@ -2415,13 +2424,14 @@ valor, como no exemplo abaixo,</p>
 <p>Alguns dos operadores que existem no R são: <code>&lt;-</code>,
 <code>=</code> e <code>==</code>. Como já comentado, os operadores
 <code>&lt;-</code> e <code>=</code> podem ser usados para atribuir
-valores a variáveis/objetos, mas recomendamos utilizar smepre o
+valores a variáveis/objetos, mas recomendamos utilizar sempre o
 <code>&lt;-</code> porque o <code>=</code> também serve para outras
 coisas (falaremos disso mais a frente quando formos criar funções!).</p>
 <p>Já o símbolo <code>==</code> funciona para avaliar uma igualdade e
-não para atribuir um valor a um elemento do R. QUando utilizamos
+não para atribuir um valor a um elemento do R. Quando utilizamos
 <code>==</code>, o <strong>R</strong> retorna uma variável lógica,
-podendo ser <code>TRUE</code> ou <code>FALSE</code>. Por exemplo:</p>
+podendo ser <code>TRUE</code> (verdadeiro) ou <code>FALSE</code>
+(falso). Por exemplo:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>=</span> <span class='fl'>2</span></span>
@@ -2432,8 +2442,8 @@ podendo ser <code>TRUE</code> ou <code>FALSE</code>. Por exemplo:</p>
 <p>A segunda linha de código acima pode ser interpretada como uma
 pergunta que fazemos ao <strong>R</strong>, <code>x</code> é igual a 2?
 E ele responde em termos de <code>TRUE</code> ou <code>FALSE</code>.</p>
-<p>Como neste momento, <code>x=2</code>, se perguntarmos, <code>x</code>
-é igua a 3? Qual deve ser a resposta?</p>
+<p>Como neste momento, <code>x=2</code>, se perguntarmos se
+<code>x</code> é igual a 3, qual deve ser a resposta?</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>==</span> <span class='fl'>3</span></span></code></pre>
@@ -2479,8 +2489,8 @@ diferente de 2,</p>
 interna do <strong>R</strong> chamada <code>class()</code>. Usualmente,
 as funções vão sempre terminar com um parêntesis <code>()</code>, sendo
 que dentro dele incluímos os argumentos da função - o que ela precisa
-(nesse caso, o nome do objeto). Mais `a frente no curso, falaremos com
-maiores detalhes sobre esses argumentos, funções em geral, e até mesmo
+(nesse caso, o nome do objeto). Mais à frente no curso, falaremos com
+maiores detalhes sobre esses argumentos, funções em geral e até mesmo
 como criar sua própria função.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2579,6 +2589,25 @@ Levels: alerta atenção inundação inundação severa normal</code></pre>
           normal 
                3 </code></pre>
 </div>
+<p>Não apenas isso, mas podemos também ordenar essas classes de alguma
+forma, utilizando o argumento <code>levels =</code> para definir quais
+são os níveis e o argumento <code>ordered = TRUE</code> para mostrar que
+há ordem nos níveis pré-definidos.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normal"</span>, <span class='st'>"atenção"</span>, <span class='st'>"alerta"</span>, <span class='st'>"inundação"</span>,</span>
+<span>              <span class='st'>"inundação severa"</span>, <span class='st'>"inundação"</span>, <span class='st'>"atenção"</span>,</span>
+<span>              <span class='st'>"normal"</span>, <span class='st'>"inundação"</span>, <span class='st'>"normal"</span>, <span class='st'>"alerta"</span><span class='op'>)</span>,</span>
+<span>            levels <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normal"</span>, <span class='st'>"atenção"</span>, <span class='st'>"alerta"</span>, <span class='st'>"inundação"</span>, <span class='st'>"inundação severa"</span><span class='op'>)</span>,</span>
+<span>            ordered <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span></span>
+<span><span class='va'>y</span></span></code></pre>
+</div>
+<pre><code> [1] normal           atenção          alerta          
+ [4] inundação        inundação severa inundação       
+ [7] atenção          normal           inundação       
+[10] normal           alerta          
+5 Levels: normal &lt; atenção &lt; alerta &lt; ... &lt; inundação severa</code></pre>
+</div>
 <h3 id="coerção-de-variáveis">Coerção de variáveis</h3>
 <p>Quando se tem diferentes tipos de classes dentro de um vetor, é feita
 uma coerção automática para que tudo fique com a mesma classe. Dessa
@@ -2649,7 +2678,8 @@ valor <code>NA</code> (<em>Not Available</em>):</p>
 <pre><code>[1] &quot;numeric&quot;</code></pre>
 </div>
 <h3 id="sequências">Sequências</h3>
-<p>Para criar vetores sequenciais podemos fazer manualmente.</p>
+<p>Podemos criar vetores sequenciais manualmente ao escrever o vetor que
+queremos com todos seus elementos.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>, <span class='fl'>5</span>, <span class='fl'>6</span>, <span class='fl'>7</span>, <span class='fl'>8</span>, <span class='fl'>9</span>, <span class='fl'>10</span><span class='op'>)</span></span>
@@ -2734,13 +2764,13 @@ vetores não sejam do mesmo tamanho teremos um problema ao fazer a
 operação elemento a elemento (vai acabar faltando algum). O
 <strong>R</strong>, nesse caso, vai fazer a operação até onde ele
 conseguir e irá retornar uma mensagem de aviso (<em>Warning</em>) - mas
-a conta será feita! Abaixo tentamos somar os vetores <code>x</code> e
-<code>y</code>. Como o vetor <code>y</code> tem um elemento a menos que
-<code>x</code>, a soma vai ser feita normalmente para os primeiros 4
-elementos de <code>x</code>, ao fazer o quinto, porém, o
-<strong>R</strong> vai voltar ao inicio do <code>y</code> - somando
-então o quinto elemento de <code>x</code> com o primeiro do
-<code>y</code>.</p>
+a conta será feita!</p>
+<p>Abaixo tentamos somar os vetores <code>x</code> e <code>y</code>.
+Como o vetor <code>y</code> tem um elemento a menos que <code>x</code>,
+a soma vai ser feita normalmente para os primeiros 4 elementos de
+<code>x</code>, ao fazer o quinto, porém, o <strong>R</strong> vai
+voltar ao inicio do <code>y</code> - somando então o quinto elemento de
+<code>x</code> com o primeiro do <code>y</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>)</span></span>
@@ -2760,25 +2790,35 @@ para cada elemento do vetor.</p>
 <pre><code>[1] FALSE FALSE FALSE FALSE FALSE</code></pre>
 </div>
 <p>Se quiser saber quantos valores dentro do meu vetor são maiores do
-que 6, ao invés de contar na mão posso usar a função <code>sum()</code>!
-Isso acontece porque os valores lógicos também funcionam como número,
-valores <code>TRUE</code> são equivalentes a 1 e valores
+que 4, ao invés de contar na mão posso usar a função <code>sum()</code>!
+Isso acontece porque os valores lógicos também funcionam como números,
+os valores <code>TRUE</code> são equivalentes a 1 e valores
 <code>FALSE</code> são iguais a 0. Assim somando os valores
 <code>TRUE</code>, conseguimos saber quantos números dentro do vetor
-<code>x</code> são maiores que 6.</p>
+<code>x</code> são maiores que 4.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>&gt;</span> <span class='fl'>6</span><span class='op'>)</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>&gt;</span> <span class='fl'>4</span><span class='op'>)</span></span></code></pre>
 </div>
-<pre><code>[1] 0</code></pre>
+<pre><code>[1] 1</code></pre>
 </div>
 <p>Abaixo, fazemos quais são os valores desse vetor que são maiores do
-que 6.</p>
+que 4.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
-<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span><span class='op'>[</span><span class='va'>x</span> <span class='op'>&gt;</span> <span class='fl'>6</span><span class='op'>]</span></span></code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span><span class='op'>[</span><span class='va'>x</span> <span class='op'>&gt;</span> <span class='fl'>4</span><span class='op'>]</span></span></code></pre>
 </div>
-<pre><code>integer(0)</code></pre>
+<pre><code>[1] 5</code></pre>
+</div>
+<p>Também podemos juntar diversos operadores lógicos com os símbolos de
+<code>&amp;</code> (E) e <code>|</code> (OU). Por exemplo, queremos
+saber quais elementos do vetor <code>x</code> são maiores do que 2 E
+menores que 4.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&gt;</span> <span class='fl'>2</span> <span class='op'>&amp;</span> <span class='va'>x</span> <span class='op'>&lt;</span> <span class='fl'>4</span></span></code></pre>
+</div>
+<pre><code>[1] FALSE FALSE  TRUE FALSE FALSE</code></pre>
 </div>
 <h2 id="outros-tipos-de-dados-data-frames-matrizes-e-listas">Outros
 tipos de dados (Data Frames, matrizes e listas)</h2>
@@ -2927,17 +2967,17 @@ duas dimensões:</p>
 <span><span class='va'>uniao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span></span>
 <span><span class='va'>uniao</span></span></code></pre>
 </div>
-<pre><code>       x         y
- [1,]  1 14.330649
- [2,]  2  5.247630
- [3,]  3 10.666094
- [4,]  4  8.190922
- [5,]  5  2.496701
- [6,]  6 13.020534
- [7,]  7 14.467861
- [8,]  8 10.327158
- [9,]  9 16.906575
-[10,] 10  4.898064</code></pre>
+<pre><code>       x          y
+ [1,]  1  7.7330320
+ [2,]  2  9.1928844
+ [3,]  3 14.2197264
+ [4,]  4 -0.3135483
+ [5,]  5  8.4014092
+ [6,]  6 10.7283991
+ [7,]  7  7.5505504
+ [8,]  8 16.5609138
+ [9,]  9  0.8132342
+[10,] 10 13.2437348</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>uniao</span><span class='op'>)</span></span></code></pre>
 </div>
@@ -2953,11 +2993,11 @@ duas dimensões:</p>
 <span><span class='va'>uniao</span></span></code></pre>
 </div>
 <pre><code>      [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]
-x  1.00000  2.00000  3.00000  4.00000 5.000000  6.00000  7.00000
-y 16.66469 13.25397 24.96667 22.72947 8.887997 18.19725 21.39323
+x  1.00000  2.00000  3.00000  4.00000  5.00000  6.00000  7.00000
+y 24.98981 24.18452 12.43958 16.50373 20.60246 18.31887 20.43454
       [,8]     [,9]    [,10]
 x  8.00000  9.00000 10.00000
-y 24.76072 16.37339 22.91059</code></pre>
+y 14.68244 25.20016 13.98503</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>uniao</span><span class='op'>)</span></span></code></pre>
 </div>
@@ -3025,7 +3065,7 @@ queremos.</p>
 <pre><code>[1] 2.302585</code></pre>
 </div>
 <p>Para saber o que é preciso colocar dentro dos parênteses, ou seja,
-quais os argumentos (<em>inputs</em>) que cada função toma, podemos
+quais os argumentos (ou <em>inputs</em>) que cada função toma, podemos
 utilizar a função <code>args()</code>. Usando ela com o log (dessa vez
 sem parênteses) dentro, podemos ver que a função toma dois argumentos: o
 <code>x</code> (valor em que se calcula o logaritmo) e a
@@ -3046,14 +3086,14 @@ essa função no <strong>R</strong>.</p>
 deixar ele explícito ao chamar a função. Não precisamos escrever qual
 argumento estamos utilizando desde que se siga a ordem da função
 (mostrada anteriormente). Caso se queira escrever os argumentos em outra
-ordem, é possível, mas é necessário escrever cada um deles. Veja melhor
-o exemplo abaixo. O primeiro não definimos a base, portanto é usada a
-pré definida (exponencial). No segundo log feito, não escrevemos qual a
-base e qual o número que queremos o logaritmo, portanto o
-<strong>R</strong> assume que estamos escrevendo na ordem da função, que
-toma como primeiro argumento o valor e o segundo argumento a base. No
-terceiro exemplo trocamos as ordens dos argumentos, mas para isso
-precisamos deixar explícito (escrito) quem é cada um.</p>
+ordem, é possível, mas é necessário escrever cada um deles.</p>
+<p>Veja melhor o exemplo abaixo. O primeiro não definimos a base,
+portanto é usada a pré definida (exponencial). No segundo log feito, não
+escrevemos qual a base e qual o número que queremos o logaritmo,
+portanto o <strong>R</strong> assume que estamos escrevendo na ordem da
+função, que toma como primeiro argumento o valor e o segundo argumento a
+base. No terceiro exemplo trocamos as ordens dos argumentos, mas para
+isso precisamos deixar explícito (escrito) quem é cada um.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span></span></code></pre>
@@ -3076,7 +3116,7 @@ e quais os argumentos que ela toma. Para fazer o exemplo, a área de um
 círculo, precisamos apenas de uma informação - o raio desse círculo.
 Podemos fazer quantas operações quisermos dentro da função, no final o
 último valor será retornado por ela (podemos deixar isso explícito
-escrevendo <code>return</code>) nela. Depois chamamos ela como qualquer
+escrevendo <code>return</code> nela). Depois chamamos ela como qualquer
 outra função!</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -3093,13 +3133,14 @@ outra função!</p>
 (ifelse)</h3>
 <p>Em programação, algo extremamente importante e útil são os comandos
 <code>if</code> e <code>else</code> (<em>e</em> / <em>se</em>). Com
-esses comandos, é possível rodar um código apenas se uma condição for
-cumprida. Esse comando no <strong>R</strong> funciona similar a uma
-função, sendo então o <code>ifelse()</code> (tudo junto!), e toma três
-argumentos - um lógico (uma condição), o que fazer se o lógico for
-<code>TRUE</code> e o que fazer se o lógico for <code>FALSE</code>.
-Abaixo fazemos um exemplo utilizando o <code>ifelse</code> para
-verificar se o <code>X</code> é maior ou menor do que 100.</p>
+esses comandos, é possível rodar um pedaço de código apenas se uma
+condição for cumprida. Esse comando no <strong>R</strong> funciona
+similar a uma função, sendo então o <code>ifelse()</code> (tudo junto!),
+e toma três argumentos - um lógico (uma condição), o que fazer se o
+lógico for <code>TRUE</code> e o que fazer se o lógico for
+<code>FALSE</code>. Abaixo fazemos um exemplo utilizando o
+<code>ifelse</code> para verificar se o <code>X</code> é maior ou menor
+do que 100.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>10</span></span>
@@ -3130,16 +3171,16 @@ arredondamos ele e em seguida o transformamos em inteiro.</p>
 construção de <em>loops</em>. Eles são utilizados quando queremos
 repetir a mesma coisa várias vezes.</p>
 <h4 id="for">for</h4>
-<p>O <code>for()</code> utiliza 2 argumentos. O primeiro fala qua objeto
-vai ser iterado várias vezes, e o outro a faixa de valores (quantas
-vezes ele vai ser iterado praticamente). No exemplo abaixo vamos por
-exemplo variar o <code>i</code> (criado dentro do próprio <em>loop</em>)
-na sequência de 1 até 5. Isso é o mais importante desse tipo de
-<em>loop</em>, <strong>precisamos</strong> saber quantas vezes
-(<code>1:5</code>) iterar essa variável (nesse caso <code>i</code>). O
-resto da função é simplesmente o que vai ser iterado. No exemplo abaixo
-apenas printamos o valor de <code>i</code> quando ele varia de 1 a
-5.</p>
+<p>O <code>for()</code> utiliza 2 argumentos separados por
+<code>in</code>. O primeiro fala qual objeto vai ser iterado várias
+vezes, e o outro a faixa de valores (quantas vezes ele vai ser iterado
+praticamente). No exemplo abaixo vamos por exemplo variar o
+<code>i</code> (criado dentro do próprio <em>loop</em>) na sequência de
+1 até 5. Isso é o mais importante desse tipo de <em>loop</em>,
+<strong>precisamos</strong> saber quantas vezes (<code>1:5</code>)
+iterar essa variável (nesse caso <code>i</code>). O resto da função é
+simplesmente o que vai ser iterado. No exemplo abaixo apenas printamos o
+valor de <code>i</code> quando ele varia de 1 a 5.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'>for</span><span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span><span class='op'>{</span></span>
@@ -3176,7 +3217,7 @@ menor ou igual a 5, por exemplo.</p>
 [1] 4
 [1] 5</code></pre>
 </div>
-<div class="sourceCode" id="cb83"><pre
+<div class="sourceCode" id="cb85"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

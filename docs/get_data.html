@@ -2184,10 +2184,11 @@ algum site oficial. Geralmente, o arquivo obtido baixado está no formato
 <code>.csv</code>, <code>.txt</code> ou <code>.xls</code> (excel) - esse
 último sendo menos comum. No próprio portal da ANA tem a opção de baixar
 os dados diretamente se souber a estação em questão ou utilizando um
-mapa dinâmico. Fazemos o exemplo abaixo para a estação 60435000. Ao
-baixar o arquivo, é importante entender como ele está salvo, para isso
-podemos abrir o arquivo pelo bloco de notas por exemplo. O arquivo em
-questão é mostrado na figura abaixo</p>
+mapa dinâmico.</p>
+<p>Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o
+arquivo, é importante entender como ele está salvo, para isso podemos
+abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é
+mostrado na figura abaixo</p>
 <p>Uma maneira de obter dados é simplesmente baixando eles de algum site
 oficial. Geralmente o arquivo baixado está no formato <code>.csv</code>,
 <code>.txt</code> ou <code>.xls</code> (excel) - esse último sendo menos
@@ -2420,59 +2421,59 @@ linhas delem usando a função <code>head()</code>.</p>
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>estacoes_bsb</span> <span class='op'>&lt;-</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>cadastro_estacoes</span>, <span class='va'>`Municipio-UF`</span> <span class='op'>==</span> <span class='st'>"BRASÍLIA-DF"</span><span class='op'>)</span></span>
 <span><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>estacoes_bsb</span><span class='op'>)</span></span></code></pre>
 </div>
-<pre><code>&#39;data.frame&#39;:   50 obs. of  14 variables:
- $ NomeEstacao  : chr  &quot;ANA SEDE (COTA ONLINE)&quot; &quot;ANA SEDE - TELEMÉTRICA&quot; &quot;RIBEIRÃO PALMEIRAS&quot; &quot;SONHEM&quot; ...
- $ CodEstacao   : chr  &quot;01547032&quot; &quot;01547079&quot; &quot;20000950&quot; &quot;20001050&quot; ...
- $ Bacia        : chr  &quot;6&quot; &quot;6&quot; &quot;2&quot; &quot;2&quot; ...
- $ SubBacia     : chr  &quot;60&quot; &quot;60&quot; &quot;20&quot; &quot;20&quot; ...
- $ Operadora    : chr  &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF&quot; &quot;00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF&quot; ...
- $ Responsavel  : chr  &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF&quot; &quot;00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF&quot; ...
+<pre><code>&#39;data.frame&#39;:   54 obs. of  14 variables:
+ $ NomeEstacao  : chr  &quot;ANA SEDE&quot; &quot;ANA SEDE (COTA ONLINE)&quot; &quot;ANA SEDE - TELEMÉTRICA&quot; &quot;ANA SEDE - TELEMÉTRICA&quot; ...
+ $ CodEstacao   : chr  &quot;01547032&quot; &quot;01547032&quot; &quot;01547079&quot; &quot;01547079&quot; ...
+ $ Bacia        : chr  &quot;6&quot; &quot;6&quot; &quot;6&quot; &quot;6&quot; ...
+ $ SubBacia     : chr  &quot;60&quot; &quot;60&quot; &quot;60&quot; &quot;60&quot; ...
+ $ Operadora    : chr  &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; ...
+ $ Responsavel  : chr  &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; ...
  $ Municipio-UF : chr  &quot;BRASÍLIA-DF&quot; &quot;BRASÍLIA-DF&quot; &quot;BRASÍLIA-DF&quot; &quot;BRASÍLIA-DF&quot; ...
- $ Latitude     : chr  &quot;-15.81805&quot; &quot;-15.81810&quot; &quot;-15.52810&quot; &quot;-15.52310&quot; ...
- $ Longitude    : chr  &quot;-47.94500&quot; &quot;-47.94500&quot; &quot;-47.74190&quot; &quot;-47.81580&quot; ...
- $ Altitude     : chr  &quot;1150.00&quot; &quot;1150.00&quot; &quot;0.00&quot; &quot;0.00&quot; ...
- $ CodRio       : chr  &quot;0&quot; &quot;0&quot; &quot;20003000&quot; &quot;20030000&quot; ...
- $ NomeRio      : chr  &quot;&quot; &quot;&quot; &quot;RIBEIRÃO PALMEIRAS&quot; &quot;RIO SONHEM&quot; ...
- $ Origem       : chr  &quot;CotaOnline&quot; &quot;RHN&quot; &quot;Setores Regulados&quot; &quot;Setores Regulados&quot; ...
+ $ Latitude     : chr  &quot;-15.81810&quot; &quot;-15.81805&quot; &quot;-15.81810&quot; &quot;-15.81810&quot; ...
+ $ Longitude    : chr  &quot;-47.94500&quot; &quot;-47.94500&quot; &quot;-47.94500&quot; &quot;-47.94500&quot; ...
+ $ Altitude     : chr  &quot;1150.00&quot; &quot;1150.00&quot; &quot;1150.00&quot; &quot;1150.00&quot; ...
+ $ CodRio       : chr  &quot;0&quot; &quot;0&quot; &quot;0&quot; &quot;0&quot; ...
+ $ NomeRio      : chr  &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; ...
+ $ Origem       : chr  &quot;Açudes Semiárido&quot; &quot;CotaOnline&quot; &quot;RHN&quot; &quot;Açudes Semiárido&quot; ...
  $ StatusEstacao: chr  &quot;Ativo&quot; &quot;Ativo&quot; &quot;Ativo&quot; &quot;Ativo&quot; ...</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>estacoes_bsb</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>             NomeEstacao CodEstacao Bacia SubBacia
-1 ANA SEDE (COTA ONLINE)   01547032     6       60
-2 ANA SEDE - TELEMÉTRICA   01547079     6       60
-3     RIBEIRÃO PALMEIRAS   20000950     2       20
-4                 SONHEM   20001050     2       20
-5      CONTAGEM - VC 201   20001200     2       20
-6    RIBEIRÃO SANTA RITA   42450050     4       42
+1               ANA SEDE   01547032     6       60
+2 ANA SEDE (COTA ONLINE)   01547032     6       60
+3 ANA SEDE - TELEMÉTRICA   01547079     6       60
+4 ANA SEDE - TELEMÉTRICA   01547079     6       60
+5      ESTACAO TESTE_PLU   09999999     6       60
+6     RIBEIRÃO PALMEIRAS   20000950     2       20
                                                          Operadora
 1                         00001 - ANA - Agência Nacional de Águas 
 2                         00001 - ANA - Agência Nacional de Águas 
-3 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-4 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-5 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
+3                         00001 - ANA - Agência Nacional de Águas 
+4                         00001 - ANA - Agência Nacional de Águas 
+5                         00001 - ANA - Agência Nacional de Águas 
 6 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
                                                        Responsavel
 1                         00001 - ANA - Agência Nacional de Águas 
 2                         00001 - ANA - Agência Nacional de Águas 
-3 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-4 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
-5 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
+3                         00001 - ANA - Agência Nacional de Águas 
+4                         00001 - ANA - Agência Nacional de Águas 
+5                         00001 - ANA - Agência Nacional de Águas 
 6 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
   Municipio-UF  Latitude Longitude Altitude   CodRio
-1  BRASÍLIA-DF -15.81805 -47.94500  1150.00        0
-2  BRASÍLIA-DF -15.81810 -47.94500  1150.00        0
-3  BRASÍLIA-DF -15.52810 -47.74190     0.00 20003000
-4  BRASÍLIA-DF -15.52310 -47.81580     0.00 20030000
-5  BRASÍLIA-DF -15.50080 -47.85420     0.00 20050000
-6  BRASÍLIA-DF -15.58560 -47.33330   870.00 42250100
-               NomeRio            Origem StatusEstacao
-1                             CotaOnline         Ativo
-2                                    RHN         Ativo
-3   RIBEIRÃO PALMEIRAS Setores Regulados         Ativo
-4           RIO SONHEM Setores Regulados         Ativo
-5 RIBEIRÃO DA CONTAGEM               RHN         Ativo
-6  RIBEIRÃO SANTA RITA               RHN         Ativo</code></pre>
+1  BRASÍLIA-DF -15.81810 -47.94500  1150.00        0
+2  BRASÍLIA-DF -15.81805 -47.94500  1150.00        0
+3  BRASÍLIA-DF -15.81810 -47.94500  1150.00        0
+4  BRASÍLIA-DF -15.81810 -47.94500  1150.00        0
+5  BRASÍLIA-DF -15.81810 -47.94500  1150.00        0
+6  BRASÍLIA-DF -15.52810 -47.74190     0.00 20003000
+             NomeRio            Origem StatusEstacao
+1                     Açudes Semiárido         Ativo
+2                           CotaOnline         Ativo
+3                                  RHN         Ativo
+4                     Açudes Semiárido         Ativo
+5                     Açudes Semiárido         Ativo
+6 RIBEIRÃO PALMEIRAS Setores Regulados         Ativo</code></pre>
 </div>
 <p>Lembrando que isso tudo nos dá apenas a lista com informações sobre
 as estações telemétricas. Para de fato termos acesso aos dados dessas
@@ -2569,12 +2570,12 @@ retorna, podemos pedir ao R as primeiras 6 linhas desse dataframe.</p>
 <span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>dados_FAL</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>  CodEstacao             DataHora Vazao Nivel Chuva
-1   60478482 2022-10-10 15:00:00        32.00  0.00
-2   60478482 2022-10-10 14:45:00        33.00  0.00
-3   60478482 2022-10-10 14:30:00        33.00  0.00
-4   60478482 2022-10-10 14:15:00        33.00  0.00
-5   60478482 2022-10-10 14:00:00        33.00  0.00
-6   60478482 2022-10-10 13:45:00        33.00  0.00</code></pre>
+1   60478482 2023-11-15 16:00:00        30.00  0.00
+2   60478482 2023-11-15 15:45:00        30.00  0.00
+3   60478482 2023-11-15 15:30:00        30.00  0.00
+4   60478482 2023-11-15 15:15:00        30.00  0.00
+5   60478482 2023-11-15 15:00:00        30.00  0.00
+6   60478482 2023-11-15 14:45:00        30.00  0.00</code></pre>
 </div>
 <p>Percebemos aqui um “problema”. A data e a hora estão na mesma coluna
 e idealmente queremos deixar em colunas separadas (uma contendo a data e
@@ -2621,12 +2622,12 @@ desse dataframe.</p>
 <span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>dados_FAL</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>  CodEstacao       Data     Hora Vazao Nivel Chuva
-1   60478482 2022-10-10 15:00:00       32.00  0.00
-2   60478482 2022-10-10 14:45:00       33.00  0.00
-3   60478482 2022-10-10 14:30:00       33.00  0.00
-4   60478482 2022-10-10 14:15:00       33.00  0.00
-5   60478482 2022-10-10 14:00:00       33.00  0.00
-6   60478482 2022-10-10 13:45:00       33.00  0.00</code></pre>
+1   60478482 2023-11-15 16:00:00       30.00  0.00
+2   60478482 2023-11-15 15:45:00       30.00  0.00
+3   60478482 2023-11-15 15:30:00       30.00  0.00
+4   60478482 2023-11-15 15:15:00       30.00  0.00
+5   60478482 2023-11-15 15:00:00       30.00  0.00
+6   60478482 2023-11-15 14:45:00       30.00  0.00</code></pre>
 </div>
 <p>Aqui rodamos a função apenas para uma estação. Mas se quisermos rodar
 para várias estações, basta utilizar um loop (for) ou até mesmo a função
@@ -2693,7 +2694,7 @@ aqui. As datas podem vir de inúmeras formas diferentes de algum banco de
 dados. Elas podem vir com “dia - mês - ano”, com o ano podendo ser
 escrito com todos os dígitos (2022) ou apenas os últimos dois (22).
 Outra coisa que pode ser alterada é a ordem (“dia - mês - ano” ou “ano -
-mês - dia” ou qualquer variação desses três. Ainda podemos encontrar em
+mês - dia” ou qualquer variação desses três). Ainda podemos encontrar em
 bases de dados o mês escrito por extenso ou abreviado como
 “01/Jan/1990”. Isso sem contar com o separador dessas datass (“/”, “-”,
 um espaço em branco…). Podemos definir isso dentro da função

@@ -3264,8 +3264,30 @@ secos. O nosso <code>dataframe</code> será denominado
 <span><span class='va'>data_inicio_dry</span> <span class='op'>&lt;-</span> <span class='va'>Qd</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i_change</span><span class='op'>[</span><span class='va'>i_dry</span><span class='op'>]</span><span class='op'>]</span> <span class='op'>-</span> <span class='va'>l_dry</span></span>
 <span><span class='va'>dry_spell</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>ano <span class='op'>=</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/year.html'>year</a></span><span class='op'>(</span><span class='va'>Qd</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i_change</span><span class='op'>[</span><span class='va'>i_dry</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>,</span>
 <span>                        data_inicio_dry <span class='op'>=</span> <span class='va'>Qd</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i_change</span><span class='op'>[</span><span class='va'>i_dry</span><span class='op'>]</span><span class='op'>]</span>,</span>
-<span>                        comprimento <span class='op'>=</span> <span class='va'>l_dry</span><span class='op'>)</span></span></code></pre>
+<span>                        comprimento <span class='op'>=</span> <span class='va'>l_dry</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>dry_spell</span><span class='op'>)</span></span></code></pre>
 </div>
+<pre><code># A tibble: 197 × 3
+     ano data_inicio_dry comprimento
+   &lt;dbl&gt; &lt;date&gt;                &lt;dbl&gt;
+ 1  1982 1982-09-13                4
+ 2  1982 1982-09-22                6
+ 3  1982 1982-10-28                1
+ 4  1984 1984-08-25               24
+ 5  1984 1984-09-07                6
+ 6  1984 1984-09-28               16
+ 7  1984 1984-10-14               14
+ 8  1984 1984-10-20                2
+ 9  1984 1984-11-28               28
+10  1984 1984-12-03                3
+# … with 187 more rows</code></pre>
+</div>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>dry_spell</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x<span class='op'>=</span><span class='va'>comprimento</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> </span>
+<span>  <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/geom_density.html'>geom_density</a></span><span class='op'>(</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="data_explore_rascunho_files/figure-html5/plot-hist-dry-spell-1.png" width="624" /></p>
 </div>
 <h3 id="cálculo-e-análise-do-volume-de-deficit">Cálculo e análise do
 volume de deficit</h3>
@@ -3287,7 +3309,7 @@ de permanência (Flow duration curve)</a></li>
 href="https://tonyladson.wordpress.com/2016/06/01/what-time-of-year-does-it-flood/">Momento
 do ano das máximas anuais</a></li>
 </ul>
-<div class="sourceCode" id="cb22"><pre
+<div class="sourceCode" id="cb23"><pre
 class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div></li>
 </ul>
 <!--radix_placeholder_article_footer-->
