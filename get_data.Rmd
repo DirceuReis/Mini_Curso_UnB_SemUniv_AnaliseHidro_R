@@ -21,7 +21,9 @@ Existem inúmeros repositórios contendo dados hidrológicos no mundo e no Brasi
 ## Obtenção de dados "tradicional"
 
 
-Uma maneira de obter dados hidrológicos é simplesmente acessando de algum site oficial. Geralmente, o arquivo obtido baixado está no formato `.csv`, `.txt` ou `.xls` (excel) - esse último sendo menos comum. No próprio portal da ANA tem a opção de baixar os dados diretamente se souber a estação em questão ou utilizando um mapa dinâmico. Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o arquivo, é importante entender como ele está salvo, para isso podemos abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é mostrado na figura abaixo
+Uma maneira de obter dados hidrológicos é simplesmente acessando de algum site oficial. Geralmente, o arquivo obtido baixado está no formato `.csv`, `.txt` ou `.xls` (excel) - esse último sendo menos comum. No próprio portal da ANA tem a opção de baixar os dados diretamente se souber a estação em questão ou utilizando um mapa dinâmico.
+
+Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o arquivo, é importante entender como ele está salvo, para isso podemos abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é mostrado na figura abaixo
 
 Uma maneira de obter dados é simplesmente baixando eles de algum site oficial. Geralmente o arquivo baixado está no formato `.csv`, `.txt` ou `.xls` (excel) - esse último sendo menos comum. No próprio portal da ANA tem a opção de baixar os dados diretamente se souber a estação em questão (https://www.snirh.gov.br/hidroweb/serieshistoricas) ou utilizando um mapa dinâmico (https://www.snirh.gov.br/hidroweb/mapa). Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o arquivo, é importante entender como ele está salvo, para isso podemos abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é mostrado na figura abaixo
 
@@ -260,7 +262,7 @@ node_doc <- XML::getNodeSet(url_parse, "//SerieHistorica")
 dados_estacao <- XML::xmlToDataFrame(nodes = node_doc)
 ```
 
-É interessante lembrar um pouco como funciona esse formato de datas aqui. As datas podem vir de inúmeras formas diferentes de algum banco de dados. Elas podem vir com "dia - mês - ano", com o ano podendo ser escrito com todos os dígitos (2022) ou apenas os últimos dois (22). Outra coisa que pode ser alterada é a ordem ("dia - mês - ano" ou "ano - mês - dia" ou qualquer variação desses três. Ainda podemos encontrar em bases de dados o mês escrito por extenso ou abreviado como "01/Jan/1990". Isso sem contar com o separador dessas datass ("/", "-", um espaço em branco...). Podemos definir isso dentro da função `as.Date()`, utilizando como argumento a seguinte convenção:
+É interessante lembrar um pouco como funciona esse formato de datas aqui. As datas podem vir de inúmeras formas diferentes de algum banco de dados. Elas podem vir com "dia - mês - ano", com o ano podendo ser escrito com todos os dígitos (2022) ou apenas os últimos dois (22). Outra coisa que pode ser alterada é a ordem ("dia - mês - ano" ou "ano - mês - dia" ou qualquer variação desses três). Ainda podemos encontrar em bases de dados o mês escrito por extenso ou abreviado como "01/Jan/1990". Isso sem contar com o separador dessas datass ("/", "-", um espaço em branco...). Podemos definir isso dentro da função `as.Date()`, utilizando como argumento a seguinte convenção:
 
 - **%Y** para anos com quatro dígitos;
 - **%y** para anos com dois dígitos;
