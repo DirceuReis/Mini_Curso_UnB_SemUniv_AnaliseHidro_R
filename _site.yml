@@ -24,11 +24,16 @@ navbar:
           href: data_explore_rascunho.html
         - text: "Análise de frequência"
           href: frequency_analysis.html
+        - text: "Análise de frequência_GEV"
+          href: frequency_analysis_gev.html
     - text: "Colaboradores"
       href: colaboradores.html
 output:
   distill::distill_article:
     toc: true
+#  html_document:
+#    mathjax: local
+#    self_contained: false
     
   
 

@@ -21,7 +21,7 @@
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -32,7 +32,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -459,8 +459,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
 
   <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-  <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
-  <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"/>
   <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
   <script src="site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
   <script src="site_libs/fuse-6.4.1/fuse.min.js"></script>
@@ -789,6 +789,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article table.gt_table td,
   d-article table.gt_table th {
     border-bottom: none;
+    font-size: 100%;
   }
 
   .html-widget {
@@ -829,9 +830,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     display: none !important;
   }
 
+  hr.section-separator {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 0px;
+  }
+
+
+  d-byline {
+    border-top: none;
+  }
+
   d-article {
     padding-top: 2.5rem;
     padding-bottom: 30px;
+    border-top: none;
   }
 
   d-appendix {
@@ -926,6 +939,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article div.sourceCode pre {
     padding-left: 18px;
     font-size: 14px;
+  }
+
+  /* tweak for Pandoc numbered line within distill */
+  d-article pre.numberSource code > span {
+      left: -2em;
   }
 
   d-article pre {
@@ -1687,6 +1705,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // create d-title
     $('.d-title').changeElementType('d-title');
 
+    // separator
+    var separator = '<hr class="section-separator" style="clear: both"/>';
+    // prepend separator above appendix
+    $('.d-byline').before(separator);
+    $('.d-article').before(separator);
+
     // create d-byline
     var byline = $('<d-byline></d-byline>');
     $('.d-byline').replaceWith(byline);
@@ -1764,8 +1788,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     $('.distill-force-highlighting-css').parent().remove();
 
     // remove empty line numbers inserted by pandoc when using a
-    // custom syntax highlighting theme
-    $('code.sourceCode a:empty').remove();
+    // custom syntax highlighting theme, except when numbering line
+    // in code chunk
+    $('pre:not(.numberLines) code.sourceCode a:empty').remove();
 
     // load distill framework
     load_distill_framework();
@@ -1791,12 +1816,13 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       // add orcid ids
       $('.authors-affiliations').find('.author').each(function(i, el) {
         var orcid_id = front_matter.authors[i].orcidID;
+        var author_name = front_matter.authors[i].author
         if (orcid_id) {
           var a = $('<a></a>');
           a.attr('href', 'https://orcid.org/' + orcid_id);
           var img = $('<img></img>');
           img.addClass('orcid-id');
-          img.attr('alt', 'ORCID ID');
+          img.attr('alt', author_name ? 'ORCID ID for ' + author_name : 'ORCID ID');
           img.attr('src','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg==');
           a.append(img);
           $(this).append(a);
@@ -1861,15 +1887,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
       // hoverable references
       $('span.citation[data-cites]').each(function() {
-        if ($(this).children()[0].nodeName == "D-FOOTNOTE") {
-          var fn = $(this).children()[0]
+        const citeChild = $(this).children()[0]
+        // Do not process if @xyz has been used without escaping and without bibliography activated
+        // https://github.com/rstudio/distill/issues/466
+        if (citeChild === undefined) return true
+
+        if (citeChild.nodeName == "D-FOOTNOTE") {
+          var fn = citeChild
           $(this).html(fn.shadowRoot.querySelector("sup"))
           $(this).id = fn.id
           fn.remove()
         }
         var refs = $(this).attr('data-cites').split(" ");
         var refHtml = refs.map(function(ref) {
-          return "<p>" + $('#ref-' + ref).html() + "</p>";
+          // Could use CSS.escape too here, we insure backward compatibility in navigator
+          return "<p>" + $('div[id="ref-' + ref + '"]').html() + "</p>";
         }).join("\n");
         window.tippy(this, {
           allowHTML: true,
@@ -2068,7 +2100,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2113,6 +2145,7 @@ Aulas
 <a href="data_explore.html">Análise exploratória</a>
 <a href="data_explore_rascunho.html">Análise exploratória 2</a>
 <a href="frequency_analysis.html">Análise de frequência</a>
+<a href="frequency_analysis_gev.html">Análise de frequência_GEV</a>
 </div>
 </div>
 <a href="colaboradores.html">Colaboradores</a>
@@ -2129,6 +2162,7 @@ Aulas
 
 <div class="d-title">
 <h1>Linguagem R</h1>
+
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
 <p>Conceitos básicos para o curso</p>
@@ -2140,172 +2174,101 @@ Aulas
 <nav class="l-text toc figcaption" id="TOC">
 <h3>Contents</h3>
 <ul>
-<li><a href="#visão-geral-do-r-e-rstudio"
-id="toc-visão-geral-do-r-e-rstudio">Visão geral do R e RStudio</a>
+<li><a href="#visão-geral-do-r-e-rstudio" id="toc-visão-geral-do-r-e-rstudio">Visão geral do R e RStudio</a>
 <ul>
-<li><a href="#o-que-é-a-linguagem-r" id="toc-o-que-é-a-linguagem-r">O
-que é a linguagem R</a></li>
-<li><a href="#porque-usar-o-r-em-hidrologia"
-id="toc-porque-usar-o-r-em-hidrologia">Porque usar o R em
-Hidrologia?</a></li>
-<li><a href="#instalação-do-programa"
-id="toc-instalação-do-programa">Instalação do programa</a></li>
-<li><a href="#interface-do-r-e-rstudio"
-id="toc-interface-do-r-e-rstudio">Interface do R e RStudio</a></li>
+<li><a href="#o-que-é-a-linguagem-r" id="toc-o-que-é-a-linguagem-r">O que é a linguagem R</a></li>
+<li><a href="#porque-usar-o-r-em-hidrologia" id="toc-porque-usar-o-r-em-hidrologia">Porque usar o R em Hidrologia?</a></li>
+<li><a href="#instalação-do-programa" id="toc-instalação-do-programa">Instalação do programa</a></li>
+<li><a href="#interface-do-r-e-rstudio" id="toc-interface-do-r-e-rstudio">Interface do R e RStudio</a></li>
 </ul></li>
-<li><a href="#primeiros-passos-e-comandos-no-r"
-id="toc-primeiros-passos-e-comandos-no-r">Primeiros passos e comandos no
-R</a>
+<li><a href="#primeiros-passos-e-comandos-no-r" id="toc-primeiros-passos-e-comandos-no-r">Primeiros passos e comandos no R</a>
 <ul>
-<li><a href="#criação-de-variáveis-e-atribuição-de-valores"
-id="toc-criação-de-variáveis-e-atribuição-de-valores">Criação de
-variáveis e atribuição de valores</a></li>
+<li><a href="#criação-de-variáveis-e-atribuição-de-valores" id="toc-criação-de-variáveis-e-atribuição-de-valores">Criação de variáveis e atribuição de valores</a></li>
 </ul></li>
 <li><a href="#objetos-do-r" id="toc-objetos-do-r">Objetos do R</a>
 <ul>
-<li><a href="#classes-de-vetores" id="toc-classes-de-vetores">Classes de
-vetores</a></li>
+<li><a href="#classes-de-vetores" id="toc-classes-de-vetores">Classes de vetores</a></li>
 <li><a href="#fatores" id="toc-fatores">Fatores</a></li>
-<li><a href="#coerção-de-variáveis"
-id="toc-coerção-de-variáveis">Coerção de variáveis</a></li>
+<li><a href="#coerção-de-variáveis" id="toc-coerção-de-variáveis">Coerção de variáveis</a></li>
 <li><a href="#sequências" id="toc-sequências">Sequências</a></li>
 <li><a href="#indexing" id="toc-indexing"><em>Indexing</em></a></li>
-<li><a href="#operações-em-ou-com-vetores"
-id="toc-operações-em-ou-com-vetores">Operações em ou com
-vetores</a></li>
+<li><a href="#operações-em-ou-com-vetores" id="toc-operações-em-ou-com-vetores">Operações em ou com vetores</a></li>
 </ul></li>
-<li><a href="#outros-tipos-de-dados-data-frames-matrizes-e-listas"
-id="toc-outros-tipos-de-dados-data-frames-matrizes-e-listas">Outros
-tipos de dados (Data Frames, matrizes e listas)</a>
+<li><a href="#outros-tipos-de-dados-data-frames-matrizes-e-listas" id="toc-outros-tipos-de-dados-data-frames-matrizes-e-listas">Outros tipos de dados (Data Frames, matrizes e listas)</a>
 <ul>
 <li><a href="#data-frames" id="toc-data-frames">Data Frames</a></li>
 <li><a href="#matrizes" id="toc-matrizes">Matrizes</a></li>
 <li><a href="#listas" id="toc-listas">Listas</a></li>
 </ul></li>
-<li><a href="#programação-básica"
-id="toc-programação-básica">Programação Básica</a>
+<li><a href="#programação-básica" id="toc-programação-básica">Programação Básica</a>
 <ul>
 <li><a href="#funções" id="toc-funções">Funções</a></li>
-<li><a href="#estruturas-condicionais-ifelse"
-id="toc-estruturas-condicionais-ifelse">Estruturas condicionais
-(ifelse)</a></li>
-<li><a href="#loops-for-e-while" id="toc-loops-for-e-while">Loops (for e
-while)</a></li>
+<li><a href="#estruturas-condicionais-ifelse" id="toc-estruturas-condicionais-ifelse">Estruturas condicionais (ifelse)</a></li>
+<li><a href="#loops-for-e-while" id="toc-loops-for-e-while">Loops (for e while)</a></li>
 </ul></li>
 </ul>
 </nav>
 </div>
 <h2 id="visão-geral-do-r-e-rstudio">Visão geral do R e RStudio</h2>
 <h3 id="o-que-é-a-linguagem-r">O que é a linguagem R</h3>
-<p>Existe um grande número de publicações sobre a linguagem R, e muitas
-delas podem ser obtidas de forma gratuita na internet, tudo dentro da
-lei, sem cometer qualquer violação de direitos autorais.</p>
-<p>O livro abaixo é uma dessas publicações, e por se tratar de um livro
-digital, seu autor continua fazendo atualizações em seu conteúdo.
-Trata-se de uma excelente fonte de consulta, e ainda nos ensina um pouco
-sobre a história por detrás do desenvolvimento do R, e sua relação com a
-linguagem S.</p>
+<p>Existe um grande número de publicações sobre a linguagem R, e muitas delas podem ser obtidas de forma gratuita na internet, tudo dentro da lei, sem cometer qualquer violação de direitos autorais.</p>
+<p>O livro abaixo é uma dessas publicações, e por se tratar de um livro digital, seu autor continua fazendo atualizações em seu conteúdo. Trata-se de uma excelente fonte de consulta, e ainda nos ensina um pouco sobre a história por detrás do desenvolvimento do R, e sua relação com a linguagem S.</p>
 <ul>
-<li><a href="https://bookdown.org/rdpeng/rprogdatascience/">R
-Programming for Data Science</a>, Roger D. Peng, 2019. Johns Hopkins
-Bloomberg School of Public Health.</li>
+<li><a href="https://bookdown.org/rdpeng/rprogdatascience/">R Programming for Data Science</a>, Roger D. Peng, 2019. Johns Hopkins Bloomberg School of Public Health.</li>
 </ul>
-<h3 id="porque-usar-o-r-em-hidrologia">Porque usar o R em
-Hidrologia?</h3>
-<p>Se você decidiu fazer este curso, você já deve ter uma ideia da
-importância de dominar uma linguagem de programação que te permita
-realizar suas próprias análises, aumentar sua produtividade, testar
-novas metodologias, ou até escrever seus próprios pacotes para serem
-distribuídos na internet de forma a facilitar a vida dos outros.</p>
-<p>Mas por que o R especificamente? Para ser sincero, o mais importante,
-ao meu ver, é ter o domínio de uma linguagem de programação. Mas me
-parece bastante razoável utilizar uma linguagem que se tornou bastante
-popular nos útimos anos, extrapolando os limites da estatística, área
-genitora da linguagem.</p>
-<p>Mas para não fugir da pergunta, seguem abaixo alguns motivos para
-usar a linguagem R na área de engenharia, e mais especificamente, na
-área de Hidrologia,</p>
+<h3 id="porque-usar-o-r-em-hidrologia">Porque usar o R em Hidrologia?</h3>
+<p>Se você decidiu fazer este curso, você já deve ter uma ideia da importância de dominar uma linguagem de programação que te permita realizar suas próprias análises, aumentar sua produtividade, testar novas metodologias, ou até escrever seus próprios pacotes para serem distribuídos na internet de forma a facilitar a vida dos outros.</p>
+<p>Mas por que o R especificamente? Para ser sincero, o mais importante, ao meu ver, é ter o domínio de uma linguagem de programação. Mas me parece bastante razoável utilizar uma linguagem que se tornou bastante popular nos útimos anos, extrapolando os limites da estatística, área genitora da linguagem.</p>
+<p>Mas para não fugir da pergunta, seguem abaixo alguns motivos para usar a linguagem R na área de engenharia, e mais especificamente, na área de Hidrologia,</p>
 <ul>
 <li><p>Simplicidade da linguagem (fácil de aprender)</p></li>
-<li><p>Excelente desempenho na manipulação de grandes bancos de
-dados</p></li>
+<li><p>Excelente desempenho na manipulação de grandes bancos de dados</p></li>
 <li><p>Acesso a métodos estatísticos consolidados</p></li>
 <li><p>Acesso a diversas ferramentas de visualização de dados</p></li>
-<li><p>Acesso a métodos analíticos de ponta e ferramentas compartilhadas
-internacionalmente - não só pelo uso de pacotes, mas sobretudo, usando
-fóruns e tutoriais.</p></li>
-<li><p><a href="https://hess.copernicus.org/articles/23/2939/2019/hess-23-2939-2019.pdf">
-R in Hydrology </a>, Slater, et al., Hydrol. Earth Syst. Sci., 23,
-2939–2963, 2019.</p></li>
+<li><p>Acesso a métodos analíticos de ponta e ferramentas compartilhadas internacionalmente - não só pelo uso de pacotes, mas sobretudo, usando fóruns e tutoriais.</p></li>
+<li><p><a href="https://hess.copernicus.org/articles/23/2939/2019/hess-23-2939-2019.pdf"> R in Hydrology </a>, Slater, et al., Hydrol. Earth Syst. Sci., 23, 2939–2963, 2019.</p></li>
 </ul>
 <h3 id="instalação-do-programa">Instalação do programa</h3>
-<p>Os computadores da sala de aula do curso já têm instalado o
-<strong>R</strong>, assim como o <strong>RStudio</strong>. Entretanto,
-para que você possa se desenvolver rapidamente na linguagem, é muito
-importante que você tenha acesso a esses programs fora do horário do
-curso, ou após a Semana Universitária.</p>
-<p>Dessa forma, sugerimos que você instale os dois programas no seu
-computador pessoal seguindo as instruções fornecidas nos links
-abaixo.</p>
+<p>Os computadores da sala de aula do curso já têm instalado o <strong>R</strong>, assim como o <strong>RStudio</strong>. Entretanto, para que você possa se desenvolver rapidamente na linguagem, é muito importante que você tenha acesso a esses programs fora do horário do curso, ou após a Semana Universitária.</p>
+<p>Dessa forma, sugerimos que você instale os dois programas no seu computador pessoal seguindo as instruções fornecidas nos links abaixo.</p>
 <div class="layout-chunk" data-layout="l-body">
 
 </div>
-<p>Download de 2 programas: <strong>R</strong> e
-<strong>RStudio</strong></p>
+<p>Download de 2 programas: <strong>R</strong> e <strong>RStudio</strong></p>
 <ul>
-<li><a href="https://cran.r-project.org/bin/windows/base/"> R para
-Windows </a></li>
+<li><a href="https://cran.r-project.org/bin/windows/base/"> R para Windows </a></li>
 </ul>
 <center>
 <img src="https://www.r-project.org/logo/Rlogo.png" height="100">
 </center>
 <ul>
-<li><a href="https://cran.r-project.org/"> R para MacOS ou Linux
-</a></li>
+<li><a href="https://cran.r-project.org/"> R para MacOS ou Linux </a></li>
 </ul>
 <center>
 <img src="https://www.r-project.org/logo/Rlogo.png" height="100">
 </center>
 <ul>
-<li><a href="https://rstudio.com/products/rstudio/download/"> R Studio
-</a></li>
+<li><a href="https://rstudio.com/products/rstudio/download/"> R Studio </a></li>
 </ul>
 <center>
 <img src="https://rstudio.com/wp-content/uploads/2018/10/RStudio-Logo-Flat.png" height="100">
 </center>
-<p><em><font size="5"> O RStudio é uma plataforma com inúmeras
-ferramentas úteis e que roda a linguagem R. É possível usar só o R por
-sua interface, mas só é possível usar o RStudio com o R instalado na
-máquina. Por isso, recomenda-se baixar primeiro o R e depois o RStudio.
-</font></em></p>
+<p><em><font size="5"> O RStudio é uma plataforma com inúmeras ferramentas úteis e que roda a linguagem R. É possível usar só o R por sua interface, mas só é possível usar o RStudio com o R instalado na máquina. Por isso, recomenda-se baixar primeiro o R e depois o RStudio. </font></em></p>
 <h3 id="interface-do-r-e-rstudio">Interface do R e RStudio</h3>
-<p>Abaixo temos a interface do <strong>R</strong> quando o baixamos. Ele
-é de fato o programa que rodamos e programamos com ele.
+<p>Abaixo temos a interface do <strong>R</strong> quando o baixamos. Ele é de fato o programa que rodamos e programamos com ele.
 <left><img src="images/RStudio_console.jpeg" height="400"></left></p>
-<p>Baixamos também o <strong>RStudio</strong>, ele é uma IDE
-(<em>Integrated Development Environment)</em>. Isso nada mais é do que
-um facilitador para usar o <strong>R</strong>, trazendo uma interface
-mais amigável para utilização dessa linguagem e algumas facilidades.
+<p>Baixamos também o <strong>RStudio</strong>, ele é uma IDE (<em>Integrated Development Environment)</em>. Isso nada mais é do que um facilitador para usar o <strong>R</strong>, trazendo uma interface mais amigável para utilização dessa linguagem e algumas facilidades.
 <left><img src="images/RStudio_organizacao.jpeg" height="400"></left></p>
-<p>O layout é ajustável em
-<code>view -&gt; Panes -&gt; Pane Layout</code>
+<p>O layout é ajustável em <code>view -&gt; Panes -&gt; Pane Layout</code>
 <left><img src="images/RStudio_panel_layout.jpeg" height="400"></left></p>
-<h2 id="primeiros-passos-e-comandos-no-r">Primeiros passos e comandos no
-R</h2>
-<p>Antes de tudo, vale dizer que organizar seu material de trabalho
-enqunto utiliza o <strong>R</strong> é muito importante. E para isso, é
-importante que você saiba onde está trabalhando na árvore de diretórios
-do seu computador.</p>
+<h2 id="primeiros-passos-e-comandos-no-r">Primeiros passos e comandos no R</h2>
+<p>Antes de tudo, vale dizer que organizar seu material de trabalho enqunto utiliza o <strong>R</strong> é muito importante. E para isso, é importante que você saiba onde está trabalhando na árvore de diretórios do seu computador.</p>
 <p>Os dois comandos abaixo ajudam nesse processo:</p>
 <ul>
-<li><code>getwd()</code>: informa em qual diretório você está fazendo
-suas atividades;</li>
-<li><code>setwd()</code>: define um diretório de trabalho onde seus
-<em>scripts</em> ficarão alojados;</li>
-<li><code>dir()</code> ou list.files()`: informa quais arquivos estão
-contidos nesse diretório;</li>
-<li><code>source()</code>: vai puxar e rodar um arquivo
-<strong>R</strong> com esse nome que está no diretório;</li>
+<li><code>getwd()</code>: informa em qual diretório você está fazendo suas atividades;</li>
+<li><code>setwd()</code>: define um diretório de trabalho onde seus <em>scripts</em> ficarão alojados;</li>
+<li><code>dir()</code> ou list.files()`: informa quais arquivos estão contidos nesse diretório;</li>
+<li><code>source()</code>: vai puxar e rodar um arquivo <strong>R</strong> com esse nome que está no diretório;</li>
 </ul>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2315,13 +2278,8 @@ contidos nesse diretório;</li>
 <span><span class='co'>#source("soma.R")</span></span></code></pre>
 </div>
 </div>
-<p>O <strong>R</strong> pode ser utilizável como uma calculadora, com os
-operadores aritméticos que se conhece, embora os benefícios da linguagem
-vão muito além dos de uma simples calculadora.</p>
-<p>Mas vamos começar pelas operações básicas da matemática. Para
-multiplicação utilizamos o símbolo <code>*</code>, para divisão
-<code>/</code>, para expoentes <code>^</code> e para raiz quadrada
-usamos <code>sqrt()</code> - do inglês <em>square root</em>.</p>
+<p>O <strong>R</strong> pode ser utilizável como uma calculadora, com os operadores aritméticos que se conhece, embora os benefícios da linguagem vão muito além dos de uma simples calculadora.</p>
+<p>Mas vamos começar pelas operações básicas da matemática. Para multiplicação utilizamos o símbolo <code>*</code>, para divisão <code>/</code>, para expoentes <code>^</code> e para raiz quadrada usamos <code>sqrt()</code> - do inglês <em>square root</em>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fl'>1</span> <span class='op'>+</span> <span class='fl'>2</span></span></code></pre>
@@ -2352,20 +2310,15 @@ usamos <code>sqrt()</code> - do inglês <em>square root</em>.</p>
 </div>
 <pre><code>[1] 3</code></pre>
 </div>
-<p>O R trabalha igualmente com vetores e escalares. Abaixo, criamos e
-somamos dois vetores por exemplo.</p>
+<p>O R trabalha igualmente com vetores e escalares. Abaixo, criamos e somamos dois vetores por exemplo.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>5</span>, <span class='fl'>7</span>, <span class='fl'>9</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>6</span>, <span class='fl'>8</span>, <span class='fl'>10</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>[1]  3  7 11 15 19</code></pre>
 </div>
-<p>A função c() é usada para concatenar valores, criando vetores de
-valores da mesma <code>classe</code>. Falaremos mais especificamente de
-<code>classe</code> mais à frente.</p>
-<p>Ao usar o operador multiplicativo <code>*</code>, o
-<strong>R</strong> entende que será feita a operação elemento a elemento
-dentro do vetor.</p>
+<p>A função c() é usada para concatenar valores, criando vetores de valores da mesma <code>classe</code>. Falaremos mais especificamente de <code>classe</code> mais à frente.</p>
+<p>Ao usar o operador multiplicativo <code>*</code>, o <strong>R</strong> entende que será feita a operação elemento a elemento dentro do vetor.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>5</span>, <span class='fl'>7</span><span class='op'>)</span> <span class='op'>*</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>6</span>, <span class='fl'>8</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
@@ -2373,9 +2326,7 @@ dentro do vetor.</p>
 <pre><code>     [,1] [,2] [,3] [,4]
 [1,]    2   12   30   56</code></pre>
 </div>
-<p>Se o objetivo, por outro lado, for o de realizar uma multiplicação de
-matrizes, o operador correto a ser usado é <code>%*%</code>, o que é
-muito importante na vetorização!</p>
+<p>Se o objetivo, por outro lado, for o de realizar uma multiplicação de matrizes, o operador correto a ser usado é <code>%*%</code>, o que é muito importante na vetorização!</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>3</span>, <span class='fl'>5</span>, <span class='fl'>7</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/r/base/matmult.html'>%*%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>, <span class='fl'>4</span>, <span class='fl'>6</span>, <span class='fl'>8</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
@@ -2386,12 +2337,8 @@ muito importante na vetorização!</p>
 [3,]   10   20   30   40
 [4,]   14   28   42   56</code></pre>
 </div>
-<h3 id="criação-de-variáveis-e-atribuição-de-valores">Criação de
-variáveis e atribuição de valores</h3>
-<p>A forma de se atribuir um valor a um elemento/objeto é utilizando o
-operador <code>&lt;-</code>, de forma que deve haver algo dos dois lados
-dessa seta. De uma lado o objeto que irá receber o valor, e do outro
-lado o valor propriamente dito.</p>
+<h3 id="criação-de-variáveis-e-atribuição-de-valores">Criação de variáveis e atribuição de valores</h3>
+<p>A forma de se atribuir um valor a um elemento/objeto é utilizando o operador <code>&lt;-</code>, de forma que deve haver algo dos dois lados dessa seta. De uma lado o objeto que irá receber o valor, e do outro lado o valor propriamente dito.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>2</span></span>
@@ -2399,12 +2346,8 @@ lado o valor propriamente dito.</p>
 </div>
 <pre><code>[1] 2</code></pre>
 </div>
-<p>Também é possível usar o operador <code>=</code> para fazer isso,
-porém não é recomendado. Se atribuirmos algum outro valor à variável
-<code>x</code>, o valor antigo será perdido.</p>
-<p>Veja que o <strong>R</strong> aceita trocar trocar a direção da seta,
-mas ela sempre deve apontar para o nome do objeto que vai receber o
-valor, como no exemplo abaixo,</p>
+<p>Também é possível usar o operador <code>=</code> para fazer isso, porém não é recomendado. Se atribuirmos algum outro valor à variável <code>x</code>, o valor antigo será perdido.</p>
+<p>Veja que o <strong>R</strong> aceita trocar trocar a direção da seta, mas ela sempre deve apontar para o nome do objeto que vai receber o valor, como no exemplo abaixo,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='op'>-</span><span class='fl'>8</span> <span class='op'>-&gt;</span> <span class='va'>x</span></span>
@@ -2412,8 +2355,7 @@ valor, como no exemplo abaixo,</p>
 </div>
 <pre><code>[1] -8</code></pre>
 </div>
-<p>Pode-se atribuir, por exemplo, um valor não-numérico a
-<code>x</code>.</p>
+<p>Pode-se atribuir, por exemplo, um valor não-numérico a <code>x</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='st'>"teste"</span></span>
@@ -2421,17 +2363,9 @@ valor, como no exemplo abaixo,</p>
 </div>
 <pre><code>[1] &quot;teste&quot;</code></pre>
 </div>
-<p>Alguns dos operadores que existem no R são: <code>&lt;-</code>,
-<code>=</code> e <code>==</code>. Como já comentado, os operadores
-<code>&lt;-</code> e <code>=</code> podem ser usados para atribuir
-valores a variáveis/objetos, mas recomendamos utilizar sempre o
-<code>&lt;-</code> porque o <code>=</code> também serve para outras
-coisas (falaremos disso mais a frente quando formos criar funções!).</p>
-<p>Já o símbolo <code>==</code> funciona para avaliar uma igualdade e
-não para atribuir um valor a um elemento do R. Quando utilizamos
-<code>==</code>, o <strong>R</strong> retorna uma variável lógica,
-podendo ser <code>TRUE</code> (verdadeiro) ou <code>FALSE</code>
-(falso). Por exemplo:</p>
+<p>Alguns dos operadores que existem no R são: <code>&lt;-</code>, <code>=</code> e <code>==</code>.
+Como já comentado, os operadores <code>&lt;-</code> e <code>=</code> podem ser usados para atribuir valores a variáveis/objetos, mas recomendamos utilizar sempre o <code>&lt;-</code> porque o <code>=</code> também serve para outras coisas (falaremos disso mais a frente quando formos criar funções!).</p>
+<p>Já o símbolo <code>==</code> funciona para avaliar uma igualdade e não para atribuir um valor a um elemento do R. Quando utilizamos <code>==</code>, o <strong>R</strong> retorna uma variável lógica, podendo ser <code>TRUE</code> (verdadeiro) ou <code>FALSE</code> (falso). Por exemplo:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>=</span> <span class='fl'>2</span></span>
@@ -2439,28 +2373,22 @@ podendo ser <code>TRUE</code> (verdadeiro) ou <code>FALSE</code>
 </div>
 <pre><code>[1] TRUE</code></pre>
 </div>
-<p>A segunda linha de código acima pode ser interpretada como uma
-pergunta que fazemos ao <strong>R</strong>, <code>x</code> é igual a 2?
-E ele responde em termos de <code>TRUE</code> ou <code>FALSE</code>.</p>
-<p>Como neste momento, <code>x=2</code>, se perguntarmos se
-<code>x</code> é igual a 3, qual deve ser a resposta?</p>
+<p>A segunda linha de código acima pode ser interpretada como uma pergunta que fazemos ao <strong>R</strong>, <code>x</code> é igual a 2? E ele responde em termos de <code>TRUE</code> ou <code>FALSE</code>.</p>
+<p>Como neste momento, <code>x=2</code>, se perguntarmos se <code>x</code> é igual a 3, qual deve ser a resposta?</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>==</span> <span class='fl'>3</span></span></code></pre>
 </div>
 <pre><code>[1] FALSE</code></pre>
 </div>
-<p>Mas existem outros operadores lógicos que também são muito úteis,
-como na linha de código abaixo em que queremos saber se <code>x</code> é
-diferente de 2,</p>
+<p>Mas existem outros operadores lógicos que também são muito úteis, como na linha de código abaixo em que queremos saber se <code>x</code> é diferente de 2,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>!=</span> <span class='fl'>2</span></span></code></pre>
 </div>
 <pre><code>[1] FALSE</code></pre>
 </div>
-<p>Os operadores matemáticos <code>&gt;</code>, <code>&lt;</code>,
-<code>&gt;=</code> e <code>&lt;=</code> também podem ser utilizados,</p>
+<p>Os operadores matemáticos <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code> e <code>&lt;=</code> também podem ser utilizados,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;</span> <span class='fl'>3</span></span></code></pre>
@@ -2474,8 +2402,7 @@ diferente de 2,</p>
 <pre><code>[1] TRUE</code></pre>
 </div>
 <h2 id="objetos-do-r">Objetos do R</h2>
-<p>Existem diversas <strong>classes</strong> de objetos dentro do
-<strong>R</strong>, alguns dos principais tipos são:</p>
+<p>Existem diversas <strong>classes</strong> de objetos dentro do <strong>R</strong>, alguns dos principais tipos são:</p>
 <ul>
 <li>Caractere (letras);</li>
 <li>Numérico (real);</li>
@@ -2485,13 +2412,7 @@ diferente de 2,</p>
 <li>Fator (classes);</li>
 <li>Lógico (<code>TRUE/FALSE</code>).</li>
 </ul>
-<p>Para sabermos a classe de um objeto, podemos utilizar uma função
-interna do <strong>R</strong> chamada <code>class()</code>. Usualmente,
-as funções vão sempre terminar com um parêntesis <code>()</code>, sendo
-que dentro dele incluímos os argumentos da função - o que ela precisa
-(nesse caso, o nome do objeto). Mais à frente no curso, falaremos com
-maiores detalhes sobre esses argumentos, funções em geral e até mesmo
-como criar sua própria função.</p>
+<p>Para sabermos a classe de um objeto, podemos utilizar uma função interna do <strong>R</strong> chamada <code>class()</code>. Usualmente, as funções vão sempre terminar com um parêntesis <code>()</code>, sendo que dentro dele incluímos os argumentos da função - o que ela precisa (nesse caso, o nome do objeto). Mais à frente no curso, falaremos com maiores detalhes sobre esses argumentos, funções em geral e até mesmo como criar sua própria função.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>2</span></span>
@@ -2509,16 +2430,8 @@ como criar sua própria função.</p>
 </div>
 <pre><code>[1] &quot;logical&quot;</code></pre>
 </div>
-<p>A forma mais básica de armazenar objetos dessas classes é na forma de
-vetor e os vetores podem ser criados, com a função <code>c()</code> já
-utilizada antes. A regra geral é que os vetores só armazenam objetos de
-mesma classe. Para criarmos um objeto contendo vários tipos de classes
-diferentes, podemos utilizar objetos do tipo <code>list</code> e
-<code>dataframe</code>, como veremos mais à frente.</p>
-<p>Via de regra, o R enverga números quando se utiliza um valor
-numérico. Para se criar uma variável do tipo inteiro
-(<code>integer</code>), deve-se acrescentar a letra <code>L</code> ao
-final:</p>
+<p>A forma mais básica de armazenar objetos dessas classes é na forma de vetor e os vetores podem ser criados, com a função <code>c()</code> já utilizada antes. A regra geral é que os vetores só armazenam objetos de mesma classe. Para criarmos um objeto contendo vários tipos de classes diferentes, podemos utilizar objetos do tipo <code>list</code> e <code>dataframe</code>, como veremos mais à frente.</p>
+<p>Via de regra, o R enverga números quando se utiliza um valor numérico. Para se criar uma variável do tipo inteiro (<code>integer</code>), deve-se acrescentar a letra <code>L</code> ao final:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>2L</span></span>
@@ -2527,9 +2440,7 @@ final:</p>
 <pre><code>[1] &quot;integer&quot;</code></pre>
 </div>
 <h3 id="classes-de-vetores">Classes de vetores</h3>
-<p>Vetores só podem conter variáveis de um tipo. Abaixo colocamos três
-exemplos para três tipos de classes diferentes (numérico, lógico e
-caractere).</p>
+<p>Vetores só podem conter variáveis de um tipo. Abaixo colocamos três exemplos para três tipos de classes diferentes (numérico, lógico e caractere).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span><span class='op'>)</span></span>
@@ -2564,10 +2475,7 @@ caractere).</p>
 <pre><code>[1] &quot;character&quot;</code></pre>
 </div>
 <h3 id="fatores">Fatores</h3>
-<p>O <code>factor</code> é uma importante classe de elemento no R para
-definir variáveis categóricas. São úteis em modelos de regressão linear
-com variáveis categóricas de entrada (estações do ano, classes de solo,
-cotas de alerta hidrológico etc.):</p>
+<p>O <code>factor</code> é uma importante classe de elemento no R para definir variáveis categóricas. São úteis em modelos de regressão linear com variáveis categóricas de entrada (estações do ano, classes de solo, cotas de alerta hidrológico etc.):</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normal"</span>, <span class='st'>"atenção"</span>, <span class='st'>"alerta"</span>, <span class='st'>"inundação"</span>,</span>
@@ -2589,10 +2497,7 @@ Levels: alerta atenção inundação inundação severa normal</code></pre>
           normal 
                3 </code></pre>
 </div>
-<p>Não apenas isso, mas podemos também ordenar essas classes de alguma
-forma, utilizando o argumento <code>levels =</code> para definir quais
-são os níveis e o argumento <code>ordered = TRUE</code> para mostrar que
-há ordem nos níveis pré-definidos.</p>
+<p>Não apenas isso, mas podemos também ordenar essas classes de alguma forma, utilizando o argumento <code>levels =</code> para definir quais são os níveis e o argumento <code>ordered = TRUE</code> para mostrar que há ordem nos níveis pré-definidos.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>factor</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"normal"</span>, <span class='st'>"atenção"</span>, <span class='st'>"alerta"</span>, <span class='st'>"inundação"</span>,</span>
@@ -2609,11 +2514,7 @@ há ordem nos níveis pré-definidos.</p>
 5 Levels: normal &lt; atenção &lt; alerta &lt; ... &lt; inundação severa</code></pre>
 </div>
 <h3 id="coerção-de-variáveis">Coerção de variáveis</h3>
-<p>Quando se tem diferentes tipos de classes dentro de um vetor, é feita
-uma coerção automática para que tudo fique com a mesma classe. Dessa
-forma, ao criar um vetor contendo dados do tipo caractere e numérico, o
-<strong>R</strong> supõe que todas as informações eram para ser do tipo
-caractere:</p>
+<p>Quando se tem diferentes tipos de classes dentro de um vetor, é feita uma coerção automática para que tudo fique com a mesma classe. Dessa forma, ao criar um vetor contendo dados do tipo caractere e numérico, o <strong>R</strong> supõe que todas as informações eram para ser do tipo caractere:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ola"</span>, <span class='fl'>1</span>, <span class='st'>"dia"</span>, <span class='fl'>2</span><span class='op'>)</span></span>
@@ -2625,9 +2526,7 @@ caractere:</p>
 </div>
 <pre><code>[1] &quot;character&quot;</code></pre>
 </div>
-<p>Podemos forçar uma coerção no <strong>R</strong>, a chamada
-<strong>Coerção explícita</strong>. Fazemos isso utilizando funções do
-tipo:</p>
+<p>Podemos forçar uma coerção no <strong>R</strong>, a chamada <strong>Coerção explícita</strong>. Fazemos isso utilizando funções do tipo:</p>
 <ul>
 <li><code>as.numeric()</code>;</li>
 <li><code>as.character()</code>;</li>
@@ -2636,13 +2535,7 @@ tipo:</p>
 <li><code>as.factor()</code>;</li>
 <li><code>as.complex()</code>.</li>
 </ul>
-<p>Com elas o <strong>R</strong> vai transformar o vetor (ou objeto) em
-questão no tipo que você definiu. Isso pode ser uma tarefa simples ou
-complicada pro programa. No exemplo abaixo, transformar tudo em
-caractere é relativamente fácil, o <strong>R</strong> apenas assume que
-o número é um <em>string</em> (um caractere). Dessa forma não
-conseguimos fazer operações aritméticas com ele, mas conseguimos fazer
-alguns tratamentos utilizados em texto.</p>
+<p>Com elas o <strong>R</strong> vai transformar o vetor (ou objeto) em questão no tipo que você definiu. Isso pode ser uma tarefa simples ou complicada pro programa. No exemplo abaixo, transformar tudo em caractere é relativamente fácil, o <strong>R</strong> apenas assume que o número é um <em>string</em> (um caractere). Dessa forma não conseguimos fazer operações aritméticas com ele, mas conseguimos fazer alguns tratamentos utilizados em texto.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='fl'>3</span><span class='op'>)</span></span>
@@ -2658,11 +2551,7 @@ alguns tratamentos utilizados em texto.</p>
 </div>
 <pre><code>Error in x + 1: argumento não-numérico para operador binário</code></pre>
 </div>
-<p>Pdemos fazer a mesma coerção para que o vetor seja numérico. Assim
-iremos transformar tudo dentro do vetor como classe numérico. Nesse
-caso, a tarefa pro <strong>R</strong> é complicada.. afinal, como
-transformar “ola” em um número? Nesses casos, no lugar é retornado um
-valor <code>NA</code> (<em>Not Available</em>):</p>
+<p>Pdemos fazer a mesma coerção para que o vetor seja numérico. Assim iremos transformar tudo dentro do vetor como classe numérico. Nesse caso, a tarefa pro <strong>R</strong> é complicada.. afinal, como transformar “ola” em um número? Nesses casos, no lugar é retornado um valor <code>NA</code> (<em>Not Available</em>):</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ola"</span>, <span class='fl'>1</span>, <span class='st'>"dia"</span>, <span class='fl'>2</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
@@ -2678,8 +2567,7 @@ valor <code>NA</code> (<em>Not Available</em>):</p>
 <pre><code>[1] &quot;numeric&quot;</code></pre>
 </div>
 <h3 id="sequências">Sequências</h3>
-<p>Podemos criar vetores sequenciais manualmente ao escrever o vetor que
-queremos com todos seus elementos.</p>
+<p>Podemos criar vetores sequenciais manualmente ao escrever o vetor que queremos com todos seus elementos.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>2</span>, <span class='fl'>3</span>, <span class='fl'>4</span>, <span class='fl'>5</span>, <span class='fl'>6</span>, <span class='fl'>7</span>, <span class='fl'>8</span>, <span class='fl'>9</span>, <span class='fl'>10</span><span class='op'>)</span></span>
@@ -2687,8 +2575,7 @@ queremos com todos seus elementos.</p>
 </div>
 <pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
 </div>
-<p>Também podemos utilizar o símboblo <code>:</code> para facilitar.
-Assim a sequência é gerada somando um a um.</p>
+<p>Também podemos utilizar o símboblo <code>:</code> para facilitar. Assim a sequência é gerada somando um a um.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>10</span><span class='op'>)</span></span>
@@ -2696,9 +2583,7 @@ Assim a sequência é gerada somando um a um.</p>
 </div>
 <pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
 </div>
-<p>Existe também funções para isso, como a função <code>seq()</code>.
-Com o primeiro valor sendo em qual número começamos a sequência e o
-segundo sendo até onde a sequêcia deve ir, sempre indo de 1 em 1.</p>
+<p>Existe também funções para isso, como a função <code>seq()</code>. Com o primeiro valor sendo em qual número começamos a sequência e o segundo sendo até onde a sequêcia deve ir, sempre indo de 1 em 1.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>10</span><span class='op'>)</span></span>
@@ -2706,11 +2591,7 @@ segundo sendo até onde a sequêcia deve ir, sempre indo de 1 em 1.</p>
 </div>
 <pre><code> [1]  1  2  3  4  5  6  7  8  9 10</code></pre>
 </div>
-<p>Essa função pode utilizar 3 valores. O terceiro é o tamanho do passo
-a ser dado, abaixo é feita uma sequência de 1 a 10, andando de 4 em 4.
-Ele não vai retornar 10 porque a sequência não passa por ele (ela seria
-1, 5, 9, 13, 17…), mas vai retornar o maior número antes do segundo
-colocado dentro do <code>seq()</code>.</p>
+<p>Essa função pode utilizar 3 valores. O terceiro é o tamanho do passo a ser dado, abaixo é feita uma sequência de 1 a 10, andando de 4 em 4. Ele não vai retornar 10 porque a sequência não passa por ele (ela seria 1, 5, 9, 13, 17…), mas vai retornar o maior número antes do segundo colocado dentro do <code>seq()</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>10</span>, <span class='fl'>4</span><span class='op'>)</span></span>
@@ -2719,11 +2600,7 @@ colocado dentro do <code>seq()</code>.</p>
 <pre><code>[1] 1 5 9</code></pre>
 </div>
 <h3 id="indexing"><em>Indexing</em></h3>
-<p>Para selecionar um valor específico dentro de um vetor, se usa
-colchetes <code>[]</code>. Assim, se quiser o primeiro elemento do vetor
-<code>x</code> eu escrevo <code>x[1]</code>. O mesmo vale para
-selecionar o primeiro, segundo e quinto elemento, escreveria
-<code>x[c(1, 2, 5)]</code>.</p>
+<p>Para selecionar um valor específico dentro de um vetor, se usa colchetes <code>[]</code>. Assim, se quiser o primeiro elemento do vetor <code>x</code> eu escrevo <code>x[1]</code>. O mesmo vale para selecionar o primeiro, segundo e quinto elemento, escreveria <code>x[c(1, 2, 5)]</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>11</span><span class='op'>:</span><span class='fl'>20</span><span class='op'>)</span></span>
@@ -2740,12 +2617,7 @@ selecionar o primeiro, segundo e quinto elemento, escreveria
 <pre><code>[1] 11 12 15</code></pre>
 </div>
 <h3 id="operações-em-ou-com-vetores">Operações em ou com vetores</h3>
-<p>Podemos fazer operações com vetores igual faziamos com números no
-começo. Os mesmos operadores são utilizados aqui. Por exemplo, se
-quisermos dobrar os valores de um vetor, podemos simplesmente fazer
-<code>2*</code> esse vetor. Em geral as operações aritméticas feitas em
-um vetor são feitas elementos a elementos. Para realizar operações
-matriciais a notação muda um pouco.</p>
+<p>Podemos fazer operações com vetores igual faziamos com números no começo. Os mesmos operadores são utilizados aqui. Por exemplo, se quisermos dobrar os valores de um vetor, podemos simplesmente fazer <code>2*</code> esse vetor. Em geral as operações aritméticas feitas em um vetor são feitas elementos a elementos. Para realizar operações matriciais a notação muda um pouco.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span></span>
@@ -2759,18 +2631,8 @@ matriciais a notação muda um pouco.</p>
 </div>
 <pre><code>[1] 0.7071068 1.0000000 1.2247449 1.4142136 1.5811388</code></pre>
 </div>
-<p>É possível inclusive fazer operações entre vetores. Porém, caso os
-vetores não sejam do mesmo tamanho teremos um problema ao fazer a
-operação elemento a elemento (vai acabar faltando algum). O
-<strong>R</strong>, nesse caso, vai fazer a operação até onde ele
-conseguir e irá retornar uma mensagem de aviso (<em>Warning</em>) - mas
-a conta será feita!</p>
-<p>Abaixo tentamos somar os vetores <code>x</code> e <code>y</code>.
-Como o vetor <code>y</code> tem um elemento a menos que <code>x</code>,
-a soma vai ser feita normalmente para os primeiros 4 elementos de
-<code>x</code>, ao fazer o quinto, porém, o <strong>R</strong> vai
-voltar ao inicio do <code>y</code> - somando então o quinto elemento de
-<code>x</code> com o primeiro do <code>y</code>.</p>
+<p>É possível inclusive fazer operações entre vetores. Porém, caso os vetores não sejam do mesmo tamanho teremos um problema ao fazer a operação elemento a elemento (vai acabar faltando algum). O <strong>R</strong>, nesse caso, vai fazer a operação até onde ele conseguir e irá retornar uma mensagem de aviso (<em>Warning</em>) - mas a conta será feita!</p>
+<p>Abaixo tentamos somar os vetores <code>x</code> e <code>y</code>. Como o vetor <code>y</code> tem um elemento a menos que <code>x</code>, a soma vai ser feita normalmente para os primeiros 4 elementos de <code>x</code>, ao fazer o quinto, porém, o <strong>R</strong> vai voltar ao inicio do <code>y</code> - somando então o quinto elemento de <code>x</code> com o primeiro do <code>y</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>y</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span><span class='op'>)</span></span>
@@ -2778,66 +2640,43 @@ voltar ao inicio do <code>y</code> - somando então o quinto elemento de
 </div>
 <pre><code>[1] 2 4 6 8 6</code></pre>
 </div>
-<p>Podemos misturar essas operações com o <em>indexing</em> comentado
-anteriormente. Por exemplo, se quisermos saber quais valores do vetor
-<code>x</code> são maiores que 6 posso escrever como abaixo. É retornado
-apenas uma sequência de valores <code>TRUE</code> ou <code>FALSE</code>
-para cada elemento do vetor.</p>
+<p>Podemos misturar essas operações com o <em>indexing</em> comentado anteriormente. Por exemplo, se quisermos saber quais valores do vetor <code>x</code> são maiores que 6 posso escrever como abaixo. É retornado apenas uma sequência de valores <code>TRUE</code> ou <code>FALSE</code> para cada elemento do vetor.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&gt;</span> <span class='fl'>6</span></span></code></pre>
 </div>
 <pre><code>[1] FALSE FALSE FALSE FALSE FALSE</code></pre>
 </div>
-<p>Se quiser saber quantos valores dentro do meu vetor são maiores do
-que 4, ao invés de contar na mão posso usar a função <code>sum()</code>!
-Isso acontece porque os valores lógicos também funcionam como números,
-os valores <code>TRUE</code> são equivalentes a 1 e valores
-<code>FALSE</code> são iguais a 0. Assim somando os valores
-<code>TRUE</code>, conseguimos saber quantos números dentro do vetor
-<code>x</code> são maiores que 4.</p>
+<p>Se quiser saber quantos valores dentro do meu vetor são maiores do que 4, ao invés de contar na mão posso usar a função <code>sum()</code>! Isso acontece porque os valores lógicos também funcionam como números, os valores <code>TRUE</code> são equivalentes a 1 e valores <code>FALSE</code> são iguais a 0. Assim somando os valores <code>TRUE</code>, conseguimos saber quantos números dentro do vetor <code>x</code> são maiores que 4.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='va'>x</span> <span class='op'>&gt;</span> <span class='fl'>4</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>[1] 1</code></pre>
 </div>
-<p>Abaixo, fazemos quais são os valores desse vetor que são maiores do
-que 4.</p>
+<p>Abaixo, fazemos quais são os valores desse vetor que são maiores do que 4.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span><span class='op'>[</span><span class='va'>x</span> <span class='op'>&gt;</span> <span class='fl'>4</span><span class='op'>]</span></span></code></pre>
 </div>
 <pre><code>[1] 5</code></pre>
 </div>
-<p>Também podemos juntar diversos operadores lógicos com os símbolos de
-<code>&amp;</code> (E) e <code>|</code> (OU). Por exemplo, queremos
-saber quais elementos do vetor <code>x</code> são maiores do que 2 E
-menores que 4.</p>
+<p>Também podemos juntar diversos operadores lógicos com os símbolos de <code>&amp;</code> (E) e <code>|</code> (OU). Por exemplo, queremos saber quais elementos do vetor <code>x</code> são maiores do que 2 E menores que 4.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&gt;</span> <span class='fl'>2</span> <span class='op'>&amp;</span> <span class='va'>x</span> <span class='op'>&lt;</span> <span class='fl'>4</span></span></code></pre>
 </div>
 <pre><code>[1] FALSE FALSE  TRUE FALSE FALSE</code></pre>
 </div>
-<h2 id="outros-tipos-de-dados-data-frames-matrizes-e-listas">Outros
-tipos de dados (Data Frames, matrizes e listas)</h2>
+<h2 id="outros-tipos-de-dados-data-frames-matrizes-e-listas">Outros tipos de dados (Data Frames, matrizes e listas)</h2>
 <h3 id="data-frames">Data Frames</h3>
 <ul>
 <li><code>matrix</code>: todos os elementos são da mesma classe;</li>
-<li><code>list</code>: cada elemento pode pertencer a uma classe
-diferente.</li>
-<li><code>data.frame</code>: dentro de cada coluna, os objetos pertencem
-à mesma classe, mas diferentes colunas podem pertencer a diferentes
-classes;</li>
+<li><code>list</code>: cada elemento pode pertencer a uma classe diferente.</li>
+<li><code>data.frame</code>: dentro de cada coluna, os objetos pertencem à mesma classe, mas diferentes colunas podem pertencer a diferentes classes;</li>
 </ul>
-<p>Quando são lidos objetos externos (planilhas excel, arquivos .txt ou
-.csv), usando as funções do R <code>read.table()</code> ou
-<code>read.csv()</code>, por exemplo, o objeto criado é um
-<code>data.frame</code>.</p>
-<p>A classe de <code>data.frame</code> é muito utilizada em R. É o que
-se utiliza para dados tabulados. Além disso, todos os elementos do
-<code>data.frame</code> têm o mesmo comprimento.</p>
+<p>Quando são lidos objetos externos (planilhas excel, arquivos .txt ou .csv), usando as funções do R <code>read.table()</code> ou <code>read.csv()</code>, por exemplo, o objeto criado é um <code>data.frame</code>.</p>
+<p>A classe de <code>data.frame</code> é muito utilizada em R. É o que se utiliza para dados tabulados. Além disso, todos os elementos do <code>data.frame</code> têm o mesmo comprimento.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>DF</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>)</span>, coluna_2 <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"A"</span>, <span class='st'>"B"</span>, <span class='st'>"C"</span><span class='op'>)</span><span class='op'>)</span></span>
@@ -2884,8 +2723,7 @@ $row.names
 [1] 1 2 3</code></pre>
 </div>
 <h3 id="matrizes">Matrizes</h3>
-<p>Matrizes são objetos objetos semelhantes a vetores, entretanto, com o
-atributo dimensão <code>dim</code>.</p>
+<p>Matrizes são objetos objetos semelhantes a vetores, entretanto, com o atributo dimensão <code>dim</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span>nrow <span class='op'>=</span> <span class='fl'>2</span>, ncol <span class='op'>=</span> <span class='fl'>3</span><span class='op'>)</span>; <span class='va'>m</span></span></code></pre>
@@ -2899,8 +2737,7 @@ atributo dimensão <code>dim</code>.</p>
 <pre><code>$dim
 [1] 2 3</code></pre>
 </div>
-<p>Matrizes podem ser criadas a partir de vetores, adicionando o
-atribuito dimensão.</p>
+<p>Matrizes podem ser criadas a partir de vetores, adicionando o atribuito dimensão.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='va'>x</span>, nrow <span class='op'>=</span> <span class='fl'>2</span>, ncol <span class='op'>=</span> <span class='fl'>5</span><span class='op'>)</span>; <span class='va'>m</span></span></code></pre>
@@ -2915,8 +2752,7 @@ atribuito dimensão.</p>
 [1,]    1    2    3    4    5
 [2,]    1    2    3    4    5</code></pre>
 </div>
-<p>Para selecionar elementos de uma matriz, é necessário especificar as
-duas dimensões:</p>
+<p>Para selecionar elementos de uma matriz, é necessário especificar as duas dimensões:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>m</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/matrix.html'>matrix</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>4</span>, nrow <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>; <span class='va'>m</span></span></code></pre>
@@ -2967,17 +2803,17 @@ duas dimensões:</p>
 <span><span class='va'>uniao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>cbind</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span></span>
 <span><span class='va'>uniao</span></span></code></pre>
 </div>
-<pre><code>       x          y
- [1,]  1  7.7330320
- [2,]  2  9.1928844
- [3,]  3 14.2197264
- [4,]  4 -0.3135483
- [5,]  5  8.4014092
- [6,]  6 10.7283991
- [7,]  7  7.5505504
- [8,]  8 16.5609138
- [9,]  9  0.8132342
-[10,] 10 13.2437348</code></pre>
+<pre><code>       x         y
+ [1,]  1 15.869427
+ [2,]  2  5.084543
+ [3,]  3  7.654034
+ [4,]  4 12.017091
+ [5,]  5 16.644716
+ [6,]  6  8.784446
+ [7,]  7 12.861898
+ [8,]  8 14.408219
+ [9,]  9 16.393721
+[10,] 10  6.119689</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>uniao</span><span class='op'>)</span></span></code></pre>
 </div>
@@ -2992,12 +2828,12 @@ duas dimensões:</p>
 <span><span class='va'>uniao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/cbind.html'>rbind</a></span><span class='op'>(</span><span class='va'>x</span>, <span class='va'>y</span><span class='op'>)</span></span>
 <span><span class='va'>uniao</span></span></code></pre>
 </div>
-<pre><code>      [,1]     [,2]     [,3]     [,4]     [,5]     [,6]     [,7]
-x  1.00000  2.00000  3.00000  4.00000  5.00000  6.00000  7.00000
-y 24.98981 24.18452 12.43958 16.50373 20.60246 18.31887 20.43454
+<pre><code>      [,1]     [,2]    [,3]    [,4]     [,5]     [,6]     [,7]
+x  1.00000  2.00000  3.0000  4.0000  5.00000  6.00000  7.00000
+y 21.39363 21.10437 19.6188 28.6885 26.73642 20.09961 12.91306
       [,8]     [,9]    [,10]
 x  8.00000  9.00000 10.00000
-y 14.68244 25.20016 13.98503</code></pre>
+y 17.98791 26.35607 26.10666</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/dim.html'>dim</a></span><span class='op'>(</span><span class='va'>uniao</span><span class='op'>)</span></span></code></pre>
 </div>
@@ -3005,12 +2841,8 @@ y 14.68244 25.20016 13.98503</code></pre>
 </div>
 <p>A função <code>rbind()</code> adiciona linhas as matrizes.</p>
 <h3 id="listas">Listas</h3>
-<p>Listas são elementos importantes na programação em R. Uma das
-vantagens de se saber utilizar bem esse tipo de elemento é que nelas é
-possível armazenar elementos de diferentes tipos (caracter, número real,
-inteiro, complexo, lógico).</p>
-<p>Elas são diferentes dos vetores que, via de regra, só armazenam
-objetos de mesma classe.</p>
+<p>Listas são elementos importantes na programação em R. Uma das vantagens de se saber utilizar bem esse tipo de elemento é que nelas é possível armazenar elementos de diferentes tipos (caracter, número real, inteiro, complexo, lógico).</p>
+<p>Elas são diferentes dos vetores que, via de regra, só armazenam objetos de mesma classe.</p>
 <p>Para criar uma lista:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -3032,8 +2864,7 @@ objetos de mesma classe.</p>
 [[5]]
 [1] 4</code></pre>
 </div>
-<p>Para selecionar dados de listas, utiliza-se o duplo cochete
-<code>[[]]</code>:</p>
+<p>Para selecionar dados de listas, utiliza-se o duplo cochete <code>[[]]</code>:</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>2</span>,<span class='fl'>3</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"Ola"</span>, <span class='st'>"Mundo"</span><span class='op'>)</span>, <span class='fl'>1</span><span class='op'>+</span><span class='fl'>5i</span>, <span class='cn'>TRUE</span>, <span class='fl'>4L</span><span class='op'>)</span></span>
@@ -3051,30 +2882,14 @@ objetos de mesma classe.</p>
 </div>
 <h2 id="programação-básica">Programação Básica</h2>
 <h3 id="funções">Funções</h3>
-<p>Uma coisa essencial em qualquer linguagem de programação é a criação
-e utilização de funções. O <strong>R</strong> (assim como outras
-linguagens) já vem com diversas funções instaladas nele mesmo - chamamos
-isso de <strong>R base</strong>. Por exemplo, se quisermos calcular o
-<code>log</code> de algum valor, podemos utilizar a função
-<code>log()</code> colocando dentro do parênteses o valor que
-queremos.</p>
+<p>Uma coisa essencial em qualquer linguagem de programação é a criação e utilização de funções. O <strong>R</strong> (assim como outras linguagens) já vem com diversas funções instaladas nele mesmo - chamamos isso de <strong>R base</strong>. Por exemplo, se quisermos calcular o <code>log</code> de algum valor, podemos utilizar a função <code>log()</code> colocando dentro do parênteses o valor que queremos.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>10</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>[1] 2.302585</code></pre>
 </div>
-<p>Para saber o que é preciso colocar dentro dos parênteses, ou seja,
-quais os argumentos (ou <em>inputs</em>) que cada função toma, podemos
-utilizar a função <code>args()</code>. Usando ela com o log (dessa vez
-sem parênteses) dentro, podemos ver que a função toma dois argumentos: o
-<code>x</code> (valor em que se calcula o logaritmo) e a
-<code>base</code> que já vem com um valor definido de exponencial. Para
-se ter mais informações sobre alguma função, podemos, além de usar
-<code>args()</code> utilizar uma interrogação anterior ao nome da função
-(sem parêntesis), ou usar a função <code>help()</code>. Essas duas
-últimas opções são equivalentes e nos mostram a documentação feita para
-essa função no <strong>R</strong>.</p>
+<p>Para saber o que é preciso colocar dentro dos parênteses, ou seja, quais os argumentos (ou <em>inputs</em>) que cada função toma, podemos utilizar a função <code>args()</code>. Usando ela com o log (dessa vez sem parênteses) dentro, podemos ver que a função toma dois argumentos: o <code>x</code> (valor em que se calcula o logaritmo) e a <code>base</code> que já vem com um valor definido de exponencial. Para se ter mais informações sobre alguma função, podemos, além de usar <code>args()</code> utilizar uma interrogação anterior ao nome da função (sem parêntesis), ou usar a função <code>help()</code>. Essas duas últimas opções são equivalentes e nos mostram a documentação feita para essa função no <strong>R</strong>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/args.html'>args</a></span><span class='op'>(</span><span class='va'>log</span><span class='op'>)</span></span>
@@ -3082,18 +2897,8 @@ essa função no <strong>R</strong>.</p>
 <span><span class='fu'><a href='https://rdrr.io/r/utils/help.html'>help</a></span><span class='op'>(</span><span class='va'>log</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<p>O segundo argumento do <code>log()</code> pode ser modificado, basta
-deixar ele explícito ao chamar a função. Não precisamos escrever qual
-argumento estamos utilizando desde que se siga a ordem da função
-(mostrada anteriormente). Caso se queira escrever os argumentos em outra
-ordem, é possível, mas é necessário escrever cada um deles.</p>
-<p>Veja melhor o exemplo abaixo. O primeiro não definimos a base,
-portanto é usada a pré definida (exponencial). No segundo log feito, não
-escrevemos qual a base e qual o número que queremos o logaritmo,
-portanto o <strong>R</strong> assume que estamos escrevendo na ordem da
-função, que toma como primeiro argumento o valor e o segundo argumento a
-base. No terceiro exemplo trocamos as ordens dos argumentos, mas para
-isso precisamos deixar explícito (escrito) quem é cada um.</p>
+<p>O segundo argumento do <code>log()</code> pode ser modificado, basta deixar ele explícito ao chamar a função. Não precisamos escrever qual argumento estamos utilizando desde que se siga a ordem da função (mostrada anteriormente). Caso se queira escrever os argumentos em outra ordem, é possível, mas é necessário escrever cada um deles.</p>
+<p>Veja melhor o exemplo abaixo. O primeiro não definimos a base, portanto é usada a pré definida (exponencial). No segundo log feito, não escrevemos qual a base e qual o número que queremos o logaritmo, portanto o <strong>R</strong> assume que estamos escrevendo na ordem da função, que toma como primeiro argumento o valor e o segundo argumento a base. No terceiro exemplo trocamos as ordens dos argumentos, mas para isso precisamos deixar explícito (escrito) quem é cada um.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>100</span><span class='op'>)</span></span></code></pre>
@@ -3108,16 +2913,7 @@ isso precisamos deixar explícito (escrito) quem é cada um.</p>
 </div>
 <pre><code>[1] 2</code></pre>
 </div>
-<p>Agora vamos fazer nossa própria função dentro do <strong>R</strong>.
-Para isso, primeiro definimos um nome para ser o nome da função (como
-fizemos com criação de variáveis / objetos), por exemplo
-“fun_area_circulo”. Em seguida devemos dizer que vamos criar uma função
-e quais os argumentos que ela toma. Para fazer o exemplo, a área de um
-círculo, precisamos apenas de uma informação - o raio desse círculo.
-Podemos fazer quantas operações quisermos dentro da função, no final o
-último valor será retornado por ela (podemos deixar isso explícito
-escrevendo <code>return</code> nela). Depois chamamos ela como qualquer
-outra função!</p>
+<p>Agora vamos fazer nossa própria função dentro do <strong>R</strong>. Para isso, primeiro definimos um nome para ser o nome da função (como fizemos com criação de variáveis / objetos), por exemplo “fun_area_circulo”. Em seguida devemos dizer que vamos criar uma função e quais os argumentos que ela toma. Para fazer o exemplo, a área de um círculo, precisamos apenas de uma informação - o raio desse círculo. Podemos fazer quantas operações quisermos dentro da função, no final o último valor será retornado por ela (podemos deixar isso explícito escrevendo <code>return</code> nela). Depois chamamos ela como qualquer outra função!</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>fun_area_circulo</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>raio</span><span class='op'>)</span><span class='op'>{</span></span>
@@ -3129,18 +2925,8 @@ outra função!</p>
 </div>
 <pre><code>[1] 78.53982</code></pre>
 </div>
-<h3 id="estruturas-condicionais-ifelse">Estruturas condicionais
-(ifelse)</h3>
-<p>Em programação, algo extremamente importante e útil são os comandos
-<code>if</code> e <code>else</code> (<em>e</em> / <em>se</em>). Com
-esses comandos, é possível rodar um pedaço de código apenas se uma
-condição for cumprida. Esse comando no <strong>R</strong> funciona
-similar a uma função, sendo então o <code>ifelse()</code> (tudo junto!),
-e toma três argumentos - um lógico (uma condição), o que fazer se o
-lógico for <code>TRUE</code> e o que fazer se o lógico for
-<code>FALSE</code>. Abaixo fazemos um exemplo utilizando o
-<code>ifelse</code> para verificar se o <code>X</code> é maior ou menor
-do que 100.</p>
+<h3 id="estruturas-condicionais-ifelse">Estruturas condicionais (ifelse)</h3>
+<p>Em programação, algo extremamente importante e útil são os comandos <code>if</code> e <code>else</code> (<em>e</em> / <em>se</em>). Com esses comandos, é possível rodar um pedaço de código apenas se uma condição for cumprida. Esse comando no <strong>R</strong> funciona similar a uma função, sendo então o <code>ifelse()</code> (tudo junto!), e toma três argumentos - um lógico (uma condição), o que fazer se o lógico for <code>TRUE</code> e o que fazer se o lógico for <code>FALSE</code>. Abaixo fazemos um exemplo utilizando o <code>ifelse</code> para verificar se o <code>X</code> é maior ou menor do que 100.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>10</span></span>
@@ -3155,9 +2941,7 @@ do que 100.</p>
 </div>
 <pre><code>[1] &quot;X é maior ou igual a 100&quot;</code></pre>
 </div>
-<p>É possível usar também só o <code>if</code> como um comando. Em
-seguida rodamos um código para que, se o X for um número não inteiro,
-arredondamos ele e em seguida o transformamos em inteiro.</p>
+<p>É possível usar também só o <code>if</code> como um comando. Em seguida rodamos um código para que, se o X for um número não inteiro, arredondamos ele e em seguida o transformamos em inteiro.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>x</span> <span class='op'>&lt;-</span> <span class='fl'>3.7</span></span>
@@ -3167,20 +2951,9 @@ arredondamos ele e em seguida o transformamos em inteiro.</p>
 <pre><code>[1] &quot;integer&quot;</code></pre>
 </div>
 <h3 id="loops-for-e-while">Loops (for e while)</h3>
-<p>A última coisa a se falar do <strong>R</strong> “básico” é a
-construção de <em>loops</em>. Eles são utilizados quando queremos
-repetir a mesma coisa várias vezes.</p>
+<p>A última coisa a se falar do <strong>R</strong> “básico” é a construção de <em>loops</em>. Eles são utilizados quando queremos repetir a mesma coisa várias vezes.</p>
 <h4 id="for">for</h4>
-<p>O <code>for()</code> utiliza 2 argumentos separados por
-<code>in</code>. O primeiro fala qual objeto vai ser iterado várias
-vezes, e o outro a faixa de valores (quantas vezes ele vai ser iterado
-praticamente). No exemplo abaixo vamos por exemplo variar o
-<code>i</code> (criado dentro do próprio <em>loop</em>) na sequência de
-1 até 5. Isso é o mais importante desse tipo de <em>loop</em>,
-<strong>precisamos</strong> saber quantas vezes (<code>1:5</code>)
-iterar essa variável (nesse caso <code>i</code>). O resto da função é
-simplesmente o que vai ser iterado. No exemplo abaixo apenas printamos o
-valor de <code>i</code> quando ele varia de 1 a 5.</p>
+<p>O <code>for()</code> utiliza 2 argumentos separados por <code>in</code>. O primeiro fala qual objeto vai ser iterado várias vezes, e o outro a faixa de valores (quantas vezes ele vai ser iterado praticamente). No exemplo abaixo vamos por exemplo variar o <code>i</code> (criado dentro do próprio <em>loop</em>) na sequência de 1 até 5. Isso é o mais importante desse tipo de <em>loop</em>, <strong>precisamos</strong> saber quantas vezes (<code>1:5</code>) iterar essa variável (nesse caso <code>i</code>). O resto da função é simplesmente o que vai ser iterado. No exemplo abaixo apenas printamos o valor de <code>i</code> quando ele varia de 1 a 5.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'>for</span><span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>1</span><span class='op'>:</span><span class='fl'>5</span><span class='op'>)</span><span class='op'>{</span></span>
@@ -3194,13 +2967,7 @@ valor de <code>i</code> quando ele varia de 1 a 5.</p>
 [1] 5</code></pre>
 </div>
 <h4 id="while">while</h4>
-<p>Diferente do <code>for</code>, utilizamos o <code>while</code> quando
-não sabemos <em>a priori</em> quando queremos terminar nosso
-<em>loop</em>. Ou seja, vamos ficar repetindo o que foi feito até certa
-condição ser cumprida. No exemplo abaixo, printamos na tela o valor de
-<code>i</code>, sendo que a cada “rodada” aumentamos o valor de
-<code>i</code> em uma unidade. Isso é feito até o <code>i</code> ser
-menor ou igual a 5, por exemplo.</p>
+<p>Diferente do <code>for</code>, utilizamos o <code>while</code> quando não sabemos <em>a priori</em> quando queremos terminar nosso <em>loop</em>. Ou seja, vamos ficar repetindo o que foi feito até certa condição ser cumprida. No exemplo abaixo, printamos na tela o valor de <code>i</code>, sendo que a cada “rodada” aumentamos o valor de <code>i</code> em uma unidade. Isso é feito até o <code>i</code> ser menor ou igual a 5, por exemplo.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>i</span> <span class='op'>&lt;-</span> <span class='fl'>0</span></span>
@@ -3217,8 +2984,7 @@ menor ou igual a 5, por exemplo.</p>
 [1] 4
 [1] 5</code></pre>
 </div>
-<div class="sourceCode" id="cb85"><pre
-class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

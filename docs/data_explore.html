@@ -21,7 +21,7 @@
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -32,7 +32,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -459,8 +459,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
 
   <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-  <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
-  <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"/>
   <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
   <script src="site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
   <script src="site_libs/fuse-6.4.1/fuse.min.js"></script>
@@ -789,6 +789,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article table.gt_table td,
   d-article table.gt_table th {
     border-bottom: none;
+    font-size: 100%;
   }
 
   .html-widget {
@@ -829,9 +830,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     display: none !important;
   }
 
+  hr.section-separator {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 0px;
+  }
+
+
+  d-byline {
+    border-top: none;
+  }
+
   d-article {
     padding-top: 2.5rem;
     padding-bottom: 30px;
+    border-top: none;
   }
 
   d-appendix {
@@ -926,6 +939,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article div.sourceCode pre {
     padding-left: 18px;
     font-size: 14px;
+  }
+
+  /* tweak for Pandoc numbered line within distill */
+  d-article pre.numberSource code > span {
+      left: -2em;
   }
 
   d-article pre {
@@ -1687,6 +1705,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // create d-title
     $('.d-title').changeElementType('d-title');
 
+    // separator
+    var separator = '<hr class="section-separator" style="clear: both"/>';
+    // prepend separator above appendix
+    $('.d-byline').before(separator);
+    $('.d-article').before(separator);
+
     // create d-byline
     var byline = $('<d-byline></d-byline>');
     $('.d-byline').replaceWith(byline);
@@ -1764,8 +1788,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     $('.distill-force-highlighting-css').parent().remove();
 
     // remove empty line numbers inserted by pandoc when using a
-    // custom syntax highlighting theme
-    $('code.sourceCode a:empty').remove();
+    // custom syntax highlighting theme, except when numbering line
+    // in code chunk
+    $('pre:not(.numberLines) code.sourceCode a:empty').remove();
 
     // load distill framework
     load_distill_framework();
@@ -1791,12 +1816,13 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       // add orcid ids
       $('.authors-affiliations').find('.author').each(function(i, el) {
         var orcid_id = front_matter.authors[i].orcidID;
+        var author_name = front_matter.authors[i].author
         if (orcid_id) {
           var a = $('<a></a>');
           a.attr('href', 'https://orcid.org/' + orcid_id);
           var img = $('<img></img>');
           img.addClass('orcid-id');
-          img.attr('alt', 'ORCID ID');
+          img.attr('alt', author_name ? 'ORCID ID for ' + author_name : 'ORCID ID');
           img.attr('src','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg==');
           a.append(img);
           $(this).append(a);
@@ -1861,15 +1887,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
       // hoverable references
       $('span.citation[data-cites]').each(function() {
-        if ($(this).children()[0].nodeName == "D-FOOTNOTE") {
-          var fn = $(this).children()[0]
+        const citeChild = $(this).children()[0]
+        // Do not process if @xyz has been used without escaping and without bibliography activated
+        // https://github.com/rstudio/distill/issues/466
+        if (citeChild === undefined) return true
+
+        if (citeChild.nodeName == "D-FOOTNOTE") {
+          var fn = citeChild
           $(this).html(fn.shadowRoot.querySelector("sup"))
           $(this).id = fn.id
           fn.remove()
         }
         var refs = $(this).attr('data-cites').split(" ");
         var refHtml = refs.map(function(ref) {
-          return "<p>" + $('#ref-' + ref).html() + "</p>";
+          // Could use CSS.escape too here, we insure backward compatibility in navigator
+          return "<p>" + $('div[id="ref-' + ref + '"]').html() + "</p>";
         }).join("\n");
         window.tippy(this, {
           allowHTML: true,
@@ -2068,7 +2100,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2113,6 +2145,7 @@ Aulas
 <a href="data_explore.html">Análise exploratória</a>
 <a href="data_explore_rascunho.html">Análise exploratória 2</a>
 <a href="frequency_analysis.html">Análise de frequência</a>
+<a href="frequency_analysis_gev.html">Análise de frequência_GEV</a>
 </div>
 </div>
 <a href="colaboradores.html">Colaboradores</a>
@@ -2129,6 +2162,7 @@ Aulas
 
 <div class="d-title">
 <h1>Análise exploratória dos dados</h1>
+
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
 <p>Como obter uma visão geral dos dados</p>
@@ -2140,72 +2174,30 @@ Aulas
 <nav class="l-text toc figcaption" id="TOC">
 <h3>Contents</h3>
 <ul>
-<li><a href="#leitura-dos-dados-gerados-na-última-aula"
-id="toc-leitura-dos-dados-gerados-na-última-aula">Leitura dos dados
-gerados na última aula</a></li>
-<li><a href="#visualizar-a-disponibilidade-de-dados"
-id="toc-visualizar-a-disponibilidade-de-dados">Visualizar a
-disponibilidade de dados</a></li>
-<li><a href="#plotagem-da-série-histórica"
-id="toc-plotagem-da-série-histórica">Plotagem da série
-histórica</a></li>
-<li><a href="#caracterização-gráfica-com-ggplot2"
-id="toc-caracterização-gráfica-com-ggplot2">Caracterização gráfica com
-ggplot2</a></li>
-<li><a href="#gráficos-com-as-4-estações"
-id="toc-gráficos-com-as-4-estações">Gráficos com as 4 estações</a></li>
-<li><a href="#outros-gráficos-interessantes"
-id="toc-outros-gráficos-interessantes">Outros gráficos
-interessantes</a></li>
-<li><a href="#gráficos-usando-a-tabela-de-resumo-estatístico"
-id="toc-gráficos-usando-a-tabela-de-resumo-estatístico">Gráficos usando
-a tabela de resumo estatístico</a></li>
+<li><a href="#leitura-dos-dados-gerados-na-última-aula" id="toc-leitura-dos-dados-gerados-na-última-aula">Leitura dos dados gerados na última aula</a></li>
+<li><a href="#visualizar-a-disponibilidade-de-dados" id="toc-visualizar-a-disponibilidade-de-dados">Visualizar a disponibilidade de dados</a></li>
+<li><a href="#plotagem-da-série-histórica" id="toc-plotagem-da-série-histórica">Plotagem da série histórica</a></li>
+<li><a href="#caracterização-gráfica-com-ggplot2" id="toc-caracterização-gráfica-com-ggplot2">Caracterização gráfica com ggplot2</a></li>
+<li><a href="#gráficos-com-as-4-estações" id="toc-gráficos-com-as-4-estações">Gráficos com as 4 estações</a></li>
+<li><a href="#outros-gráficos-interessantes" id="toc-outros-gráficos-interessantes">Outros gráficos interessantes</a></li>
+<li><a href="#gráficos-usando-a-tabela-de-resumo-estatístico" id="toc-gráficos-usando-a-tabela-de-resumo-estatístico">Gráficos usando a tabela de resumo estatístico</a></li>
 <li><a href="#livros" id="toc-livros">Livros !</a>
 <ul>
-<li><a href="#livro-do-criador-do-ggplot2"
-id="toc-livro-do-criador-do-ggplot2">Livro do criador do
-ggplot2:</a></li>
-<li><a href="#entender-melhor-quais-cores-usar"
-id="toc-entender-melhor-quais-cores-usar">Entender melhor quais cores
-usar:</a></li>
-<li><a href="#todas-as-cores-do-r" id="toc-todas-as-cores-do-r">Todas as
-cores do R:</a></li>
+<li><a href="#livro-do-criador-do-ggplot2" id="toc-livro-do-criador-do-ggplot2">Livro do criador do ggplot2:</a></li>
+<li><a href="#entender-melhor-quais-cores-usar" id="toc-entender-melhor-quais-cores-usar">Entender melhor quais cores usar:</a></li>
+<li><a href="#todas-as-cores-do-r" id="toc-todas-as-cores-do-r">Todas as cores do R:</a></li>
 </ul></li>
 </ul>
 </nav>
 </div>
-<p>Nesta aula, iremos realizar um conjunto de atividade que nos ajudarão
-entender os dados que temos em mão. Essas atividade são conhecidas como
-<strong>análise exploratória de dados</strong>.</p>
-<p>Não existe um conjunto único de atividades que define uma
-<strong>análise exploratória</strong>. O que se costuma fazer nessa
-etapa de um estudo vai depender da natureza do estudo.</p>
-<p>Embora nossa atividade final é a de relaizar um estudo de análise de
-frequÊncia de cheias, nesta aula, apresentaremos algumas atividades mais
-gerais, que podem e devem ser utilizadas em outros tipos de estudo.</p>
-<p>Para iniciar essas atividades, vamos primeiro carregar os dados que
-foram obtidos na aual anterior e gravados em arquivos no fomato
-texto.</p>
-<h2 id="leitura-dos-dados-gerados-na-última-aula">Leitura dos dados
-gerados na última aula</h2>
-<p>Para carregar esses dados de vazão, precisamos ler os arquivos com
-extensão <strong>txt</strong>, que foram criados com os dados de vazão
-obtidos via webservide da ANA.</p>
-<p>Faremos isso com os três arquivos existentes, o primeiro que contém
-apenas a série histórica de uma estação específica, o segundo que
-consiste dos dados diários da série histórica de quatro estações, e por
-último, aquele com os valores de máximo, mínimo e média todos a nível
-anual.</p>
-<p>Para não precisarmos redefinir a coluna de Datas como sendo do
-formato <em>Date</em> (lembrar que o <strong>R</strong> vai ler ela
-automaticamente como <em>character</em>), podemos usar o argumento
-<strong>colClasses =</strong> para avisar ao <strong>R</strong> a classe
-de cada coluna. Além disso, vamos aproveitar e transformar a coluna de
-código das estações como fator. Se não souber qual a classe uma coluna,
-pode-se botar <strong>NA</strong> - porém é importante notar que é
-<strong>obrigatório</strong> informar o tipo. Caso coloque menos
-argumentos no vetor do que o número de colunas, o <strong>R</strong> irá
-iterar sobre o vetor informado.</p>
+<p>Nesta aula, iremos realizar um conjunto de atividade que nos ajudarão entender os dados que temos em mão. Essas atividade são conhecidas como <strong>análise exploratória de dados</strong>.</p>
+<p>Não existe um conjunto único de atividades que define uma <strong>análise exploratória</strong>. O que se costuma fazer nessa etapa de um estudo vai depender da natureza do estudo.</p>
+<p>Embora nossa atividade final é a de relaizar um estudo de análise de frequÊncia de cheias, nesta aula, apresentaremos algumas atividades mais gerais, que podem e devem ser utilizadas em outros tipos de estudo.</p>
+<p>Para iniciar essas atividades, vamos primeiro carregar os dados que foram obtidos na aual anterior e gravados em arquivos no fomato texto.</p>
+<h2 id="leitura-dos-dados-gerados-na-última-aula">Leitura dos dados gerados na última aula</h2>
+<p>Para carregar esses dados de vazão, precisamos ler os arquivos com extensão <strong>txt</strong>, que foram criados com os dados de vazão obtidos via webservide da ANA.</p>
+<p>Faremos isso com os três arquivos existentes, o primeiro que contém apenas a série histórica de uma estação específica, o segundo que consiste dos dados diários da série histórica de quatro estações, e por último, aquele com os valores de máximo, mínimo e média todos a nível anual.</p>
+<p>Para não precisarmos redefinir a coluna de Datas como sendo do formato <em>Date</em> (lembrar que o <strong>R</strong> vai ler ela automaticamente como <em>character</em>), podemos usar o argumento <strong>colClasses =</strong> para avisar ao <strong>R</strong> a classe de cada coluna. Além disso, vamos aproveitar e transformar a coluna de código das estações como fator. Se não souber qual a classe uma coluna, pode-se botar <strong>NA</strong> - porém é importante notar que é <strong>obrigatório</strong> informar o tipo. Caso coloque menos argumentos no vetor do que o número de colunas, o <strong>R</strong> irá iterar sobre o vetor informado.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_60435000</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='st'>"dados/60435000.txt"</span>,</span>
@@ -2229,40 +2221,14 @@ iterar sobre o vetor informado.</p>
 <span>                           fileEncoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<h2 id="visualizar-a-disponibilidade-de-dados">Visualizar a
-disponibilidade de dados</h2>
-<p>É comum realizar estudos hidrológicos que contemplem, pelo menos num
-primeiro momento, um número elevado de estações que, em tese, podem ser
-utilizadas.</p>
-<p>Para termos uma visão de conjunto dos dados que estão disponíveis, é
-interessante fazer uma plotagem que permite entender o período de dados
-disponíveis em cada estação, bem como a ocorrência de falhas nas séries.
-Essa visão mais geral nos ajuda a definir quais estações devem ser
-selecionadas, e possivelmente o período de dados mais adequado para o
-estudo.</p>
-<p>Mas mesmo que estejamos trabalhando com apenas uma estação, é sempre
-interessante visualizar o período disponível, bem como as falhas
-contidas no registro.</p>
-<p>Iniciaremos essa visualização da disponibilidade dos dados com apenas
-uma estação. Na etapa seguinte, expandiremos para um conjunto de quatro
-estações selcionadas na aula anterior.</p>
-<p>Faremos um gráfico do tipo <strong>heatmap</strong>, que é
-basicamente uma figura que coloca cores numa Tabela. Neste primeiro
-passo, para cada estação, faremos um <strong>heatmap</strong> das vazões
-médias mensais com os anos no eixo-y e os meses no eixo-x. A tonalidade
-das cores estará associada à magnitude da vazão média do mês em questão.
-Quando o mês não possui vazão, a região do mês correspodente ficará
-branca.</p>
-<p>O resultado final permite visualizar, dentro de uma faixa de anos, a
-magnitude das vazões por meio de cores, e também a ocorrência de falhas
-nos registros, permitindo reconhecer de cara a sazonalidade das vazões,
-com cores mais fortes no período úmido e cores mais suaves no período
-seco.</p>
-<p>Para construir essa Figura inicial com apenas uma estação, vamos
-trabalhar com o <code>dataframe</code> denominado
-<code>dados_60435000</code>, cujas primeiras observações podem ser
-vistas abaixo, onde observamos 3 colunas, o código da estação, a data, e
-o valor da vazão diária correspondente.</p>
+<h2 id="visualizar-a-disponibilidade-de-dados">Visualizar a disponibilidade de dados</h2>
+<p>É comum realizar estudos hidrológicos que contemplem, pelo menos num primeiro momento, um número elevado de estações que, em tese, podem ser utilizadas.</p>
+<p>Para termos uma visão de conjunto dos dados que estão disponíveis, é interessante fazer uma plotagem que permite entender o período de dados disponíveis em cada estação, bem como a ocorrência de falhas nas séries. Essa visão mais geral nos ajuda a definir quais estações devem ser selecionadas, e possivelmente o período de dados mais adequado para o estudo.</p>
+<p>Mas mesmo que estejamos trabalhando com apenas uma estação, é sempre interessante visualizar o período disponível, bem como as falhas contidas no registro.</p>
+<p>Iniciaremos essa visualização da disponibilidade dos dados com apenas uma estação. Na etapa seguinte, expandiremos para um conjunto de quatro estações selcionadas na aula anterior.</p>
+<p>Faremos um gráfico do tipo <strong>heatmap</strong>, que é basicamente uma figura que coloca cores numa Tabela. Neste primeiro passo, para cada estação, faremos um <strong>heatmap</strong> das vazões médias mensais com os anos no eixo-y e os meses no eixo-x. A tonalidade das cores estará associada à magnitude da vazão média do mês em questão. Quando o mês não possui vazão, a região do mês correspodente ficará branca.</p>
+<p>O resultado final permite visualizar, dentro de uma faixa de anos, a magnitude das vazões por meio de cores, e também a ocorrência de falhas nos registros, permitindo reconhecer de cara a sazonalidade das vazões, com cores mais fortes no período úmido e cores mais suaves no período seco.</p>
+<p>Para construir essa Figura inicial com apenas uma estação, vamos trabalhar com o <code>dataframe</code> denominado <code>dados_60435000</code>, cujas primeiras observações podem ser vistas abaixo, onde observamos 3 colunas, o código da estação, a data, e o valor da vazão diária correspondente.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>)</span></span></code></pre>
@@ -2275,10 +2241,7 @@ o valor da vazão diária correspondente.</p>
 5    60435000 1978-05-05    NA
 6    60435000 1978-05-06    NA</code></pre>
 </div>
-<p>Para facilitar a construção do <strong>heatmap</strong>, que precisa
-separar as informações de mês e ano, vamos expandir o dataframe com mais
-duas colunas, uma com os meses e a outra com os anos, como pode ser
-visto na sequência,</p>
+<p>Para facilitar a construção do <strong>heatmap</strong>, que precisa separar as informações de mês e ano, vamos expandir o dataframe com mais duas colunas, uma com os meses e a outra com os anos, como pode ser visto na sequência,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/year.html'>year</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span>
@@ -2293,12 +2256,7 @@ visto na sequência,</p>
 5    60435000 1978-05-05    NA 1978   5
 6    60435000 1978-05-06    NA 1978   5</code></pre>
 </div>
-<p>As duas colunas extras permitirão a realização do cálculo das vazões
-médias mensais para cada ano. Para isso, utilizaremos as funções
-<code>group_by()</code>, <code>summarize()</code> e <code>mean()</code>.
-Ao final, rearrumamos as linhas em ordem decrescente de ano apenas para
-criarmos um <strong>heatmap</strong> que coloque os anos iniciais na
-parte de cima da Figura, com veremos mais adiante,</p>
+<p>As duas colunas extras permitirão a realização do cálculo das vazões médias mensais para cada ano. Para isso, utilizaremos as funções <code>group_by()</code>, <code>summarize()</code> e <code>mean()</code>. Ao final, rearrumamos as linhas em ordem decrescente de ano apenas para criarmos um <strong>heatmap</strong> que coloque os anos iniciais na parte de cima da Figura, com veremos mais adiante,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_60435000_v2</span> <span class='op'>&lt;-</span></span>
@@ -2326,13 +2284,7 @@ parte de cima da Figura, com veremos mais adiante,</p>
 11 60435000     1978    11  1.40
 12 60435000     1978    12  2.71</code></pre>
 </div>
-<p>Com esse novo_dataframe em mãos, podemos construir a Figura desejada.
-Mas para utilizar a função <code>heatmap()</code>, precisamos fazer uma
-pequena reestruturação, já que essa função precisa receber uma matriz
-com os valores de vazão média mensal, que devem estar organizados de uma
-forma específica, com as linhas representando os anos e as colunas
-representando os meses. Essa reestruturação é feita com o código
-abaixo,</p>
+<p>Com esse novo_dataframe em mãos, podemos construir a Figura desejada. Mas para utilizar a função <code>heatmap()</code>, precisamos fazer uma pequena reestruturação, já que essa função precisa receber uma matriz com os valores de vazão média mensal, que devem estar organizados de uma forma específica, com as linhas representando os anos e as colunas representando os meses. Essa reestruturação é feita com o código abaixo,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_heatmap</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://tidyr.tidyverse.org/reference/pivot_wider.html'>pivot_wider</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>dados_60435000_v2</span>,</span>
@@ -2351,16 +2303,10 @@ abaixo,</p>
 4 60435000     2018 2.61   2.13  2.55  2.08 1.33  0.840 0.478  0.351
 5 60435000     2017 0.876  2.26  1.53  1.26 0.708 0.446 0.266  0.142
 6 60435000     2016 3.90   2.67  2.27  1.23 0.933 0.517 0.306  0.176
-# … with 4 more variables: `9` &lt;dbl&gt;, `10` &lt;dbl&gt;, `11` &lt;dbl&gt;,
-#   `12` &lt;dbl&gt;</code></pre>
+# ℹ 4 more variables: `9` &lt;dbl&gt;, `10` &lt;dbl&gt;, `11` &lt;dbl&gt;, `12` &lt;dbl&gt;</code></pre>
 </div>
-<p>Agora basta utiliza a função <code>heatmap()</code> para construir a
-Figura desejada. Primeiro apagamos as primeiras duas colunas dessa
-matriz, porque a primeira traz o código da estação e a segunda os anos,
-ambas desnecessárias para fazer a Figura.</p>
-<p>Para construção do gráfico abaixo, usando a função
-<code>heatmap()</code>, precisamos apenas de uma matriz com os valores a
-serem utilizados.</p>
+<p>Agora basta utiliza a função <code>heatmap()</code> para construir a Figura desejada. Primeiro apagamos as primeiras duas colunas dessa matriz, porque a primeira traz o código da estação e a segunda os anos, ambas desnecessárias para fazer a Figura.</p>
+<p>Para construção do gráfico abaixo, usando a função <code>heatmap()</code>, precisamos apenas de uma matriz com os valores a serem utilizados.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Remoção das primeiras duas colunas</span></span>
@@ -2377,23 +2323,10 @@ serem utilizados.</p>
 </div>
 <p><img src="data_explore_files/figure-html5/heatmap-1.png" width="768" /></p>
 </div>
-<p>Podemos perceber algumas características importantes nessa plotagem
-da disponibilidade dos dados de vazão da estação
-<strong>60435000</strong>.</p>
-<p>Logo na primeira linha, que representa o ano de 1978, podemos ver que
-não há dados nos 5 primeiros meses, já que temos a cor branca
-representando os valores de vazão. No restante dos anos, pode-se
-verificar a ocorrência de falhas em mais três oportunidades: dez/2008,
-jan/2009 e ago/2019.</p>
-<p>Além das falhas, a Figura indica vazões médias mensais mais baixas
-(tons mais suaves) no meio do ano, entre os meses de junho a outubro, e
-vazões mais altas (tons mais escuros) entre novembro e maio.</p>
-<p>Outra maneira de fazermos o mesmo gráfico é usando o
-<strong>ggplot2</strong>, abaixo segue um código mostrando seu formato.
-Falaremos mais desse pacote, com suas funções e argumentos, ao decorrer
-deste módulo, portanto não se preocupe tanto com a notação abaixo - o
-importante é mostrar que podemos atingir o mesmo objetivo de diferentes
-formas usando diferentes funções dentro do <strong>R</strong>.</p>
+<p>Podemos perceber algumas características importantes nessa plotagem da disponibilidade dos dados de vazão da estação <strong>60435000</strong>.</p>
+<p>Logo na primeira linha, que representa o ano de 1978, podemos ver que não há dados nos 5 primeiros meses, já que temos a cor branca representando os valores de vazão. No restante dos anos, pode-se verificar a ocorrência de falhas em mais três oportunidades: dez/2008, jan/2009 e ago/2019.</p>
+<p>Além das falhas, a Figura indica vazões médias mensais mais baixas (tons mais suaves) no meio do ano, entre os meses de junho a outubro, e vazões mais altas (tons mais escuros) entre novembro e maio.</p>
+<p>Outra maneira de fazermos o mesmo gráfico é usando o <strong>ggplot2</strong>, abaixo segue um código mostrando seu formato. Falaremos mais desse pacote, com suas funções e argumentos, ao decorrer deste módulo, portanto não se preocupe tanto com a notação abaixo - o importante é mostrar que podemos atingir o mesmo objetivo de diferentes formas usando diferentes funções dentro do <strong>R</strong>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
@@ -2427,16 +2360,8 @@ formas usando diferentes funções dentro do <strong>R</strong>.</p>
 <p><img src="data_explore_files/figure-html5/heatmap%20ggplot2-1.png" width="768" /></p>
 </div>
 <h2 id="plotagem-da-série-histórica">Plotagem da série histórica</h2>
-<p>Como estamos lidando com dadso de vazão, uma das primeira coisas a
-fazer é plotar a série histórica, o que permite visualizarmos a faxia de
-variação das vazões diárias, a presença de falhas na série e de valores
-muito diferentes do restante, podendo indicar a necessidade de uma
-verificação mais cuidados para confirmarmos que esses valores são
-realmente confiáveis.</p>
-<p>O <strong>R-base</strong> permite plotarmos facilmente a série
-histórica. O código abaixo é o mais simples de todo para realizar esse
-tipo de plotagem. Vea que informamos apenas as variáveis referentes aos
-eixos x e y.</p>
+<p>Como estamos lidando com dadso de vazão, uma das primeira coisas a fazer é plotar a série histórica, o que permite visualizarmos a faxia de variação das vazões diárias, a presença de falhas na série e de valores muito diferentes do restante, podendo indicar a necessidade de uma verificação mais cuidados para confirmarmos que esses valores são realmente confiáveis.</p>
+<p>O <strong>R-base</strong> permite plotarmos facilmente a série histórica. O código abaixo é o mais simples de todo para realizar esse tipo de plotagem. Vea que informamos apenas as variáveis referentes aos eixos x e y.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Data</span>,</span>
@@ -2444,11 +2369,7 @@ eixos x e y.</p>
 </div>
 <p><img src="data_explore_files/figure-html5/grafico_1-1.png" width="768" /></p>
 </div>
-<p>A Figura gerada não é das mais atraentes, já que o <strong>R</strong>
-faz suas próprias escolhas, já que não definimos uma gama enorme de
-argumentos existentes. É possível fazer um esforço na tentativa de gerar
-uma Figura um pouco mais atraente, incluindo nomes para os eixos e
-título da Figura, espessura da linha, linhas de grade etc,</p>
+<p>A Figura gerada não é das mais atraentes, já que o <strong>R</strong> faz suas próprias escolhas, já que não definimos uma gama enorme de argumentos existentes. É possível fazer um esforço na tentativa de gerar uma Figura um pouco mais atraente, incluindo nomes para os eixos e título da Figura, espessura da linha, linhas de grade etc,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Data</span>,</span>
@@ -2472,36 +2393,16 @@ título da Figura, espessura da linha, linhas de grade etc,</p>
 </div>
 <p><img src="data_explore_files/figure-html5/unnamed-chunk-1-1.png" width="768" /></p>
 </div>
-<h2 id="caracterização-gráfica-com-ggplot2">Caracterização gráfica com
-ggplot2</h2>
-<p>Diferentemente dos gráficos que podem ser feitos no <strong>R
-base</strong> (sem pacotes adicionais), o <strong>ggplot2</strong> atua
-um pouco diferente na forma em que é chamado. Por exemplo, se quisesse
-fazer um gráfico da série histórica da estação
-<strong>60435000</strong>, poderíamos fazer sem pacotes.</p>
-<p>Já com a função <code>ggplot()</code> não adianta apenas definirmos
-em quem iremos mexer. Dentro dessa função existe um argumento chamado de
-<strong>aes</strong>. Ele vem do inglês, <em>aesthetics</em> e, como o
-nome diz, reflete a estética do gráfico, o que você vai mexer nele
-(cores, pontos, linhas…). Se chamarmos apenas o <code>ggplot()</code>
-com o argumento <strong>aes</strong> definido, nada será plotado, mas
-veremos os eixos e as grades (imagem abaixo). Lembrar que esses plots
-aparecerão no <strong>RStudio</strong> no canto inferior direito.</p>
+<h2 id="caracterização-gráfica-com-ggplot2">Caracterização gráfica com ggplot2</h2>
+<p>Diferentemente dos gráficos que podem ser feitos no <strong>R base</strong> (sem pacotes adicionais), o <strong>ggplot2</strong> atua um pouco diferente na forma em que é chamado. Por exemplo, se quisesse fazer um gráfico da série histórica da estação <strong>60435000</strong>, poderíamos fazer sem pacotes.</p>
+<p>Já com a função <code>ggplot()</code> não adianta apenas definirmos em quem iremos mexer. Dentro dessa função existe um argumento chamado de <strong>aes</strong>. Ele vem do inglês, <em>aesthetics</em> e, como o nome diz, reflete a estética do gráfico, o que você vai mexer nele (cores, pontos, linhas…). Se chamarmos apenas o <code>ggplot()</code> com o argumento <strong>aes</strong> definido, nada será plotado, mas veremos os eixos e as grades (imagem abaixo). Lembrar que esses plots aparecerão no <strong>RStudio</strong> no canto inferior direito.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>dados_60435000</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Data</span>, y <span class='op'>=</span> <span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 <p><img src="data_explore_files/figure-html5/grafico_3,%20-1.png" width="768" /></p>
 </div>
-<p>No <strong>ggplot2</strong>, a escrita é um pouco diferente do
-<strong>R base</strong> e se assemelha ao que fizemos com o <strong>pipe
-operator</strong>. Escrevemos <code>ggplot()</code> e em seguida vamos
-somando o que queremos com o sinal de “<strong>+</strong>”. Por exemplo,
-se quisermos um gráfico de linha vamos escrever
-<code>+ geom_line()</code>. Temos dois jeitos de escrever isso, um
-colocando os dados dentro do <code>ggplot()</code> e deixando o
-<code>geom_line()</code> em branco, ou o contrário. Ambos códigos abaixo
-retornam o mesmo gráfico.</p>
+<p>No <strong>ggplot2</strong>, a escrita é um pouco diferente do <strong>R base</strong> e se assemelha ao que fizemos com o <strong>pipe operator</strong>. Escrevemos <code>ggplot()</code> e em seguida vamos somando o que queremos com o sinal de “<strong>+</strong>”. Por exemplo, se quisermos um gráfico de linha vamos escrever <code>+ geom_line()</code>. Temos dois jeitos de escrever isso, um colocando os dados dentro do <code>ggplot()</code> e deixando o <code>geom_line()</code> em branco, ou o contrário. Ambos códigos abaixo retornam o mesmo gráfico.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span>data <span class='op'>=</span> <span class='va'>dados_60435000</span>, <span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>Data</span>, y <span class='op'>=</span> <span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span></span>
@@ -2514,13 +2415,8 @@ retornam o mesmo gráfico.</p>
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="data_explore_files/figure-html5/grafico_5_escondido-1.png" width="768" /></p>
 </div>
-<p>Similar ao <strong>R base</strong>, podemos mexer em todos os
-aspectos gráficos aqui, como a cor dos pontos e o tema
-(<strong><em>theme</em></strong>). Esse tema refere a todos os detalhes
-gráficos (qual o tamanho das linhas do gráfico, tamanho das letras, do
-título, qual fonte…). Já existem diversos temas pré-programados com o
-ggplot2, como o tema <em>bw</em> (<em>black and white</em>, ou preto e
-branco).</p>
+<p>Similar ao <strong>R base</strong>, podemos mexer em todos os aspectos gráficos aqui, como a cor dos pontos e o tema (<strong><em>theme</em></strong>). Esse tema refere a todos os detalhes gráficos (qual o tamanho das linhas do gráfico, tamanho das letras, do título, qual fonte…). Já existem diversos temas pré-programados com o ggplot2, como o tema <em>bw</em>
+(<em>black and white</em>, ou preto e branco).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
@@ -2646,8 +2542,7 @@ branco).</p>
 </div>
 <p><img src="data_explore_files/figure-html5/grafico_13-1.png" width="768" /></p>
 </div>
-<h2 id="outros-gráficos-interessantes">Outros gráficos
-interessantes</h2>
+<h2 id="outros-gráficos-interessantes">Outros gráficos interessantes</h2>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Mes</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/month.html'>month</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span><span class='op'>)</span></span>
@@ -2692,8 +2587,7 @@ interessantes</h2>
 </div>
 <p><img src="data_explore_files/figure-html5/boxplot_2-1.png" width="768" /></p>
 </div>
-<h2 id="gráficos-usando-a-tabela-de-resumo-estatístico">Gráficos usando
-a tabela de resumo estatístico</h2>
+<h2 id="gráficos-usando-a-tabela-de-resumo-estatístico">Gráficos usando a tabela de resumo estatístico</h2>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>resumo_todas</span><span class='op'>$</span><span class='va'>Cod_estacao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/factor.html'>as.factor</a></span><span class='op'>(</span><span class='va'>resumo_todas</span><span class='op'>$</span><span class='va'>Cod_estacao</span><span class='op'>)</span></span>
@@ -2732,29 +2626,20 @@ a tabela de resumo estatístico</h2>
 <h2 id="livros">Livros !</h2>
 <h3 id="livro-do-criador-do-ggplot2">Livro do criador do ggplot2:</h3>
 <ul>
-<li><a href="https://ggplot2-book.org/"
-class="uri">https://ggplot2-book.org/</a></li>
+<li><a href="https://ggplot2-book.org/" class="uri">https://ggplot2-book.org/</a></li>
 </ul>
-<h3 id="entender-melhor-quais-cores-usar">Entender melhor quais cores
-usar:</h3>
+<h3 id="entender-melhor-quais-cores-usar">Entender melhor quais cores usar:</h3>
 <ul>
-<li><a href="http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/"
-class="uri">http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/</a></li>
-<li><a
-href="https://eos.org/features/visualizing-science-how-color-determines-whatwesee?utm_source=eos&amp;utm_medium=email&amp;utm_campaign=EosBuzz052920"
-class="uri">https://eos.org/features/visualizing-science-how-color-determines-whatwesee?utm_source=eos&amp;utm_medium=email&amp;utm_campaign=EosBuzz052920</a></li>
-<li><a href="https://eagereyes.org/basics/rainbow-color-map"
-class="uri">https://eagereyes.org/basics/rainbow-color-map</a></li>
-<li><a href="https://ieeexplore.ieee.org/document/4118486"
-class="uri">https://ieeexplore.ieee.org/document/4118486</a></li>
+<li><a href="http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/" class="uri">http://www.cookbook-r.com/Graphs/Colors_(ggplot2)/</a></li>
+<li><a href="https://eos.org/features/visualizing-science-how-color-determines-whatwesee?utm_source=eos&amp;utm_medium=email&amp;utm_campaign=EosBuzz052920" class="uri">https://eos.org/features/visualizing-science-how-color-determines-whatwesee?utm_source=eos&amp;utm_medium=email&amp;utm_campaign=EosBuzz052920</a></li>
+<li><a href="https://eagereyes.org/basics/rainbow-color-map" class="uri">https://eagereyes.org/basics/rainbow-color-map</a></li>
+<li><a href="https://ieeexplore.ieee.org/document/4118486" class="uri">https://ieeexplore.ieee.org/document/4118486</a></li>
 </ul>
 <h3 id="todas-as-cores-do-r">Todas as cores do R:</h3>
 <ul>
-<li><a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf"
-class="uri">http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf</a></li>
+<li><a href="http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf" class="uri">http://www.stat.columbia.edu/~tzheng/files/Rcolor.pdf</a></li>
 </ul>
-<div class="sourceCode" id="cb7"><pre
-class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

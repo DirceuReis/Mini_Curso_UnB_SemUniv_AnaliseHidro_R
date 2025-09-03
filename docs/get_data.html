@@ -21,7 +21,7 @@
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -32,7 +32,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -459,8 +459,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
 
   <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-  <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
-  <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"/>
   <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
   <script src="site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
   <script src="site_libs/fuse-6.4.1/fuse.min.js"></script>
@@ -789,6 +789,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article table.gt_table td,
   d-article table.gt_table th {
     border-bottom: none;
+    font-size: 100%;
   }
 
   .html-widget {
@@ -829,9 +830,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     display: none !important;
   }
 
+  hr.section-separator {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 0px;
+  }
+
+
+  d-byline {
+    border-top: none;
+  }
+
   d-article {
     padding-top: 2.5rem;
     padding-bottom: 30px;
+    border-top: none;
   }
 
   d-appendix {
@@ -926,6 +939,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article div.sourceCode pre {
     padding-left: 18px;
     font-size: 14px;
+  }
+
+  /* tweak for Pandoc numbered line within distill */
+  d-article pre.numberSource code > span {
+      left: -2em;
   }
 
   d-article pre {
@@ -1687,6 +1705,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // create d-title
     $('.d-title').changeElementType('d-title');
 
+    // separator
+    var separator = '<hr class="section-separator" style="clear: both"/>';
+    // prepend separator above appendix
+    $('.d-byline').before(separator);
+    $('.d-article').before(separator);
+
     // create d-byline
     var byline = $('<d-byline></d-byline>');
     $('.d-byline').replaceWith(byline);
@@ -1764,8 +1788,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     $('.distill-force-highlighting-css').parent().remove();
 
     // remove empty line numbers inserted by pandoc when using a
-    // custom syntax highlighting theme
-    $('code.sourceCode a:empty').remove();
+    // custom syntax highlighting theme, except when numbering line
+    // in code chunk
+    $('pre:not(.numberLines) code.sourceCode a:empty').remove();
 
     // load distill framework
     load_distill_framework();
@@ -1791,12 +1816,13 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       // add orcid ids
       $('.authors-affiliations').find('.author').each(function(i, el) {
         var orcid_id = front_matter.authors[i].orcidID;
+        var author_name = front_matter.authors[i].author
         if (orcid_id) {
           var a = $('<a></a>');
           a.attr('href', 'https://orcid.org/' + orcid_id);
           var img = $('<img></img>');
           img.addClass('orcid-id');
-          img.attr('alt', 'ORCID ID');
+          img.attr('alt', author_name ? 'ORCID ID for ' + author_name : 'ORCID ID');
           img.attr('src','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg==');
           a.append(img);
           $(this).append(a);
@@ -1861,15 +1887,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
       // hoverable references
       $('span.citation[data-cites]').each(function() {
-        if ($(this).children()[0].nodeName == "D-FOOTNOTE") {
-          var fn = $(this).children()[0]
+        const citeChild = $(this).children()[0]
+        // Do not process if @xyz has been used without escaping and without bibliography activated
+        // https://github.com/rstudio/distill/issues/466
+        if (citeChild === undefined) return true
+
+        if (citeChild.nodeName == "D-FOOTNOTE") {
+          var fn = citeChild
           $(this).html(fn.shadowRoot.querySelector("sup"))
           $(this).id = fn.id
           fn.remove()
         }
         var refs = $(this).attr('data-cites').split(" ");
         var refHtml = refs.map(function(ref) {
-          return "<p>" + $('#ref-' + ref).html() + "</p>";
+          // Could use CSS.escape too here, we insure backward compatibility in navigator
+          return "<p>" + $('div[id="ref-' + ref + '"]').html() + "</p>";
         }).join("\n");
         window.tippy(this, {
           allowHTML: true,
@@ -2068,7 +2100,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2113,6 +2145,7 @@ Aulas
 <a href="data_explore.html">Análise exploratória</a>
 <a href="data_explore_rascunho.html">Análise exploratória 2</a>
 <a href="frequency_analysis.html">Análise de frequência</a>
+<a href="frequency_analysis_gev.html">Análise de frequência_GEV</a>
 </div>
 </div>
 <a href="colaboradores.html">Colaboradores</a>
@@ -2129,6 +2162,7 @@ Aulas
 
 <div class="d-title">
 <h1>Obtenção de dados hidrológicos na web</h1>
+
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
 <p>Conceitos básicos</p>
@@ -2140,81 +2174,38 @@ Aulas
 <nav class="l-text toc figcaption" id="TOC">
 <h3>Contents</h3>
 <ul>
-<li><a href="#repositório-de-dados"
-id="toc-repositório-de-dados">Repositório de dados</a></li>
-<li><a href="#obtenção-de-dados-tradicional"
-id="toc-obtenção-de-dados-tradicional">Obtenção de dados
-“tradicional”</a></li>
-<li><a href="#obtenção-via-webservice"
-id="toc-obtenção-via-webservice">Obtenção via webservice</a>
+<li><a href="#repositório-de-dados" id="toc-repositório-de-dados">Repositório de dados</a></li>
+<li><a href="#obtenção-de-dados-tradicional" id="toc-obtenção-de-dados-tradicional">Obtenção de dados “tradicional”</a></li>
+<li><a href="#obtenção-via-webservice" id="toc-obtenção-via-webservice">Obtenção via webservice</a>
 <ul>
-<li><a href="#lista-das-estações-telemétricas-da-ana"
-id="toc-lista-das-estações-telemétricas-da-ana">Lista das Estações
-Telemétricas da ANA</a></li>
-<li><a href="#dados-hidrometeorológicos-da-ana"
-id="toc-dados-hidrometeorológicos-da-ana">Dados Hidrometeorológicos da
-ANA</a></li>
-<li><a href="#série-histórica" id="toc-série-histórica">Série
-Histórica</a></li>
+<li><a href="#lista-das-estações-telemétricas-da-ana" id="toc-lista-das-estações-telemétricas-da-ana">Lista das Estações Telemétricas da ANA</a></li>
+<li><a href="#dados-hidrometeorológicos-da-ana" id="toc-dados-hidrometeorológicos-da-ana">Dados Hidrometeorológicos da ANA</a></li>
+<li><a href="#série-histórica" id="toc-série-histórica">Série Histórica</a></li>
 </ul></li>
-<li><a href="#salvar-arquivos" id="toc-salvar-arquivos">Salvar
-arquivos</a>
+<li><a href="#salvar-arquivos" id="toc-salvar-arquivos">Salvar arquivos</a>
 <ul>
-<li><a href="#salvar-um-arquivo-único"
-id="toc-salvar-um-arquivo-único">Salvar um arquivo único</a></li>
-<li><a href="#salvar-em-um-loop" id="toc-salvar-em-um-loop">Salvar em um
-loop</a></li>
+<li><a href="#salvar-um-arquivo-único" id="toc-salvar-um-arquivo-único">Salvar um arquivo único</a></li>
+<li><a href="#salvar-em-um-loop" id="toc-salvar-em-um-loop">Salvar em um loop</a></li>
 </ul></li>
 </ul>
 </nav>
 </div>
 <h2 id="repositório-de-dados">Repositório de dados</h2>
-<p>Existem inúmeros repositórios contendo dados hidrológicos no mundo e
-no Brasil. Alguns exemplos são:</p>
+<p>Existem inúmeros repositórios contendo dados hidrológicos no mundo e no Brasil. Alguns exemplos são:</p>
 <ul>
 <li>HidroWeb da ANA;</li>
 <li>Séries históricas do ONS;</li>
 <li>Dados do CPRM;</li>
 <li>Dados do INMET.</li>
 </ul>
-<h2 id="obtenção-de-dados-tradicional">Obtenção de dados
-“tradicional”</h2>
-<p>Uma maneira de obter dados hidrológicos é simplesmente acessando de
-algum site oficial. Geralmente, o arquivo obtido baixado está no formato
-<code>.csv</code>, <code>.txt</code> ou <code>.xls</code> (excel) - esse
-último sendo menos comum. No próprio portal da ANA tem a opção de baixar
-os dados diretamente se souber a estação em questão ou utilizando um
-mapa dinâmico.</p>
-<p>Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o
-arquivo, é importante entender como ele está salvo, para isso podemos
-abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é
-mostrado na figura abaixo</p>
-<p>Uma maneira de obter dados é simplesmente baixando eles de algum site
-oficial. Geralmente o arquivo baixado está no formato <code>.csv</code>,
-<code>.txt</code> ou <code>.xls</code> (excel) - esse último sendo menos
-comum. No próprio portal da ANA tem a opção de baixar os dados
-diretamente se souber a estação em questão (<a
-href="https://www.snirh.gov.br/hidroweb/serieshistoricas"
-class="uri">https://www.snirh.gov.br/hidroweb/serieshistoricas</a>) ou
-utilizando um mapa dinâmico (<a
-href="https://www.snirh.gov.br/hidroweb/mapa"
-class="uri">https://www.snirh.gov.br/hidroweb/mapa</a>). Fazemos o
-exemplo abaixo para a estação 60435000. Ao baixar o arquivo, é
-importante entender como ele está salvo, para isso podemos abrir o
-arquivo pelo bloco de notas por exemplo. O arquivo em questão é mostrado
-na figura abaixo</p>
+<h2 id="obtenção-de-dados-tradicional">Obtenção de dados “tradicional”</h2>
+<p>Uma maneira de obter dados hidrológicos é simplesmente acessando de algum site oficial. Geralmente, o arquivo obtido baixado está no formato <code>.csv</code>, <code>.txt</code> ou <code>.xls</code> (excel) - esse último sendo menos comum. No próprio portal da ANA tem a opção de baixar os dados diretamente se souber a estação em questão ou utilizando um mapa dinâmico.</p>
+<p>Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o arquivo, é importante entender como ele está salvo, para isso podemos abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é mostrado na figura abaixo</p>
+<p>Uma maneira de obter dados é simplesmente baixando eles de algum site oficial. Geralmente o arquivo baixado está no formato <code>.csv</code>, <code>.txt</code> ou <code>.xls</code> (excel) - esse último sendo menos comum. No próprio portal da ANA tem a opção de baixar os dados diretamente se souber a estação em questão (<a href="https://www.snirh.gov.br/hidroweb/serieshistoricas" class="uri">https://www.snirh.gov.br/hidroweb/serieshistoricas</a>) ou utilizando um mapa dinâmico (<a href="https://www.snirh.gov.br/hidroweb/mapa" class="uri">https://www.snirh.gov.br/hidroweb/mapa</a>). Fazemos o exemplo abaixo para a estação 60435000. Ao baixar o arquivo, é importante entender como ele está salvo, para isso podemos abrir o arquivo pelo bloco de notas por exemplo. O arquivo em questão é mostrado na figura abaixo</p>
 <div class="layout-chunk" data-layout="l-body-outset">
 <p><img src="images/arquivo_vazao_ANA_csv.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
-<p>É possível perceber alguns detalhes importantes. As primeiras 13
-linhas contém informações sobre o sistema em sí e a estação, mas os
-dados medidos começam de fato na linha 14. O separador de cada coluna é
-um “<code>;</code>” e os decimais são separados por “<code>,</code>”.
-Agora já temos as informações necessárias para acessar esses dados pelo
-<strong>R</strong>. Usamos aqui a função <code>read.table()</code>,
-também é possível utilizar a função <code>read.csv()</code>, ambas fazem
-a mesma coisa, apenas alteram os argumentos pré definidos (que podem ser
-trocados).</p>
+<p>É possível perceber alguns detalhes importantes. As primeiras 13 linhas contém informações sobre o sistema em sí e a estação, mas os dados medidos começam de fato na linha 14. O separador de cada coluna é um “<code>;</code>” e os decimais são separados por “<code>,</code>”. Agora já temos as informações necessárias para acessar esses dados pelo <strong>R</strong>. Usamos aqui a função <code>read.table()</code>, também é possível utilizar a função <code>read.csv()</code>, ambas fazem a mesma coisa, apenas alteram os argumentos pré definidos (que podem ser trocados).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_ANA</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='st'>"dados/vazoes_T_60435000.txt"</span>,</span>
@@ -2224,8 +2215,7 @@ trocados).</p>
 <span>                        dec <span class='op'>=</span> <span class='st'>","</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<p>Agora podemos ver quais colunas existem nesse dataframe dentro do
-próprio <strong>R</strong> e tentar entender ele melhor também!</p>
+<p>Agora podemos ver quais colunas existem nesse dataframe dentro do próprio <strong>R</strong> e tentar entender ele melhor também!</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/colnames.html'>colnames</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>)</span></span></code></pre>
@@ -2271,103 +2261,35 @@ próprio <strong>R</strong> e tentar entender ele melhor também!</p>
 [77] &quot;Vazao30Status&quot;        &quot;Vazao31Status&quot;       
 [79] &quot;X&quot;                   </code></pre>
 </div>
-<p>A seguir puxaremos o mesmo dado porém diretamente da internet,
-utilizando o que chamamos de <em>webservice</em>. Isso facilita muito a
-criação de códigos mais automatizados em que não é necessário ficar
-baixando os dados um a um.</p>
+<p>A seguir puxaremos o mesmo dado porém diretamente da internet, utilizando o que chamamos de <em>webservice</em>. Isso facilita muito a criação de códigos mais automatizados em que não é necessário ficar baixando os dados um a um.</p>
 <h2 id="obtenção-via-webservice">Obtenção via webservice</h2>
-<p>Ser capaz de obter informações hidrológicas de forma gratuita
-diretamente da internet, algo conhecido como “webscraping”, representa
-um ganho significativo de eficiência no desenvolvimento de estudos e
-projetos de hidrologia, recursos hídricos, e áreas afins.</p>
-<p>Essa possibilidade vem se tornando cada vez mais comum nos dias de
-hoje. Por exemplo, a Agência Nacional de Águas e Saneamento Básico
-(ANA), o Operador Nacional do Sistema Elétrico (ONS), e outras
-instituições no Brasil e no exterior disponibilizam alguns de seus dados
-por meio do chamado webservice.</p>
-<p>Em essência, o webservice é apenas um site que contém os dados.
-Porém, esses dados estão organizados de uma maneira bem específica, de
-forma que para que seja possível obtê-los de forma eficiente, é
-imprescindível que essa organização seja bem entedida. Aqui neste curso
-introdutório, vamos focar nossas atividades no webservice da ANA, que se
-encontra disponível por meio do url <a
-href="http://telemetriaws1.ana.gov.br/ServiceANA.asmx"
-class="uri">http://telemetriaws1.ana.gov.br/ServiceANA.asmx</a>.</p>
-<p>Quando acessamos esse endereço, somos levados para a página
-abaixo,</p>
+<p>Ser capaz de obter informações hidrológicas de forma gratuita diretamente da internet, algo conhecido como “webscraping”, representa um ganho significativo de eficiência no desenvolvimento de estudos e projetos de hidrologia, recursos hídricos, e áreas afins.</p>
+<p>Essa possibilidade vem se tornando cada vez mais comum nos dias de hoje. Por exemplo, a Agência Nacional de Águas e Saneamento Básico (ANA), o Operador Nacional do Sistema Elétrico (ONS), e outras instituições no Brasil e no exterior disponibilizam alguns de seus dados por meio do chamado webservice.</p>
+<p>Em essência, o webservice é apenas um site que contém os dados. Porém, esses dados estão organizados de uma maneira bem específica, de forma que para que seja possível obtê-los de forma eficiente, é imprescindível que essa organização seja bem entedida. Aqui neste curso introdutório, vamos focar nossas atividades no webservice da ANA, que se encontra disponível por meio do url <a href="http://telemetriaws1.ana.gov.br/ServiceANA.asmx" class="uri">http://telemetriaws1.ana.gov.br/ServiceANA.asmx</a>.</p>
+<p>Quando acessamos esse endereço, somos levados para a página abaixo,</p>
 <div class="layout-chunk" data-layout="l-body-outset">
 <p><img src="images/webservice_ANA.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
-<p>Se dermos um zoom na figura, podemos verificar todas as informações
-que estão disponíveis no webservice, tais como “dados
-hidrometeorológicos”, “dados hidrometeorológicos gerais”, “lista de
-estações telemétricas”, “Cotas”, “inventário”, “rios”, “série
-histórica”, entre outras.</p>
-<p>Nesse mesmo site, pode-se acessar um arquivo em formato pdf com
-detalhes sobre o sistema como um todo, e com o que se pode obter dentro
-dele <a href="http://telemetriaws1.ana.gov.br/Telemetria1ws.pdf"
-class="uri">http://telemetriaws1.ana.gov.br/Telemetria1ws.pdf</a>! Esse
-arquivo é essencial para entendermos como os dados estão disponíveis e
-como podemos acessá-los.</p>
-<p>Esse documento nos informa que os dados hidrológicos da ANA estão
-disponibilizados no formato XML (“Extended Markup Language”), de forma
-que precisamos aprender como acessar e manipular as informações
-disponibilizados nesse formato. Mas discutiremos apenas o básico neste
-curso, sem nos profundarmos muito. Porém se você deseja saber mais sobre
-webscraping e usufruir de várias de suas possibilidade, sugerimos que
-procure se aprofundar mais nesse tema.</p>
-<p>Para acessar dados do tipo <strong>XML</strong> dentro do
-<strong>R</strong>, utilizamos um pacote já criado, chamado
-<strong>XML</strong>. Lembrando que caso não tenhamos instalado ele
-ainda, precisamos o fazer com o <code>install.packages()</code>. Em
-seguida precisamos apenas carregar na seção utilizando
-<code>library()</code> como escrito abaixo. Além desse pacote, também
-utilizaremos algumas partes do pacote <strong>lubridate</strong> para
-trabalharmos com datas.</p>
+<p>Se dermos um zoom na figura, podemos verificar todas as informações que estão disponíveis no webservice, tais como “dados hidrometeorológicos”, “dados hidrometeorológicos gerais”, “lista de estações telemétricas”, “Cotas”, “inventário”, “rios”, “série histórica”, entre outras.</p>
+<p>Nesse mesmo site, pode-se acessar um arquivo em formato pdf com detalhes sobre o sistema como um todo, e com o que se pode obter dentro dele <a href="http://telemetriaws1.ana.gov.br/Telemetria1ws.pdf" class="uri">http://telemetriaws1.ana.gov.br/Telemetria1ws.pdf</a>! Esse arquivo é essencial para entendermos como os dados estão disponíveis e como podemos acessá-los.</p>
+<p>Esse documento nos informa que os dados hidrológicos da ANA estão disponibilizados no formato XML (“Extended Markup Language”), de forma que precisamos aprender como acessar e manipular as informações disponibilizados nesse formato. Mas discutiremos apenas o básico neste curso, sem nos profundarmos muito. Porém se você deseja saber mais sobre webscraping e usufruir de várias de suas possibilidade, sugerimos que procure se aprofundar mais nesse tema.</p>
+<p>Para acessar dados do tipo <strong>XML</strong> dentro do <strong>R</strong>, utilizamos um pacote já criado, chamado <strong>XML</strong>. Lembrando que caso não tenhamos instalado ele ainda, precisamos o fazer com o <code>install.packages()</code>. Em seguida precisamos apenas carregar na seção utilizando <code>library()</code> como escrito abaixo. Além desse pacote, também utilizaremos algumas partes do pacote <strong>lubridate</strong> para trabalharmos com datas.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>#install.packages("XML")</span></span>
-<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='http://www.omegahat.net/RSXML/'>XML</a></span><span class='op'>)</span></span>
+<span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://www.omegahat.net/RSXML/'>XML</a></span><span class='op'>)</span></span>
 <span></span>
 <span><span class='co'>#install.packages("lubridate")</span></span>
 <span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://lubridate.tidyverse.org'>lubridate</a></span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<h3 id="lista-das-estações-telemétricas-da-ana">Lista das Estações
-Telemétricas da ANA</h3>
-<p>Começaremos nossas atividades acessando os dados das estações
-telemétricas desse sistema. Pode-se perceber olhando para o próprio
-site, que são necessários dois parâmetros para pesquisar as estações. O
-primiero chama-se “statusEstacoes”, que pode ser 0, que significa
-estação ativa, ou 1, que representa estação em manutenção. O segundo
-parâmetro é chamado de “Origem”, podendo variar entre 0 e 5. Se olharmos
-o arquivo em formato pdf mencioando acima, vamos ver que se deixarmos o
-“statusEstacoes” em branco, serão retornadas as informações de todas as
-estações do sistema, que é exatamente o que queremos agora.</p>
-<p>Sendo assim, se colocarmos no nosso navegador o seguinte url: <a
-href="http://telemetriaws1.ana.gov.br/ServiceANA.asmx/ListaEstacoesTelemetricas?statusEstacoes=&amp;origem="
-class="uri">http://telemetriaws1.ana.gov.br/ServiceANA.asmx/ListaEstacoesTelemetricas?statusEstacoes=&amp;origem=</a>,
-teremos acesso ao arquivo XML com a informação de todas as estações
-telemétricas.</p>
+<h3 id="lista-das-estações-telemétricas-da-ana">Lista das Estações Telemétricas da ANA</h3>
+<p>Começaremos nossas atividades acessando os dados das estações telemétricas desse sistema. Pode-se perceber olhando para o próprio site, que são necessários dois parâmetros para pesquisar as estações. O primiero chama-se “statusEstacoes”, que pode ser 0, que significa estação ativa, ou 1, que representa estação em manutenção. O segundo parâmetro é chamado de “Origem”, podendo variar entre 0 e 5. Se olharmos o arquivo em formato pdf mencioando acima, vamos ver que se deixarmos o “statusEstacoes” em branco, serão retornadas as informações de todas as estações do sistema, que é exatamente o que queremos agora.</p>
+<p>Sendo assim, se colocarmos no nosso navegador o seguinte url: <a href="http://telemetriaws1.ana.gov.br/ServiceANA.asmx/ListaEstacoesTelemetricas?statusEstacoes=&amp;origem=" class="uri">http://telemetriaws1.ana.gov.br/ServiceANA.asmx/ListaEstacoesTelemetricas?statusEstacoes=&amp;origem=</a>, teremos acesso ao arquivo XML com a informação de todas as estações telemétricas.</p>
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="images/XML_ANA_info_1.png" width="90%" style="display: block; margin: auto;" /></p>
 </div>
-<p>Para que tenhamos cesso a essas informações nesse mesmo formato no
-RStudio, teremos que fazer uso de um pacote chamado “XML”, que contém a
-função denominada <code>xmlParse()</code>. Essa função é capaz de ler um
-arquivo do tipo XML e gerar uma estrutura no <strong>R</strong> similar
-ao que aparece na imagem acima (formato de “árvore”). A função exige que
-informemos um argumento obrigatório, que é o <em>url</em> a ser
-utilizado, e permite ainda que passemos um argumento opcional, que é a
-codificação do arquivo (do inglês encoding). Usualmente no Brasil,
-utilizamos o “UTF-8” para poder utilizar nossos acentos (mas lembre-se
-que essa parte é um outro mundo no R e não entraremos com maiores
-detalhamentos). Quando um pacote já está carregado dentro do
-<strong>R</strong>, não precisamos escrever ele antes da função - isso,
-porém, pode ser uma boa prática para deixar o código mais fácil de ler
-(uma vez que qualquer leitor entenderia que a funçção
-<code>xmlParse()</code> pertence ao pacote <strong>XML</strong> uma vez
-que está escrito <code>XML::</code> antes da função!</p>
+<p>Para que tenhamos cesso a essas informações nesse mesmo formato no RStudio, teremos que fazer uso de um pacote chamado “XML”, que contém a função denominada <code>xmlParse()</code>. Essa função é capaz de ler um arquivo do tipo XML e gerar uma estrutura no <strong>R</strong> similar ao que aparece na imagem acima (formato de “árvore”). A função exige que informemos um argumento obrigatório, que é o <em>url</em> a ser utilizado, e permite ainda que passemos um argumento opcional, que é a codificação do arquivo (do inglês encoding). Usualmente no Brasil, utilizamos o “UTF-8” para poder utilizar nossos acentos (mas lembre-se que essa parte é um outro mundo no R e não entraremos com maiores detalhamentos). Quando um pacote já está carregado dentro do <strong>R</strong>, não precisamos escrever ele antes da função - isso, porém, pode ser uma boa prática para deixar o código mais fácil de ler (uma vez que qualquer leitor entenderia que a funçção <code>xmlParse()</code> pertence ao pacote <strong>XML</strong> uma vez que está escrito <code>XML::</code> antes da função!</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>status_codigo</span> <span class='op'>&lt;-</span> <span class='st'>""</span></span>
@@ -2378,115 +2300,80 @@ que está escrito <code>XML::</code> antes da função!</p>
 <span><span class='va'>url_parse</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlTreeParse.html'>xmlParse</a></span><span class='op'>(</span><span class='va'>url_base</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<p>Olha o nosso código um pouco. Percebe que invés de digitar
-diretamente o url para acesso, quebramos ele em várias partes e juntamos
-com a função paste0(). Fizemos isso para ficar mais fácil de mudar algo
-depois. Caso quisermos utilizar outro valor em “statusEstacoes” ou em
-“Origem”, basta mudarmos os objetos criados e o resto do código continua
-igual! Ao chamar o url_parse no console, verá uma imagem similar ao site
-quando abrimos o url.</p>
-<p>Para puxar agora as informações dessas estações, precisamos entender
-melhor o arquivo original no formato XML. De maneira resumida, arquivos
-no formato XML ou HTML possuem estruturas que são definidas entre “&lt;
-&gt;”. Ao mexer no url que nos dá todas as estações, percebe-se que
-todos os dados de cada estação são precedidos por um elemento chamado
-“Table” (dentro do “&lt;&gt;”). Porém, queremos os nodes que estão
-associados a esses “Tables” (tabelas). Para isso, samos a função
-getNodeSet(). Com os argumentos dessa função sendo primeiro o objeto
-criado no R depois de ter feito um xmlParse() e o segundo argumento
-sendo “//Table” (lembrar de colocar essas duas barras)</p>
+<p>Olha o nosso código um pouco. Percebe que invés de digitar diretamente o url para acesso, quebramos ele em várias partes e juntamos com a função paste0(). Fizemos isso para ficar mais fácil de mudar algo depois. Caso quisermos utilizar outro valor em “statusEstacoes” ou em “Origem”, basta mudarmos os objetos criados e o resto do código continua igual! Ao chamar o url_parse no console, verá uma imagem similar ao site quando abrimos o url.</p>
+<p>Para puxar agora as informações dessas estações, precisamos entender melhor o arquivo original no formato XML. De maneira resumida, arquivos no formato XML ou HTML possuem estruturas que são definidas entre “&lt; &gt;”. Ao mexer no url que nos dá todas as estações, percebe-se que todos os dados de cada estação são precedidos por um elemento chamado “Table” (dentro do “&lt;&gt;”). Porém, queremos os nodes que estão associados a esses “Tables” (tabelas). Para isso, samos a função getNodeSet(). Com os argumentos dessa função sendo primeiro o objeto criado no R depois de ter feito um xmlParse() e o segundo argumento sendo “//Table” (lembrar de colocar essas duas barras)</p>
 <div class="layout-chunk" data-layout="l-body">
 <p><img src="images/XML_ANA_info_2.png" width="90%" style="display: block; margin: auto;" /></p>
 </div>
-<p>A próxima etapa agora é transformar esse arquivo em algo que estamos
-mais acostumados a mexer dentro do R. Boas opções são dataframes e
-listas. Como não aprendemos a mexer muito com listas, vamos transformar
-nosso objeto em um dataframe. Para isso utilizamos a função
-xmlToDataFrame().</p>
+<p>A próxima etapa agora é transformar esse arquivo em algo que estamos mais acostumados a mexer dentro do R. Boas opções são dataframes e listas. Como não aprendemos a mexer muito com listas, vamos transformar nosso objeto em um dataframe. Para isso utilizamos a função xmlToDataFrame().</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>nodes_doc</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/getNodeSet.html'>getNodeSet</a></span><span class='op'>(</span><span class='va'>url_parse</span>, <span class='st'>"//Table"</span><span class='op'>)</span></span>
 <span><span class='va'>cadastro_estacoes</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlToDataFrame.html'>xmlToDataFrame</a></span><span class='op'>(</span>nodes <span class='op'>=</span> <span class='va'>nodes_doc</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<p>Agora podemos fazer as manipulações que já aprendemos anteriormente
-(com dataframe ficou fácil!). Por exemplo, se quisermos selecionar
-apenas as estações de Brasília, escrevemos o código abaixo. O
-“Municipio-UF” é apenas uma das colunas do dataframe, podemos filtrar
-com base em qualquer outra também. Vemos então a estrutura desse
-dataframe criado, usando a função <code>str()</code>, e as primeiras 5
-linhas delem usando a função <code>head()</code>.</p>
+<p>Agora podemos fazer as manipulações que já aprendemos anteriormente (com dataframe ficou fácil!). Por exemplo, se quisermos selecionar apenas as estações de Brasília, escrevemos o código abaixo. O “Municipio-UF” é apenas uma das colunas do dataframe, podemos filtrar com base em qualquer outra também. Vemos então a estrutura desse dataframe criado, usando a função <code>str()</code>, e as primeiras 5 linhas delem usando a função <code>head()</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>estacoes_bsb</span> <span class='op'>&lt;-</span> <span class='fu'>dplyr</span><span class='fu'>::</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>cadastro_estacoes</span>, <span class='va'>`Municipio-UF`</span> <span class='op'>==</span> <span class='st'>"BRASÍLIA-DF"</span><span class='op'>)</span></span>
 <span><span class='fu'><a href='https://rdrr.io/r/utils/str.html'>str</a></span><span class='op'>(</span><span class='va'>estacoes_bsb</span><span class='op'>)</span></span></code></pre>
 </div>
-<pre><code>&#39;data.frame&#39;:   54 obs. of  14 variables:
- $ NomeEstacao  : chr  &quot;ANA SEDE&quot; &quot;ANA SEDE (COTA ONLINE)&quot; &quot;ANA SEDE - TELEMÉTRICA&quot; &quot;ANA SEDE - TELEMÉTRICA&quot; ...
- $ CodEstacao   : chr  &quot;01547032&quot; &quot;01547032&quot; &quot;01547079&quot; &quot;01547079&quot; ...
- $ Bacia        : chr  &quot;6&quot; &quot;6&quot; &quot;6&quot; &quot;6&quot; ...
- $ SubBacia     : chr  &quot;60&quot; &quot;60&quot; &quot;60&quot; &quot;60&quot; ...
- $ Operadora    : chr  &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; ...
- $ Responsavel  : chr  &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; ...
+<pre><code>&#39;data.frame&#39;:   56 obs. of  14 variables:
+ $ NomeEstacao  : chr  &quot;ANA SEDE - TELEMÉTRICA&quot; &quot;ESTACAO TESTE_PLU&quot; &quot;RIBEIRÃO PALMEIRAS&quot; &quot;SONHEM&quot; ...
+ $ CodEstacao   : chr  &quot;01547079&quot; &quot;09999999&quot; &quot;20000950&quot; &quot;20001050&quot; ...
+ $ Bacia        : chr  &quot;6&quot; &quot;6&quot; &quot;2&quot; &quot;2&quot; ...
+ $ SubBacia     : chr  &quot;60&quot; &quot;60&quot; &quot;20&quot; &quot;20&quot; ...
+ $ Operadora    : chr  &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF&quot; &quot;00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF&quot; ...
+ $ Responsavel  : chr  &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00001 - ANA - Agência Nacional de Águas &quot; &quot;00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF&quot; &quot;00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF&quot; ...
  $ Municipio-UF : chr  &quot;BRASÍLIA-DF&quot; &quot;BRASÍLIA-DF&quot; &quot;BRASÍLIA-DF&quot; &quot;BRASÍLIA-DF&quot; ...
- $ Latitude     : chr  &quot;-15.81810&quot; &quot;-15.81805&quot; &quot;-15.81810&quot; &quot;-15.81810&quot; ...
- $ Longitude    : chr  &quot;-47.94500&quot; &quot;-47.94500&quot; &quot;-47.94500&quot; &quot;-47.94500&quot; ...
- $ Altitude     : chr  &quot;1150.00&quot; &quot;1150.00&quot; &quot;1150.00&quot; &quot;1150.00&quot; ...
- $ CodRio       : chr  &quot;0&quot; &quot;0&quot; &quot;0&quot; &quot;0&quot; ...
- $ NomeRio      : chr  &quot;&quot; &quot;&quot; &quot;&quot; &quot;&quot; ...
- $ Origem       : chr  &quot;Açudes Semiárido&quot; &quot;CotaOnline&quot; &quot;RHN&quot; &quot;Açudes Semiárido&quot; ...
+ $ Latitude     : chr  &quot;-15.81810&quot; &quot;-15.81810&quot; &quot;-15.52810&quot; &quot;-15.52310&quot; ...
+ $ Longitude    : chr  &quot;-47.94500&quot; &quot;-47.94500&quot; &quot;-47.74190&quot; &quot;-47.81580&quot; ...
+ $ Altitude     : chr  &quot;1150.00&quot; &quot;1150.00&quot; &quot;0.00&quot; &quot;0.00&quot; ...
+ $ CodRio       : chr  &quot;0&quot; &quot;0&quot; &quot;20003000&quot; &quot;20030000&quot; ...
+ $ NomeRio      : chr  &quot;&quot; &quot;&quot; &quot;RIBEIRÃO PALMEIRAS&quot; &quot;RIO SONHEM&quot; ...
+ $ Origem       : chr  &quot;RHN&quot; &quot;Açudes Semiárido&quot; &quot;Setores Regulados&quot; &quot;Setores Regulados&quot; ...
  $ StatusEstacao: chr  &quot;Ativo&quot; &quot;Ativo&quot; &quot;Ativo&quot; &quot;Ativo&quot; ...</code></pre>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>estacoes_bsb</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>             NomeEstacao CodEstacao Bacia SubBacia
-1               ANA SEDE   01547032     6       60
-2 ANA SEDE (COTA ONLINE)   01547032     6       60
-3 ANA SEDE - TELEMÉTRICA   01547079     6       60
-4 ANA SEDE - TELEMÉTRICA   01547079     6       60
-5      ESTACAO TESTE_PLU   09999999     6       60
-6     RIBEIRÃO PALMEIRAS   20000950     2       20
+1 ANA SEDE - TELEMÉTRICA   01547079     6       60
+2      ESTACAO TESTE_PLU   09999999     6       60
+3     RIBEIRÃO PALMEIRAS   20000950     2       20
+4                 SONHEM   20001050     2       20
+5      CONTAGEM - VC 201   20001200     2       20
+6    RIBEIRÃO SANTA RITA   42450050     4       42
                                                          Operadora
 1                         00001 - ANA - Agência Nacional de Águas 
 2                         00001 - ANA - Agência Nacional de Águas 
-3                         00001 - ANA - Agência Nacional de Águas 
-4                         00001 - ANA - Agência Nacional de Águas 
-5                         00001 - ANA - Agência Nacional de Águas 
+3 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
+4 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
+5 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
 6 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
                                                        Responsavel
 1                         00001 - ANA - Agência Nacional de Águas 
 2                         00001 - ANA - Agência Nacional de Águas 
-3                         00001 - ANA - Agência Nacional de Águas 
-4                         00001 - ANA - Agência Nacional de Águas 
-5                         00001 - ANA - Agência Nacional de Águas 
+3 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
+4 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
+5 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
 6 00190 - ADASA-DF - Agência Reguladora de Águas e Saneamento - DF
   Municipio-UF  Latitude Longitude Altitude   CodRio
 1  BRASÍLIA-DF -15.81810 -47.94500  1150.00        0
-2  BRASÍLIA-DF -15.81805 -47.94500  1150.00        0
-3  BRASÍLIA-DF -15.81810 -47.94500  1150.00        0
-4  BRASÍLIA-DF -15.81810 -47.94500  1150.00        0
-5  BRASÍLIA-DF -15.81810 -47.94500  1150.00        0
-6  BRASÍLIA-DF -15.52810 -47.74190     0.00 20003000
-             NomeRio            Origem StatusEstacao
-1                     Açudes Semiárido         Ativo
-2                           CotaOnline         Ativo
-3                                  RHN         Ativo
-4                     Açudes Semiárido         Ativo
-5                     Açudes Semiárido         Ativo
-6 RIBEIRÃO PALMEIRAS Setores Regulados         Ativo</code></pre>
+2  BRASÍLIA-DF -15.81810 -47.94500  1150.00        0
+3  BRASÍLIA-DF -15.52810 -47.74190     0.00 20003000
+4  BRASÍLIA-DF -15.52310 -47.81580     0.00 20030000
+5  BRASÍLIA-DF -15.50080 -47.85420     0.00 20050000
+6  BRASÍLIA-DF -15.58560 -47.33330   870.00 42250100
+               NomeRio            Origem StatusEstacao
+1                                    RHN         Ativo
+2                       Açudes Semiárido         Ativo
+3   RIBEIRÃO PALMEIRAS Setores Regulados         Ativo
+4           RIO SONHEM Setores Regulados         Ativo
+5 RIBEIRÃO DA CONTAGEM               RHN         Ativo
+6  RIBEIRÃO SANTA RITA               RHN         Ativo</code></pre>
 </div>
-<p>Lembrando que isso tudo nos dá apenas a lista com informações sobre
-as estações telemétricas. Para de fato termos acesso aos dados dessas
-estações, precisamos acessar outro url e fazer mais alguns códigos!</p>
-<p>Idealmente, se a gente quiser ficar sempre puxando diferentes
-informações e não ficar precisando rodar linha por linha de código,
-podemos juntar tudo isso em uma função. Para a nossa função, deixaremos
-o processo um pouco melhor. Primeiro definiremos que a função precisa de
-3 parâmetros (o status da estação, a origem e qual Unidade Federativa do
-Brasil queremos). Após puxar os dados em XML e transformar tudo em um
-dataframe, fazemos aqui algo novo - criamos uma coluna chamada “UF”
-contendo apenas as últimas duas letras do Município (isos porque no
-arquivo original, as duas últimas letras são as siglas da UF).</p>
+<p>Lembrando que isso tudo nos dá apenas a lista com informações sobre as estações telemétricas. Para de fato termos acesso aos dados dessas estações, precisamos acessar outro url e fazer mais alguns códigos!</p>
+<p>Idealmente, se a gente quiser ficar sempre puxando diferentes informações e não ficar precisando rodar linha por linha de código, podemos juntar tudo isso em uma função. Para a nossa função, deixaremos o processo um pouco melhor. Primeiro definiremos que a função precisa de 3 parâmetros (o status da estação, a origem e qual Unidade Federativa do Brasil queremos). Após puxar os dados em XML e transformar tudo em um dataframe, fazemos aqui algo novo - criamos uma coluna chamada “UF” contendo apenas as últimas duas letras do Município (isos porque no arquivo original, as duas últimas letras são as siglas da UF).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>ANA_info</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>status_codigo</span> <span class='op'>=</span> <span class='st'>""</span>,</span>
@@ -2512,10 +2399,7 @@ arquivo original, as duas últimas letras são as siglas da UF).</p>
 <span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
-<p>Podemos simplesmente testar essa função criada chamando a função e
-atribuindo para um objeto qualquer (chamamos aqui de “teste”) seu
-resultado. Em seguida falamos para o R printar as colunas desse
-dataframe.</p>
+<p>Podemos simplesmente testar essa função criada chamando a função e atribuindo para um objeto qualquer (chamamos aqui de “teste”) seu resultado. Em seguida falamos para o R printar as colunas desse dataframe.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Testar a função feita!</span></span>
@@ -2527,19 +2411,8 @@ dataframe.</p>
  [9] &quot;Longitude&quot;     &quot;Altitude&quot;      &quot;CodRio&quot;        &quot;NomeRio&quot;      
 [13] &quot;Origem&quot;        &quot;StatusEstacao&quot; &quot;UF&quot;           </code></pre>
 </div>
-<h3 id="dados-hidrometeorológicos-da-ana">Dados Hidrometeorológicos da
-ANA</h3>
-<p>Para acessar os dados hidrometeorológicos nesse webservice, temos
-outro url: <a
-href="http://telemetriaws1.ana.gov.br/ServiceANA.asmx?op=DadosHidrometeorologicos"
-class="uri">http://telemetriaws1.ana.gov.br/ServiceANA.asmx?op=DadosHidrometeorologicos</a>.
-Nele, vemos que são necessárias agora três parâmetros para fazermos uma
-busca: o “codEstacao” (que a gente pegou na parte anterior!), a
-“dataInicio” e a “dataFim”. Do mesmo jeito de antes, vamos definir um
-objeto para cada parâmetro e depois criar um url baseado nesses
-parâmetros. Em seguida fazemos um xmlParse() e pegamos as informações
-contidas nos nodes com o getNodeSet(). Por último, transformamos isso em
-um dataframe. Dessa vez, podemos fazer a função direto ja!</p>
+<h3 id="dados-hidrometeorológicos-da-ana">Dados Hidrometeorológicos da ANA</h3>
+<p>Para acessar os dados hidrometeorológicos nesse webservice, temos outro url: <a href="http://telemetriaws1.ana.gov.br/ServiceANA.asmx?op=DadosHidrometeorologicos" class="uri">http://telemetriaws1.ana.gov.br/ServiceANA.asmx?op=DadosHidrometeorologicos</a>. Nele, vemos que são necessárias agora três parâmetros para fazermos uma busca: o “codEstacao” (que a gente pegou na parte anterior!), a “dataInicio” e a “dataFim”. Do mesmo jeito de antes, vamos definir um objeto para cada parâmetro e depois criar um url baseado nesses parâmetros. Em seguida fazemos um xmlParse() e pegamos as informações contidas nos nodes com o getNodeSet(). Por último, transformamos isso em um dataframe. Dessa vez, podemos fazer a função direto ja!</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_ANA</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>cod_estacao</span> <span class='op'>=</span> <span class='st'>""</span>,</span>
@@ -2559,33 +2432,21 @@ um dataframe. Dessa vez, podemos fazer a função direto ja!</p>
 <span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
-<p>A partir da função que criamos anteriormente, para puxar as
-informações das estações, podemos ver os códigos de todas as estações.
-Um exemplo é a FAL, da própria UnB. Seu código é 60478482 - podemos usar
-ele na nossa nova função “dados_ANA”. Para ver o que essa função criada
-retorna, podemos pedir ao R as primeiras 6 linhas desse dataframe.</p>
+<p>A partir da função que criamos anteriormente, para puxar as informações das estações, podemos ver os códigos de todas as estações. Um exemplo é a FAL, da própria UnB. Seu código é 60478482 - podemos usar ele na nossa nova função “dados_ANA”. Para ver o que essa função criada retorna, podemos pedir ao R as primeiras 6 linhas desse dataframe.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_FAL</span> <span class='op'>&lt;-</span> <span class='fu'>dados_ANA</span><span class='op'>(</span>cod_estacao <span class='op'>=</span> <span class='fl'>60478482</span><span class='op'>)</span></span>
 <span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>dados_FAL</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>  CodEstacao             DataHora Vazao Nivel Chuva
-1   60478482 2023-11-15 16:00:00        30.00  0.00
-2   60478482 2023-11-15 15:45:00        30.00  0.00
-3   60478482 2023-11-15 15:30:00        30.00  0.00
-4   60478482 2023-11-15 15:15:00        30.00  0.00
-5   60478482 2023-11-15 15:00:00        30.00  0.00
-6   60478482 2023-11-15 14:45:00        30.00  0.00</code></pre>
+1   60478482 2024-05-31 14:00:00               0.00
+2   60478482 2024-05-31 13:45:00               0.00
+3   60478482 2024-05-31 13:30:00               0.00
+4   60478482 2024-05-31 13:15:00               0.00
+5   60478482 2024-05-31 13:00:00               0.00
+6   60478482 2024-05-31 12:45:00               0.00</code></pre>
 </div>
-<p>Percebemos aqui um “problema”. A data e a hora estão na mesma coluna
-e idealmente queremos deixar em colunas separadas (uma contendo a data e
-outra contendo as horas). Então iremos adicionar dentro da nossa função,
-mais um comando para fazer essa separação. Um jeito simples (mas não o
-único) de fazer isso é selecionando os primeiros 10 caracteres como
-sendo os de data e os últimos 8 como sendo de hora - porque a data
-sempre vai estar no formato “dia/mes/ano” e o horário em
-“hora:minuto:segundo”. Podemos também reorganizar as colunas do jeito
-que quisermos. Abaixo está essa nova função mais organizada.</p>
+<p>Percebemos aqui um “problema”. A data e a hora estão na mesma coluna e idealmente queremos deixar em colunas separadas (uma contendo a data e outra contendo as horas). Então iremos adicionar dentro da nossa função, mais um comando para fazer essa separação. Um jeito simples (mas não o único) de fazer isso é selecionando os primeiros 10 caracteres como sendo os de data e os últimos 8 como sendo de hora - porque a data sempre vai estar no formato “dia/mes/ano” e o horário em “hora:minuto:segundo”. Podemos também reorganizar as colunas do jeito que quisermos. Abaixo está essa nova função mais organizada.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_ANA</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>cod_estacao</span> <span class='op'>=</span> <span class='st'>""</span>,</span>
@@ -2612,9 +2473,7 @@ que quisermos. Abaixo está essa nova função mais organizada.</p>
 <span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
-<p>Chamamos novamente essa função (agora atualizada) para rodar a
-estação da FAL. Em seguida printamos no R apenas as primeiras 6 linhas
-desse dataframe.</p>
+<p>Chamamos novamente essa função (agora atualizada) para rodar a estação da FAL. Em seguida printamos no R apenas as primeiras 6 linhas desse dataframe.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Rodar a função para a estação da FAL</span></span>
@@ -2622,37 +2481,24 @@ desse dataframe.</p>
 <span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>dados_FAL</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>  CodEstacao       Data     Hora Vazao Nivel Chuva
-1   60478482 2023-11-15 16:00:00       30.00  0.00
-2   60478482 2023-11-15 15:45:00       30.00  0.00
-3   60478482 2023-11-15 15:30:00       30.00  0.00
-4   60478482 2023-11-15 15:15:00       30.00  0.00
-5   60478482 2023-11-15 15:00:00       30.00  0.00
-6   60478482 2023-11-15 14:45:00       30.00  0.00</code></pre>
+1   60478482 2024-05-31 14:00:00              0.00
+2   60478482 2024-05-31 13:45:00              0.00
+3   60478482 2024-05-31 13:30:00              0.00
+4   60478482 2024-05-31 13:15:00              0.00
+5   60478482 2024-05-31 13:00:00              0.00
+6   60478482 2024-05-31 12:45:00              0.00</code></pre>
 </div>
-<p>Aqui rodamos a função apenas para uma estação. Mas se quisermos rodar
-para várias estações, basta utilizar um loop (for) ou até mesmo a função
-lapply do R (mais rápido!).</p>
+<p>Aqui rodamos a função apenas para uma estação. Mas se quisermos rodar para várias estações, basta utilizar um loop (for) ou até mesmo a função lapply do R (mais rápido!).</p>
 <h3 id="série-histórica">Série Histórica</h3>
-<p>Outro local do HidroWeb da ANA que possui dados hidrológicos
-relevantes é na seção de série histórica, disponível <em>online</em> em:
-<a
-href="http://telemetriaws1.ana.gov.br/ServiceANA.asmx?op=HidroSerieHistorica"
-class="uri">http://telemetriaws1.ana.gov.br/ServiceANA.asmx?op=HidroSerieHistorica</a>.
-Para puxar esse arquivo dentro do <strong>R</strong> é possível fazer
-algo similar ao feito acima. Nessa seção, porém, são necessários 5
-argumentos:</p>
+<p>Outro local do HidroWeb da ANA que possui dados hidrológicos relevantes é na seção de série histórica, disponível <em>online</em> em: <a href="http://telemetriaws1.ana.gov.br/ServiceANA.asmx?op=HidroSerieHistorica" class="uri">http://telemetriaws1.ana.gov.br/ServiceANA.asmx?op=HidroSerieHistorica</a>. Para puxar esse arquivo dentro do <strong>R</strong> é possível fazer algo similar ao feito acima. Nessa seção, porém, são necessários 5 argumentos:</p>
 <ul>
 <li><strong>codEstacao</strong> (código da estação);</li>
-<li><strong>dataInicio</strong> (primeira data em que se quer os
-dados);</li>
+<li><strong>dataInicio</strong> (primeira data em que se quer os dados);</li>
 <li><strong>dataFim</strong> (última data em que se quer os dados);</li>
-<li><strong>tipoDados</strong> (podendo ser cotas, 1, chuvas, 2, ou
-vazões, 3);</li>
-<li><strong>nivelConsistencia</strong> (podendo ser Bruto, 1, ou
-consistido, 2).</li>
+<li><strong>tipoDados</strong> (podendo ser cotas, 1, chuvas, 2, ou vazões, 3);</li>
+<li><strong>nivelConsistencia</strong> (podendo ser Bruto, 1, ou consistido, 2).</li>
 </ul>
-<p>Primeiro então criamos objetos contendo essas informações necessárias
-para entrar no <em>url</em> da série histórica.</p>
+<p>Primeiro então criamos objetos contendo essas informações necessárias para entrar no <em>url</em> da série histórica.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>cod_estacao</span> <span class='op'>&lt;-</span> <span class='fl'>60435000</span></span>
@@ -2662,16 +2508,7 @@ para entrar no <em>url</em> da série histórica.</p>
 <span><span class='va'>nivel_consist</span> <span class='op'>&lt;-</span> <span class='fl'>1</span></span></code></pre>
 </div>
 </div>
-<p>Em seguida, esses objetos são utilizados para criar um <em>url</em>
-para podermos acessar os dados do HidroWeb. Após é feito o mesmo que a
-cima em outros portais dentro do portal da ANA, fazendo então um
-<code>XML::xmlParse()</code>, seguido por um
-<code>XML::getNodeSet()</code> e <code>XML::xmlToDataFrame()</code>.
-Diferentemente do que foi feito anteriormente, não foi feita aqui a
-separação da coluna de data em duas, uma contendo a data e outra
-contendo a hora. Na coluna de Data é feita a transformação de
-<em>character</em> para <em>Date</em> de modo que possamos fazer algumas
-operações com ela depois.</p>
+<p>Em seguida, esses objetos são utilizados para criar um <em>url</em> para podermos acessar os dados do HidroWeb. Após é feito o mesmo que a cima em outros portais dentro do portal da ANA, fazendo então um <code>XML::xmlParse()</code>, seguido por um <code>XML::getNodeSet()</code> e <code>XML::xmlToDataFrame()</code>. Diferentemente do que foi feito anteriormente, não foi feita aqui a separação da coluna de data em duas, uma contendo a data e outra contendo a hora. Na coluna de Data é feita a transformação de <em>character</em> para <em>Date</em> de modo que possamos fazer algumas operações com ela depois.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Puxar dados do url e transformar em dataframe</span></span>
@@ -2689,32 +2526,16 @@ operações com ela depois.</p>
 <span><span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlToDataFrame.html'>xmlToDataFrame</a></span><span class='op'>(</span>nodes <span class='op'>=</span> <span class='va'>node_doc</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<p>É interessante lembrar um pouco como funciona esse formato de datas
-aqui. As datas podem vir de inúmeras formas diferentes de algum banco de
-dados. Elas podem vir com “dia - mês - ano”, com o ano podendo ser
-escrito com todos os dígitos (2022) ou apenas os últimos dois (22).
-Outra coisa que pode ser alterada é a ordem (“dia - mês - ano” ou “ano -
-mês - dia” ou qualquer variação desses três). Ainda podemos encontrar em
-bases de dados o mês escrito por extenso ou abreviado como
-“01/Jan/1990”. Isso sem contar com o separador dessas datass (“/”, “-”,
-um espaço em branco…). Podemos definir isso dentro da função
-<code>as.Date()</code>, utilizando como argumento a seguinte
-convenção:</p>
+<p>É interessante lembrar um pouco como funciona esse formato de datas aqui. As datas podem vir de inúmeras formas diferentes de algum banco de dados. Elas podem vir com “dia - mês - ano”, com o ano podendo ser escrito com todos os dígitos (2022) ou apenas os últimos dois (22). Outra coisa que pode ser alterada é a ordem (“dia - mês - ano” ou “ano - mês - dia” ou qualquer variação desses três). Ainda podemos encontrar em bases de dados o mês escrito por extenso ou abreviado como “01/Jan/1990”. Isso sem contar com o separador dessas datass (“/”, “-”, um espaço em branco…). Podemos definir isso dentro da função <code>as.Date()</code>, utilizando como argumento a seguinte convenção:</p>
 <ul>
 <li><strong>%Y</strong> para anos com quatro dígitos;</li>
 <li><strong>%y</strong> para anos com dois dígitos;</li>
 <li><strong>%d</strong> para os dias (dígitos de 1 a 31);</li>
 <li><strong>%m</strong> para os meses (dígitos de 1 a 12);</li>
-<li><strong>%b</strong> para meses no formato abreviado em inglês
-(<em>Jan</em>, <em>Feb</em>, …);</li>
-<li><strong>%B</strong> para meses no formato por extenso em inglês
-(<em>January</em>, <em>February</em>, …).</li>
+<li><strong>%b</strong> para meses no formato abreviado em inglês (<em>Jan</em>, <em>Feb</em>, …);</li>
+<li><strong>%B</strong> para meses no formato por extenso em inglês (<em>January</em>, <em>February</em>, …).</li>
 </ul>
-<p>Essa função do <strong>R</strong> possui um argumento que irá ficar
-tentando diversos formatos diferentes e tomará como verdade o primeiro
-que não retornar valores NA - porém, para formatos específicos (e se já
-sabemos qual é), pode ser melhor já deixar isso explícito em seu
-código.</p>
+<p>Essa função do <strong>R</strong> possui um argumento que irá ficar tentando diversos formatos diferentes e tomará como verdade o primeiro que não retornar valores NA - porém, para formatos específicos (e se já sabemos qual é), pode ser melhor já deixar isso explícito em seu código.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='st'>"2021-11-01"</span>, format <span class='op'>=</span> <span class='st'>"%Y-%m-%d"</span><span class='op'>)</span></span></code></pre>
@@ -2725,23 +2546,7 @@ código.</p>
 </div>
 <pre><code>[1] &quot;1970-01-01&quot;</code></pre>
 </div>
-<p>Nesse arquivo temos a necessidade de uma nova etapa. Ao olhar um
-pouco como os dados estão oganizados, percebemos que existem 78 colunas.
-Ao invés dos dados de vazão estarem todos em uma mesma coluna, eles
-estão espaçados por coluna, contendo 1 mês completo para cada linha do
-dataframe. Isso é um pouco problemático, pois ao puxarmos todas as 31
-colunas de dados, estaremos puxandos datas inexistentes como dia 31 de
-fevereiro. O que fazemos no código abaixo é aplicar (usando a função
-<strong>sapply</strong>) uma função para cada linha dos dados da série
-histórica, e portanto para cada mês. Para cada linha, puxaremos apenas a
-parte da data contendo o ano e o mês, e em seguida colaremos os valores
-de 1 a 31 neles. Ao transformarmos esses caracteres em data, utilizando
-o <strong>as.Date</strong>, o <strong>R</strong> fara uma coerção, como
-comentado anteriormente. Tudo aquilo que ee não conseguir colocar no
-formato de datas (como o dia 31 de fevereiro), sera retornado como
-<strong>NA</strong>. Assim teremos um vetor com as datas corretas, e as
-dadtas fictícias que criamos e que não existem, estarão como
-<strong>NA</strong>.</p>
+<p>Nesse arquivo temos a necessidade de uma nova etapa. Ao olhar um pouco como os dados estão oganizados, percebemos que existem 78 colunas. Ao invés dos dados de vazão estarem todos em uma mesma coluna, eles estão espaçados por coluna, contendo 1 mês completo para cada linha do dataframe. Isso é um pouco problemático, pois ao puxarmos todas as 31 colunas de dados, estaremos puxandos datas inexistentes como dia 31 de fevereiro. O que fazemos no código abaixo é aplicar (usando a função <strong>sapply</strong>) uma função para cada linha dos dados da série histórica, e portanto para cada mês. Para cada linha, puxaremos apenas a parte da data contendo o ano e o mês, e em seguida colaremos os valores de 1 a 31 neles. Ao transformarmos esses caracteres em data, utilizando o <strong>as.Date</strong>, o <strong>R</strong> fara uma coerção, como comentado anteriormente. Tudo aquilo que ee não conseguir colocar no formato de datas (como o dia 31 de fevereiro), sera retornado como <strong>NA</strong>. Assim teremos um vetor com as datas corretas, e as dadtas fictícias que criamos e que não existem, estarão como <strong>NA</strong>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>Data_proxy</span> <span class='op'>&lt;-</span></span>
@@ -2751,27 +2556,15 @@ dadtas fictícias que criamos e que não existem, estarão como
 <span>  <span class='op'>}</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<p>Em seguida puxamos os dados. Esses podem vir apenas como a transposta
-das colunas correspondentes, que são as colunas 16 até a 46. Após pegar
-a transposta dessas colunas de cada linha de data, concatenamos isso em
-um vetor e transformamos no formato numérico. Sempre deixar seu código
-pensando em contas matriciais é muito útil (como pegar a transposta),
-pois o computador consegue fazer essas contas de forma muito eficiente.
-É extremamente interessante notar que sempre temos diferentes formas de
-fazer um código, isso vai variar muito com a lógica de cada programador
-e esse é apenas um exemplo de como podemos pegar esses dados da
-<strong>ANA</strong>.</p>
+<p>Em seguida puxamos os dados. Esses podem vir apenas como a transposta das colunas correspondentes, que são as colunas 16 até a 46. Após pegar a transposta dessas colunas de cada linha de data, concatenamos isso em um vetor e transformamos no formato numérico. Sempre deixar seu código pensando em contas matriciais é muito útil (como pegar a transposta), pois o computador consegue fazer essas contas de forma muito eficiente.
+É extremamente interessante notar que sempre temos diferentes formas de fazer um código, isso vai variar muito com a lógica de cada programador e esse é apenas um exemplo de como podemos pegar esses dados da <strong>ANA</strong>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>Dados_proxy</span> <span class='op'>&lt;-</span></span>
 <span>  <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span><span class='op'>)</span><span class='op'>:</span><span class='fl'>1</span>, <span class='fl'>16</span><span class='op'>:</span><span class='fl'>46</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<p>Em seguida fazemos um dataframe vazio, contendo 3 colunas. A primeira
-possui o código da estação sendo avaliado (como repete para todas as
-linhas, podemos pegar apenas o primeiro valor). A segunda as datas e a
-última sendo a coluna com os dados de vazão que está, por hora,
-vazio.</p>
+<p>Em seguida fazemos um dataframe vazio, contendo 3 colunas. A primeira possui o código da estação sendo avaliado (como repete para todas as linhas, podemos pegar apenas o primeiro valor). A segunda as datas e a última sendo a coluna com os dados de vazão que está, por hora, vazio.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>Cod_estacao <span class='op'>=</span> <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>EstacaoCodigo</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,</span>
@@ -2779,28 +2572,13 @@ vazio.</p>
 <span>                           Vazao <span class='op'>=</span> <span class='va'>Dados_proxy</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<p>Agora temos que retirar todas as linhas desse <em>data.frame</em> que
-estão como formato <strong>NA</strong>, pois são as datas fictícias
-criadas por a gente e que de fato não existem (lembram que para criar o
-vetor <strong>Data_proxy</strong> nós criamos os dias 1 a 31 de todos os
-meses?). Portanto retiramos (usando o símbolo de “-”) essas linhas da
-nossa tabela_final.</p>
+<p>Agora temos que retirar todas as linhas desse <em>data.frame</em> que estão como formato <strong>NA</strong>, pois são as datas fictícias criadas por a gente e que de fato não existem (lembram que para criar o vetor <strong>Data_proxy</strong> nós criamos os dias 1 a 31 de todos os meses?). Portanto retiramos (usando o símbolo de “-”) essas linhas da nossa tabela_final.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='va'>tabela_final</span><span class='op'>[</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span><span class='op'>)</span>,<span class='op'>]</span></span></code></pre>
 </div>
 </div>
-<p>Ainda temos um grande problema nessa situação. Existem casos em que
-uma estação não terá dados de um mês inteiro. Nesses casos não haverá
-linha para criarmos as datas fictícias. Portanto, para garantir que a
-nossa série estará com TODAS as datas, fazemos uma sequência que começa
-da menor data em nossa tabela e vai até a maior. Em seguida vemos quais
-as datas faltantes na nossa tabela e, caso existam essas datas
-faltantes, completamos nossa tabela. Isso é feito criando um data.frame
-com as mesmas colunas (Cod_estacao, Data e Dados) e depois juntando
-ambas tabelas com a função <strong>rbind</strong>. Como essas datas não
-foram coletadas informações a respeito das vazões (ou cotas),
-preenchemos a tabela com os dados sendo <strong>NA</strong>.</p>
+<p>Ainda temos um grande problema nessa situação. Existem casos em que uma estação não terá dados de um mês inteiro. Nesses casos não haverá linha para criarmos as datas fictícias. Portanto, para garantir que a nossa série estará com TODAS as datas, fazemos uma sequência que começa da menor data em nossa tabela e vai até a maior. Em seguida vemos quais as datas faltantes na nossa tabela e, caso existam essas datas faltantes, completamos nossa tabela. Isso é feito criando um data.frame com as mesmas colunas (Cod_estacao, Data e Dados) e depois juntando ambas tabelas com a função <strong>rbind</strong>. Como essas datas não foram coletadas informações a respeito das vazões (ou cotas), preenchemos a tabela com os dados sendo <strong>NA</strong>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Preencher as datas faltantes</span></span>
@@ -2823,10 +2601,7 @@ preenchemos a tabela com os dados sendo <strong>NA</strong>.</p>
 <span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
-<p>Por fim colocamos essa tabela_final na ordem correta das datas
-(quando colamos com o <strong>rbind</strong> a ordem não fica como
-queremos) e pronto! Agora podemos ver, por exemplo, as primeiras 5
-medições que não são <code>NA</code></p>
+<p>Por fim colocamos essa tabela_final na ordem correta das datas (quando colamos com o <strong>rbind</strong> a ordem não fica como queremos) e pronto! Agora podemos ver, por exemplo, as primeiras 5 medições que não são <code>NA</code></p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='va'>tabela_final</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/order.html'>order</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,<span class='op'>]</span></span>
@@ -2841,10 +2616,7 @@ medições que não são <code>NA</code></p>
 16    60435000 1978-05-16 2.4667
 17    60435000 1978-05-17 2.5004</code></pre>
 </div>
-<p>Assim como feito nas outras etapas, podemos aqui fazer uma função
-para automatizar tudo que foi feito em várias etapas para deixar o
-processo mais automatizado e mais fácil quando quiser rodar o mesmo
-processo para outras estações.</p>
+<p>Assim como feito nas outras etapas, podemos aqui fazer uma função para automatizar tudo que foi feito em várias etapas para deixar o processo mais automatizado e mais fácil quando quiser rodar o mesmo processo para outras estações.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_serie_ANA</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>cod_estacao</span> <span class='op'>=</span> <span class='cn'>NA</span>,</span>
@@ -2924,17 +2696,8 @@ processo para outras estações.</p>
 </div>
 <h2 id="salvar-arquivos">Salvar arquivos</h2>
 <h3 id="salvar-um-arquivo-único">Salvar um arquivo único</h3>
-<p>Uma etapa tão importante quanto baixar os próprios dados que se
-precisa é conseguir salvar eles antes ou depois de alguma manipulação
-feita. Isso pode ser feito pelo <strong>R</strong> utilizando as funções
-<code>write.table()</code>, <code>write.csv()</code> ou variações delas
-- da mesma forma que haviam variações em <code>read.table()</code>
-<code>read.csv()</code>.</p>
-<p>Uma boa prática é deixar todos os argumentos mais importantes
-explícitos, para que não tenha dúvidas de qua função usar ou como se irá
-salvar. Assim deixa-se explícito abaixo o separador (<em>tab</em>), os
-decimais (“.”), que não irá salvar o nome das linhas (elas não tem nome)
-e a codificação do arquivo (acentos e etc.).</p>
+<p>Uma etapa tão importante quanto baixar os próprios dados que se precisa é conseguir salvar eles antes ou depois de alguma manipulação feita. Isso pode ser feito pelo <strong>R</strong> utilizando as funções <code>write.table()</code>, <code>write.csv()</code> ou variações delas - da mesma forma que haviam variações em <code>read.table()</code> <code>read.csv()</code>.</p>
+<p>Uma boa prática é deixar todos os argumentos mais importantes explícitos, para que não tenha dúvidas de qua função usar ou como se irá salvar. Assim deixa-se explícito abaixo o separador (<em>tab</em>), os decimais (“.”), que não irá salvar o nome das linhas (elas não tem nome) e a codificação do arquivo (acentos e etc.).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/write.table.html'>write.table</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>dados_60435000</span>,</span>
@@ -2946,23 +2709,14 @@ e a codificação do arquivo (acentos e etc.).</p>
 </div>
 </div>
 <h3 id="salvar-em-um-loop">Salvar em um loop</h3>
-<p>A vantagem de utilizar funções e automatizações é fazer tudo que foi
-feito acima para <em>n</em> estações, não apenas uma! Selecionamos já 4
-estações de uma mesma bacia para fazermos análises mais a frente. Os
-códigos delas são:</p>
+<p>A vantagem de utilizar funções e automatizações é fazer tudo que foi feito acima para <em>n</em> estações, não apenas uma! Selecionamos já 4 estações de uma mesma bacia para fazermos análises mais a frente. Os códigos delas são:</p>
 <ul>
 <li>60435000 (feita);</li>
 <li>60436000;</li>
 <li>60436190;</li>
 <li>60443000 (última estação).</li>
 </ul>
-<p>Para fazer isso, podemos rodar a nossa funão criada,
-<code>dados_serie_ANA()</code>, para cada uma dessas estações. Depois de
-rodar a função, podemos rodar também o código para salvar elas! Note que
-o <strong>i</strong> interno ao <code>for()</code> não precisa ser uma
-sequência, ele apenas informa quais os valores que <strong>i</strong>
-vai tomar a cada iteração. Na hora de salvar usamos a função
-<code>paste0()</code> pois o nome vai variar com cada iteração.</p>
+<p>Para fazer isso, podemos rodar a nossa funão criada, <code>dados_serie_ANA()</code>, para cada uma dessas estações. Depois de rodar a função, podemos rodar também o código para salvar elas! Note que o <strong>i</strong> interno ao <code>for()</code> não precisa ser uma sequência, ele apenas informa quais os valores que <strong>i</strong> vai tomar a cada iteração. Na hora de salvar usamos a função <code>paste0()</code> pois o nome vai variar com cada iteração.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'>for</span><span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>60435000</span>, <span class='fl'>60436000</span>, <span class='fl'>60436190</span>, <span class='fl'>60443000</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
@@ -2977,15 +2731,7 @@ vai tomar a cada iteração. Na hora de salvar usamos a função
 <span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
-<p>Agora temos 4 arquivos, um para cada estação que definimos, salvos em
-formato <em>.txt</em> do jeito que queremos - o que tornará a próxima
-etapa de manipulação muito mais fácil. Ao invés de termos um arquivo
-para cada estação com 78 colunas e as vazões podendo estar em diferentes
-linhas e colunas temos uma tabela bem simples, com apenas 3 colunas. Uma
-contendo o código da estação, outra a data e a última o valor de vazão
-observado. Se quisermos fazer um <em>loop</em> para salvarmos os 4
-arquivos em um mesmo data.frame também podemos o fazer. Segue abaixo
-esse último exemplo.</p>
+<p>Agora temos 4 arquivos, um para cada estação que definimos, salvos em formato <em>.txt</em> do jeito que queremos - o que tornará a próxima etapa de manipulação muito mais fácil. Ao invés de termos um arquivo para cada estação com 78 colunas e as vazões podendo estar em diferentes linhas e colunas temos uma tabela bem simples, com apenas 3 colunas. Uma contendo o código da estação, outra a data e a última o valor de vazão observado. Se quisermos fazer um <em>loop</em> para salvarmos os 4 arquivos em um mesmo data.frame também podemos o fazer. Segue abaixo esse último exemplo.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>estacoes</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>60435000</span>, <span class='fl'>60436000</span>, <span class='fl'>60436190</span>, <span class='fl'>60443000</span><span class='op'>)</span></span>
@@ -3010,8 +2756,7 @@ esse último exemplo.</p>
 <span>            fileEncoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<div class="sourceCode" id="cb11"><pre
-class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

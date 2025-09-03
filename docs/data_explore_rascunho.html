@@ -21,7 +21,7 @@
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -32,7 +32,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -459,8 +459,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
 
   <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-  <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
-  <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"/>
   <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
   <script src="site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
   <script src="site_libs/fuse-6.4.1/fuse.min.js"></script>
@@ -789,6 +789,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article table.gt_table td,
   d-article table.gt_table th {
     border-bottom: none;
+    font-size: 100%;
   }
 
   .html-widget {
@@ -829,9 +830,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     display: none !important;
   }
 
+  hr.section-separator {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 0px;
+  }
+
+
+  d-byline {
+    border-top: none;
+  }
+
   d-article {
     padding-top: 2.5rem;
     padding-bottom: 30px;
+    border-top: none;
   }
 
   d-appendix {
@@ -926,6 +939,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article div.sourceCode pre {
     padding-left: 18px;
     font-size: 14px;
+  }
+
+  /* tweak for Pandoc numbered line within distill */
+  d-article pre.numberSource code > span {
+      left: -2em;
   }
 
   d-article pre {
@@ -1687,6 +1705,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // create d-title
     $('.d-title').changeElementType('d-title');
 
+    // separator
+    var separator = '<hr class="section-separator" style="clear: both"/>';
+    // prepend separator above appendix
+    $('.d-byline').before(separator);
+    $('.d-article').before(separator);
+
     // create d-byline
     var byline = $('<d-byline></d-byline>');
     $('.d-byline').replaceWith(byline);
@@ -1764,8 +1788,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     $('.distill-force-highlighting-css').parent().remove();
 
     // remove empty line numbers inserted by pandoc when using a
-    // custom syntax highlighting theme
-    $('code.sourceCode a:empty').remove();
+    // custom syntax highlighting theme, except when numbering line
+    // in code chunk
+    $('pre:not(.numberLines) code.sourceCode a:empty').remove();
 
     // load distill framework
     load_distill_framework();
@@ -1791,12 +1816,13 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       // add orcid ids
       $('.authors-affiliations').find('.author').each(function(i, el) {
         var orcid_id = front_matter.authors[i].orcidID;
+        var author_name = front_matter.authors[i].author
         if (orcid_id) {
           var a = $('<a></a>');
           a.attr('href', 'https://orcid.org/' + orcid_id);
           var img = $('<img></img>');
           img.addClass('orcid-id');
-          img.attr('alt', 'ORCID ID');
+          img.attr('alt', author_name ? 'ORCID ID for ' + author_name : 'ORCID ID');
           img.attr('src','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg==');
           a.append(img);
           $(this).append(a);
@@ -1861,15 +1887,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
       // hoverable references
       $('span.citation[data-cites]').each(function() {
-        if ($(this).children()[0].nodeName == "D-FOOTNOTE") {
-          var fn = $(this).children()[0]
+        const citeChild = $(this).children()[0]
+        // Do not process if @xyz has been used without escaping and without bibliography activated
+        // https://github.com/rstudio/distill/issues/466
+        if (citeChild === undefined) return true
+
+        if (citeChild.nodeName == "D-FOOTNOTE") {
+          var fn = citeChild
           $(this).html(fn.shadowRoot.querySelector("sup"))
           $(this).id = fn.id
           fn.remove()
         }
         var refs = $(this).attr('data-cites').split(" ");
         var refHtml = refs.map(function(ref) {
-          return "<p>" + $('#ref-' + ref).html() + "</p>";
+          // Could use CSS.escape too here, we insure backward compatibility in navigator
+          return "<p>" + $('div[id="ref-' + ref + '"]').html() + "</p>";
         }).join("\n");
         window.tippy(this, {
           allowHTML: true,
@@ -2068,7 +2100,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2113,6 +2145,7 @@ Aulas
 <a href="data_explore.html">Análise exploratória</a>
 <a href="data_explore_rascunho.html">Análise exploratória 2</a>
 <a href="frequency_analysis.html">Análise de frequência</a>
+<a href="frequency_analysis_gev.html">Análise de frequência_GEV</a>
 </div>
 </div>
 <a href="colaboradores.html">Colaboradores</a>
@@ -2129,6 +2162,7 @@ Aulas
 
 <div class="d-title">
 <h1>Análise exploratória dos dados: Parte 2</h1>
+
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
 <p>Rascunho de novas análises com <strong>R</strong></p>
@@ -2141,80 +2175,46 @@ Aulas
 <h3>Contents</h3>
 <ul>
 <li><a href="#apresentação" id="toc-apresentação">Apresentação</a></li>
-<li><a href="#leitura-dos-dados-diários"
-id="toc-leitura-dos-dados-diários">Leitura dos dados diários</a></li>
-<li><a href="#curva-de-permanência" id="toc-curva-de-permanência">Curva
-de permanência</a></li>
-<li><a href="#sazonalidade-das-vazões-máximas-anuais"
-id="toc-sazonalidade-das-vazões-máximas-anuais">Sazonalidade das vazões
-máximas anuais</a></li>
-<li><a href="#análise-de-veranicos-de-chuva"
-id="toc-análise-de-veranicos-de-chuva">Análise de veranicos de chuva</a>
+<li><a href="#leitura-dos-dados-diários" id="toc-leitura-dos-dados-diários">Leitura dos dados diários</a></li>
+<li><a href="#curva-de-permanência" id="toc-curva-de-permanência">Curva de permanência</a></li>
+<li><a href="#sazonalidade-das-vazões-máximas-anuais" id="toc-sazonalidade-das-vazões-máximas-anuais">Sazonalidade das vazões máximas anuais</a></li>
+<li><a href="#análise-de-veranicos-de-chuva" id="toc-análise-de-veranicos-de-chuva">Análise de veranicos de chuva</a>
 <ul>
-<li><a href="#baixar-dados-de-chuva"
-id="toc-baixar-dados-de-chuva">Baixar dados de chuva</a></li>
-<li><a href="#identificar-veranicos"
-id="toc-identificar-veranicos">Identificar veranicos</a></li>
-<li><a href="#plotagem-de-período-de-veranicos"
-id="toc-plotagem-de-período-de-veranicos">Plotagem de período de
-veranicos</a></li>
-<li><a href="#frequência-de-veranicos-de-uma-dada-extensão"
-id="toc-frequência-de-veranicos-de-uma-dada-extensão">Frequência de
-veranicos de uma dada extensão</a></li>
+<li><a href="#baixar-dados-de-chuva" id="toc-baixar-dados-de-chuva">Baixar dados de chuva</a></li>
+<li><a href="#identificar-veranicos" id="toc-identificar-veranicos">Identificar veranicos</a></li>
+<li><a href="#plotagem-de-período-de-veranicos" id="toc-plotagem-de-período-de-veranicos">Plotagem de período de veranicos</a></li>
+<li><a href="#frequência-de-veranicos-de-uma-dada-extensão" id="toc-frequência-de-veranicos-de-uma-dada-extensão">Frequência de veranicos de uma dada extensão</a></li>
 </ul></li>
-<li><a href="#análise-de-seca" id="toc-análise-de-seca">Análise de
-seca</a>
+<li><a href="#análise-de-seca" id="toc-análise-de-seca">Análise de seca</a>
 <ul>
-<li><a href="#baixar-dados-de-vazão"
-id="toc-baixar-dados-de-vazão">Baixar dados de vazão</a></li>
-<li><a href="#identificar-status-da-vazão-seco-ou-úmido"
-id="toc-identificar-status-da-vazão-seco-ou-úmido">Identificar status da
-vazão (seco ou úmido)</a></li>
-<li><a href="#plotagem-dos-períodos-secos-e-períodos-úmidos"
-id="toc-plotagem-dos-períodos-secos-e-períodos-úmidos">Plotagem dos
-períodos secos e períodos úmidos</a></li>
-<li><a href="#frequência-e-extensão-dos-períodos-secos-dry-spells"
-id="toc-frequência-e-extensão-dos-períodos-secos-dry-spells">Frequência
-e extensão dos períodos secos (<em>dry spells</em>)</a></li>
-<li><a href="#cálculo-e-análise-do-volume-de-deficit"
-id="toc-cálculo-e-análise-do-volume-de-deficit">Cálculo e análise do
-volume de deficit</a></li>
-<li><a href="#identificar-veranicos-1"
-id="toc-identificar-veranicos-1">Identificar veranicos</a></li>
+<li><a href="#baixar-dados-de-vazão" id="toc-baixar-dados-de-vazão">Baixar dados de vazão</a></li>
+<li><a href="#identificar-status-da-vazão-seco-ou-úmido" id="toc-identificar-status-da-vazão-seco-ou-úmido">Identificar status da vazão (seco ou úmido)</a></li>
+<li><a href="#plotagem-dos-períodos-secos-e-períodos-úmidos" id="toc-plotagem-dos-períodos-secos-e-períodos-úmidos">Plotagem dos períodos secos e períodos úmidos</a></li>
+<li><a href="#frequência-e-extensão-dos-períodos-secos-dry-spells" id="toc-frequência-e-extensão-dos-períodos-secos-dry-spells">Frequência e extensão dos períodos secos (<em>dry spells</em>)</a></li>
+<li><a href="#cálculo-e-análise-do-volume-de-deficit" id="toc-cálculo-e-análise-do-volume-de-deficit">Cálculo e análise do volume de deficit</a></li>
+<li><a href="#identificar-veranicos-1" id="toc-identificar-veranicos-1">Identificar veranicos</a></li>
 <li><a href="#section" id="toc-section"></a></li>
 </ul></li>
-<li><a href="#fontes-de-consulta" id="toc-fontes-de-consulta">Fontes de
-consulta</a></li>
+<li><a href="#fontes-de-consulta" id="toc-fontes-de-consulta">Fontes de consulta</a></li>
 </ul>
 </nav>
 </div>
 <h2 id="apresentação">Apresentação</h2>
-<p>Esta página pode ser vista como um rascunho de uma segunda aula em
-<strong>Análise Exploratória de Dados</strong>, o que significa dizer
-que ainda está em construção.</p>
-<p>A ideia é iniciar com a leitura de dados diários de vazão de uma dada
-estação, e a partir daí, realizar uma séries de atividades que se
-constitui basicamente da construção de gráficos que permitam
-caracterizar, de uma forma geral, o comportamentos das vazões no
-local.</p>
-<p>Segue abaixo, uma lista das análises que se pretende realizar nesta
-aula:</p>
+<p>Esta página pode ser vista como um rascunho de uma segunda aula em <strong>Análise Exploratória de Dados</strong>, o que significa dizer que ainda está em construção.</p>
+<p>A ideia é iniciar com a leitura de dados diários de vazão de uma dada estação, e a partir daí, realizar uma séries de atividades que se constitui basicamente da construção de gráficos que permitam caracterizar, de uma forma geral, o comportamentos das vazões no local.</p>
+<p>Segue abaixo, uma lista das análises que se pretende realizar nesta aula:</p>
 <ul>
-<li>Construção de curva de permanência a nível diário em três estágios
-acumulativos:
+<li>Construção de curva de permanência a nível diário em três estágios acumulativos:
 <ul>
 <li>com todos os anos do histórico de uma só vez</li>
 <li>uma curva para cada ano</li>
-<li>identificação da curva de permanência dos anos mais úmido e mais
-seco</li>
+<li>identificação da curva de permanência dos anos mais úmido e mais seco</li>
 </ul></li>
-<li>Sazonalidade das máximas anuais (esécie de rosas dos ventos para
-vazões)</li>
+<li>Sazonalidade das máximas anuais (esécie de rosas dos ventos para vazões)</li>
 <li>Construção das mínimas para um dado número de dias consecutivos</li>
 </ul>
 <h2 id="leitura-dos-dados-diários">Leitura dos dados diários</h2>
-<p>Iniciamos esta aula fazendo a leitura do arquivo <code>txt</code> que
-contém os dados de vazão média diária obtidos anteriormente.</p>
+<p>Iniciamos esta aula fazendo a leitura do arquivo <code>txt</code> que contém os dados de vazão média diária obtidos anteriormente.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Leitura do arquivo de vazões médias diárias</span></span>
@@ -2239,21 +2239,9 @@ contém os dados de vazão média diária obtidos anteriormente.</p>
 10    60435000 1978-05-10    NA</code></pre>
 </div>
 <h2 id="curva-de-permanência">Curva de permanência</h2>
-<p>A curva de permanência de vazões relaciona os valores de vazão
-registrados na estação com as respectivas probabilidade de serem
-excedidos. Costuma-se representar os valores de vazão no eixo-y e a
-probabilide de excedência no eixo-x. Costuma-se interpretar a
-probabilidade de excedência como o percentual do tempo em que se observa
-valores de vazão maior ou iguais ao valor em questão.</p>
-<p>Para construrios uma curva de permanência com os dados apresentados
-acima, criaremos uma nova coluna no nosso <code>dataframe</code>,
-denominado <code>Qd</code>, com os valores do ano corrspondente,
-informação disponível na coluna de <code>Data</code>. Isso nos ajudará
-nas etapas posteriores de cálculo.</p>
-<p>Além disso, removeremos os anos em que haja falha nos dados de vazão,
-evitando distorções no cálculo dos percentis de vazão, necessários para
-a criação da curva de permanência. Essas duas etapas são realizadas no
-código abaixo,</p>
+<p>A curva de permanência de vazões relaciona os valores de vazão registrados na estação com as respectivas probabilidade de serem excedidos. Costuma-se representar os valores de vazão no eixo-y e a probabilide de excedência no eixo-x. Costuma-se interpretar a probabilidade de excedência como o percentual do tempo em que se observa valores de vazão maior ou iguais ao valor em questão.</p>
+<p>Para construrios uma curva de permanência com os dados apresentados acima, criaremos uma nova coluna no nosso <code>dataframe</code>, denominado <code>Qd</code>, com os valores do ano corrspondente, informação disponível na coluna de <code>Data</code>. Isso nos ajudará nas etapas posteriores de cálculo.</p>
+<p>Além disso, removeremos os anos em que haja falha nos dados de vazão, evitando distorções no cálculo dos percentis de vazão, necessários para a criação da curva de permanência. Essas duas etapas são realizadas no código abaixo,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Criação de coluna com os anos</span></span>
@@ -2268,7 +2256,7 @@ código abaixo,</p>
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>Qd</span> <span class='op'>&lt;-</span> <span class='va'>Qd</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
 <span>          <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='op'>!</span><span class='op'>(</span><span class='va'>Ano</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='va'>Anos_falha</span><span class='op'>)</span><span class='op'>)</span></span>
-<span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>Qd</span><span class='op'>)</span></span></code></pre>
+<span><span class='fu'><a href='https://rdrr.io/pkg/tibble/man/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>Qd</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code># A tibble: 14,579 × 4
    Cod_estacao Data       Vazao   Ano
@@ -2283,32 +2271,18 @@ código abaixo,</p>
  8 60435000    1979-01-08  4.17  1979
  9 60435000    1979-01-09 10.9   1979
 10 60435000    1979-01-10 15.8   1979
-# … with 14,569 more rows</code></pre>
+# ℹ 14,569 more rows</code></pre>
 </div>
-<p>Podemos notar que os anos 1978, 2008, 2009, 2019 continham falhas e
-foram removidos de nossa análise. A série restante contém um total de
-14579 observações, relativas a 40 anos de dados sem falhas, com início
-em 1979 e fim em 2021.</p>
-<p>Constuiremos primeiro a curva de permanência tradicional, aquela em
-que as obervações de todos os anos do histórico são empregadas no
-cálculo da probabilidade de excedência. Aqui, utilizaremos a chamada
-posição de plotagem de Weibull, conforme equação abaixo,</p>
+<p>Podemos notar que os anos 1978, 2008, 2009, 2019 continham falhas e foram removidos de nossa análise. A série restante contém um total de 14579 observações, relativas a 40 anos de dados sem falhas, com início em 1979 e fim em 2021.</p>
+<p>Constuiremos primeiro a curva de permanência tradicional, aquela em que as obervações de todos os anos do histórico são empregadas no cálculo da probabilidade de excedência. Aqui, utilizaremos a chamada posição de plotagem de Weibull, conforme equação abaixo,</p>
 <p><span class="math display">\[
 P(Q&gt;q_{(i)})=\frac{i}{n+1}
 \]</span></p>
-<p>em que <span class="math inline">\(q_{(i)}\)</span> é a i-ésima maior
-vazão observada, <span class="math inline">\(i\)</span> é o posto
-(<em>ranking</em>) da observação, e <span
-class="math inline">\(n\)</span> é o número de observações. Só para
-deixar claro, a probabilidade da vazão média diária ultrapassar a maior
-vazão média diária já registrada vale</p>
+<p>em que <span class="math inline">\(q_{(i)}\)</span> é a i-ésima maior vazão observada, <span class="math inline">\(i\)</span> é o posto (<em>ranking</em>) da observação, e <span class="math inline">\(n\)</span> é o número de observações. Só para deixar claro, a probabilidade da vazão média diária ultrapassar a maior vazão média diária já registrada vale</p>
 <p><span class="math display">\[
 P(Q&gt;q_{(1)}) = \frac{1}{n+1}
 \]</span></p>
-<p>Utilizamos o código abaixo, escrito em <code>R-base</code>, para
-realizar esse cálculo. AO final, apresentamos as primeiras 10 linhas do
-<code>dataframe</code> denominado <code>Qperm_all</code>, com os valores
-da probabilidade de excedência localizados na última coluna.</p>
+<p>Utilizamos o código abaixo, escrito em <code>R-base</code>, para realizar esse cálculo. AO final, apresentamos as primeiras 10 linhas do <code>dataframe</code> denominado <code>Qperm_all</code>, com os valores da probabilidade de excedência localizados na última coluna.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Permanência calculada com todos os anos juntos </span></span>
@@ -2316,7 +2290,7 @@ da probabilidade de excedência localizados na última coluna.</p>
 <span><span class='va'>Qperm_all</span> <span class='op'>&lt;-</span> <span class='va'>Qd</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/order.html'>order</a></span><span class='op'>(</span><span class='va'>Qd</span><span class='op'>$</span><span class='va'>Vazao</span>, decreasing <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, <span class='op'>]</span></span>
 <span><span class='va'>Qperm_all</span><span class='op'>$</span><span class='va'>index</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Qperm_all</span><span class='op'>)</span></span>
 <span><span class='va'>Qperm_all</span><span class='op'>$</span><span class='va'>weibull</span> <span class='op'>&lt;-</span> <span class='va'>Qperm_all</span><span class='op'>$</span><span class='va'>index</span><span class='op'>/</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Qperm_all</span><span class='op'>)</span><span class='op'>+</span><span class='fl'>1</span><span class='op'>)</span> </span>
-<span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>Qperm_all</span><span class='op'>)</span></span></code></pre>
+<span><span class='fu'><a href='https://rdrr.io/pkg/tibble/man/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>Qperm_all</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code># A tibble: 14,579 × 6
    Cod_estacao Data       Vazao   Ano index   weibull
@@ -2331,21 +2305,17 @@ da probabilidade de excedência localizados na última coluna.</p>
  8 60435000    1994-03-06  18.9  1994     8 0.000549 
  9 60435000    2004-01-28  18.8  2004     9 0.000617 
 10 60435000    2016-01-20  17.8  2016    10 0.000686 
-# … with 14,569 more rows</code></pre>
+# ℹ 14,569 more rows</code></pre>
 </div>
-<p>Note que as vazões estão ordenadas de forma decrescentte, com o maior
-valor do histórico tendo ocorrido em 2004-02-23.</p>
-<p>Poderíamos ter obtido o mesmo resultado utilizando o pacote
-<code>tidyverse</code>, como pode ser observado abaixo. É sempre bom
-saber realizar algo de manieras diferentes. Utilize a que você achar
-mais fácil.</p>
+<p>Note que as vazões estão ordenadas de forma decrescentte, com o maior valor do histórico tendo ocorrido em 2004-02-23.</p>
+<p>Poderíamos ter obtido o mesmo resultado utilizando o pacote <code>tidyverse</code>, como pode ser observado abaixo. É sempre bom saber realizar algo de manieras diferentes. Utilize a que você achar mais fácil.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>Qperm_allt</span> <span class='op'>&lt;-</span> <span class='va'>Qd</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/arrange.html'>arrange</a></span><span class='op'>(</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/desc.html'>desc</a></span><span class='op'>(</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>index <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rank.html'>rank</a></span><span class='op'>(</span><span class='op'>-</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>weibull <span class='op'>=</span> <span class='va'>index</span><span class='op'>/</span><span class='op'>(</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/context.html'>n</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>+</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span></span>
-<span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>Qperm_allt</span><span class='op'>)</span></span></code></pre>
+<span><span class='fu'><a href='https://rdrr.io/pkg/tibble/man/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>Qperm_allt</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code># A tibble: 14,579 × 6
    Cod_estacao Data       Vazao   Ano index   weibull
@@ -2360,16 +2330,10 @@ mais fácil.</p>
  8 60435000    1994-03-06  18.9  1994   8   0.000549 
  9 60435000    2004-01-28  18.8  2004   9   0.000617 
 10 60435000    2016-01-20  17.8  2016  10   0.000686 
-# … with 14,569 more rows</code></pre>
+# ℹ 14,569 more rows</code></pre>
 </div>
-<p>Agora já temos os elementos necessários para realizar a plotagem da
-curva de permanência, quais sejam: a vazão média diária (eixo-y),
-armazenada na coluna <code>Vazao</code> de nosso <code>dataframe</code>,
-e a probabilidade de excedênia (eixo-x), armazeada na coluna
-<code>weibull</code>.</p>
-<p>O código abaixo faz a plotagem utilizando o pacote
-<code>ggplot2</code>. Plotamos a vazão na escala logarítmica para
-facilitar a visualização.</p>
+<p>Agora já temos os elementos necessários para realizar a plotagem da curva de permanência, quais sejam: a vazão média diária (eixo-y), armazenada na coluna <code>Vazao</code> de nosso <code>dataframe</code>, e a probabilidade de excedênia (eixo-x), armazeada na coluna <code>weibull</code>.</p>
+<p>O código abaixo faz a plotagem utilizando o pacote <code>ggplot2</code>. Plotamos a vazão na escala logarítmica para facilitar a visualização.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='op'>)</span> <span class='op'>+</span></span>
@@ -2386,16 +2350,8 @@ facilitar a visualização.</p>
 </div>
 <p><img src="data_explore_rascunho_files/figure-html5/plot-perm-all-1.png" width="768" /></p>
 </div>
-<p>O próximo passo é determinar as curvas de permanência para cada uma
-dos anos do histórico, e plotá-las junto com a curva acima. Isso nos
-dará uma ideia do grau de variabilidade da curva de permanência de ano
-para ano.</p>
-<p>Aqui, nos restringiremos a usar o pacote <code>tidyverse</code> para
-rearrumar o <code>dataframe</code> e realizar as operações necessárias.
-Como faremos uma curva de permanência para cada ano do histórico,
-precisaremos calcular as probabilidades de excedência de forma separada
-para cada ano. Faremos isso utilizando a função <code>group_by</code>,
-como apresentado no código abaixo,</p>
+<p>O próximo passo é determinar as curvas de permanência para cada uma dos anos do histórico, e plotá-las junto com a curva acima. Isso nos dará uma ideia do grau de variabilidade da curva de permanência de ano para ano.</p>
+<p>Aqui, nos restringiremos a usar o pacote <code>tidyverse</code> para rearrumar o <code>dataframe</code> e realizar as operações necessárias. Como faremos uma curva de permanência para cada ano do histórico, precisaremos calcular as probabilidades de excedência de forma separada para cada ano. Faremos isso utilizando a função <code>group_by</code>, como apresentado no código abaixo,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Permanência calculada para cada ano</span></span>
@@ -2405,7 +2361,7 @@ como apresentado no código abaixo,</p>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Ano</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>index <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rank.html'>rank</a></span><span class='op'>(</span><span class='op'>-</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>weibull <span class='op'>=</span> <span class='va'>index</span><span class='op'>/</span><span class='op'>(</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/context.html'>n</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>+</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span></span>
-<span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>Qperm_ano</span><span class='op'>)</span></span></code></pre>
+<span><span class='fu'><a href='https://rdrr.io/pkg/tibble/man/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>Qperm_ano</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code># A tibble: 14,579 × 6
    Cod_estacao Data       Vazao   Ano index weibull
@@ -2420,13 +2376,9 @@ como apresentado no código abaixo,</p>
  8 60435000    1979-01-21 10.5   1979     8 0.0219 
  9 60435000    1979-01-11  9.61  1979     9 0.0246 
 10 60435000    1979-01-13  9.19  1979    10 0.0273 
-# … with 14,569 more rows</code></pre>
+# ℹ 14,569 more rows</code></pre>
 </div>
-<p>Só nos resta agora fazer a plotagem. Como incluiremos 40 novas
-curvas, é importante que utilizemos uma linha bem fina e uma cor
-bastante suave. Utilizaremos a cor <code>gryy70</code> com tamanho
-<code>0.2</code>. Você pode experimentar as diferentes possibilidades
-que o <code>ggplot2</code> oferece.</p>
+<p>Só nos resta agora fazer a plotagem. Como incluiremos 40 novas curvas, é importante que utilizemos uma linha bem fina e uma cor bastante suave. Utilizaremos a cor <code>gryy70</code> com tamanho <code>0.2</code>. Você pode experimentar as diferentes possibilidades que o <code>ggplot2</code> oferece.</p>
 <p>O código para a plotagem segue abaixo,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2446,19 +2398,9 @@ que o <code>ggplot2</code> oferece.</p>
 </div>
 <p><img src="data_explore_rascunho_files/figure-html5/plot-perm-all-anos-1.png" width="768" /></p>
 </div>
-<p>Podemos perceber uma faixa de variação relativamente grande de ano
-para ano para os diferentes valores de percentis.</p>
-<p>Para faciliatr a visualização, faremos duas modificações na Figura
-acima. Primeiro, vamos alterar a linha de grade, tornando-a mais
-refinada. Depois, iremos fazer uma transformação no eixo-x para deixar
-mais claro o comportamento dessas curvas nas regiões extremas da
-probabilidade de excedência.</p>
-<p>Para a primeira parte, utilizaremos a função abaixo, que constrói um
-novo conjunto de linhas de grade na escala logarítmica, código este que
-foi retirado do link abaixo. Para a segunda parte, empregaremos uma
-transformação do tipo <code>probit</code> aos valores de probabilidade,
-transformando essas porbabilidades em quantis da distribuição
-normal-padrão.</p>
+<p>Podemos perceber uma faixa de variação relativamente grande de ano para ano para os diferentes valores de percentis.</p>
+<p>Para faciliatr a visualização, faremos duas modificações na Figura acima. Primeiro, vamos alterar a linha de grade, tornando-a mais refinada. Depois, iremos fazer uma transformação no eixo-x para deixar mais claro o comportamento dessas curvas nas regiões extremas da probabilidade de excedência.</p>
+<p>Para a primeira parte, utilizaremos a função abaixo, que constrói um novo conjunto de linhas de grade na escala logarítmica, código este que foi retirado do link abaixo. Para a segunda parte, empregaremos uma transformação do tipo <code>probit</code> aos valores de probabilidade, transformando essas porbabilidades em quantis da distribuição normal-padrão.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Function to plot minor breaks at a log scale</span></span>
@@ -2508,21 +2450,10 @@ normal-padrão.</p>
 </div>
 <p><img src="data_explore_rascunho_files/figure-html5/plot-perm-all-anos-v2-1.png" width="768" /></p>
 </div>
-<p>Veja que as mudanças implementadas permitiram visualizar melhor os
-resultados, principalmente para os quantis acima de 90%.</p>
-<p>Dá para notar, por exemplo, que a <span
-class="math inline">\(Q_{0.95}\)</span> vale 0.38 m<span
-class="math inline">\(^3\)</span>/s quando se emprega todo o conjunto de
-anos do histórico, muito embora, numa análise a nível anual, seu valor
-pode variar entre entre 1.48 m<span class="math inline">\(^3\)</span>/s
-e 0.07 m<span class="math inline">\(^3\)</span>/s.</p>
-<p>Para finalizar este esta atividade em relação à curva de permanência,
-e para chamar a atenção para essa variabilidade de ano para ano, vamos
-identificar o ano mais seco e o ano mais úmido, e diferenciá-los na
-Figura acima.</p>
-<p>Para isso, precisamos identificar quem são esses anos. Vamos utilizar
-como métrica para a definição do ano mais e do ano mais seco, a vazão
-média anual.</p>
+<p>Veja que as mudanças implementadas permitiram visualizar melhor os resultados, principalmente para os quantis acima de 90%.</p>
+<p>Dá para notar, por exemplo, que a <span class="math inline">\(Q_{0.95}\)</span> vale 0.38 m<span class="math inline">\(^3\)</span>/s quando se emprega todo o conjunto de anos do histórico, muito embora, numa análise a nível anual, seu valor pode variar entre entre 1.48 m<span class="math inline">\(^3\)</span>/s e 0.07 m<span class="math inline">\(^3\)</span>/s.</p>
+<p>Para finalizar este esta atividade em relação à curva de permanência, e para chamar a atenção para essa variabilidade de ano para ano, vamos identificar o ano mais seco e o ano mais úmido, e diferenciá-los na Figura acima.</p>
+<p>Para isso, precisamos identificar quem são esses anos. Vamos utilizar como métrica para a definição do ano mais e do ano mais seco, a vazão média anual.</p>
 <p>O código abaixo mostra com essa identificação pode ser feita,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -2540,10 +2471,8 @@ média anual.</p>
 </div>
 <pre><code>[1] 1983</code></pre>
 </div>
-<p>Para tornar as curvas de permanência de 1983 e 2017 mais proeminentes
-na Figura acima, basta colorí-las.</p>
-<p>Para isso, vamos construir um novo <code>dataframe</code> apenas ocm
-esses anos,</p>
+<p>Para tornar as curvas de permanência de 1983 e 2017 mais proeminentes na Figura acima, basta colorí-las.</p>
+<p>Para isso, vamos construir um novo <code>dataframe</code> apenas ocm esses anos,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>anos_extremos</span> <span class='op'>&lt;-</span> <span class='va'>Qd</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
@@ -2552,7 +2481,7 @@ esses anos,</p>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Ano</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>index <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/rank.html'>rank</a></span><span class='op'>(</span><span class='op'>-</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>weibull <span class='op'>=</span> <span class='va'>index</span><span class='op'>/</span><span class='op'>(</span><span class='fu'><a href='https://dplyr.tidyverse.org/reference/context.html'>n</a></span><span class='op'>(</span><span class='op'>)</span><span class='op'>+</span><span class='fl'>1</span><span class='op'>)</span><span class='op'>)</span></span>
-<span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>anos_extremos</span><span class='op'>)</span></span></code></pre>
+<span><span class='fu'><a href='https://rdrr.io/pkg/tibble/man/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>anos_extremos</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code># A tibble: 730 × 6
    Cod_estacao Data       Vazao   Ano index weibull
@@ -2567,10 +2496,9 @@ esses anos,</p>
  8 60435000    1983-03-27 10.9   1983     8 0.0219 
  9 60435000    1983-01-02 10.4   1983     9 0.0246 
 10 60435000    1983-02-08  9.95  1983    10 0.0273 
-# … with 720 more rows</code></pre>
+# ℹ 720 more rows</code></pre>
 </div>
-<p>Fazemos isso no código abaixo, incluindo uma legenda para identificar
-quem é quem.</p>
+<p>Fazemos isso no código abaixo, incluindo uma legenda para identificar quem é quem.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Plotagem</span></span>
@@ -2595,29 +2523,12 @@ quem é quem.</p>
 </div>
 <p><img src="data_explore_rascunho_files/figure-html5/unnamed-chunk-4-1.png" width="768" /></p>
 </div>
-<h2 id="sazonalidade-das-vazões-máximas-anuais">Sazonalidade das vazões
-máximas anuais</h2>
-<p>Quando o interesse se dá na modelagem das vazões máximas de um dada
-estação fluviométrica, é importante compreender quando, ao longo do ano,
-esses eventos mais extremos ocorrem, de forma a analisar os possíveis
-mecanismos geradores dessas grandes cheias.</p>
-<p>Na modelagem estatística de eventos de cheia, costuma-se assumir, a
-priori, que a série de máximos é homogênea, o que justifica o uso de
-apenas uma distribuição teórica de probabilidades.</p>
-<p>Entretanto, isso nem sempre é verdade, pois é possível que haja
-diferentes mecanismos físicos geradores das vazões mais altas. Esses
-mecanismos podem ocorrer em diferentes épocas do ano, de forma que num
-dado ano, digamos, a maior cheia possa ter ocorrido devido ao mecanismo
-<strong>A</strong>, enquanto que no ano seguinte, tenha sido o resultado
-do mecanismo gerador <strong>B</strong>. Em casos como esse, o mais
-indicado é modelar as vazões máximas como uma combinação de duas
-distribuições distintas, uma para cada mecanismo gerador.</p>
-<p>Visualizar quando as grandes cheias usualmente ocorrem ao longo do
-ano é um primeiro passo nesse tipo de análise, e isso é exatamente o que
-faremos aqui.</p>
-<p>Iniciamos esta atividade criando um novo <code>dataframe</code>,
-baseado no <code>dataframe</code> de vazões média diárias sem falhas,
-<code>Qd</code> (ver <strong>Curva de Permanência</strong>).</p>
+<h2 id="sazonalidade-das-vazões-máximas-anuais">Sazonalidade das vazões máximas anuais</h2>
+<p>Quando o interesse se dá na modelagem das vazões máximas de um dada estação fluviométrica, é importante compreender quando, ao longo do ano, esses eventos mais extremos ocorrem, de forma a analisar os possíveis mecanismos geradores dessas grandes cheias.</p>
+<p>Na modelagem estatística de eventos de cheia, costuma-se assumir, a priori, que a série de máximos é homogênea, o que justifica o uso de apenas uma distribuição teórica de probabilidades.</p>
+<p>Entretanto, isso nem sempre é verdade, pois é possível que haja diferentes mecanismos físicos geradores das vazões mais altas. Esses mecanismos podem ocorrer em diferentes épocas do ano, de forma que num dado ano, digamos, a maior cheia possa ter ocorrido devido ao mecanismo <strong>A</strong>, enquanto que no ano seguinte, tenha sido o resultado do mecanismo gerador <strong>B</strong>. Em casos como esse, o mais indicado é modelar as vazões máximas como uma combinação de duas distribuições distintas, uma para cada mecanismo gerador.</p>
+<p>Visualizar quando as grandes cheias usualmente ocorrem ao longo do ano é um primeiro passo nesse tipo de análise, e isso é exatamente o que faremos aqui.</p>
+<p>Iniciamos esta atividade criando um novo <code>dataframe</code>, baseado no <code>dataframe</code> de vazões média diárias sem falhas, <code>Qd</code> (ver <strong>Curva de Permanência</strong>).</p>
 <p>Este novo <code>dataframe</code> irá conter quatro colunas:</p>
 <ul>
 <li>col1: código da estação</li>
@@ -2625,8 +2536,7 @@ baseado no <code>dataframe</code> de vazões média diárias sem falhas,
 <li>col3: vazão máxima daquele ano hidrológico</li>
 <li>col4: data da ocorrênca da vazão máxima</li>
 </ul>
-<p>Para isso, utilizaremos a função <code>fun_max_ano</code>,
-apresentada abaixo,</p>
+<p>Para isso, utilizaremos a função <code>fun_max_ano</code>, apresentada abaixo,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Contrução da série de máximos anuais a partir de um ano hidrológico ####</span></span>
@@ -2651,17 +2561,12 @@ apresentada abaixo,</p>
 <span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
-<p>Veja que a função <code>fun_max_ano</code> assume que o ano
-hidrológico começa no mês de agosto, o que parece razoável para a
-estação que estamos utilizando. Se você achar que o ano hidrológico deve
-começar em outro mês, defina o mês quando chamar a função.</p>
-<p>Chamamos a referida função e criamos o <code>dataframe</code>
-denominado <code>Q_max</code>, cujas primiras linhas podem ser
-observadas na sequência.</p>
+<p>Veja que a função <code>fun_max_ano</code> assume que o ano hidrológico começa no mês de agosto, o que parece razoável para a estação que estamos utilizando. Se você achar que o ano hidrológico deve começar em outro mês, defina o mês quando chamar a função.</p>
+<p>Chamamos a referida função e criamos o <code>dataframe</code> denominado <code>Q_max</code>, cujas primiras linhas podem ser observadas na sequência.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>Q_max</span> <span class='op'>&lt;-</span> <span class='fu'>fun_max_ano</span><span class='op'>(</span><span class='va'>Qd</span><span class='op'>)</span></span>
-<span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>)</span></span></code></pre>
+<span><span class='fu'><a href='https://rdrr.io/pkg/tibble/man/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code># A tibble: 43 × 4
    Cod_estacao ano_hidro maxima data_maxima
@@ -2676,24 +2581,11 @@ observadas na sequência.</p>
  8 60435000         1986  10.4  1986-01-29 
  9 60435000         1987  12.4  1986-12-30 
 10 60435000         1988  17.1  1988-03-13 
-# … with 33 more rows</code></pre>
+# ℹ 33 more rows</code></pre>
 </div>
-<p>Agora que já temos a data completa da ocorrência de cada uma das
-vazões máximas anuais, precisamos mapeá-las para coordenada polar de
-forma que seja possível construir uma espécie de rosa dos ventos, mas
-para as vazões máximas anuais.</p>
-<p>A lógica dessa rosa das vazões é que cada ocorrência seja
-representada por duas variáveis: a magnitude da vazão, representada pelo
-tamanho do segmento, e a data de ocorrência dentro do ano, representada
-pela direção do segmento. Aqui, representaremos uma cheia no dia 01 de
-janeiro com um segmento na direção Note-Sul apontando para cima. Em
-outras palavras, a duração de cada ano do histórico será representada
-por uma volta inteira no círculo, enquanto a ocorrência de uma cheia
-numa data específica será mapeada para um ângulo em radianos.</p>
-<p>Para realizar tal mapeamento, faremos uso da função
-<code>Date.to.Angle</code>, apresentada abaixo, gentilmente
-compartilhada por Tony Ladson em sua conta de GitHub, cujo endereço
-aparece no início da função.</p>
+<p>Agora que já temos a data completa da ocorrência de cada uma das vazões máximas anuais, precisamos mapeá-las para coordenada polar de forma que seja possível construir uma espécie de rosa dos ventos, mas para as vazões máximas anuais.</p>
+<p>A lógica dessa rosa das vazões é que cada ocorrência seja representada por duas variáveis: a magnitude da vazão, representada pelo tamanho do segmento, e a data de ocorrência dentro do ano, representada pela direção do segmento. Aqui, representaremos uma cheia no dia 01 de janeiro com um segmento na direção Note-Sul apontando para cima. Em outras palavras, a duração de cada ano do histórico será representada por uma volta inteira no círculo, enquanto a ocorrência de uma cheia numa data específica será mapeada para um ângulo em radianos.</p>
+<p>Para realizar tal mapeamento, faremos uso da função <code>Date.to.Angle</code>, apresentada abaixo, gentilmente compartilhada por Tony Ladson em sua conta de GitHub, cujo endereço aparece no início da função.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Função compartihada por Tony Ladson</span></span>
@@ -2710,21 +2602,9 @@ aparece no início da função.</p>
 <span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
-<p>A função <code>Date.to.Angle</code> lê as datas de ocorrência das
-máximas anuais, e para cada um dos anos, determina o tempo decorrido, em
-segundos, guardando a resposta na variável
-<code>time.since.year.start</code>. Isso permite lidar de forma adequada
-com os anos bissextos que por ventura apareçam.</p>
-<p>Na sequência, a função mapeia cada uma das vazões máximas para um
-ângulo em radianos, assumindo que <span
-class="math inline">\(2\pi\)</span> radianos tenha exatamente a extensão
-do ano em segundos.</p>
-<p>Com essa função em mãos, podemos criar uma nova coluna do
-<code>dataframe</code> <code>Q_max</code> com os ângulos em radianos, e
-isso é feito no código abaixo, que determina também, nas duas primeiras
-linhas, quais seriam os valores, em radianos, das datas de início de
-cada mês do ano, informação necessária para construir a nossa rosa das
-vazões.</p>
+<p>A função <code>Date.to.Angle</code> lê as datas de ocorrência das máximas anuais, e para cada um dos anos, determina o tempo decorrido, em segundos, guardando a resposta na variável <code>time.since.year.start</code>. Isso permite lidar de forma adequada com os anos bissextos que por ventura apareçam.</p>
+<p>Na sequência, a função mapeia cada uma das vazões máximas para um ângulo em radianos, assumindo que <span class="math inline">\(2\pi\)</span> radianos tenha exatamente a extensão do ano em segundos.</p>
+<p>Com essa função em mãos, podemos criar uma nova coluna do <code>dataframe</code> <code>Q_max</code> com os ângulos em radianos, e isso é feito no código abaixo, que determina também, nas duas primeiras linhas, quais seriam os valores, em radianos, das datas de início de cada mês do ano, informação necessária para construir a nossa rosa das vazões.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># gera sequência e calcula ângulo para informações mês a mês</span></span>
@@ -2736,11 +2616,7 @@ vazões.</p>
 <span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>rad <span class='op'>=</span> <span class='fu'>Date_to_Angle</span><span class='op'>(</span><span class='va'>data_maxima</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<p>Para realizar a plotagem, vamos mais uma vez usufruir da generosidade
-de <a
-href="https://gist.github.com/TonyLadson/843410a1f9e1f1bbf1f48eeeee79a007">Tony
-Ladson</a>, que nos fornece o script para a plotagem. Fizemos pequenas
-adaptações no script original, mas em essência, o script é o mesmo.</p>
+<p>Para realizar a plotagem, vamos mais uma vez usufruir da generosidade de <a href="https://gist.github.com/TonyLadson/843410a1f9e1f1bbf1f48eeeee79a007">Tony Ladson</a>, que nos fornece o script para a plotagem. Fizemos pequenas adaptações no script original, mas em essência, o script é o mesmo.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://ggplot2.tidyverse.org/reference/ggplot.html'>ggplot</a></span><span class='op'>(</span><span class='va'>Q_max</span>,<span class='fu'><a href='https://ggplot2.tidyverse.org/reference/aes.html'>aes</a></span><span class='op'>(</span>x<span class='op'>=</span><span class='va'>rad</span>, y<span class='op'>=</span><span class='va'>maxima</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>+</span> </span>
@@ -2760,29 +2636,17 @@ adaptações no script original, mas em essência, o script é o mesmo.</p>
 </div>
 <p><img src="data_explore_rascunho_files/figure-html5/unnamed-chunk-8-1.png" width="768" /></p>
 </div>
-<p>Embora haja espaço para melhorias nessa plotagem, podemos ver
-claramente que as grandes cheias nesta estação fluviométrica ocorrem
-entre os meses de dezembro e março, com honrosas exceções em outubro e
-abril, mas sempre com magnitudes menores.</p>
-<h2 id="análise-de-veranicos-de-chuva">Análise de veranicos de
-chuva</h2>
+<p>Embora haja espaço para melhorias nessa plotagem, podemos ver claramente que as grandes cheias nesta estação fluviométrica ocorrem entre os meses de dezembro e março, com honrosas exceções em outubro e abril, mas sempre com magnitudes menores.</p>
+<h2 id="análise-de-veranicos-de-chuva">Análise de veranicos de chuva</h2>
 <h3 id="baixar-dados-de-chuva">Baixar dados de chuva</h3>
 <h3 id="identificar-veranicos">Identificar veranicos</h3>
-<h3 id="plotagem-de-período-de-veranicos">Plotagem de período de
-veranicos</h3>
-<h3 id="frequência-de-veranicos-de-uma-dada-extensão">Frequência de
-veranicos de uma dada extensão</h3>
+<h3 id="plotagem-de-período-de-veranicos">Plotagem de período de veranicos</h3>
+<h3 id="frequência-de-veranicos-de-uma-dada-extensão">Frequência de veranicos de uma dada extensão</h3>
 <h2 id="análise-de-seca">Análise de seca</h2>
 <h3 id="baixar-dados-de-vazão">Baixar dados de vazão</h3>
-<p>Iniciamos com a leitura dos dados de vazão. Vamos mais uma vez
-utilizar os dados da estação fluviométrica <strong>60435000</strong>,
-que já foram gravados num arquivo do tipo <code>txt</code>.</p>
-<p>Apesar de já termos utilizado esses dados nas atividades anteriores,
-vamos lê-los de novo, pois nós havíamos anteriormente elimanados os anos
-que continham falhas, o que não é exatamente o que queremos aqui, pelo
-menos nessa primeira atividade.</p>
-<p>O código abaixo apresenta a maneira como lemos um arquivo
-<code>txt</code> utilizando a função <code>read.table</code>.</p>
+<p>Iniciamos com a leitura dos dados de vazão. Vamos mais uma vez utilizar os dados da estação fluviométrica <strong>60435000</strong>, que já foram gravados num arquivo do tipo <code>txt</code>.</p>
+<p>Apesar de já termos utilizado esses dados nas atividades anteriores, vamos lê-los de novo, pois nós havíamos anteriormente elimanados os anos que continham falhas, o que não é exatamente o que queremos aqui, pelo menos nessa primeira atividade.</p>
+<p>O código abaixo apresenta a maneira como lemos um arquivo <code>txt</code> utilizando a função <code>read.table</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Leitura do arquivo de vazões médias diárias</span></span>
@@ -2806,56 +2670,16 @@ menos nessa primeira atividade.</p>
 9     60435000 1978-05-09    NA
 10    60435000 1978-05-10    NA</code></pre>
 </div>
-<p>Como podemos ver, o <code>dataframe</code> denominado <code>Qd</code>
-contém três colunas, o código da estação, as datas, e os valores diários
-de vazão. Nós forçamos que o código da estação seja um
-<code>factor</code> e que as datas sejam da classe
-<code>date</code>.</p>
-<h3 id="identificar-status-da-vazão-seco-ou-úmido">Identificar status da
-vazão (seco ou úmido)</h3>
-<p>O primeiro passo nessa análise é identificar os períodos em que as
-vazões diárias estão acima ou abaixo de um valor-limite pré-especificado
-de vazão.</p>
-<p>Essa análise é bastante importante para estudos relacionados a secas
-e avaliação de impactos causados pelas secas. Dias consecutivos com
-vazões diárias inferiores ao valor-limite formam os chamdos períodos
-<strong>secos</strong>, geralmente chamados na literatura inglesa de
-<em>dry spells</em>.</p>
-<p>Estimar a frequência de períodos <strong>secos</strong> (<em>dry
-spells</em>) com diferentes comprimentos, assim como descrever o padrão
-estatístico dos chamados <strong>volumes de defcit</strong>, são
-procedimentos importantes para entender a extensão de problemas
-relacionados `a seca numa dada região, desde que o valor-limite de vazão
-escolhido para realizar a análise tenha alguma relação com a seca
-local.</p>
-<p>De todo modo, essas grandezas são muitas vezes empregadas para
-caracterizar o comportamento hidrológica da região, principalmente a
-propensão a longos períodos com vazões baixas, o que pode representar
-problemas de escassez hídrica.</p>
-<p>A escolha desse valor-limite varia de estudo para estudo. É normal
-escolher um quantil específico da série de vazões, como a mediana,
-embora a média também possa ser empregada. Em estudos mais específicos,
-é comum utilizar a demanda estimada de água para asbastecimento de uma
-cidade, por exemplo, como o valor-limite de vazão.</p>
-<p>O <strong>volume de defcit</strong>, mencionado anteriormente, é
-simplesmente o volume total acumulado ao longo do período seco,
-calculado como a diferença entre o volume associado à vazão-limite e o
-volume que de fato escoou no rio. Essa variável expressa a diferença
-entre o que se deseja em termos de volume num determinado período e o
-volume que rio de fato forneceu nesse mesmo período, daí a expressão
-<strong>volume de defcit</strong>.</p>
-<p>Mas o primeiro passo nessa análise é identificar o <em>status</em> da
-vazão do rio, em cada dia, ao longo do histórico. Se a vazão do rio for
-menor do que a vazão-limite pré-estabelecida, diz-se que o
-<em>status</em> desse dia é seco, caso contrário identificamos esse dia
-como úmido.</p>
-<p>Isso é relativamente fácil de fazer utilizando a linguagem
-<strong>R</strong>, como podemos ver abaixo. Para fins de ilustração,
-estamos utilizando o valor de 1 m<span
-class="math inline">\(^3\)</span>/s como valor-limite, que é um valor
-bem próximo do primeiro quartil para esse conjunto de dados. Isso
-significa que em aproximadamente 25% dos dias, a vazões são inferiores a
-esse valor.</p>
+<p>Como podemos ver, o <code>dataframe</code> denominado <code>Qd</code> contém três colunas, o código da estação, as datas, e os valores diários de vazão. Nós forçamos que o código da estação seja um <code>factor</code> e que as datas sejam da classe <code>date</code>.</p>
+<h3 id="identificar-status-da-vazão-seco-ou-úmido">Identificar status da vazão (seco ou úmido)</h3>
+<p>O primeiro passo nessa análise é identificar os períodos em que as vazões diárias estão acima ou abaixo de um valor-limite pré-especificado de vazão.</p>
+<p>Essa análise é bastante importante para estudos relacionados a secas e avaliação de impactos causados pelas secas. Dias consecutivos com vazões diárias inferiores ao valor-limite formam os chamdos períodos <strong>secos</strong>, geralmente chamados na literatura inglesa de <em>dry spells</em>.</p>
+<p>Estimar a frequência de períodos <strong>secos</strong> (<em>dry spells</em>) com diferentes comprimentos, assim como descrever o padrão estatístico dos chamados <strong>volumes de defcit</strong>, são procedimentos importantes para entender a extensão de problemas relacionados `a seca numa dada região, desde que o valor-limite de vazão escolhido para realizar a análise tenha alguma relação com a seca local.</p>
+<p>De todo modo, essas grandezas são muitas vezes empregadas para caracterizar o comportamento hidrológica da região, principalmente a propensão a longos períodos com vazões baixas, o que pode representar problemas de escassez hídrica.</p>
+<p>A escolha desse valor-limite varia de estudo para estudo. É normal escolher um quantil específico da série de vazões, como a mediana, embora a média também possa ser empregada. Em estudos mais específicos, é comum utilizar a demanda estimada de água para asbastecimento de uma cidade, por exemplo, como o valor-limite de vazão.</p>
+<p>O <strong>volume de defcit</strong>, mencionado anteriormente, é simplesmente o volume total acumulado ao longo do período seco, calculado como a diferença entre o volume associado à vazão-limite e o volume que de fato escoou no rio. Essa variável expressa a diferença entre o que se deseja em termos de volume num determinado período e o volume que rio de fato forneceu nesse mesmo período, daí a expressão <strong>volume de defcit</strong>.</p>
+<p>Mas o primeiro passo nessa análise é identificar o <em>status</em> da vazão do rio, em cada dia, ao longo do histórico. Se a vazão do rio for menor do que a vazão-limite pré-estabelecida, diz-se que o <em>status</em> desse dia é seco, caso contrário identificamos esse dia como úmido.</p>
+<p>Isso é relativamente fácil de fazer utilizando a linguagem <strong>R</strong>, como podemos ver abaixo. Para fins de ilustração, estamos utilizando o valor de 1 m<span class="math inline">\(^3\)</span>/s como valor-limite, que é um valor bem próximo do primeiro quartil para esse conjunto de dados. Isso significa que em aproximadamente 25% dos dias, a vazões são inferiores a esse valor.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Define valor-limite</span></span>
@@ -2871,7 +2695,7 @@ esse valor.</p>
 <span><span class='co'>## identifica dias em que vazão é inferior ao limite estabelecido</span></span>
 <span><span class='co'>## e cria nova coluna no daaframe</span></span>
 <span><span class='va'>Qd</span><span class='op'>$</span><span class='va'>status</span> <span class='op'>&lt;-</span> <span class='va'>Qd</span><span class='op'>$</span><span class='va'>Vazao</span> <span class='op'>&lt;</span> <span class='va'>limite</span></span>
-<span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>Qd</span><span class='op'>)</span></span></code></pre>
+<span><span class='fu'><a href='https://rdrr.io/pkg/tibble/man/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>Qd</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code># A tibble: 15,920 × 4
    Cod_estacao Data       Vazao status
@@ -2886,20 +2710,12 @@ esse valor.</p>
  8 60435000    1978-05-08    NA NA    
  9 60435000    1978-05-09    NA NA    
 10 60435000    1978-05-10    NA NA    
-# … with 15,910 more rows</code></pre>
+# ℹ 15,910 more rows</code></pre>
 </div>
-<p>Embora não seja possível visualizar nas primeiras 10 linhas da Tabela
-cima, a coluna <code>status</code> contém <code>FALSE</code> quando o
-dia é considerado <strong>úmido</strong> e <code>TRUE</code> quando o
-dia é considerado <strong>seco</strong>. E como pode ser visto,
-<code>status = NA</code> quando há falha nos dados de vazão.</p>
-<h3 id="plotagem-dos-períodos-secos-e-períodos-úmidos">Plotagem dos
-períodos secos e períodos úmidos</h3>
-<p>Com o que temos até aqui, o que não é muito, já é possível visualizar
-a ocorrência e o comprimento dos períodos secos e períodos úmidos ao
-longo da série histórica.</p>
-<p>Para isso, utilizaremos o <code>geom_tile</code> do pacote
-<code>ggplot2</code>.</p>
+<p>Embora não seja possível visualizar nas primeiras 10 linhas da Tabela cima, a coluna <code>status</code> contém <code>FALSE</code> quando o dia é considerado <strong>úmido</strong> e <code>TRUE</code> quando o dia é considerado <strong>seco</strong>. E como pode ser visto, <code>status = NA</code> quando há falha nos dados de vazão.</p>
+<h3 id="plotagem-dos-períodos-secos-e-períodos-úmidos">Plotagem dos períodos secos e períodos úmidos</h3>
+<p>Com o que temos até aqui, o que não é muito, já é possível visualizar a ocorrência e o comprimento dos períodos secos e períodos úmidos ao longo da série histórica.</p>
+<p>Para isso, utilizaremos o <code>geom_tile</code> do pacote <code>ggplot2</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Plotagem dos períodos secos e úmidos</span></span>
@@ -2961,41 +2777,15 @@ longo da série histórica.</p>
 </div>
 <p><img src="data_explore_rascunho_files/figure-html5/heatmap%20ggplot2-1.png" width="768" /></p>
 </div>
-<p>Podemos observar que, de uma forma geral, os períodos
-<strong>secos</strong>, aqueles com dias consecutivos com vazão inferior
-a 1 m<span class="math inline">\(^3\)</span>/s, ocorrem normalmente
-entre os meses de julho e novembro.</p>
-<p>Mas é também interessante notar que a partir do meio da década de
-1990, pelo menos é essa a aimpressão que passa, essas vazões mais baixas
-se tornaram mais frequentes, com períodos secos mais extensos, com
-ocorrência também em dezembro e janeiro.</p>
-<h3 id="frequência-e-extensão-dos-períodos-secos-dry-spells">Frequência
-e extensão dos períodos secos (<em>dry spells</em>)</h3>
-<p>Agora que já temos uma boa noção de quando os períodos secos e úmidos
-ocorreram ao longo do período histórico, passemos para uma análise
-quantitativa um pouco mais detalhada.</p>
-<p>Iniciaremos esta nova etapa com uma descrição da frequência dos
-períodos secos com diferentes comprimentos. Podemos fazer a mesma coisa
-para os períodos <strong>úmidos</strong>, mas vamos nos limitar aqui
-nesta aula aos períodos <strong>secos</strong>.</p>
-<p>Podemos iniciar esta etapa identificando os dias em que houve mudança
-de <em>status</em>, ou seja, quando o período passou de
-<strong>seco</strong> para <strong>úmido</strong> e vice-versa.</p>
-<p>Para isso, iremos comparar o <em>status</em> da vazão de um dia, com
-o <em>status</em> da vazão do dia seguinte. Se os <em>status</em> forem
-diferentes, significa que houve mudança de <em>status</em>. Óbvio,
-não?</p>
-<p>Mas existe um pequeno complicador nessa história, pois além dos
-<em>status</em> <code>TRUE</code> (<strong>seco</strong>) e
-<code>FALSE</code> (<strong>úmido</strong>), temos também o
-<em>status</em> <code>NA</code> (<strong>Falha</strong>). Para evitar
-possíveis complicações com o uso de <code>NA</code> nas funções a serem
-empregadas mais adiante, vamos substituir o <code>status = NA</code> no
-dataframe <code>Qd</code> por <code>status = -1</code>.</p>
-<p>Feita essa subtituição, utilizaremos a função <code>which</code>, em
-conjunto com um operador lógico que compara se os <em>status</em> de
-dois dias consecutivos são diferentes, para obter o índice de cada uma
-das mudanças que ocorreram na série histórica, como mostrado abaixo,</p>
+<p>Podemos observar que, de uma forma geral, os períodos <strong>secos</strong>, aqueles com dias consecutivos com vazão inferior a 1 m<span class="math inline">\(^3\)</span>/s, ocorrem normalmente entre os meses de julho e novembro.</p>
+<p>Mas é também interessante notar que a partir do meio da década de 1990, pelo menos é essa a aimpressão que passa, essas vazões mais baixas se tornaram mais frequentes, com períodos secos mais extensos, com ocorrência também em dezembro e janeiro.</p>
+<h3 id="frequência-e-extensão-dos-períodos-secos-dry-spells">Frequência e extensão dos períodos secos (<em>dry spells</em>)</h3>
+<p>Agora que já temos uma boa noção de quando os períodos secos e úmidos ocorreram ao longo do período histórico, passemos para uma análise quantitativa um pouco mais detalhada.</p>
+<p>Iniciaremos esta nova etapa com uma descrição da frequência dos períodos secos com diferentes comprimentos. Podemos fazer a mesma coisa para os períodos <strong>úmidos</strong>, mas vamos nos limitar aqui nesta aula aos períodos <strong>secos</strong>.</p>
+<p>Podemos iniciar esta etapa identificando os dias em que houve mudança de <em>status</em>, ou seja, quando o período passou de <strong>seco</strong> para <strong>úmido</strong> e vice-versa.</p>
+<p>Para isso, iremos comparar o <em>status</em> da vazão de um dia, com o <em>status</em> da vazão do dia seguinte. Se os <em>status</em> forem diferentes, significa que houve mudança de <em>status</em>. Óbvio, não?</p>
+<p>Mas existe um pequeno complicador nessa história, pois além dos <em>status</em> <code>TRUE</code> (<strong>seco</strong>) e <code>FALSE</code> (<strong>úmido</strong>), temos também o <em>status</em> <code>NA</code> (<strong>Falha</strong>). Para evitar possíveis complicações com o uso de <code>NA</code> nas funções a serem empregadas mais adiante, vamos substituir o <code>status = NA</code> no dataframe <code>Qd</code> por <code>status = -1</code>.</p>
+<p>Feita essa subtituição, utilizaremos a função <code>which</code>, em conjunto com um operador lógico que compara se os <em>status</em> de dois dias consecutivos são diferentes, para obter o índice de cada uma das mudanças que ocorreram na série histórica, como mostrado abaixo,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## identifica quando ocorre mudança de status na vazão </span></span>
@@ -3008,10 +2798,7 @@ das mudanças que ocorreram na série histórica, como mostrado abaixo,</p>
 <span><span class='va'>i_change</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>Qd</span><span class='op'>$</span><span class='va'>status</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='va'>n</span><span class='op'>-</span><span class='fl'>1</span><span class='op'>]</span> <span class='op'>!=</span> <span class='va'>Qd</span><span class='op'>$</span><span class='va'>status</span><span class='op'>[</span><span class='fl'>2</span><span class='op'>:</span><span class='va'>n</span><span class='op'>]</span><span class='op'>)</span>, <span class='va'>n</span><span class='op'>)</span> </span></code></pre>
 </div>
 </div>
-<p>Os 400 valores contidos no vetor <code>i_change</code>, apresentados
-abaixo, indicam a última posição de cada um dos 400 períodos contidos no
-histórico. Podemos ver, por exemplo, que o primeiro período se encerra
-na posição (dia) 11 e o segundo na posição (dia) 1593.</p>
+<p>Os 400 valores contidos no vetor <code>i_change</code>, apresentados abaixo, indicam a última posição de cada um dos 400 períodos contidos no histórico. Podemos ver, por exemplo, que o primeiro período se encerra na posição (dia) 11 e o segundo na posição (dia) 1593.</p>
 <div class="layout-chunk" data-layout="l-body">
 <pre><code>  [1]    11  1593  1597  1600  1606  1641  1642  2285  2309  2316
  [11]  2322  2327  2343  2345  2359  2363  2365  2376  2404  2406
@@ -3054,14 +2841,8 @@ na posição (dia) 11 e o segundo na posição (dia) 1593.</p>
 [381] 15514 15523 15525 15552 15564 15570 15576 15580 15581 15585
 [391] 15588 15590 15594 15606 15620 15760 15893 15895 15897 15920</code></pre>
 </div>
-<p>Embora saibamos quando a mudança de <em>status</em> ocorre, ou seja,
-quando os períodos mudam, não sabemos ainda o <em>status</em> de cada
-uma dos períodos identificados.</p>
-<p>Mas antes de determinar o tipo de período, podemos já calcular seus
-comprimentos. Para isso, acrescentamos o valor <code>0</code> como
-primeiro elemento do vetor <code>i_change</code> de modo que as
-diferenças de seus elementos consecutivos sejam iguais aos comprimentos
-dos períodos,</p>
+<p>Embora saibamos quando a mudança de <em>status</em> ocorre, ou seja, quando os períodos mudam, não sabemos ainda o <em>status</em> de cada uma dos períodos identificados.</p>
+<p>Mas antes de determinar o tipo de período, podemos já calcular seus comprimentos. Para isso, acrescentamos o valor <code>0</code> como primeiro elemento do vetor <code>i_change</code> de modo que as diferenças de seus elementos consecutivos sejam iguais aos comprimentos dos períodos,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Determina o comprimento de cada período (seco, úmido ou NA)</span></span>
@@ -3069,8 +2850,7 @@ dos períodos,</p>
 <span><span class='va'>l_spell</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/diff.html'>diff</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>0</span>, <span class='va'>i_change</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<p>O vetor <code>l_spell</code> armazena os comprimentos de todos os 400
-períodos, como pode ser visto abaixo,</p>
+<p>O vetor <code>l_spell</code> armazena os comprimentos de todos os 400 períodos, como pode ser visto abaixo,</p>
 <div class="layout-chunk" data-layout="l-body">
 <pre><code>  [1]   11 1582    4    3    6   35    1  643   24    7    6    5   16
  [14]    2   14    4    2   11   28    2    3    1    4   12    6  238
@@ -3104,18 +2884,9 @@ períodos, como pode ser visto abaixo,</p>
 [378]    1    7    1    1    9    2   27   12    6    6    4    1    4
 [391]    3    2    4   12   14  140  133    2    2   23</code></pre>
 </div>
-<p>Para realizar a identifcação do tipo de cada período, utilizaremos
-conjuntamente os índices de onde as mudanças ocorrem
-(<code>i_change</code>) e os respectivos <em>status</em>, armazenados na
-columa <code>Qd$status</code> do nosso <code>dataframe</code>
-<code>Qd</code>.</p>
-<p>Essa operação nos retorna um vetor com os seguintes possíveis
-valores: <code>-1, 0, 1</code>. O valor <code>-1</code> indica que o
-período em questão é de <strong>falhas</strong> apenas. Por outro lado,
-os valores <code>0</code> e<code>1</code> indicam, respectivamente,
-períodos <strong>úmidos</strong> e <strong>secos</strong>.</p>
-<p>No nosso código abaixo, esses valores são armazenados no vetor
-<code>spell_type</code>.</p>
+<p>Para realizar a identifcação do tipo de cada período, utilizaremos conjuntamente os índices de onde as mudanças ocorrem (<code>i_change</code>) e os respectivos <em>status</em>, armazenados na columa <code>Qd$status</code> do nosso <code>dataframe</code> <code>Qd</code>.</p>
+<p>Essa operação nos retorna um vetor com os seguintes possíveis valores: <code>-1, 0, 1</code>. O valor <code>-1</code> indica que o período em questão é de <strong>falhas</strong> apenas. Por outro lado, os valores <code>0</code> e<code>1</code> indicam, respectivamente, períodos <strong>úmidos</strong> e <strong>secos</strong>.</p>
+<p>No nosso código abaixo, esses valores são armazenados no vetor <code>spell_type</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## identifica se é um dry spell, wet spell ou período de falhas</span></span>
@@ -3125,10 +2896,7 @@ períodos <strong>úmidos</strong> e <strong>secos</strong>.</p>
 <span><span class='va'>spell_type</span> <span class='op'>&lt;-</span> <span class='va'>Qd</span><span class='op'>$</span><span class='va'>status</span><span class='op'>[</span><span class='va'>i_change</span><span class='op'>]</span></span></code></pre>
 </div>
 </div>
-<p>Podemos ver com base no elementos do vetor <code>spell_type</code>,
-apresentado abaxio, que para os dados que estamos trabalhando, temos um
-total de 400 períodos, sendo que o primeiro período está indicado como
--1, o que significa dizer que é um período de falhas.</p>
+<p>Podemos ver com base no elementos do vetor <code>spell_type</code>, apresentado abaxio, que para os dados que estamos trabalhando, temos um total de 400 períodos, sendo que o primeiro período está indicado como -1, o que significa dizer que é um período de falhas.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>spell_type</span></span></code></pre>
@@ -3154,8 +2922,7 @@ total de 400 períodos, sendo que o primeiro período está indicado como
 [379]  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1  0  1
 [400]  0</code></pre>
 </div>
-<p>Esse vetor <code>spell_type</code> é utilizado então para
-identificarmos os índices para cada tipo de período,</p>
+<p>Esse vetor <code>spell_type</code> é utilizado então para identificarmos os índices para cada tipo de período,</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Identifica índices dos três tipos de períodos</span></span>
@@ -3199,10 +2966,7 @@ identificarmos os índices para cada tipo de período,</p>
 </div>
 <pre><code>[1]   1 225 227 360</code></pre>
 </div>
-<p>Sabendo os índices associados a cada tipo de período, podemos
-relacionar com os valores de comprimentos de períodos armazenados no
-vetor <code>l_spell</code> e finalmente determinar os diversos
-comprimentos dos períodos secos, úmidos e de falhas.</p>
+<p>Sabendo os índices associados a cada tipo de período, podemos relacionar com os valores de comprimentos de períodos armazenados no vetor <code>l_spell</code> e finalmente determinar os diversos comprimentos dos períodos secos, úmidos e de falhas.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Extensão dos spells</span></span>
@@ -3249,15 +3013,8 @@ comprimentos dos períodos secos, úmidos e de falhas.</p>
 </div>
 <pre><code>[1] 11 23 22 31</code></pre>
 </div>
-<p>Embora não seja muito fácil de visualizar, creio que valha a pena
-tentar entender os números apresentados acima, que representam os
-comprimentos dos 197 períodos <strong>secos</strong>, 199 períodos
-<strong>úmidos</strong> e 4 períodos de <strong>falhas</strong>.</p>
-<p>Para deixar registrado os achados, vamos criar um
-<code>dataframe</code> com os resultados relacionados aos períodos
-secos. O nosso <code>dataframe</code> será denominado
-<code>dry_spell</code> e conterá as seguintes colunas: <code>ano</code>,
-<code>data_inicio_dry</code>, e <code>comprimento</code>.</p>
+<p>Embora não seja muito fácil de visualizar, creio que valha a pena tentar entender os números apresentados acima, que representam os comprimentos dos 197 períodos <strong>secos</strong>, 199 períodos <strong>úmidos</strong> e 4 períodos de <strong>falhas</strong>.</p>
+<p>Para deixar registrado os achados, vamos criar um <code>dataframe</code> com os resultados relacionados aos períodos secos. O nosso <code>dataframe</code> será denominado <code>dry_spell</code> e conterá as seguintes colunas: <code>ano</code>, <code>data_inicio_dry</code>, e <code>comprimento</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'>## Construção de um novo dataframe com os dados de dry spell</span></span>
@@ -3265,7 +3022,7 @@ secos. O nosso <code>dataframe</code> será denominado
 <span><span class='va'>dry_spell</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>ano <span class='op'>=</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/year.html'>year</a></span><span class='op'>(</span><span class='va'>Qd</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i_change</span><span class='op'>[</span><span class='va'>i_dry</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span>,</span>
 <span>                        data_inicio_dry <span class='op'>=</span> <span class='va'>Qd</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i_change</span><span class='op'>[</span><span class='va'>i_dry</span><span class='op'>]</span><span class='op'>]</span>,</span>
 <span>                        comprimento <span class='op'>=</span> <span class='va'>l_dry</span><span class='op'>)</span></span>
-<span><span class='fu'><a href='https://tibble.tidyverse.org/reference/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>dry_spell</span><span class='op'>)</span></span></code></pre>
+<span><span class='fu'><a href='https://rdrr.io/pkg/tibble/man/tibble.html'>tibble</a></span><span class='op'>(</span><span class='va'>dry_spell</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code># A tibble: 197 × 3
      ano data_inicio_dry comprimento
@@ -3280,7 +3037,7 @@ secos. O nosso <code>dataframe</code> será denominado
  8  1984 1984-10-20                2
  9  1984 1984-11-28               28
 10  1984 1984-12-03                3
-# … with 187 more rows</code></pre>
+# ℹ 187 more rows</code></pre>
 </div>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
@@ -3289,28 +3046,17 @@ secos. O nosso <code>dataframe</code> será denominado
 </div>
 <p><img src="data_explore_rascunho_files/figure-html5/plot-hist-dry-spell-1.png" width="624" /></p>
 </div>
-<h3 id="cálculo-e-análise-do-volume-de-deficit">Cálculo e análise do
-volume de deficit</h3>
+<h3 id="cálculo-e-análise-do-volume-de-deficit">Cálculo e análise do volume de deficit</h3>
 <h3 id="identificar-veranicos-1">Identificar veranicos</h3>
 <h3 id="section"></h3>
 <h2 id="fontes-de-consulta">Fontes de consulta</h2>
 <ul>
-<li><p>O site <a
-href="https://tonyladson.wordpress.com/2018/12/02/visualising-hydrologic-data/">Visualizing
-hydrologic data</a>, escrito por <a
-href="https://tonyladson.wordpress.com/tests/">Tony Ladson</a>, além de
-conter exemplos interessantes de plotagem em Hidrologia, disponibiliza
-os códigos usados na linguagem <strong>R</strong>.</p>
+<li><p>O site <a href="https://tonyladson.wordpress.com/2018/12/02/visualising-hydrologic-data/">Visualizing hydrologic data</a>, escrito por <a href="https://tonyladson.wordpress.com/tests/">Tony Ladson</a>, além de conter exemplos interessantes de plotagem em Hidrologia, disponibiliza os códigos usados na linguagem <strong>R</strong>.</p>
 <ul>
-<li><a
-href="https://tonyladson.wordpress.com/2018/12/04/flow-duration-curves/">Curva
-de permanência (Flow duration curve)</a></li>
-<li><a
-href="https://tonyladson.wordpress.com/2016/06/01/what-time-of-year-does-it-flood/">Momento
-do ano das máximas anuais</a></li>
+<li><a href="https://tonyladson.wordpress.com/2018/12/04/flow-duration-curves/">Curva de permanência (Flow duration curve)</a></li>
+<li><a href="https://tonyladson.wordpress.com/2016/06/01/what-time-of-year-does-it-flood/">Momento do ano das máximas anuais</a></li>
 </ul>
-<div class="sourceCode" id="cb23"><pre
-class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div></li>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div></li>
 </ul>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->

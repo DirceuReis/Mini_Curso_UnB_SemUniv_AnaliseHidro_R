@@ -21,7 +21,7 @@
 <style type="text/css">code{white-space: pre;}</style>
 <style type="text/css" data-origin="pandoc">
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -32,7 +32,7 @@ div.sourceCode { overflow: auto; }
 }
 @media print {
 pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
 }
 pre.numberSource code
   { counter-reset: source-line 0; }
@@ -459,8 +459,8 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
 
   <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
-  <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet"/>
-  <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"/>
   <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
   <script src="site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
   <script src="site_libs/fuse-6.4.1/fuse.min.js"></script>
@@ -789,6 +789,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article table.gt_table td,
   d-article table.gt_table th {
     border-bottom: none;
+    font-size: 100%;
   }
 
   .html-widget {
@@ -829,9 +830,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     display: none !important;
   }
 
+  hr.section-separator {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 0px;
+  }
+
+
+  d-byline {
+    border-top: none;
+  }
+
   d-article {
     padding-top: 2.5rem;
     padding-bottom: 30px;
+    border-top: none;
   }
 
   d-appendix {
@@ -926,6 +939,11 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   d-article div.sourceCode pre {
     padding-left: 18px;
     font-size: 14px;
+  }
+
+  /* tweak for Pandoc numbered line within distill */
+  d-article pre.numberSource code > span {
+      left: -2em;
   }
 
   d-article pre {
@@ -1687,6 +1705,12 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     // create d-title
     $('.d-title').changeElementType('d-title');
 
+    // separator
+    var separator = '<hr class="section-separator" style="clear: both"/>';
+    // prepend separator above appendix
+    $('.d-byline').before(separator);
+    $('.d-article').before(separator);
+
     // create d-byline
     var byline = $('<d-byline></d-byline>');
     $('.d-byline').replaceWith(byline);
@@ -1764,8 +1788,9 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
     $('.distill-force-highlighting-css').parent().remove();
 
     // remove empty line numbers inserted by pandoc when using a
-    // custom syntax highlighting theme
-    $('code.sourceCode a:empty').remove();
+    // custom syntax highlighting theme, except when numbering line
+    // in code chunk
+    $('pre:not(.numberLines) code.sourceCode a:empty').remove();
 
     // load distill framework
     load_distill_framework();
@@ -1791,12 +1816,13 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
       // add orcid ids
       $('.authors-affiliations').find('.author').each(function(i, el) {
         var orcid_id = front_matter.authors[i].orcidID;
+        var author_name = front_matter.authors[i].author
         if (orcid_id) {
           var a = $('<a></a>');
           a.attr('href', 'https://orcid.org/' + orcid_id);
           var img = $('<img></img>');
           img.addClass('orcid-id');
-          img.attr('alt', 'ORCID ID');
+          img.attr('alt', author_name ? 'ORCID ID for ' + author_name : 'ORCID ID');
           img.attr('src','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg==');
           a.append(img);
           $(this).append(a);
@@ -1861,15 +1887,21 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
 
       // hoverable references
       $('span.citation[data-cites]').each(function() {
-        if ($(this).children()[0].nodeName == "D-FOOTNOTE") {
-          var fn = $(this).children()[0]
+        const citeChild = $(this).children()[0]
+        // Do not process if @xyz has been used without escaping and without bibliography activated
+        // https://github.com/rstudio/distill/issues/466
+        if (citeChild === undefined) return true
+
+        if (citeChild.nodeName == "D-FOOTNOTE") {
+          var fn = citeChild
           $(this).html(fn.shadowRoot.querySelector("sup"))
           $(this).id = fn.id
           fn.remove()
         }
         var refs = $(this).attr('data-cites').split(" ");
         var refHtml = refs.map(function(ref) {
-          return "<p>" + $('#ref-' + ref).html() + "</p>";
+          // Could use CSS.escape too here, we insure backward compatibility in navigator
+          return "<p>" + $('div[id="ref-' + ref + '"]').html() + "</p>";
         }).join("\n");
         window.tippy(this, {
           allowHTML: true,
@@ -2068,7 +2100,7 @@ code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </script>
 
   <!--/radix_placeholder_distill-->
-  <script src="site_libs/header-attrs-2.14/header-attrs.js"></script>
+  <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
   <script src="site_libs/popper-2.6.0/popper.min.js"></script>
   <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
   <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
@@ -2113,6 +2145,7 @@ Aulas
 <a href="data_explore.html">Análise exploratória</a>
 <a href="data_explore_rascunho.html">Análise exploratória 2</a>
 <a href="frequency_analysis.html">Análise de frequência</a>
+<a href="frequency_analysis_gev.html">Análise de frequência_GEV</a>
 </div>
 </div>
 <a href="colaboradores.html">Colaboradores</a>
@@ -2129,6 +2162,7 @@ Aulas
 
 <div class="d-title">
 <h1>Manipulação dos dados</h1>
+
 <!--radix_placeholder_categories-->
 <!--/radix_placeholder_categories-->
 <p>Como organizar as informações para facilitar as análises</p>
@@ -2141,69 +2175,33 @@ Aulas
 <h3>Contents</h3>
 <ul>
 <li><a href="#pacotes" id="toc-pacotes">Pacotes</a></li>
-<li><a href="#puxar-arquivo-anterior-e-analisar-ele"
-id="toc-puxar-arquivo-anterior-e-analisar-ele">Puxar arquivo anterior e
-analisar ele</a></li>
-<li><a href="#manipulações-básicas-nos-dados"
-id="toc-manipulações-básicas-nos-dados">Manipulações básicas nos
-dados</a></li>
-<li><a href="#dados-em-branco-na" id="toc-dados-em-branco-na">Dados em
-Branco (NA)</a></li>
-<li><a href="#ano-hidrológico" id="toc-ano-hidrológico">Ano
-hidrológico</a>
+<li><a href="#puxar-arquivo-anterior-e-analisar-ele" id="toc-puxar-arquivo-anterior-e-analisar-ele">Puxar arquivo anterior e analisar ele</a></li>
+<li><a href="#manipulações-básicas-nos-dados" id="toc-manipulações-básicas-nos-dados">Manipulações básicas nos dados</a></li>
+<li><a href="#dados-em-branco-na" id="toc-dados-em-branco-na">Dados em Branco (NA)</a></li>
+<li><a href="#ano-hidrológico" id="toc-ano-hidrológico">Ano hidrológico</a>
 <ul>
-<li><a href="#tabela-resumo" id="toc-tabela-resumo">Tabela
-Resumo</a></li>
-<li><a href="#tabela-final-loop" id="toc-tabela-final-loop">Tabela final
-(loop)</a></li>
+<li><a href="#tabela-resumo" id="toc-tabela-resumo">Tabela Resumo</a></li>
+<li><a href="#tabela-final-loop" id="toc-tabela-final-loop">Tabela final (loop)</a></li>
 </ul></li>
 </ul>
 </nav>
 </div>
 <h2 id="pacotes">Pacotes</h2>
-<p>Nessa seção vamos usar mecanismos de pacotes já feitos no
-<strong>R</strong>. Existem inúmeros pacotes, cada um com suas funções
-e/ou bancos de dados para diferentes assuntos. Eles podem, inclusive,
-ser apenas um aglomerado de diferentes pacotes para não precisar baixar
-todos um por um. A primeira etapa de utilizar um pacote é a sua
-instalação, isso é feito com o comando <code>install.packages()</code>
-com o nome do pacote estando entre aspas (““) dentro dos parêntesis.
-Assim podemos fazer com todos que se encontram no CRAN (repositório que
-contém o que queremos). Na aula de hoje utilizaremos apenas o
-<strong>tidyverse</strong>, que é um agregado de pacotes extremamente
-populares hoje para manipulação e análise de dados.</p>
+<p>Nessa seção vamos usar mecanismos de pacotes já feitos no <strong>R</strong>. Existem inúmeros pacotes, cada um com suas funções e/ou bancos de dados para diferentes assuntos. Eles podem, inclusive, ser apenas um aglomerado de diferentes pacotes para não precisar baixar todos um por um. A primeira etapa de utilizar um pacote é a sua instalação, isso é feito com o comando <code>install.packages()</code> com o nome do pacote estando entre aspas (““) dentro dos parêntesis. Assim podemos fazer com todos que se encontram no CRAN (repositório que contém o que queremos). Na aula de hoje utilizaremos apenas o <strong>tidyverse</strong>, que é um agregado de pacotes extremamente populares hoje para manipulação e análise de dados.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/install.packages.html'>install.packages</a></span><span class='op'>(</span><span class='st'>"tidyverse"</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<p>Para que o <strong>R</strong> não fique muito pesado, todos os
-pacotes baixados precisam ser carregados na sua seção do
-<strong>R</strong> - isso é feito com o comando <code>library()</code>
-com o pacote estando detro do parêntesis <strong>sem</strong> aspas.</p>
-<p>Podemos notar que ao carregar o pacote dentro da nossa seção primeiro
-vemos quais outros pacotes que foram carregados e suas respectivas
-versões. Nesse exemplo, ao carregar o <strong>tidyverse</strong>, ele
-contém o <strong>ggplot2</strong>, <strong>purrr</strong>,
-<strong>tibble</strong>, <strong>dplyr</strong>, <strong>tidyr</strong>,
-<strong>stringr</strong>, <strong>readr</strong> e
-<strong>forcats</strong>. Além disso, aparece uma mensagem mostrando
-“conflitos”. Esses conflitos são quando diferentes pacotes utilizam
-funções de mesmo nome (as vezes para fazer coisas diferentes), assim o
-<strong>R</strong> te avisa quais funções são iguais e quais serão as
-utilizadas normalmente no programa. É possível usar qualquer função se
-deixarmos explícito de qual pacote queremos (por exemplo
-<code>stats::filter()</code>)</p>
+<p>Para que o <strong>R</strong> não fique muito pesado, todos os pacotes baixados precisam ser carregados na sua seção do <strong>R</strong> - isso é feito com o comando <code>library()</code> com o pacote estando detro do parêntesis <strong>sem</strong> aspas.</p>
+<p>Podemos notar que ao carregar o pacote dentro da nossa seção primeiro vemos quais outros pacotes que foram carregados e suas respectivas versões. Nesse exemplo, ao carregar o <strong>tidyverse</strong>, ele contém o <strong>ggplot2</strong>, <strong>purrr</strong>, <strong>tibble</strong>, <strong>dplyr</strong>, <strong>tidyr</strong>, <strong>stringr</strong>, <strong>readr</strong> e <strong>forcats</strong>. Além disso, aparece uma mensagem mostrando “conflitos”. Esses conflitos são quando diferentes pacotes utilizam funções de mesmo nome (as vezes para fazer coisas diferentes), assim o <strong>R</strong> te avisa quais funções são iguais e quais serão as utilizadas normalmente no programa. É possível usar qualquer função se deixarmos explícito de qual pacote queremos (por exemplo <code>stats::filter()</code>)</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='kw'><a href='https://rdrr.io/r/base/library.html'>library</a></span><span class='op'>(</span><span class='va'><a href='https://tidyverse.tidyverse.org'>tidyverse</a></span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<h2 id="puxar-arquivo-anterior-e-analisar-ele">Puxar arquivo anterior e
-analisar ele</h2>
-<p>Primeiro vamos baixar apenas uma das estações que fizemos na última
-aula. Ao final podemos repetir o que foi feito anteriormente e criar um
-<em>loop</em> para repetir para as outras 3 estações.</p>
+<h2 id="puxar-arquivo-anterior-e-analisar-ele">Puxar arquivo anterior e analisar ele</h2>
+<p>Primeiro vamos baixar apenas uma das estações que fizemos na última aula. Ao final podemos repetir o que foi feito anteriormente e criar um <em>loop</em> para repetir para as outras 3 estações.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_ANA</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='st'>"dados/60435000.txt"</span>,</span>
@@ -2213,11 +2211,7 @@ aula. Ao final podemos repetir o que foi feito anteriormente e criar um
 <span>                        fileEncoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<p>Apesar de termos mexido nesses dados na última aula, o
-<strong>R</strong> não sabe disso, ele baixa o arquivo como se fosse um
-outro qualquer, assim a coluna da estação é do tipo “inteiro” e a
-segunda coluna (de data) está do tipo “caractere”. Vemos isso abaixo e
-em seguida corrigimos ambas para caractere e data, respectivamente.</p>
+<p>Apesar de termos mexido nesses dados na última aula, o <strong>R</strong> não sabe disso, ele baixa o arquivo como se fosse um outro qualquer, assim a coluna da estação é do tipo “inteiro” e a segunda coluna (de data) está do tipo “caractere”. Vemos isso abaixo e em seguida corrigimos ambas para caractere e data, respectivamente.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/class.html'>class</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Cod_estacao</span><span class='op'>)</span></span></code></pre>
@@ -2232,12 +2226,8 @@ em seguida corrigimos ambas para caractere e data, respectivamente.</p>
 <span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<h2 id="manipulações-básicas-nos-dados">Manipulações básicas nos
-dados</h2>
-<p>Agora que temos um arquivo do jeito que queríamos (diferente do que
-pegamos diretamente do servidor da ANA), fazer algumas análises podem
-ser bem fáceis. Se quisermos saber de quando a quando essa estação tem
-dados, basta vermos os valores mínimos e máximos da Data.</p>
+<h2 id="manipulações-básicas-nos-dados">Manipulações básicas nos dados</h2>
+<p>Agora que temos um arquivo do jeito que queríamos (diferente do que pegamos diretamente do servidor da ANA), fazer algumas análises podem ser bem fáceis. Se quisermos saber de quando a quando essa estação tem dados, basta vermos os valores mínimos e máximos da Data.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span></code></pre>
@@ -2250,14 +2240,7 @@ dados, basta vermos os valores mínimos e máximos da Data.</p>
 </div>
 <pre><code>[1] &quot;2021-11-30&quot;</code></pre>
 </div>
-<p>Se quisermos saber qual valor mínimo, máximo e médio de vazão podemos
-também, mas aparece um problema! Nesses valores temos dados em branco,
-ou <code>NA</code> (<em>Not Available</em>). Dados faltantes sempre são
-problemático e devem ser tratados quando possível. Para algumas funções
-nativas, como <code>max()</code>, <code>min()</code> e
-<code>mean()</code> temos a opção de apenas ignorar eles com o argumento
-<code>na.rm = TRUE</code>, assim os valores máximos, médios e mínimos
-são calculados sem considerar os dados em branco.</p>
+<p>Se quisermos saber qual valor mínimo, máximo e médio de vazão podemos também, mas aparece um problema! Nesses valores temos dados em branco, ou <code>NA</code> (<em>Not Available</em>). Dados faltantes sempre são problemático e devem ser tratados quando possível. Para algumas funções nativas, como <code>max()</code>, <code>min()</code> e <code>mean()</code> temos a opção de apenas ignorar eles com o argumento <code>na.rm = TRUE</code>, assim os valores máximos, médios e mínimos são calculados sem considerar os dados em branco.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Vazao</span>, na.rm <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span></span></code></pre>
@@ -2273,11 +2256,7 @@ são calculados sem considerar os dados em branco.</p>
 <pre><code>[1] 2.096619</code></pre>
 </div>
 <h2 id="dados-em-branco-na">Dados em Branco (NA)</h2>
-<p>Antes mesmo de começar a fazer essas avaliações é interessante e
-importante entender melhor os dados em branco. Primeiro, quantos
-existem? Para isso podemos usar a função <code>is.na()</code>, vamos
-rodar ela apenas para os primeiros 15 dados de vazão para mostrar na
-tela.</p>
+<p>Antes mesmo de começar a fazer essas avaliações é interessante e importante entender melhor os dados em branco. Primeiro, quantos existem? Para isso podemos usar a função <code>is.na()</code>, vamos rodar ela apenas para os primeiros 15 dados de vazão para mostrar na tela.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>:</span><span class='fl'>15</span><span class='op'>]</span></span></code></pre>
@@ -2285,20 +2264,14 @@ tela.</p>
 <pre><code> [1]  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE  TRUE
 [12] FALSE FALSE FALSE FALSE</code></pre>
 </div>
-<p>Essa função retorna um dado <code>TRUE</code> ou <code>FALSE</code>
-para cada valor avaliado. Como dados lógicos também são
-binários/numéricos (<strong>TRUE = 1</strong> e <strong>FALSE =
-0</strong>), podemos somar esses valores para ver quantos dados em
-branco temos no total. Temos então
-<code>sum(is.na(dados_ANA[,3]))</code> dados em branco.</p>
+<p>Essa função retorna um dado <code>TRUE</code> ou <code>FALSE</code> para cada valor avaliado. Como dados lógicos também são binários/numéricos (<strong>TRUE = 1</strong> e <strong>FALSE = 0</strong>), podemos somar esses valores para ver quantos dados em branco temos no total. Temos então <code>sum(is.na(dados_ANA[,3]))</code> dados em branco.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>[1] 87</code></pre>
 </div>
-<p>Para saber quais as datas que tem o valor de vazão em branco basta
-aplicarmos esse <code>is.na()</code> na coluna de datas.</p>
+<p>Para saber quais as datas que tem o valor de vazão em branco basta aplicarmos esse <code>is.na()</code> na coluna de datas.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>]</span></span></code></pre>
@@ -2322,38 +2295,17 @@ aplicarmos esse <code>is.na()</code> na coluna de datas.</p>
 [81] &quot;2019-08-25&quot; &quot;2019-08-26&quot; &quot;2019-08-27&quot; &quot;2019-08-28&quot; &quot;2019-08-29&quot;
 [86] &quot;2019-08-30&quot; &quot;2019-08-31&quot;</code></pre>
 </div>
-<p>E se quiser o último (a última data com vazão em branco), podemos
-fazer o <code>max()</code> dessas datas todas.</p>
+<p>E se quiser o último (a última data com vazão em branco), podemos fazer o <code>max()</code> dessas datas todas.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>[1] &quot;2019-08-31&quot;</code></pre>
 </div>
-<p>O que fazer com cada dado em branco vai depender do que se quer com
-os dados. Como completar essas falhas é uma temática extremamente
-relevante e difícil de responder até mesmo hoje. Pararemos por hora de
-falar desses valores, e não entraremos muito a fundo sobre o que fazer
-com eles (até porque depende do que se quer fazer) nesse curso.</p>
+<p>O que fazer com cada dado em branco vai depender do que se quer com os dados. Como completar essas falhas é uma temática extremamente relevante e difícil de responder até mesmo hoje. Pararemos por hora de falar desses valores, e não entraremos muito a fundo sobre o que fazer com eles (até porque depende do que se quer fazer) nesse curso.</p>
 <h2 id="ano-hidrológico">Ano hidrológico</h2>
-<p>Em hidrologia estatística, é muito comum utilizarmos o ano
-hidrológico ao invés do calendário “normal” (janeiro a dezembro) para
-fazer análises estatísticas. Onde começa o ano hidrológico também não é
-tão simples, mas a via de regra é: entre as secas e cheias.</p>
-<p>Faremos aqui uma função para transformar nossa data em ano
-hidrológico, assim conseguiremos fazer algumas análises anuais
-interessantes. A função, chamada aqui de <code>fun_ano_hidro()</code>
-tomará 2 argumentos: um sendo as datas que queremos transformar e o
-outro em que mês que se inicia o ano hidrológico, aqui deixamos
-pré-definido como 8, mas se quiser mudar isso, basta alterar o argumento
-na hora de chamar ela (assim não ficamos preso a esse número)! Primeiro
-devemos garantir que as datas estão no formato certo, portanto fazemos
-essa transformação no começo da função. Em seguida definimos qual será o
-ano hidrológico. O que fazemos é avaliar se o mês em questão é menor ou
-maior do que o começo do ano hidrológico definido pela função. Se for
-maior, significa que já entramos em outro ano hidrológico, portanto o
-ano em questão é o seguinte (o mês 8, Agosto, de 2000 entra para o ano
-hidrológico de 2001 e assim por diante).</p>
+<p>Em hidrologia estatística, é muito comum utilizarmos o ano hidrológico ao invés do calendário “normal” (janeiro a dezembro) para fazer análises estatísticas. Onde começa o ano hidrológico também não é tão simples, mas a via de regra é: entre as secas e cheias.</p>
+<p>Faremos aqui uma função para transformar nossa data em ano hidrológico, assim conseguiremos fazer algumas análises anuais interessantes. A função, chamada aqui de <code>fun_ano_hidro()</code> tomará 2 argumentos: um sendo as datas que queremos transformar e o outro em que mês que se inicia o ano hidrológico, aqui deixamos pré-definido como 8, mas se quiser mudar isso, basta alterar o argumento na hora de chamar ela (assim não ficamos preso a esse número)! Primeiro devemos garantir que as datas estão no formato certo, portanto fazemos essa transformação no começo da função. Em seguida definimos qual será o ano hidrológico. O que fazemos é avaliar se o mês em questão é menor ou maior do que o começo do ano hidrológico definido pela função. Se for maior, significa que já entramos em outro ano hidrológico, portanto o ano em questão é o seguinte (o mês 8, Agosto, de 2000 entra para o ano hidrológico de 2001 e assim por diante).</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>fun_ano_hidro</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>datas</span>,</span>
@@ -2372,8 +2324,7 @@ hidrológico de 2001 e assim por diante).</p>
 <span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
-<p>Abaixo testamos ela fazendo uma nova coluna no nosso
-<em>dataframe</em>.</p>
+<p>Abaixo testamos ela fazendo uma nova coluna no nosso <em>dataframe</em>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>ano_hidro</span> <span class='op'>&lt;-</span> <span class='fu'>fun_ano_hidro</span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span>
@@ -2389,34 +2340,14 @@ hidrológico de 2001 e assim por diante).</p>
 6    60435000 1978-05-06    NA      1978</code></pre>
 </div>
 <h3 id="tabela-resumo">Tabela Resumo</h3>
-<p>Aqui introduzimos um novo conceito do pacote
-<strong>magrittr</strong> (ele está internamente no
-<strong>tiyverse</strong>). Esse conceito se chama <strong>pipe
-operator</strong> e é dado pelo símbolo <code>%&gt;%</code>. Basicamente
-o que ele faz é tomar o que está na esquerda dele, e usar como argumento
-da função a direita. Assim ao invés de escrever as funções umas dentro
-das outras, podemos deixar o código mais limpo e fácil de entender. Olhe
-o exemplo abaixo. Nele estamos tirando o log das vazões, com a função
-<code>log()</code>, depois calculando as diferenças desse log em um
-passo de tempo com <code>diff()</code>, calculamos o exponencial disso
-com <code>exp()</code>, em seguimas calculamos a média desses valores e
-depois arredondamos isso para ter apenas 2 casas decimais.</p>
+<p>Aqui introduzimos um novo conceito do pacote <strong>magrittr</strong> (ele está internamente no <strong>tiyverse</strong>). Esse conceito se chama <strong>pipe operator</strong> e é dado pelo símbolo <code>%&gt;%</code>. Basicamente o que ele faz é tomar o que está na esquerda dele, e usar como argumento da função a direita. Assim ao invés de escrever as funções umas dentro das outras, podemos deixar o código mais limpo e fácil de entender. Olhe o exemplo abaixo. Nele estamos tirando o log das vazões, com a função <code>log()</code>, depois calculando as diferenças desse log em um passo de tempo com <code>diff()</code>, calculamos o exponencial disso com <code>exp()</code>, em seguimas calculamos a média desses valores e depois arredondamos isso para ter apenas 2 casas decimais.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/base/Round.html'>round</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/mean.html'>mean</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/diff.html'>diff</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span>, na.rm <span class='op'>=</span> <span class='cn'>T</span><span class='op'>)</span>, <span class='fl'>2</span><span class='op'>)</span></span></code></pre>
 </div>
 <pre><code>[1] 1.03</code></pre>
 </div>
-<p>É fácil se perder lendo isso pois no <strong>R</strong> normalmente
-lemos de dentro para fora das funções (e portanto da direita para a
-esquerda) e é mais fácil ainda confundir qual argumento entra em qual
-função. Usando o <strong>pipe operator</strong>, dado por
-<code>%&gt;%</code>, o código fica mais facilmente interpretável.
-Selecionamos a vazão e em seguida tiramos o log, depois a diferença,
-depois o expoente… Quando uma função tem diversos argumentos podemos
-escrever explicitamente onde que o objeto a esquerda do <em>pipe</em>
-vai entrar colocando um ponto no lugar dele, não precisando que ele
-sempre entre no primeiro argumento da função.</p>
+<p>É fácil se perder lendo isso pois no <strong>R</strong> normalmente lemos de dentro para fora das funções (e portanto da direita para a esquerda) e é mais fácil ainda confundir qual argumento entra em qual função. Usando o <strong>pipe operator</strong>, dado por <code>%&gt;%</code>, o código fica mais facilmente interpretável. Selecionamos a vazão e em seguida tiramos o log, depois a diferença, depois o expoente… Quando uma função tem diversos argumentos podemos escrever explicitamente onde que o objeto a esquerda do <em>pipe</em> vai entrar colocando um ponto no lugar dele, não precisando que ele sempre entre no primeiro argumento da função.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>dados_ANA</span><span class='op'>$</span><span class='va'>Vazao</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
@@ -2428,27 +2359,9 @@ sempre entre no primeiro argumento da função.</p>
 </div>
 <pre><code>[1] 1.03</code></pre>
 </div>
-<p>Agora que temos o ano hidrológico para cada data, podemos fazer a
-nossa série de máximos, mínimos e médias anuais a partir dos dados
-diários. Primeiro cria-se um <em>dataframe</em> vazio com as colunas
-para cada ano, uma coluna para os máximos, outra para os mínimos e outra
-para as médias anuais. Podemos também criar uma quarta coluna para o
-número de valores <em>NA</em> nesse período.</p>
-<p>Já iremos fazer isso no formato de função, para que possamos replicar
-para as outras estações também! A função tomará como argumento a tabela
-original de dados (<code>dados_ANA</code>), e irá rodar a função
-<code>fun_ano_hidro()</code> internamente. Assim teremos uma nova coluna
-criada com a função <code>mutate()</code>. Em seguida agrupamos os dados
-por estação (se tivesse mais de uma por exemplo) e por ano hidrológico
-usando o <code>group_by</code> e falamos o que faremos ao juntar esses
-dados com o <code>summarise()</code>. Um problema é se o ano hidrológico
-estiver todo com falha, nesses casos as funções usadas retornarão
-<code>Inf</code> (infinito), <code>-Inf</code> ou <code>NaN</code>
-(<em>Not a Number</em>), portanto depois de agruparmos, iremos trocar
-qualquer valor não-finito na tabela por <strong>NA</strong>.</p>
-<p>Rodar uma outra função internamente requer alguns cuidados. Por
-exemplo, aqui assumimos que a tabela virá com uma coluna chamada “Data”.
-Caso isso não aconteca a nossa função não irá funcionar.</p>
+<p>Agora que temos o ano hidrológico para cada data, podemos fazer a nossa série de máximos, mínimos e médias anuais a partir dos dados diários. Primeiro cria-se um <em>dataframe</em> vazio com as colunas para cada ano, uma coluna para os máximos, outra para os mínimos e outra para as médias anuais. Podemos também criar uma quarta coluna para o número de valores <em>NA</em> nesse período.</p>
+<p>Já iremos fazer isso no formato de função, para que possamos replicar para as outras estações também! A função tomará como argumento a tabela original de dados (<code>dados_ANA</code>), e irá rodar a função <code>fun_ano_hidro()</code> internamente. Assim teremos uma nova coluna criada com a função <code>mutate()</code>. Em seguida agrupamos os dados por estação (se tivesse mais de uma por exemplo) e por ano hidrológico usando o <code>group_by</code> e falamos o que faremos ao juntar esses dados com o <code>summarise()</code>. Um problema é se o ano hidrológico estiver todo com falha, nesses casos as funções usadas retornarão <code>Inf</code> (infinito), <code>-Inf</code> ou <code>NaN</code> (<em>Not a Number</em>), portanto depois de agruparmos, iremos trocar qualquer valor não-finito na tabela por <strong>NA</strong>.</p>
+<p>Rodar uma outra função internamente requer alguns cuidados. Por exemplo, aqui assumimos que a tabela virá com uma coluna chamada “Data”. Caso isso não aconteca a nossa função não irá funcionar.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>fun_resumo_ano</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>dados_hidro</span><span class='op'>)</span><span class='op'>{</span></span>
@@ -2469,17 +2382,7 @@ Caso isso não aconteca a nossa função não irá funcionar.</p>
 </div>
 </div>
 <h3 id="tabela-final-loop">Tabela final (loop)</h3>
-<p>Agora podemos aplicar essa função diretamente aos
-<code>dados_ANA</code> da última aula. Na realidade, podemos fazer um
-<em>loop</em> para abrir cada uma das 4 estações, rodar essa função e
-juntar essas tabelas em uma só com a função <code>rbind()</code> - essa
-função junta diferentes <em>dataframes</em> pelas mesmas colunas,
-colocando um embaixo do outro. Abaixo rodamos o <em>loop</em> de outra
-maneira, definindo antes quais os códigos das estações e rodando o
-<code>for()</code> variando de 1 a 4. Primeiro lemos a primeira estação
-e, se for a primeira iteração, salvamos ela em um objeto chamado
-<em>tabela_final</em>. Se não for a primeira iteração, juntamos elas com
-o <code>rbind()</code>.</p>
+<p>Agora podemos aplicar essa função diretamente aos <code>dados_ANA</code> da última aula. Na realidade, podemos fazer um <em>loop</em> para abrir cada uma das 4 estações, rodar essa função e juntar essas tabelas em uma só com a função <code>rbind()</code> - essa função junta diferentes <em>dataframes</em> pelas mesmas colunas, colocando um embaixo do outro. Abaixo rodamos o <em>loop</em> de outra maneira, definindo antes quais os códigos das estações e rodando o <code>for()</code> variando de 1 a 4. Primeiro lemos a primeira estação e, se for a primeira iteração, salvamos ela em um objeto chamado <em>tabela_final</em>. Se não for a primeira iteração, juntamos elas com o <code>rbind()</code>.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>estacoes_cod</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>60435000</span>, <span class='fl'>60436000</span>, <span class='fl'>60436190</span>, <span class='fl'>60443000</span><span class='op'>)</span></span>
@@ -2498,8 +2401,7 @@ o <code>rbind()</code>.</p>
 <span><span class='op'>}</span></span></code></pre>
 </div>
 </div>
-<p>Por último, podemos salvar esse arquivo também, para usarmos nas
-aulas seguintes.</p>
+<p>Por último, podemos salvar esse arquivo também, para usarmos nas aulas seguintes.</p>
 <div class="layout-chunk" data-layout="l-body">
 <div class="sourceCode">
 <pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/write.table.html'>write.table</a></span><span class='op'>(</span>x <span class='op'>=</span> <span class='va'>tabela_final</span>,</span>
@@ -2510,8 +2412,7 @@ aulas seguintes.</p>
 <span>            fileEncoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span></code></pre>
 </div>
 </div>
-<div class="sourceCode" id="cb15"><pre
-class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
 <!--radix_placeholder_article_footer-->
 <!--/radix_placeholder_article_footer-->
 </div>

@@ -1,0 +1,3430 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1"/>
+  <meta name="generator" content="distill" />
+
+  <style type="text/css">
+  /* Hide doc at startup (prevent jankiness while JS renders/transforms) */
+  body {
+    visibility: hidden;
+  }
+  </style>
+
+ <!--radix_placeholder_import_source-->
+ <!--/radix_placeholder_import_source-->
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  { color: #00769e; background-color: #f1f3f5; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span { color: #00769e; } /* Normal */
+code span.al { color: #ad0000; } /* Alert */
+code span.an { color: #5e5e5e; } /* Annotation */
+code span.at { color: #657422; } /* Attribute */
+code span.bn { color: #ad0000; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #00769e; } /* ControlFlow */
+code span.ch { color: #20794d; } /* Char */
+code span.cn { color: #8f5902; } /* Constant */
+code span.co { color: #5e5e5e; } /* Comment */
+code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+code span.dt { color: #ad0000; } /* DataType */
+code span.dv { color: #ad0000; } /* DecVal */
+code span.er { color: #ad0000; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #ad0000; } /* Float */
+code span.fu { color: #4758ab; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #5e5e5e; } /* Information */
+code span.kw { color: #00769e; } /* Keyword */
+code span.op { color: #5e5e5e; } /* Operator */
+code span.ot { color: #00769e; } /* Other */
+code span.pp { color: #ad0000; } /* Preprocessor */
+code span.sc { color: #5e5e5e; } /* SpecialChar */
+code span.ss { color: #20794d; } /* SpecialString */
+code span.st { color: #20794d; } /* String */
+code span.va { color: #111111; } /* Variable */
+code span.vs { color: #20794d; } /* VerbatimString */
+code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+</style>
+
+
+  <!--radix_placeholder_meta_tags-->
+  <title>Análise Hidrológica com R: uma introdução para iniciantes: Análise de frequência de cheias (GEV)</title>
+
+  <meta property="description" itemprop="description" content="Exemplo de análise local com dados reais"/>
+
+  <link rel="license" href="https://creativecommons.org/licenses/by/4.0/"/>
+
+
+  <!--  https://developers.facebook.com/docs/sharing/webmasters#markup -->
+  <meta property="og:title" content="Análise Hidrológica com R: uma introdução para iniciantes: Análise de frequência de cheias (GEV)"/>
+  <meta property="og:type" content="article"/>
+  <meta property="og:description" content="Exemplo de análise local com dados reais"/>
+  <meta property="og:locale" content="en_US"/>
+  <meta property="og:site_name" content="Análise Hidrológica com R: uma introdução para iniciantes"/>
+
+  <!--  https://dev.twitter.com/cards/types/summary -->
+  <meta property="twitter:card" content="summary"/>
+  <meta property="twitter:title" content="Análise Hidrológica com R: uma introdução para iniciantes: Análise de frequência de cheias (GEV)"/>
+  <meta property="twitter:description" content="Exemplo de análise local com dados reais"/>
+
+  <!--/radix_placeholder_meta_tags-->
+  <!--radix_placeholder_rmarkdown_metadata-->
+
+  <script type="text/json" id="radix-rmarkdown-metadata">
+  {"type":"list","attributes":{"names":{"type":"character","attributes":{},"value":["title","description"]}},"value":[{"type":"character","attributes":{},"value":["Análise de frequência de cheias (GEV)"]},{"type":"character","attributes":{},"value":["Exemplo de análise local com dados reais"]}]}
+  </script>
+  <!--/radix_placeholder_rmarkdown_metadata-->
+  <!--radix_placeholder_navigation_in_header-->
+  <meta name="distill:offset" content=""/>
+
+  <script type="application/javascript">
+
+    window.headroom_prevent_pin = false;
+
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+
+      // initialize headroom for banner
+      var header = $('header').get(0);
+      var headerHeight = header.offsetHeight;
+      var headroom = new Headroom(header, {
+        tolerance: 5,
+        onPin : function() {
+          if (window.headroom_prevent_pin) {
+            window.headroom_prevent_pin = false;
+            headroom.unpin();
+          }
+        }
+      });
+      headroom.init();
+      if(window.location.hash)
+        headroom.unpin();
+      $(header).addClass('headroom--transition');
+
+      // offset scroll location for banner on hash change
+      // (see: https://github.com/WickyNilliams/headroom.js/issues/38)
+      window.addEventListener("hashchange", function(event) {
+        window.scrollTo(0, window.pageYOffset - (headerHeight + 25));
+      });
+
+      // responsive menu
+      $('.distill-site-header').each(function(i, val) {
+        var topnav = $(this);
+        var toggle = topnav.find('.nav-toggle');
+        toggle.on('click', function() {
+          topnav.toggleClass('responsive');
+        });
+      });
+
+      // nav dropdowns
+      $('.nav-dropbtn').click(function(e) {
+        $(this).next('.nav-dropdown-content').toggleClass('nav-dropdown-active');
+        $(this).parent().siblings('.nav-dropdown')
+           .children('.nav-dropdown-content').removeClass('nav-dropdown-active');
+      });
+      $("body").click(function(e){
+        $('.nav-dropdown-content').removeClass('nav-dropdown-active');
+      });
+      $(".nav-dropdown").click(function(e){
+        e.stopPropagation();
+      });
+    });
+  </script>
+
+  <style type="text/css">
+
+  /* Theme (user-documented overrideables for nav appearance) */
+
+  .distill-site-nav {
+    color: rgba(255, 255, 255, 0.8);
+    background-color: #0F2E3D;
+    font-size: 15px;
+    font-weight: 300;
+  }
+
+  .distill-site-nav a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .distill-site-nav a:hover {
+    color: white;
+  }
+
+  @media print {
+    .distill-site-nav {
+      display: none;
+    }
+  }
+
+  .distill-site-header {
+
+  }
+
+  .distill-site-footer {
+
+  }
+
+
+  /* Site Header */
+
+  .distill-site-header {
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 3;
+  }
+
+  .distill-site-header .nav-left {
+    display: inline-block;
+    margin-left: 8px;
+  }
+
+  @media screen and (max-width: 768px) {
+    .distill-site-header .nav-left {
+      margin-left: 0;
+    }
+  }
+
+
+  .distill-site-header .nav-right {
+    float: right;
+    margin-right: 8px;
+  }
+
+  .distill-site-header a,
+  .distill-site-header .title {
+    display: inline-block;
+    text-align: center;
+    padding: 14px 10px 14px 10px;
+  }
+
+  .distill-site-header .title {
+    font-size: 18px;
+    min-width: 150px;
+  }
+
+  .distill-site-header .logo {
+    padding: 0;
+  }
+
+  .distill-site-header .logo img {
+    display: none;
+    max-height: 20px;
+    width: auto;
+    margin-bottom: -4px;
+  }
+
+  .distill-site-header .nav-image img {
+    max-height: 18px;
+    width: auto;
+    display: inline-block;
+    margin-bottom: -3px;
+  }
+
+
+
+  @media screen and (min-width: 1000px) {
+    .distill-site-header .logo img {
+      display: inline-block;
+    }
+    .distill-site-header .nav-left {
+      margin-left: 20px;
+    }
+    .distill-site-header .nav-right {
+      margin-right: 20px;
+    }
+    .distill-site-header .title {
+      padding-left: 12px;
+    }
+  }
+
+
+  .distill-site-header .nav-toggle {
+    display: none;
+  }
+
+  .nav-dropdown {
+    display: inline-block;
+    position: relative;
+  }
+
+  .nav-dropdown .nav-dropbtn {
+    border: none;
+    outline: none;
+    color: rgba(255, 255, 255, 0.8);
+    padding: 16px 10px;
+    background-color: transparent;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    margin: 0;
+    margin-top: 1px;
+    z-index: 2;
+  }
+
+  .nav-dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: white;
+    min-width: 200px;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 4px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.1);
+    z-index: 1;
+    margin-top: 2px;
+    white-space: nowrap;
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .nav-dropdown-content hr {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-dropdown-active {
+    display: block;
+  }
+
+  .nav-dropdown-content a, .nav-dropdown-content .nav-dropdown-header {
+    color: black;
+    padding: 6px 24px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+  }
+
+  .nav-dropdown-content .nav-dropdown-header {
+    display: block;
+    padding: 5px 24px;
+    padding-bottom: 0;
+    text-transform: uppercase;
+    font-size: 14px;
+    color: #999999;
+    white-space: nowrap;
+  }
+
+  .nav-dropdown:hover .nav-dropbtn {
+    color: white;
+  }
+
+  .nav-dropdown-content a:hover {
+    background-color: #ddd;
+    color: black;
+  }
+
+  .nav-right .nav-dropdown-content {
+    margin-left: -45%;
+    right: 0;
+  }
+
+  @media screen and (max-width: 768px) {
+    .distill-site-header a, .distill-site-header .nav-dropdown  {display: none;}
+    .distill-site-header a.nav-toggle {
+      float: right;
+      display: block;
+    }
+    .distill-site-header .title {
+      margin-left: 0;
+    }
+    .distill-site-header .nav-right {
+      margin-right: 0;
+    }
+    .distill-site-header {
+      overflow: hidden;
+    }
+    .nav-right .nav-dropdown-content {
+      margin-left: 0;
+    }
+  }
+
+
+  @media screen and (max-width: 768px) {
+    .distill-site-header.responsive {position: relative; min-height: 500px; }
+    .distill-site-header.responsive a.nav-toggle {
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+    .distill-site-header.responsive a,
+    .distill-site-header.responsive .nav-dropdown {
+      display: block;
+      text-align: left;
+    }
+    .distill-site-header.responsive .nav-left,
+    .distill-site-header.responsive .nav-right {
+      width: 100%;
+    }
+    .distill-site-header.responsive .nav-dropdown {float: none;}
+    .distill-site-header.responsive .nav-dropdown-content {position: relative;}
+    .distill-site-header.responsive .nav-dropdown .nav-dropbtn {
+      display: block;
+      width: 100%;
+      text-align: left;
+    }
+  }
+
+  /* Site Footer */
+
+  .distill-site-footer {
+    width: 100%;
+    overflow: hidden;
+    box-sizing: border-box;
+    z-index: 3;
+    margin-top: 30px;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    text-align: center;
+  }
+
+  /* Headroom */
+
+  d-title {
+    padding-top: 6rem;
+  }
+
+  @media print {
+    d-title {
+      padding-top: 4rem;
+    }
+  }
+
+  .headroom {
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
+  .headroom--transition {
+    transition: all .4s ease-in-out;
+  }
+
+  .headroom--unpinned {
+    top: -100px;
+  }
+
+  .headroom--pinned {
+    top: 0;
+  }
+
+  /* adjust viewport for navbar height */
+  /* helps vertically center bootstrap (non-distill) content */
+  .min-vh-100 {
+    min-height: calc(100vh - 100px) !important;
+  }
+
+  </style>
+
+  <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+  <link href="site_libs/font-awesome-6.5.2/css/all.min.css" rel="stylesheet"/>
+  <link href="site_libs/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet"/>
+  <script src="site_libs/headroom-0.9.4/headroom.min.js"></script>
+  <script src="site_libs/autocomplete-0.37.1/autocomplete.min.js"></script>
+  <script src="site_libs/fuse-6.4.1/fuse.min.js"></script>
+
+  <script type="application/javascript">
+
+  function getMeta(metaName) {
+    var metas = document.getElementsByTagName('meta');
+    for (let i = 0; i < metas.length; i++) {
+      if (metas[i].getAttribute('name') === metaName) {
+        return metas[i].getAttribute('content');
+      }
+    }
+    return '';
+  }
+
+  function offsetURL(url) {
+    var offset = getMeta('distill:offset');
+    return offset ? offset + '/' + url : url;
+  }
+
+  function createFuseIndex() {
+
+    // create fuse index
+    var options = {
+      keys: [
+        { name: 'title', weight: 20 },
+        { name: 'categories', weight: 15 },
+        { name: 'description', weight: 10 },
+        { name: 'contents', weight: 5 },
+      ],
+      ignoreLocation: true,
+      threshold: 0
+    };
+    var fuse = new window.Fuse([], options);
+
+    // fetch the main search.json
+    return fetch(offsetURL('search.json'))
+      .then(function(response) {
+        if (response.status == 200) {
+          return response.json().then(function(json) {
+            // index main articles
+            json.articles.forEach(function(article) {
+              fuse.add(article);
+            });
+            // download collections and index their articles
+            return Promise.all(json.collections.map(function(collection) {
+              return fetch(offsetURL(collection)).then(function(response) {
+                if (response.status === 200) {
+                  return response.json().then(function(articles) {
+                    articles.forEach(function(article) {
+                      fuse.add(article);
+                    });
+                  })
+                } else {
+                  return Promise.reject(
+                    new Error('Unexpected status from search index request: ' +
+                              response.status)
+                  );
+                }
+              });
+            })).then(function() {
+              return fuse;
+            });
+          });
+
+        } else {
+          return Promise.reject(
+            new Error('Unexpected status from search index request: ' +
+                        response.status)
+          );
+        }
+      });
+  }
+
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+
+    // get search element (bail if we don't have one)
+    var searchEl = window.document.getElementById('distill-search');
+    if (!searchEl)
+      return;
+
+    createFuseIndex()
+      .then(function(fuse) {
+
+        // make search box visible
+        searchEl.classList.remove('hidden');
+
+        // initialize autocomplete
+        var options = {
+          autoselect: true,
+          hint: false,
+          minLength: 2,
+        };
+        window.autocomplete(searchEl, options, [{
+          source: function(query, callback) {
+            const searchOptions = {
+              isCaseSensitive: false,
+              shouldSort: true,
+              minMatchCharLength: 2,
+              limit: 10,
+            };
+            var results = fuse.search(query, searchOptions);
+            callback(results
+              .map(function(result) { return result.item; })
+            );
+          },
+          templates: {
+            suggestion: function(suggestion) {
+              var img = suggestion.preview && Object.keys(suggestion.preview).length > 0
+                ? `<img src="${offsetURL(suggestion.preview)}"</img>`
+                : '';
+              var html = `
+                <div class="search-item">
+                  <h3>${suggestion.title}</h3>
+                  <div class="search-item-description">
+                    ${suggestion.description || ''}
+                  </div>
+                  <div class="search-item-preview">
+                    ${img}
+                  </div>
+                </div>
+              `;
+              return html;
+            }
+          }
+        }]).on('autocomplete:selected', function(event, suggestion) {
+          window.location.href = offsetURL(suggestion.path);
+        });
+        // remove inline display style on autocompleter (we want to
+        // manage responsive display via css)
+        $('.algolia-autocomplete').css("display", "");
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+
+  });
+
+  </script>
+
+  <style type="text/css">
+
+  .nav-search {
+    font-size: x-small;
+  }
+
+  /* Algolioa Autocomplete */
+
+  .algolia-autocomplete {
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: sub;
+    background-color: white;
+    color: black;
+    padding: 6px;
+    padding-top: 8px;
+    padding-bottom: 0;
+    border-radius: 6px;
+    border: 1px #0F2E3D solid;
+    width: 180px;
+  }
+
+
+  @media screen and (max-width: 768px) {
+    .distill-site-nav .algolia-autocomplete {
+      display: none;
+      visibility: hidden;
+    }
+    .distill-site-nav.responsive .algolia-autocomplete {
+      display: inline-block;
+      visibility: visible;
+    }
+    .distill-site-nav.responsive .algolia-autocomplete .aa-dropdown-menu {
+      margin-left: 0;
+      width: 400px;
+      max-height: 400px;
+    }
+  }
+
+  .algolia-autocomplete .aa-input, .algolia-autocomplete .aa-hint {
+    width: 90%;
+    outline: none;
+    border: none;
+  }
+
+  .algolia-autocomplete .aa-hint {
+    color: #999;
+  }
+  .algolia-autocomplete .aa-dropdown-menu {
+    width: 550px;
+    max-height: 70vh;
+    overflow-x: visible;
+    overflow-y: scroll;
+    padding: 5px;
+    margin-top: 3px;
+    margin-left: -150px;
+    background-color: #fff;
+    border-radius: 5px;
+    border: 1px solid #999;
+    border-top: none;
+  }
+
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion {
+    cursor: pointer;
+    padding: 5px 4px;
+    border-bottom: 1px solid #eee;
+  }
+
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion:last-of-type {
+    border-bottom: none;
+    margin-bottom: 2px;
+  }
+
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item {
+    overflow: hidden;
+    font-size: 0.8em;
+    line-height: 1.4em;
+  }
+
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item h3 {
+    font-size: 1rem;
+    margin-block-start: 0;
+    margin-block-end: 5px;
+  }
+
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-description {
+    display: inline-block;
+    overflow: hidden;
+    height: 2.8em;
+    width: 80%;
+    margin-right: 4%;
+  }
+
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview {
+    display: inline-block;
+    width: 15%;
+  }
+
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview img {
+    height: 3em;
+    width: auto;
+    display: none;
+  }
+
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion .search-item-preview img[src] {
+    display: initial;
+  }
+
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion.aa-cursor {
+    background-color: #eee;
+  }
+  .algolia-autocomplete .aa-dropdown-menu .aa-suggestion em {
+    font-weight: bold;
+    font-style: normal;
+  }
+
+  </style>
+
+
+  <!--/radix_placeholder_navigation_in_header-->
+  <!--radix_placeholder_distill-->
+
+  <style type="text/css">
+
+  body {
+    background-color: white;
+  }
+
+  .pandoc-table {
+    width: 100%;
+  }
+
+  .pandoc-table>caption {
+    margin-bottom: 10px;
+  }
+
+  .pandoc-table th:not([align]) {
+    text-align: left;
+  }
+
+  .pagedtable-footer {
+    font-size: 15px;
+  }
+
+  d-byline .byline {
+    grid-template-columns: 2fr 2fr;
+  }
+
+  d-byline .byline h3 {
+    margin-block-start: 1.5em;
+  }
+
+  d-byline .byline .authors-affiliations h3 {
+    margin-block-start: 0.5em;
+  }
+
+  .authors-affiliations .orcid-id {
+    width: 16px;
+    height:16px;
+    margin-left: 4px;
+    margin-right: 4px;
+    vertical-align: middle;
+    padding-bottom: 2px;
+  }
+
+  d-title .dt-tags {
+    margin-top: 1em;
+    grid-column: text;
+  }
+
+  .dt-tags .dt-tag {
+    text-decoration: none;
+    display: inline-block;
+    color: rgba(0,0,0,0.6);
+    padding: 0em 0.4em;
+    margin-right: 0.5em;
+    margin-bottom: 0.4em;
+    font-size: 70%;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  d-article table.gt_table td,
+  d-article table.gt_table th {
+    border-bottom: none;
+    font-size: 100%;
+  }
+
+  .html-widget {
+    margin-bottom: 2.0em;
+  }
+
+  .l-screen-inset {
+    padding-right: 16px;
+  }
+
+  .l-screen .caption {
+    margin-left: 10px;
+  }
+
+  .shaded {
+    background: rgb(247, 247, 247);
+    padding-top: 20px;
+    padding-bottom: 20px;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .shaded .html-widget {
+    margin-bottom: 0;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .shaded .shaded-content {
+    background: white;
+  }
+
+  .text-output {
+    margin-top: 0;
+    line-height: 1.5em;
+  }
+
+  .hidden {
+    display: none !important;
+  }
+
+  hr.section-separator {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    margin: 0px;
+  }
+
+
+  d-byline {
+    border-top: none;
+  }
+
+  d-article {
+    padding-top: 2.5rem;
+    padding-bottom: 30px;
+    border-top: none;
+  }
+
+  d-appendix {
+    padding-top: 30px;
+  }
+
+  d-article>p>img {
+    width: 100%;
+  }
+
+  d-article h2 {
+    margin: 1rem 0 1.5rem 0;
+  }
+
+  d-article h3 {
+    margin-top: 1.5rem;
+  }
+
+  d-article iframe {
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    margin-bottom: 2.0em;
+    width: 100%;
+  }
+
+  /* Tweak code blocks */
+
+  d-article div.sourceCode code,
+  d-article pre code {
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+  }
+
+  d-article pre,
+  d-article div.sourceCode,
+  d-article div.sourceCode pre {
+    overflow: auto;
+  }
+
+  d-article div.sourceCode {
+    background-color: white;
+  }
+
+  d-article div.sourceCode pre {
+    padding-left: 10px;
+    font-size: 12px;
+    border-left: 2px solid rgba(0,0,0,0.1);
+  }
+
+  d-article pre {
+    font-size: 12px;
+    color: black;
+    background: none;
+    margin-top: 0;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+  }
+
+  d-article pre a {
+    border-bottom: none;
+  }
+
+  d-article pre a:hover {
+    border-bottom: none;
+    text-decoration: underline;
+  }
+
+  d-article details {
+    grid-column: text;
+    margin-bottom: 0.8em;
+  }
+
+  @media(min-width: 768px) {
+
+  d-article pre,
+  d-article div.sourceCode,
+  d-article div.sourceCode pre {
+    overflow: visible !important;
+  }
+
+  d-article div.sourceCode pre {
+    padding-left: 18px;
+    font-size: 14px;
+  }
+
+  /* tweak for Pandoc numbered line within distill */
+  d-article pre.numberSource code > span {
+      left: -2em;
+  }
+
+  d-article pre {
+    font-size: 14px;
+  }
+
+  }
+
+  figure img.external {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+    padding: 18px;
+    box-sizing: border-box;
+  }
+
+  /* CSS for d-contents */
+
+  .d-contents {
+    grid-column: text;
+    color: rgba(0,0,0,0.8);
+    font-size: 0.9em;
+    padding-bottom: 1em;
+    margin-bottom: 1em;
+    padding-bottom: 0.5em;
+    margin-bottom: 1em;
+    padding-left: 0.25em;
+    justify-self: start;
+  }
+
+  @media(min-width: 1000px) {
+    .d-contents.d-contents-float {
+      height: 0;
+      grid-column-start: 1;
+      grid-column-end: 4;
+      justify-self: center;
+      padding-right: 3em;
+      padding-left: 2em;
+    }
+  }
+
+  .d-contents nav h3 {
+    font-size: 18px;
+    margin-top: 0;
+    margin-bottom: 1em;
+  }
+
+  .d-contents li {
+    list-style-type: none
+  }
+
+  .d-contents nav > ul {
+    padding-left: 0;
+  }
+
+  .d-contents ul {
+    padding-left: 1em
+  }
+
+  .d-contents nav ul li {
+    margin-top: 0.6em;
+    margin-bottom: 0.2em;
+  }
+
+  .d-contents nav a {
+    font-size: 13px;
+    border-bottom: none;
+    text-decoration: none
+    color: rgba(0, 0, 0, 0.8);
+  }
+
+  .d-contents nav a:hover {
+    text-decoration: underline solid rgba(0, 0, 0, 0.6)
+  }
+
+  .d-contents nav > ul > li > a {
+    font-weight: 600;
+  }
+
+  .d-contents nav > ul > li > ul {
+    font-weight: inherit;
+  }
+
+  .d-contents nav > ul > li > ul > li {
+    margin-top: 0.2em;
+  }
+
+
+  .d-contents nav ul {
+    margin-top: 0;
+    margin-bottom: 0.25em;
+  }
+
+  .d-article-with-toc h2:nth-child(2) {
+    margin-top: 0;
+  }
+
+
+  /* Figure */
+
+  .figure {
+    position: relative;
+    margin-bottom: 2.5em;
+    margin-top: 1.5em;
+  }
+
+  .figure .caption {
+    color: rgba(0, 0, 0, 0.6);
+    font-size: 12px;
+    line-height: 1.5em;
+  }
+
+  .figure img.external {
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.1);
+    padding: 18px;
+    box-sizing: border-box;
+  }
+
+  .figure .caption a {
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  .figure .caption b,
+  .figure .caption strong, {
+    font-weight: 600;
+    color: rgba(0, 0, 0, 1.0);
+  }
+
+  /* Citations */
+
+  d-article .citation {
+    color: inherit;
+    cursor: inherit;
+  }
+
+  div.hanging-indent{
+    margin-left: 1em; text-indent: -1em;
+  }
+
+  /* Citation hover box */
+
+  .tippy-box[data-theme~=light-border] {
+    background-color: rgba(250, 250, 250, 0.95);
+  }
+
+  .tippy-content > p {
+    margin-bottom: 0;
+    padding: 2px;
+  }
+
+
+  /* Tweak 1000px media break to show more text */
+
+  @media(min-width: 1000px) {
+    .base-grid,
+    distill-header,
+    d-title,
+    d-abstract,
+    d-article,
+    d-appendix,
+    distill-appendix,
+    d-byline,
+    d-footnote-list,
+    d-citation-list,
+    distill-footer {
+      grid-template-columns: [screen-start] 1fr [page-start kicker-start] 80px [middle-start] 50px [text-start kicker-end] 65px 65px 65px 65px 65px 65px 65px 65px [text-end gutter-start] 65px [middle-end] 65px [page-end gutter-end] 1fr [screen-end];
+      grid-column-gap: 16px;
+    }
+
+    .grid {
+      grid-column-gap: 16px;
+    }
+
+    d-article {
+      font-size: 1.06rem;
+      line-height: 1.7em;
+    }
+    figure .caption, .figure .caption, figure figcaption {
+      font-size: 13px;
+    }
+  }
+
+  @media(min-width: 1180px) {
+    .base-grid,
+    distill-header,
+    d-title,
+    d-abstract,
+    d-article,
+    d-appendix,
+    distill-appendix,
+    d-byline,
+    d-footnote-list,
+    d-citation-list,
+    distill-footer {
+      grid-template-columns: [screen-start] 1fr [page-start kicker-start] 60px [middle-start] 60px [text-start kicker-end] 60px 60px 60px 60px 60px 60px 60px 60px [text-end gutter-start] 60px [middle-end] 60px [page-end gutter-end] 1fr [screen-end];
+      grid-column-gap: 32px;
+    }
+
+    .grid {
+      grid-column-gap: 32px;
+    }
+  }
+
+
+  /* Get the citation styles for the appendix (not auto-injected on render since
+     we do our own rendering of the citation appendix) */
+
+  d-appendix .citation-appendix,
+  .d-appendix .citation-appendix {
+    font-size: 11px;
+    line-height: 15px;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    padding-left: 18px;
+    border: 1px solid rgba(0,0,0,0.1);
+    background: rgba(0, 0, 0, 0.02);
+    padding: 10px 18px;
+    border-radius: 3px;
+    color: rgba(150, 150, 150, 1);
+    overflow: hidden;
+    margin-top: -12px;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+
+  /* Include appendix styles here so they can be overridden */
+
+  d-appendix {
+    contain: layout style;
+    font-size: 0.8em;
+    line-height: 1.7em;
+    margin-top: 60px;
+    margin-bottom: 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    color: rgba(0,0,0,0.5);
+    padding-top: 60px;
+    padding-bottom: 48px;
+  }
+
+  d-appendix h3 {
+    grid-column: page-start / text-start;
+    font-size: 15px;
+    font-weight: 500;
+    margin-top: 1em;
+    margin-bottom: 0;
+    color: rgba(0,0,0,0.65);
+  }
+
+  d-appendix h3 + * {
+    margin-top: 1em;
+  }
+
+  d-appendix ol {
+    padding: 0 0 0 15px;
+  }
+
+  @media (min-width: 768px) {
+    d-appendix ol {
+      padding: 0 0 0 30px;
+      margin-left: -30px;
+    }
+  }
+
+  d-appendix li {
+    margin-bottom: 1em;
+  }
+
+  d-appendix a {
+    color: rgba(0, 0, 0, 0.6);
+  }
+
+  d-appendix > * {
+    grid-column: text;
+  }
+
+  d-appendix > d-footnote-list,
+  d-appendix > d-citation-list,
+  d-appendix > distill-appendix {
+    grid-column: screen;
+  }
+
+  /* Include footnote styles here so they can be overridden */
+
+  d-footnote-list {
+    contain: layout style;
+  }
+
+  d-footnote-list > * {
+    grid-column: text;
+  }
+
+  d-footnote-list a.footnote-backlink {
+    color: rgba(0,0,0,0.3);
+    padding-left: 0.5em;
+  }
+
+
+
+  /* Anchor.js */
+
+  .anchorjs-link {
+    /*transition: all .25s linear; */
+    text-decoration: none;
+    border-bottom: none;
+  }
+  *:hover > .anchorjs-link {
+    margin-left: -1.125em !important;
+    text-decoration: none;
+    border-bottom: none;
+  }
+
+  /* Social footer */
+
+  .social_footer {
+    margin-top: 30px;
+    margin-bottom: 0;
+    color: rgba(0,0,0,0.67);
+  }
+
+  .disqus-comments {
+    margin-right: 30px;
+  }
+
+  .disqus-comment-count {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+  }
+
+  #disqus_thread {
+    margin-top: 30px;
+  }
+
+  .article-sharing a {
+    border-bottom: none;
+    margin-right: 8px;
+  }
+
+  .article-sharing a:hover {
+    border-bottom: none;
+  }
+
+  .sidebar-section.subscribe {
+    font-size: 12px;
+    line-height: 1.6em;
+  }
+
+  .subscribe p {
+    margin-bottom: 0.5em;
+  }
+
+
+  .article-footer .subscribe {
+    font-size: 15px;
+    margin-top: 45px;
+  }
+
+
+  .sidebar-section.custom {
+    font-size: 12px;
+    line-height: 1.6em;
+  }
+
+  .custom p {
+    margin-bottom: 0.5em;
+  }
+
+  /* Styles for listing layout (hide title) */
+  .layout-listing d-title, .layout-listing .d-title {
+    display: none;
+  }
+
+  /* Styles for posts lists (not auto-injected) */
+
+
+  .posts-with-sidebar {
+    padding-left: 45px;
+    padding-right: 45px;
+  }
+
+  .posts-list .description h2,
+  .posts-list .description p {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+  }
+
+  .posts-list .description h2 {
+    font-weight: 700;
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .posts-list h2.post-tag {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    padding-bottom: 12px;
+  }
+  .posts-list {
+    margin-top: 60px;
+    margin-bottom: 24px;
+  }
+
+  .posts-list .post-preview {
+    text-decoration: none;
+    overflow: hidden;
+    display: block;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 24px 0;
+  }
+
+  .post-preview-last {
+    border-bottom: none !important;
+  }
+
+  .posts-list .posts-list-caption {
+    grid-column: screen;
+    font-weight: 400;
+  }
+
+  .posts-list .post-preview h2 {
+    margin: 0 0 6px 0;
+    line-height: 1.2em;
+    font-style: normal;
+    font-size: 24px;
+  }
+
+  .posts-list .post-preview p {
+    margin: 0 0 12px 0;
+    line-height: 1.4em;
+    font-size: 16px;
+  }
+
+  .posts-list .post-preview .thumbnail {
+    box-sizing: border-box;
+    margin-bottom: 24px;
+    position: relative;
+    max-width: 500px;
+  }
+  .posts-list .post-preview img {
+    width: 100%;
+    display: block;
+  }
+
+  .posts-list .metadata {
+    font-size: 12px;
+    line-height: 1.4em;
+    margin-bottom: 18px;
+  }
+
+  .posts-list .metadata > * {
+    display: inline-block;
+  }
+
+  .posts-list .metadata .publishedDate {
+    margin-right: 2em;
+  }
+
+  .posts-list .metadata .dt-authors {
+    display: block;
+    margin-top: 0.3em;
+    margin-right: 2em;
+  }
+
+  .posts-list .dt-tags {
+    display: block;
+    line-height: 1em;
+  }
+
+  .posts-list .dt-tags .dt-tag {
+    display: inline-block;
+    color: rgba(0,0,0,0.6);
+    padding: 0.3em 0.4em;
+    margin-right: 0.2em;
+    margin-bottom: 0.4em;
+    font-size: 60%;
+    border: 1px solid rgba(0,0,0,0.2);
+    border-radius: 3px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .posts-list img {
+    opacity: 1;
+  }
+
+  .posts-list img[data-src] {
+    opacity: 0;
+  }
+
+  .posts-more {
+    clear: both;
+  }
+
+
+  .posts-sidebar {
+    font-size: 16px;
+  }
+
+  .posts-sidebar h3 {
+    font-size: 16px;
+    margin-top: 0;
+    margin-bottom: 0.5em;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+  .sidebar-section {
+    margin-bottom: 30px;
+  }
+
+  .categories ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .categories li {
+    color: rgba(0, 0, 0, 0.8);
+    margin-bottom: 0;
+  }
+
+  .categories li>a {
+    border-bottom: none;
+  }
+
+  .categories li>a:hover {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+  }
+
+  .categories .active {
+    font-weight: 600;
+  }
+
+  .categories .category-count {
+    color: rgba(0, 0, 0, 0.4);
+  }
+
+
+  @media(min-width: 768px) {
+    .posts-list .post-preview h2 {
+      font-size: 26px;
+    }
+    .posts-list .post-preview .thumbnail {
+      float: right;
+      width: 30%;
+      margin-bottom: 0;
+    }
+    .posts-list .post-preview .description {
+      float: left;
+      width: 45%;
+    }
+    .posts-list .post-preview .metadata {
+      float: left;
+      width: 20%;
+      margin-top: 8px;
+    }
+    .posts-list .post-preview p {
+      margin: 0 0 12px 0;
+      line-height: 1.5em;
+      font-size: 16px;
+    }
+    .posts-with-sidebar .posts-list {
+      float: left;
+      width: 75%;
+    }
+    .posts-with-sidebar .posts-sidebar {
+      float: right;
+      width: 20%;
+      margin-top: 60px;
+      padding-top: 24px;
+      padding-bottom: 24px;
+    }
+  }
+
+
+  /* Improve display for browsers without grid (IE/Edge <= 15) */
+
+  .downlevel {
+    line-height: 1.6em;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+  }
+
+  .downlevel .d-title {
+    padding-top: 6rem;
+    padding-bottom: 1.5rem;
+  }
+
+  .downlevel .d-title h1 {
+    font-size: 50px;
+    font-weight: 700;
+    line-height: 1.1em;
+    margin: 0 0 0.5rem;
+  }
+
+  .downlevel .d-title p {
+    font-weight: 300;
+    font-size: 1.2rem;
+    line-height: 1.55em;
+    margin-top: 0;
+  }
+
+  .downlevel .d-byline {
+    padding-top: 0.8em;
+    padding-bottom: 0.8em;
+    font-size: 0.8rem;
+    line-height: 1.8em;
+  }
+
+  .downlevel .section-separator {
+    border: none;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  .downlevel .d-article {
+    font-size: 1.06rem;
+    line-height: 1.7em;
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+  }
+
+
+  .downlevel .d-appendix {
+    padding-left: 0;
+    padding-right: 0;
+    max-width: none;
+    font-size: 0.8em;
+    line-height: 1.7em;
+    margin-bottom: 0;
+    color: rgba(0,0,0,0.5);
+    padding-top: 40px;
+    padding-bottom: 48px;
+  }
+
+  .downlevel .footnotes ol {
+    padding-left: 13px;
+  }
+
+  .downlevel .base-grid,
+  .downlevel .distill-header,
+  .downlevel .d-title,
+  .downlevel .d-abstract,
+  .downlevel .d-article,
+  .downlevel .d-appendix,
+  .downlevel .distill-appendix,
+  .downlevel .d-byline,
+  .downlevel .d-footnote-list,
+  .downlevel .d-citation-list,
+  .downlevel .distill-footer,
+  .downlevel .appendix-bottom,
+  .downlevel .posts-container {
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  @media(min-width: 768px) {
+    .downlevel .base-grid,
+    .downlevel .distill-header,
+    .downlevel .d-title,
+    .downlevel .d-abstract,
+    .downlevel .d-article,
+    .downlevel .d-appendix,
+    .downlevel .distill-appendix,
+    .downlevel .d-byline,
+    .downlevel .d-footnote-list,
+    .downlevel .d-citation-list,
+    .downlevel .distill-footer,
+    .downlevel .appendix-bottom,
+    .downlevel .posts-container {
+    padding-left: 150px;
+    padding-right: 150px;
+    max-width: 900px;
+  }
+  }
+
+  .downlevel pre code {
+    display: block;
+    border-left: 2px solid rgba(0, 0, 0, .1);
+    padding: 0 0 0 20px;
+    font-size: 14px;
+  }
+
+  .downlevel code, .downlevel pre {
+    color: black;
+    background: none;
+    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+  }
+
+  .downlevel .posts-list .post-preview {
+    color: inherit;
+  }
+
+
+
+  </style>
+
+  <script type="application/javascript">
+
+  function is_downlevel_browser() {
+    if (bowser.isUnsupportedBrowser({ msie: "12", msedge: "16"},
+                                   window.navigator.userAgent)) {
+      return true;
+    } else {
+      return window.load_distill_framework === undefined;
+    }
+  }
+
+  // show body when load is complete
+  function on_load_complete() {
+
+    // add anchors
+    if (window.anchors) {
+      window.anchors.options.placement = 'left';
+      window.anchors.add('d-article > h2, d-article > h3, d-article > h4, d-article > h5');
+    }
+
+
+    // set body to visible
+    document.body.style.visibility = 'visible';
+
+    // force redraw for leaflet widgets
+    if (window.HTMLWidgets) {
+      var maps = window.HTMLWidgets.findAll(".leaflet");
+      $.each(maps, function(i, el) {
+        var map = this.getMap();
+        map.invalidateSize();
+        map.eachLayer(function(layer) {
+          if (layer instanceof L.TileLayer)
+            layer.redraw();
+        });
+      });
+    }
+
+    // trigger 'shown' so htmlwidgets resize
+    $('d-article').trigger('shown');
+  }
+
+  function init_distill() {
+
+    init_common();
+
+    // create front matter
+    var front_matter = $('<d-front-matter></d-front-matter>');
+    $('#distill-front-matter').wrap(front_matter);
+
+    // create d-title
+    $('.d-title').changeElementType('d-title');
+
+    // separator
+    var separator = '<hr class="section-separator" style="clear: both"/>';
+    // prepend separator above appendix
+    $('.d-byline').before(separator);
+    $('.d-article').before(separator);
+
+    // create d-byline
+    var byline = $('<d-byline></d-byline>');
+    $('.d-byline').replaceWith(byline);
+
+    // create d-article
+    var article = $('<d-article></d-article>');
+    $('.d-article').wrap(article).children().unwrap();
+
+    // move posts container into article
+    $('.posts-container').appendTo($('d-article'));
+
+    // create d-appendix
+    $('.d-appendix').changeElementType('d-appendix');
+
+    // flag indicating that we have appendix items
+    var appendix = $('.appendix-bottom').children('h3').length > 0;
+
+    // replace footnotes with <d-footnote>
+    $('.footnote-ref').each(function(i, val) {
+      appendix = true;
+      var href = $(this).attr('href');
+      var id = href.replace('#', '');
+      var fn = $('#' + id);
+      var fn_p = $('#' + id + '>p');
+      fn_p.find('.footnote-back').remove();
+      var text = fn_p.html();
+      var dtfn = $('<d-footnote></d-footnote>');
+      dtfn.html(text);
+      $(this).replaceWith(dtfn);
+    });
+    // remove footnotes
+    $('.footnotes').remove();
+
+    // move refs into #references-listing
+    $('#references-listing').replaceWith($('#refs'));
+
+    $('h1.appendix, h2.appendix').each(function(i, val) {
+      $(this).changeElementType('h3');
+    });
+    $('h3.appendix').each(function(i, val) {
+      var id = $(this).attr('id');
+      $('.d-contents a[href="#' + id + '"]').parent().remove();
+      appendix = true;
+      $(this).nextUntil($('h1, h2, h3')).addBack().appendTo($('d-appendix'));
+    });
+
+    // show d-appendix if we have appendix content
+    $("d-appendix").css('display', appendix ? 'grid' : 'none');
+
+    // localize layout chunks to just output
+    $('.layout-chunk').each(function(i, val) {
+
+      // capture layout
+      var layout = $(this).attr('data-layout');
+
+      // apply layout to markdown level block elements
+      var elements = $(this).children().not('details, div.sourceCode, pre, script');
+      elements.each(function(i, el) {
+        var layout_div = $('<div class="' + layout + '"></div>');
+        if (layout_div.hasClass('shaded')) {
+          var shaded_content = $('<div class="shaded-content"></div>');
+          $(this).wrap(shaded_content);
+          $(this).parent().wrap(layout_div);
+        } else {
+          $(this).wrap(layout_div);
+        }
+      });
+
+
+      // unwrap the layout-chunk div
+      $(this).children().unwrap();
+    });
+
+    // remove code block used to force  highlighting css
+    $('.distill-force-highlighting-css').parent().remove();
+
+    // remove empty line numbers inserted by pandoc when using a
+    // custom syntax highlighting theme, except when numbering line
+    // in code chunk
+    $('pre:not(.numberLines) code.sourceCode a:empty').remove();
+
+    // load distill framework
+    load_distill_framework();
+
+    // wait for window.distillRunlevel == 4 to do post processing
+    function distill_post_process() {
+
+      if (!window.distillRunlevel || window.distillRunlevel < 4)
+        return;
+
+      // hide author/affiliations entirely if we have no authors
+      var front_matter = JSON.parse($("#distill-front-matter").html());
+      var have_authors = front_matter.authors && front_matter.authors.length > 0;
+      if (!have_authors)
+        $('d-byline').addClass('hidden');
+
+      // article with toc class
+      $('.d-contents').parent().addClass('d-article-with-toc');
+
+      // strip links that point to #
+      $('.authors-affiliations').find('a[href="#"]').removeAttr('href');
+
+      // add orcid ids
+      $('.authors-affiliations').find('.author').each(function(i, el) {
+        var orcid_id = front_matter.authors[i].orcidID;
+        var author_name = front_matter.authors[i].author
+        if (orcid_id) {
+          var a = $('<a></a>');
+          a.attr('href', 'https://orcid.org/' + orcid_id);
+          var img = $('<img></img>');
+          img.addClass('orcid-id');
+          img.attr('alt', author_name ? 'ORCID ID for ' + author_name : 'ORCID ID');
+          img.attr('src','data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg==');
+          a.append(img);
+          $(this).append(a);
+        }
+      });
+
+      // hide elements of author/affiliations grid that have no value
+      function hide_byline_column(caption) {
+        $('d-byline').find('h3:contains("' + caption + '")').parent().css('visibility', 'hidden');
+      }
+
+      // affiliations
+      var have_affiliations = false;
+      for (var i = 0; i<front_matter.authors.length; ++i) {
+        var author = front_matter.authors[i];
+        if (author.affiliation !== "&nbsp;") {
+          have_affiliations = true;
+          break;
+        }
+      }
+      if (!have_affiliations)
+        $('d-byline').find('h3:contains("Affiliations")').css('visibility', 'hidden');
+
+      // published date
+      if (!front_matter.publishedDate)
+        hide_byline_column("Published");
+
+      // document object identifier
+      var doi = $('d-byline').find('h3:contains("DOI")');
+      var doi_p = doi.next().empty();
+      if (!front_matter.doi) {
+        // if we have a citation and valid citationText then link to that
+        if ($('#citation').length > 0 && front_matter.citationText) {
+          doi.html('Citation');
+          $('<a href="#citation"></a>')
+            .text(front_matter.citationText)
+            .appendTo(doi_p);
+        } else {
+          hide_byline_column("DOI");
+        }
+      } else {
+        $('<a></a>')
+           .attr('href', "https://doi.org/" + front_matter.doi)
+           .html(front_matter.doi)
+           .appendTo(doi_p);
+      }
+
+       // change plural form of authors/affiliations
+      if (front_matter.authors.length === 1) {
+        var grid = $('.authors-affiliations');
+        grid.children('h3:contains("Authors")').text('Author');
+        grid.children('h3:contains("Affiliations")').text('Affiliation');
+      }
+
+      // remove d-appendix and d-footnote-list local styles
+      $('d-appendix > style:first-child').remove();
+      $('d-footnote-list > style:first-child').remove();
+
+      // move appendix-bottom entries to the bottom
+      $('.appendix-bottom').appendTo('d-appendix').children().unwrap();
+      $('.appendix-bottom').remove();
+
+      // hoverable references
+      $('span.citation[data-cites]').each(function() {
+        const citeChild = $(this).children()[0]
+        // Do not process if @xyz has been used without escaping and without bibliography activated
+        // https://github.com/rstudio/distill/issues/466
+        if (citeChild === undefined) return true
+
+        if (citeChild.nodeName == "D-FOOTNOTE") {
+          var fn = citeChild
+          $(this).html(fn.shadowRoot.querySelector("sup"))
+          $(this).id = fn.id
+          fn.remove()
+        }
+        var refs = $(this).attr('data-cites').split(" ");
+        var refHtml = refs.map(function(ref) {
+          // Could use CSS.escape too here, we insure backward compatibility in navigator
+          return "<p>" + $('div[id="ref-' + ref + '"]').html() + "</p>";
+        }).join("\n");
+        window.tippy(this, {
+          allowHTML: true,
+          content: refHtml,
+          maxWidth: 500,
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start'
+        });
+      });
+
+      // fix footnotes in tables (#411)
+      // replacing broken distill.pub feature
+      $('table d-footnote').each(function() {
+        // we replace internal showAtNode methode which is triggered when hovering a footnote
+        this.hoverBox.showAtNode = function(node) {
+          // ported from https://github.com/distillpub/template/pull/105/files
+          calcOffset = function(elem) {
+              let x = elem.offsetLeft;
+              let y = elem.offsetTop;
+              // Traverse upwards until an `absolute` element is found or `elem`
+              // becomes null.
+              while (elem = elem.offsetParent && elem.style.position != 'absolute') {
+                  x += elem.offsetLeft;
+                  y += elem.offsetTop;
+              }
+
+              return { left: x, top: y };
+          }
+          // https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/offsetTop
+          const bbox = node.getBoundingClientRect();
+          const offset = calcOffset(node);
+          this.show([offset.left + bbox.width, offset.top + bbox.height]);
+        }
+      })
+
+      // clear polling timer
+      clearInterval(tid);
+
+      // show body now that everything is ready
+      on_load_complete();
+    }
+
+    var tid = setInterval(distill_post_process, 50);
+    distill_post_process();
+
+  }
+
+  function init_downlevel() {
+
+    init_common();
+
+     // insert hr after d-title
+    $('.d-title').after($('<hr class="section-separator"/>'));
+
+    // check if we have authors
+    var front_matter = JSON.parse($("#distill-front-matter").html());
+    var have_authors = front_matter.authors && front_matter.authors.length > 0;
+
+    // manage byline/border
+    if (!have_authors)
+      $('.d-byline').remove();
+    $('.d-byline').after($('<hr class="section-separator"/>'));
+    $('.d-byline a').remove();
+
+    // remove toc
+    $('.d-contents').remove();
+
+    // move appendix elements
+    $('h1.appendix, h2.appendix').each(function(i, val) {
+      $(this).changeElementType('h3');
+    });
+    $('h3.appendix').each(function(i, val) {
+      $(this).nextUntil($('h1, h2, h3')).addBack().appendTo($('.d-appendix'));
+    });
+
+
+    // inject headers into references and footnotes
+    var refs_header = $('<h3></h3>');
+    refs_header.text('References');
+    $('#refs').prepend(refs_header);
+
+    var footnotes_header = $('<h3></h3');
+    footnotes_header.text('Footnotes');
+    $('.footnotes').children('hr').first().replaceWith(footnotes_header);
+
+    // move appendix-bottom entries to the bottom
+    $('.appendix-bottom').appendTo('.d-appendix').children().unwrap();
+    $('.appendix-bottom').remove();
+
+    // remove appendix if it's empty
+    if ($('.d-appendix').children().length === 0)
+      $('.d-appendix').remove();
+
+    // prepend separator above appendix
+    $('.d-appendix').before($('<hr class="section-separator" style="clear: both"/>'));
+
+    // trim code
+    $('pre>code').each(function(i, val) {
+      $(this).html($.trim($(this).html()));
+    });
+
+    // move posts-container right before article
+    $('.posts-container').insertBefore($('.d-article'));
+
+    $('body').addClass('downlevel');
+
+    on_load_complete();
+  }
+
+
+  function init_common() {
+
+    // jquery plugin to change element types
+    (function($) {
+      $.fn.changeElementType = function(newType) {
+        var attrs = {};
+
+        $.each(this[0].attributes, function(idx, attr) {
+          attrs[attr.nodeName] = attr.nodeValue;
+        });
+
+        this.replaceWith(function() {
+          return $("<" + newType + "/>", attrs).append($(this).contents());
+        });
+      };
+    })(jQuery);
+
+    // prevent underline for linked images
+    $('a > img').parent().css({'border-bottom' : 'none'});
+
+    // mark non-body figures created by knitr chunks as 100% width
+    $('.layout-chunk').each(function(i, val) {
+      var figures = $(this).find('img, .html-widget');
+      // ignore leaflet img layers (#106)
+      figures = figures.filter(':not(img[class*="leaflet"])')
+      if ($(this).attr('data-layout') !== "l-body") {
+        figures.css('width', '100%');
+      } else {
+        figures.css('max-width', '100%');
+        figures.filter("[width]").each(function(i, val) {
+          var fig = $(this);
+          fig.css('width', fig.attr('width') + 'px');
+        });
+
+      }
+    });
+
+    // auto-append index.html to post-preview links in file: protocol
+    // and in rstudio ide preview
+    $('.post-preview').each(function(i, val) {
+      if (window.location.protocol === "file:")
+        $(this).attr('href', $(this).attr('href') + "index.html");
+    });
+
+    // get rid of index.html references in header
+    if (window.location.protocol !== "file:") {
+      $('.distill-site-header a[href]').each(function(i,val) {
+        $(this).attr('href', $(this).attr('href').replace(/^index[.]html/, "./"));
+      });
+    }
+
+    // add class to pandoc style tables
+    $('tr.header').parent('thead').parent('table').addClass('pandoc-table');
+    $('.kable-table').children('table').addClass('pandoc-table');
+
+    // add figcaption style to table captions
+    $('caption').parent('table').addClass("figcaption");
+
+    // initialize posts list
+    if (window.init_posts_list)
+      window.init_posts_list();
+
+    // implmement disqus comment link
+    $('.disqus-comment-count').click(function() {
+      window.headroom_prevent_pin = true;
+      $('#disqus_thread').toggleClass('hidden');
+      if (!$('#disqus_thread').hasClass('hidden')) {
+        var offset = $(this).offset();
+        $(window).resize();
+        $('html, body').animate({
+          scrollTop: offset.top - 35
+        });
+      }
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+    if (is_downlevel_browser())
+      init_downlevel();
+    else
+      window.addEventListener('WebComponentsReady', init_distill);
+  });
+
+  </script>
+
+  <!--/radix_placeholder_distill-->
+  <script src="site_libs/header-attrs-2.29/header-attrs.js"></script>
+  <script src="site_libs/popper-2.6.0/popper.min.js"></script>
+  <link href="site_libs/tippy-6.2.7/tippy.css" rel="stylesheet" />
+  <link href="site_libs/tippy-6.2.7/tippy-light-border.css" rel="stylesheet" />
+  <script src="site_libs/tippy-6.2.7/tippy.umd.min.js"></script>
+  <script src="site_libs/anchor-4.2.2/anchor.min.js"></script>
+  <script src="site_libs/bowser-1.9.3/bowser.min.js"></script>
+  <script src="site_libs/webcomponents-2.0.0/webcomponents.js"></script>
+  <script src="site_libs/distill-2.2.21/template.v2.js"></script>
+  <!--radix_placeholder_site_in_header-->
+  <!--/radix_placeholder_site_in_header-->
+
+
+</head>
+
+<body>
+
+<!--radix_placeholder_front_matter-->
+
+<script id="distill-front-matter" type="text/json">
+{"title":"Análise de frequência de cheias (GEV)","description":"Exemplo de análise local com dados reais","authors":[]}
+</script>
+
+<!--/radix_placeholder_front_matter-->
+<!--radix_placeholder_navigation_before_body-->
+<header class="header header--fixed" role="banner">
+<nav class="distill-site-nav distill-site-header">
+<div class="nav-left">
+<a href="index.html" class="title">Análise Hidrológica com R: uma introdução para iniciantes</a>
+</div>
+<div class="nav-right">
+<a href="index.html">Home</a>
+<div class="nav-dropdown">
+<button class="nav-dropbtn">
+Aulas
+ 
+<span class="down-arrow">&#x25BE;</span>
+</button>
+<div class="nav-dropdown-content">
+<a href="conc_basic_R.html">Conceitos básicos R</a>
+<a href="get_data.html">Obtenção de dados</a>
+<a href="data_manip.html">Manipulação de dados</a>
+<a href="data_explore.html">Análise exploratória</a>
+<a href="data_explore_rascunho.html">Análise exploratória 2</a>
+<a href="frequency_analysis.html">Análise de frequência</a>
+<a href="frequency_analysis_gev.html">Análise de frequência_GEV</a>
+</div>
+</div>
+<a href="colaboradores.html">Colaboradores</a>
+<a href="https://github.com/DirceuReis/Mini_Curso_UnB_SemUniv_AnaliseHidro_R" aria-label="Link to source">
+<i class="fab fa-github" aria-hidden="true"></i>
+</a>
+<a href="javascript:void(0);" class="nav-toggle">&#9776;</a>
+</div>
+</nav>
+</header>
+<!--/radix_placeholder_navigation_before_body-->
+<!--radix_placeholder_site_before_body-->
+<!--/radix_placeholder_site_before_body-->
+
+<div class="d-title">
+<h1>Análise de frequência de cheias (GEV)</h1>
+
+<!--radix_placeholder_categories-->
+<!--/radix_placeholder_categories-->
+<p>Exemplo de análise local com dados reais</p>
+</div>
+
+
+<div class="d-article">
+<div class="d-contents d-contents-float">
+<nav class="l-text toc figcaption" id="TOC">
+<h3>Contents</h3>
+<ul>
+<li><a href="#objetivos-da-atividade" id="toc-objetivos-da-atividade">Objetivos da atividade</a></li>
+<li><a href="#seleção-das-vazões-máximas-anuais" id="toc-seleção-das-vazões-máximas-anuais">Seleção das vazões máximas anuais</a>
+<ul>
+<li><a href="#obtenção-da-série-de-vazões-diárias" id="toc-obtenção-da-série-de-vazões-diárias">Obtenção da série de vazões diárias</a></li>
+<li><a href="#extração-da-série-de-vazões-máximas-anuais" id="toc-extração-da-série-de-vazões-máximas-anuais">Extração da série de vazões máximas anuais</a></li>
+<li><a href="#visualização-da-série-de-máximos-anuais" id="toc-visualização-da-série-de-máximos-anuais">Visualização da série de máximos anuais</a></li>
+</ul></li>
+<li><a href="#construção-da-curva-de-frequência-amostral" id="toc-construção-da-curva-de-frequência-amostral">Construção da curva de frequência amostral</a>
+<ul>
+<li><a href="#posição-de-plotagem" id="toc-posição-de-plotagem">Posição de plotagem</a></li>
+<li><a href="#plotagem-da-amostra-na-figura" id="toc-plotagem-da-amostra-na-figura">Plotagem da amostra na Figura</a></li>
+</ul></li>
+<li><a href="#ajuste-de-uma-distribuição-teórica-de-probabilidades" id="toc-ajuste-de-uma-distribuição-teórica-de-probabilidades">Ajuste de uma distribuição teórica de probabilidades</a>
+<ul>
+<li><a href="#a-distribuição-gev" id="toc-a-distribuição-gev">A distribuição GEV</a></li>
+<li><a href="#quantis-da-gev" id="toc-quantis-da-gev">Quantis da GEV</a></li>
+<li><a href="#métodos-de-ajuste" id="toc-métodos-de-ajuste">Métodos de ajuste</a></li>
+<li><a href="#ajuste-da-gev-e-estimativa-dos-quantis" id="toc-ajuste-da-gev-e-estimativa-dos-quantis">Ajuste da GEV e estimativa dos quantis</a></li>
+</ul></li>
+<li><a href="#descricao-incertezas" id="toc-descricao-incertezas">Descrição das incertezas</a>
+<ul>
+<li><a href="#método-delta" id="toc-método-delta">Método Delta</a></li>
+<li><a href="#incerteza-nos-parâmetros" id="toc-incerteza-nos-parâmetros">Incerteza nos parâmetros</a></li>
+<li><a href="#incerteza-nos-quantis" id="toc-incerteza-nos-quantis">Incerteza nos quantis</a></li>
+<li><a href="#plotagem-final-da-curva-de-frequência" id="toc-plotagem-final-da-curva-de-frequência">Plotagem final da curva de frequência</a></li>
+</ul></li>
+<li><a href="#uma-função-geral" id="toc-uma-função-geral">Uma função geral</a></li>
+</ul>
+</nav>
+</div>
+<h2 id="objetivos-da-atividade">Objetivos da atividade</h2>
+<p>O objetivo desta atividade é realizar uma análise de frequência de
+cheias a nível local. Isso significa que iremos relacionar a magnitude
+das vazões máximas anuais com a probabilidade da mesma ser excedida. A
+análise a nível local siginifca que utilizaremos apenas as informações
+de vazão observadas na estação fluviométrica de interesse, sem fazer uso
+de informações sobre as vazões máximas anuais que teham acontecido em
+outras estações fluviométricas localizadas na região.</p>
+<p>Além de construirmos a relação entre a magnitude das vazões máximas
+anuais e a respectiva probabilidade de excedência, é importante saber
+estimar também o grau de incerteza nessas estimativas. Essas incertezas
+são usualmente representadas por intervalos de confiança, como veremos
+mais adianate.</p>
+<p>Além de calcular essas quantidades, a curva de frequência, e suas
+respectivas incertezas, são representadas graficamente, como na figura
+abaixo, que mostra os resultados para um estudo de cheias numa seção do
+Rio Salado, localizada na província de Santa Fé, na Argentina, onde em
+2003 ocorreu o rompimento de um dique que resultou em perde de vidas
+humanas e elevados prejuízos. Nesse caso, utilizou-se a distribuição
+Generalizada de Valores Extremos (GEV), mas aqui no curso faremos uso de
+uma distribuição mais simples de se trabalhar, a lognormal. O objetivo
+aqui é ter uma motivação hidrológica para apreder a usar a linguagem R.</p>
+<p>Contruiremos aqui no curso uma figura semelhante a esta, onde no eixo-x
+temos o tempo de recorrência e no eixo-y a magnitude das vazões máximas
+anuais. O tempo de recorrência apresentado no eixo-x é uma maneira de
+representar a probabilidade de excedência. A linha cheia em vermelho
+representa o valor esperado dos valores da vazão máxima anual em função
+do tempo de recorrência, enquanto as linhas tracejadas representam os
+intervalos de confiança de 95%, ilustrando as incertezas envolvidas
+nessas estimativas. Os círculos azuis escuros representam as vazões
+máximas anuais registradas no passado, enquanto o círculo azul claro
+mostra a cheia destruidora de 2003.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="figure" style="text-align: center">
+<img src="images/curva_freq_salado.png" alt="Curva de frequência do cheias do Rio Salado, na Argentina." width="90%" />
+<p class="caption">
+(#fig:curva_freq)Curva de frequência do cheias do Rio Salado, na Argentina.
+</p>
+</div>
+</div>
+<h2 id="seleção-das-vazões-máximas-anuais">Seleção das vazões máximas anuais</h2>
+<p>O primeiro passo de nossa atividade consiste em obter a série de máximos
+anuais que desejamos analisar. A obtenção da série de máximos anuais
+será realizada em duas etapas. Primeiro vamos obter a séries de vazões
+diárias, e para isso utilizaremos a mesma função de obtenção de séries
+diárias de vazão que aprendemos na segunda aula deste curso. Com a série
+de vazões diárias em mãos, passaremos para a segunda etapa, que é a de
+extrair a vazão máxima de cada ano hidrológico.</p>
+<h3 id="obtenção-da-série-de-vazões-diárias">Obtenção da série de vazões diárias</h3>
+<p>A função abaixo permite obter a série de vazões diárias de uma estação
+fluviométrica. O único argumento desta função é o código da estação.
+Quando chamamos esta função, ela retorna um dataframe com 3 colunas: o
+código da estação, a data, e o valor da vazão diária.</p>
+<p>Como já estudamos esta função anteriormente, a uitlizaremos aqui sem
+entrar em qualqer detalhes sobre seu funcionamento.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Função para obter série histórica de vazão de uma determinada estação ####</span></span>
+<span><span class='va'>dados_serie_ANA</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>cod_estacao</span> <span class='op'>=</span> <span class='cn'>NA</span>,</span>
+<span>                            <span class='va'>data_inicio</span> <span class='op'>=</span> <span class='st'>"01/01/1800"</span>,</span>
+<span>                            <span class='va'>data_fim</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Sys.time.html'>Sys.Date</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>                            <span class='va'>tipo_dados</span> <span class='op'>=</span> <span class='fl'>3</span>,</span>
+<span>                            <span class='va'>nivel_consist</span> <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  </span>
+<span>  <span class='co'># Pegar dados a partir do url e transformar em um dataframe</span></span>
+<span>  <span class='va'>url_base</span> <span class='op'>&lt;-</span></span>
+<span>    <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='st'>"http://telemetriaws1.ana.gov.br/ServiceANA.asmx/"</span>,</span>
+<span>           <span class='st'>"HidroSerieHistorica?"</span>,</span>
+<span>           <span class='st'>"codEstacao="</span>, <span class='va'>cod_estacao</span>,</span>
+<span>           <span class='st'>"&amp;dataInicio="</span>, <span class='va'>data_inicio</span>,</span>
+<span>           <span class='st'>"&amp;dataFim="</span>, <span class='va'>data_fim</span>,</span>
+<span>           <span class='st'>"&amp;tipoDados="</span>, <span class='va'>tipo_dados</span>,</span>
+<span>           <span class='st'>"&amp;nivelConsistencia="</span>, <span class='va'>nivel_consist</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='va'>url_parse</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlTreeParse.html'>xmlParse</a></span><span class='op'>(</span><span class='va'>url_base</span>, encoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span>
+<span>  <span class='va'>node_doc</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/getNodeSet.html'>getNodeSet</a></span><span class='op'>(</span><span class='va'>url_parse</span>, <span class='st'>"//SerieHistorica"</span><span class='op'>)</span></span>
+<span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'>XML</span><span class='fu'>::</span><span class='fu'><a href='https://rdrr.io/pkg/XML/man/xmlToDataFrame.html'>xmlToDataFrame</a></span><span class='op'>(</span>nodes <span class='op'>=</span> <span class='va'>node_doc</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Por algum motivo o hidroweb não está filtrando os dados pela consistencia</span></span>
+<span>  <span class='va'>dados_estacao</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://dplyr.tidyverse.org/reference/filter.html'>filter</a></span><span class='op'>(</span><span class='va'>dados_estacao</span>, <span class='va'>NivelConsistencia</span> <span class='op'>==</span> <span class='va'>nivel_consist</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Separar data e hora</span></span>
+<span>  <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span>, <span class='fl'>1</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Hora</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>DataHora</span>, <span class='fl'>12</span>, <span class='fl'>19</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Fazer um dataframe só com datas e valores de vazão</span></span>
+<span>  <span class='va'>datas_dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.Date.html'>seq.Date</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span>,</span>
+<span>                        to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'><a href='https://lubridate.tidyverse.org/reference/mplus.html'>%m+%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/weekday.POSIXt.html'>months</a></span><span class='op'>(</span><span class='fl'>1</span><span class='op'>)</span> <span class='op'>-</span> <span class='fl'>1</span>,</span>
+<span>                        by <span class='op'>=</span> <span class='st'>"day"</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='va'>tabela_final</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>Cod_estacao <span class='op'>=</span> <span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>EstacaoCodigo</span><span class='op'>[</span><span class='fl'>1</span><span class='op'>]</span>,</span>
+<span>                             Data <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/character.html'>as.character</a></span><span class='op'>(</span><span class='va'>datas_dia</span><span class='op'>)</span>,</span>
+<span>                             Vazao <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='cn'>NA</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  </span>
+<span>  <span class='kw'>for</span><span class='op'>(</span><span class='va'>i</span> <span class='kw'>in</span> <span class='fl'>1</span><span class='op'>:</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>    <span class='co'># Dia em análise</span></span>
+<span>    <span class='va'>dia</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span>, <span class='fl'>9</span>, <span class='fl'>10</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>    </span>
+<span>    <span class='co'># Mês e ano em análise</span></span>
+<span>    <span class='va'>mes_ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste0</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/substr.html'>substr</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span>, <span class='fl'>1</span>, <span class='fl'>8</span><span class='op'>)</span>, <span class='st'>"01"</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>    </span>
+<span>    <span class='co'># Olhar a linha do mes e ano e escolher a coluna pelo dia + 15</span></span>
+<span>    <span class='va'>linha_dado</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>==</span> <span class='va'>mes_ano</span><span class='op'>)</span></span>
+<span>    </span>
+<span>    <span class='co'># Se não tiver o mês nos dados da estação, colocar valor NA</span></span>
+<span>    <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>linha_dado</span><span class='op'>)</span> <span class='op'>==</span> <span class='fl'>0</span>,</span>
+<span>           <span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='cn'>NA</span>,</span>
+<span>           <span class='va'>tabela_final</span><span class='op'>$</span><span class='va'>Vazao</span><span class='op'>[</span><span class='va'>i</span><span class='op'>]</span> <span class='op'>&lt;-</span></span>
+<span>             <span class='fu'><a href='https://rdrr.io/r/base/numeric.html'>as.numeric</a></span><span class='op'>(</span><span class='va'>dados_estacao</span><span class='op'>[</span><span class='va'>linha_dado</span>, <span class='op'>(</span><span class='va'>dia</span> <span class='op'>+</span> <span class='fl'>15</span><span class='op'>)</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>    </span>
+<span>  <span class='op'>}</span></span>
+<span>  </span>
+<span>  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>tabela_final</span><span class='op'>)</span></span>
+<span><span class='op'>}</span></span></code></pre>
+</div>
+</div>
+<p>Precisamos escolher uma estação fluviométrica para realizar nossa
+análise. Sugiro utilizar a estação <strong>60435000</strong>, localizada na bacia do
+Rio Descoberto, que drena uma área de 113.2 km<span class="math inline">\(^2\)</span>, mas vocês têm a
+indepedência de escolhar qualquer outras estação que esteja no banco de
+dados da Agência Nacional de Águas.</p>
+<p>Para obter a série diária da estação escolhida, basta chamar a função
+acima passando o argumento necessário, que é simplesmente o código da
+estação desejada. A função devolve um dataframe com a série de vazões
+médias diárias.</p>
+<p>Para fins de visualização, utilizamos a função <code>head(nome_do_dataframe)</code>
+do R, como mostrado abaixo, que nos mostra as primeiras 6 linhas do
+dataframe.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># dados_60435000 &lt;- dados_serie_ANA(cod_estacao = 60435000)</span></span>
+<span><span class='va'>dados_60435000</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/utils/read.table.html'>read.table</a></span><span class='op'>(</span>file <span class='op'>=</span> <span class='st'>"dados/60435000.txt"</span>,</span>
+<span>                             sep <span class='op'>=</span> <span class='st'>"\t"</span>,</span>
+<span>                             dec <span class='op'>=</span> <span class='st'>"."</span>,</span>
+<span>                             header <span class='op'>=</span> <span class='cn'>TRUE</span>,</span>
+<span>                             fileEncoding <span class='op'>=</span> <span class='st'>"UTF-8"</span><span class='op'>)</span></span>
+<span><span class='va'>index_falha_diario</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>[</span>, <span class='fl'>3</span><span class='op'>]</span> <span class='op'>==</span> <span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='va'>dias_falha</span> <span class='op'>&lt;-</span> <span class='va'>dados_60435000</span><span class='op'>[</span><span class='va'>index_falha_diario</span>, <span class='fl'>2</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>  Cod_estacao       Data Vazao
+1    60435000 1978-05-01    NA
+2    60435000 1978-05-02    NA
+3    60435000 1978-05-03    NA
+4    60435000 1978-05-04    NA
+5    60435000 1978-05-05    NA
+6    60435000 1978-05-06    NA</code></pre>
+</div>
+<p>Além disso, é sempre importante visualizar os dados para que se teha uma
+ideia geral da faixa de variação das vazões, sazonalidade e outras
+padrões que possa ser percebidos num gráfico.</p>
+<p>Aqui, nós plotaremos a série completa das vazões diárias da estação
+<strong>60435000</strong> utilizando o código abaixo, que emprega o chamado R-base,
+ao invés de pacote <code>ggplot2</code>, visto na aula anterior. Mas se preferir
+utilizar o <code>ggplot2</code> para realizar esta plotagem, fique à vontade.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>time</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>time</span>,<span class='va'>dados_60435000</span><span class='op'>$</span><span class='va'>Vazao</span>,type <span class='op'>=</span> <span class='st'>"l"</span>,</span>
+<span>     main <span class='op'>=</span> <span class='st'>"Vazões diárias - estação 60435000"</span>,</span>
+<span>     xlab <span class='op'>=</span> <span class='st'>"Anos"</span>,ylab <span class='op'>=</span> <span class='st'>"Q (m³/s)"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Adiciona grid horizontal apenas</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/grid.html'>grid</a></span><span class='op'>(</span>nx <span class='op'>=</span> <span class='cn'>NA</span>, ny <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>     lty <span class='op'>=</span> <span class='fl'>2</span>,      <span class='co'># Grid line type</span></span>
+<span>     col <span class='op'>=</span> <span class='st'>"gray"</span>, <span class='co'># Grid line color</span></span>
+<span>     lwd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span>      <span class='co'># Grid line width</span></span></code></pre>
+</div>
+<p><img src="frequency_analysis_gev_files/figure-html5/unnamed-chunk-1-1.png" width="768" /></p>
+</div>
+<h3 id="extração-da-série-de-vazões-máximas-anuais">Extração da série de vazões máximas anuais</h3>
+<p>Com a série de vazões diárias, passamos ao segundo passo que é o de
+construir a série de máximos anuais com base no ano hidrológico. Para
+isso, utilizaremos uma outra função, que é apresentada abaixo. Veja que
+a função tem como <em>default</em> o ano hidrológico com início no mês de
+agosto. Mas o mês de início do ano hidrológico pode ser facilmente
+alterado, bastando aicionar esse argumento quando chamar a função.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Contrução da série de máximos anuais a partir de um ano hidrológico ####</span></span>
+<span><span class='va'>fun_max_ano</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>tabela</span> <span class='op'>=</span> <span class='cn'>NA</span>,</span>
+<span>                        <span class='va'>comeco_ano_hidro</span> <span class='op'>=</span> <span class='fl'>8</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  </span>
+<span>  <span class='co'># Transformar a coluna Data em "Dates" (caso esteja em character)</span></span>
+<span>  <span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/as.Date.html'>as.Date</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Definir se o mês em questão entra no ano atual ou no próximo ano</span></span>
+<span>  <span class='va'>desloc_ano</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/ifelse.html'>ifelse</a></span><span class='op'>(</span><span class='fu'><a href='https://lubridate.tidyverse.org/reference/month.html'>month</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='va'>comeco_ano_hidro</span>, <span class='fl'>0</span>, <span class='fl'>1</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Ano Hidro</span></span>
+<span>  <span class='va'>tabela</span><span class='op'>$</span><span class='va'>ano_hidro</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://lubridate.tidyverse.org/reference/year.html'>year</a></span><span class='op'>(</span><span class='va'>tabela</span><span class='op'>$</span><span class='va'>Data</span><span class='op'>)</span> <span class='op'>+</span> <span class='va'>desloc_ano</span></span>
+<span>  </span>
+<span>  <span class='co'># Fazer uma tabela final apenas com os máximos anuais</span></span>
+<span>  <span class='va'>max_anuais</span> <span class='op'>&lt;-</span></span>
+<span>    <span class='va'>tabela</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/group_by.html'>group_by</a></span><span class='op'>(</span><span class='va'>Cod_estacao</span>, <span class='va'>ano_hidro</span><span class='op'>)</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span></span>
+<span>    <span class='fu'><a href='https://dplyr.tidyverse.org/reference/summarise.html'>summarise</a></span><span class='op'>(</span>maxima <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>Vazao</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='op'>}</span></span></code></pre>
+</div>
+</div>
+<p>Para finalmente obtermos a série de máximos anuais, basta chamar a
+função fornecendo o arquivo que contém as séries diárias de vazão, que
+no nosso caso é o <code>dados_60435000</code>. Mais uma vez, podemos utilizar a
+função <code>head</code> para dar uma leve espiada nas informoações contidas no
+dataframe.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>Q_max</span> <span class='op'>&lt;-</span> <span class='fu'>fun_max_ano</span><span class='op'>(</span><span class='va'>dados_60435000</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code># A tibble: 6 × 3
+# Groups:   Cod_estacao [1]
+  Cod_estacao ano_hidro maxima
+        &lt;int&gt;     &lt;dbl&gt;  &lt;dbl&gt;
+1    60435000      1978   NA  
+2    60435000      1979   16.1
+3    60435000      1980   28.9
+4    60435000      1981   11.1
+5    60435000      1982   12.8
+6    60435000      1983   25.3</code></pre>
+</div>
+<p>A função <code>fun_max_ano</code> foi escrita de forma que qualquer falha na série
+de vazões diárias num dado ano hidrológico resulta numa falha na série
+de máximos anuais. Isso nem semrpe é necessário, já que falhas no
+período de estiagem não indicam falhas nas séries de máximos, mas creio
+que a função nos serve bem para este curso.</p>
+<p>Podemos notar a presença de um <code>NA</code> na nossa plotagem acima. É
+interessante verificar o número total de anos disponíveis com dados
+diários de vazão, bem como o número de anos com falha na série de
+máximos anuais.</p>
+<p>O número de anos com dados de vazões diárias pode ser obtidos
+simplemente identificando o número de linhas no dataframe <code>Q_max</code>, e
+para isso utilizamos o código abaixo,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>n_anos</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>)</span></span>
+<span><span class='va'>n_anos</span></span></code></pre>
+</div>
+<pre><code>[1] 45</code></pre>
+</div>
+<p>Mas já sabemos que o ano de 1978 não contém o valor de vazão máxima
+porque a série de vazões diárias não estava completa. Será que há outros
+anos no histórico com esse problema? Para identificar se há falha em
+outros anos, utilizaremos duas funções do <strong>R</strong> de forma conjunta,
+<code>is.na</code> e <code>which</code>. A função <code>is.na</code> identifica se o elemento é um <code>NA</code>
+ou não, retornando um valor lógico, <code>TRUE</code> ou <code>FALSE</code>, enquanto a função
+<code>which</code> permite identificar a posição de uma dada condição. O código
+abaixo permite identificar em quais anos ocorrem falhas na série de
+máximos anuais,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>index</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>[</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>==</span><span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='va'>anos_falha</span> <span class='op'>&lt;-</span> <span class='va'>Q_max</span><span class='op'>[</span><span class='va'>index</span>,<span class='fl'>2</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span></span>
+<span><span class='va'>anos_falha</span></span></code></pre>
+</div>
+<pre><code># A tibble: 3 × 2
+  ano_hidro maxima
+      &lt;dbl&gt;  &lt;dbl&gt;
+1      1978     NA
+2      2009     NA
+3      2020     NA</code></pre>
+</div>
+<p>A primeira linha de código identifica as posições em que há a presença
+de <code>NA</code> na terceira coluna do dataframe, que é a coluna com as
+informações sobre as vazões máximas de cada ano hidrológico, e associa à
+variável <code>index</code>. Na linha seguinte, criamos um novo dataframe com a
+informação dos anos em que temos falhas nos dados.</p>
+<p>É verdade que poderíamos ter escrito o código acima de uma forma mais
+compacta, porém ficaria mais difícil de entender. Veja o que você acha.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>anos_falha</span> <span class='op'>&lt;-</span> <span class='va'>Q_max</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/which.html'>which</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/NA.html'>is.na</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>[</span>,<span class='fl'>3</span><span class='op'>]</span><span class='op'>==</span><span class='cn'>TRUE</span><span class='op'>)</span><span class='op'>)</span>,<span class='fl'>2</span><span class='op'>:</span><span class='fl'>3</span><span class='op'>]</span></span>
+<span><span class='va'>anos_falha</span></span></code></pre>
+</div>
+<pre><code># A tibble: 3 × 2
+  ano_hidro maxima
+      &lt;dbl&gt;  &lt;dbl&gt;
+1      1978     NA
+2      2009     NA
+3      2020     NA</code></pre>
+</div>
+<p>Mais à frente, quando tivermos que fazer os cálculos necessários para
+realizar a análise de frequência, teremos que nos livrar desses anos com
+falhas. Mas por enquanto, vamos deixá-los como estão, e passemos `a
+etapa seguinte que é a de visualizar a série de máximos anuais.</p>
+<h3 id="visualização-da-série-de-máximos-anuais">Visualização da série de máximos anuais</h3>
+<p>Agora já podemos visualizar a série de máximos anuais que serivirão de
+base para a nossa análise de frequência. Essa visualização pode ser
+feita com o código abaixo, que utiliza apenas o <code>R-base</code>. Mais uma vex,
+se desejar utilizar o <code>ggplot2</code> para essa plotagem, fique à vontade.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>$</span><span class='va'>ano_hidro</span>,<span class='va'>Q_max</span><span class='op'>$</span><span class='va'>maxima</span>,type <span class='op'>=</span> <span class='st'>"o"</span>,</span>
+<span>     main <span class='op'>=</span> <span class='st'>"Máximos anuais - 60435000"</span>,</span>
+<span>     xlab <span class='op'>=</span> <span class='st'>"Anos"</span>,ylab <span class='op'>=</span> <span class='st'>"Q_max (m3/s)"</span>,lwd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span>
+<span><span class='co'># Adiciona grid</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/grid.html'>grid</a></span><span class='op'>(</span>nx <span class='op'>=</span> <span class='cn'>NULL</span>, ny <span class='op'>=</span> <span class='cn'>NULL</span>,</span>
+<span>     lty <span class='op'>=</span> <span class='fl'>2</span>,      <span class='co'># Grid line type</span></span>
+<span>     col <span class='op'>=</span> <span class='st'>"gray"</span>, <span class='co'># Grid line color</span></span>
+<span>     lwd <span class='op'>=</span> <span class='fl'>1</span><span class='op'>)</span>      <span class='co'># Grid line width</span></span></code></pre>
+</div>
+<p><img src="frequency_analysis_gev_files/figure-html5/unnamed-chunk-7-1.png" width="768" /></p>
+</div>
+<h2 id="construção-da-curva-de-frequência-amostral">Construção da curva de frequência amostral</h2>
+<h3 id="posição-de-plotagem">Posição de plotagem</h3>
+<p>Para que possamos plotar os círculos azuis escuros da Figura apresentada
+anteriormente, para o caso do Rio Salado, que representam as vazões
+máximas anuais observadas na série histórica, precisamos determinar as
+chamadas posição de plotagem, que servirão de base para o cálculo do
+tempo de recorrência empírico para cada valor de vazão da amostra.</p>
+<p>Para que seja possível entender esta etapa, vale a pena investir um
+certo tempo do curso em alguns conceitos básicos.</p>
+<p>O tempo de recorrência associado a uma determinada magnitude de vazão,
+<span class="math inline">\(T_r(q)\)</span>, é um conceito hidrológico bastante conhecido, de forma que não
+dedicaremos muito tempo para discutí-lo aqui. Por definição, o tempo de
+recorrência de um evento, cuja magnitude vale <span class="math inline">\(q\)</span>, é igual ao inverso da
+probabilidade da vazão máxima anual exceder esse valor,</p>
+<p><span class="math display">\[T_r(q) = \frac{1}{P(Q&gt;q)}\]</span></p>
+<p>Por exemplo, se a probabilidade da vazão máxima anual ultrapassar um
+dado valor <span class="math inline">\(q\)</span> for igual a 0.10, dizemos que o tempo de recorrência
+dessa vazão <span class="math inline">\(q\)</span> é de 10 anos. Da mesma forma, se <span class="math inline">\(P(Q&gt;q)=0.01\)</span>, dizemos
+que o tempo de recorrência de <span class="math inline">\(q\)</span> vale 100 anos.</p>
+<p>Portanto, para que possamos incluir as vazões observadas na nossa curva
+de frequência, será preciso determinar a probabilidade de excedência de
+cada uma das observações contidas na série de vazões máximas anuais da
+localidade de interesse. Como o intuito neste primeiro momento é plotar
+as vazões observadas na curva de frequência, nos basearemos na chamada
+distribuição empírica de frequência.</p>
+<p>A distribuição empírica de frequência relaciona cada valor de vazão
+máxima observada na série histórica, denominada aqui de <span class="math inline">\(q_i\)</span>, com sua
+frequência relativa acumulada, <span class="math inline">\(\hat{F}_Q(q_i)\)</span>. A quantidade
+<span class="math inline">\(\hat{F}_Q(q_i)\)</span> representa a nossa estimativa para a probabilidade da
+variável de interesse, <span class="math inline">\(Q\)</span>, ser menor ou igual ao valor amostral, <span class="math inline">\(q_i\)</span>,</p>
+<p><span class="math display">\[\hat{F}_Q(q_i) = \hat{P}(Q \le q_i)\]</span></p>
+<p>em que <span class="math inline">\(\hat{F}_Q\)</span> é a estimativa da frequência relativa acumulada da
+variável aleatória <span class="math inline">\(Q\)</span> baseada na amostra, enquanto <span class="math inline">\(q_i\)</span> representa o
+valor de uma dada observação <span class="math inline">\(i\)</span>. O uso do acento circunflexo na equação
+acima é uma convenção utilizada em estatística para mostrar que estamos
+nos referindo a uma estimativa da grandeza em questão baseada na amostra
+que se tem em mãos.</p>
+<p>Já dissemos acima que o tempo de recorrência <span class="math inline">\(T_r(q)\)</span> é função da
+probabilidade de excedência, que por sua vez pode ser interpretada como
+o complemento de <span class="math inline">\(F_Q(q_i)\)</span>. Dessa forma, podemos dizer que</p>
+<p><span class="math display">\[\hat{P}(Q \gt q_i) = 1 - \hat{P}(Q \le q_i)\]</span> de forma que</p>
+<p><span class="math display">\[\hat{T}_r(q_i) = \frac{1}{1-\hat{P}(Q \le q_i)}\]</span></p>
+<p>Pode parecer estranho se você estiver vendo isso pela primeira vez, mas
+a verdade é que há diferentes maneiras de se estimar a distribuição
+empírica de frequência das observações de uma amostra,
+<span class="math inline">\(\hat{P}(Q\le q_i)\)</span>, ou seu complemento, <span class="math inline">\(\hat{P}(Q\gt q_i)\)</span>.</p>
+<p>Uma maneira bem comum de estimar tais probabilidades, quando se tem uma
+amostra de tamanho <span class="math inline">\(n\)</span>, consiste em ordenar a série em ordem decrescente
+e determinar a probabilidade de excedência utilizando a seguinte
+fórmula,</p>
+<p><span class="math display">\[\hat{P}(Q &gt; q_{(i)}) = 1 - \hat{F}_Q(q_{(i)}) = \frac{i}{n+1}\]</span></p>
+<p>em que <span class="math inline">\(q_{(i)}\)</span> representa a chamada estatística de ordem <span class="math inline">\(i\)</span>, em que
+<span class="math inline">\(q_{(1)}\gt q_{(2)}\gt \ldots \gt q_{(n)}\)</span> representa a série ordenada
+das vazões máximas anuais, de forma que <span class="math inline">\(q_{(1)}\)</span> e <span class="math inline">\(q_{(n)}\)</span> são,
+respectivamente, a maior e a menor observações da amostra. De acordo com
+essa expressão, por exemplo, numa amostra de tamanho 49, a probabilidade
+da vazão máxima anual ser maior do que a maior observação da amostra
+vale <span class="math inline">\(P(Q&gt;q_{(1)})=0.02\)</span>), o que resulta num tempo de recorrência de
+<span class="math inline">\(T_r(q_{(1)})=50\)</span> anos.</p>
+<p>Não se preocupe tanto se esse conceito de posição de plotagem não ficou
+totalmente claro. Basta saber que plotaremos os valores de máximos
+anuais da amostra na curva de frequência utilizando a posição de
+plotagem de Weibull, que é o nome que se dá à posição de plotagem
+<span class="math inline">\(i/(n+1)\)</span>.</p>
+<h3 id="plotagem-da-amostra-na-figura">Plotagem da amostra na Figura</h3>
+<p>Na verdade, utilizaremos o tempo de recorrência, <span class="math inline">\(T_r\)</span>, para plotagem,
+lembrando que o <span class="math inline">\(T_r\)</span> é simplemenste o inverso da probabilidade de
+excedência, representada pela posição de plotagem de Weibull.</p>
+<p>O código para o cálculo do <span class="math inline">\(Tr\)</span> é apresentado abaixo. Para facilitar a
+compreenção de como o cálculo é feito, criaram-se três novas colunas ao
+dataframe que contém as vazões máximas anuais. Mas antes disso,
+efetuou-se o ordenamento das vazões máximas em ordem decrescente, ou
+seja, o primeiro valor de vazão da nova série ordenada é o maior da
+amostra.</p>
+<p>As três novas colunas são, respectivamente, o índice das vazões,
+começando de 1 indo até o número total de valores, a posição de plotagem
+de Weilbull, que expressa a probabilidade de excedência, e por último o
+tempo de recorrência, <span class="math inline">\(Tr\)</span>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Remoção dos anos com falha</span></span>
+<span><span class='va'>Q_max</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/na.fail.html'>na.omit</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>)</span></span>
+<span><span class='co'># Ordenamento decrescente do dataframe</span></span>
+<span><span class='va'>Q_max_ord</span> <span class='op'>&lt;-</span> <span class='va'>Q_max</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/order.html'>order</a></span><span class='op'>(</span><span class='va'>Q_max</span><span class='op'>$</span><span class='va'>maxima</span>, decreasing <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>, <span class='op'>]</span></span>
+<span><span class='co'># Inclusão de Três novas colunas: index, posição de plotagem de Weibull, e Tr</span></span>
+<span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>index</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fl'>1</span>,to <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>weibull</span> <span class='op'>&lt;-</span> <span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>index</span><span class='op'>/</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/nrow.html'>nrow</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>)</span> <span class='op'>+</span> <span class='fl'>1</span><span class='op'>)</span></span>
+<span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>/</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>weibull</span></span></code></pre>
+</div>
+</div>
+<p>Como já fizemos antes, podemos dar uma espiada nesse novo dataframe com
+as vazões máximas anuais ordenada utilizando a função
+<code>head(dataframe_name)</code>,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code># A tibble: 6 × 6
+# Groups:   Cod_estacao [1]
+  Cod_estacao ano_hidro maxima index weibull    Tr
+        &lt;int&gt;     &lt;dbl&gt;  &lt;dbl&gt; &lt;int&gt;   &lt;dbl&gt; &lt;dbl&gt;
+1    60435000      2004   37.5     1  0.0233 43   
+2    60435000      1980   28.9     2  0.0465 21.5 
+3    60435000      1983   25.3     3  0.0698 14.3 
+4    60435000      1994   19.3     4  0.0930 10.8 
+5    60435000      2016   17.8     5  0.116   8.6 
+6    60435000      1988   17.1     6  0.140   7.17</code></pre>
+</div>
+<p>A última coluna de <code>Q_max_ord</code> contém o valor do tempo de recorrência de
+cada uma das observações contidas na amostra. Vale notar que as
+observações em <code>Q_max_ord</code> estão ordenadas em ordem decrescente.</p>
+<p>Podemos agora criar uma Figura, similar àquela apresentada para o estudo
+do Rio Salado. Porém, nesta etapa de nossa análise, apenas os valores
+amostrais das vazões máximas serão apresentados.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span>,<span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span>,type <span class='op'>=</span> <span class='st'>"p"</span>, pch <span class='op'>=</span> <span class='fl'>19</span>,cex <span class='op'>=</span> <span class='fl'>1.5</span>,col <span class='op'>=</span> <span class='st'>"blue"</span>,</span>
+<span>     log <span class='op'>=</span> <span class='st'>"x"</span>,main <span class='op'>=</span> <span class='st'>"Curva de frequência de cheias - 60435000"</span>,</span>
+<span>     xlab <span class='op'>=</span> <span class='st'>"Tr (anos)"</span>,ylab <span class='op'>=</span> <span class='st'>"Q_max (m3/s)"</span>,</span>
+<span>     xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>100</span><span class='op'>)</span>,   <span class='co'># X-axis limits</span></span>
+<span>     ylim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span></span>
+<span><span class='co'># Adiciona grid horizontal</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>1</span>, at <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>1</span>,<span class='fl'>10</span>,by<span class='op'>=</span><span class='fl'>1</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>10</span>,<span class='fl'>100</span>,by<span class='op'>=</span><span class='fl'>10</span><span class='op'>)</span>,<span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>200</span>,<span class='fl'>1000</span>,by<span class='op'>=</span><span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span>     tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span>
+<span><span class='co'># Adiciona grid vertical</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>2</span>, tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="frequency_analysis_gev_files/figure-html5/unnamed-chunk-10-1.png" width="768" /></p>
+</div>
+<h2 id="ajuste-de-uma-distribuição-teórica-de-probabilidades">Ajuste de uma distribuição teórica de probabilidades</h2>
+<p>Estudos que realizam de análise de frequência de cheias geralmente
+utilizam as seguintes distribuições teóricas de probabilidade:</p>
+<ul>
+<li>Lognormal de 2 parâmetros (LN2)</li>
+<li>Lognormal de 3 parâmetros (LN3)</li>
+<li>Generalizada de Valor Extremo (GEV)</li>
+<li>Log-Pearson Tipo 3 (LP3).</li>
+</ul>
+<p>Como o intuito aqui não é o de se aprofundar nos detalhes técnicos de
+análise de frequência, o que exigiria um número muito maior de horas de
+aula, mas de ter uma motivação maior para aprender a linguagem <strong>R</strong>,
+vamos realizar nossa análise de frequência de cheias com a distribuição
+GEV utilizando o método da máxima verossimilhança.</p>
+<h3 id="a-distribuição-gev">A distribuição GEV</h3>
+<p>A distribuição Generalizada de Valores Extremos (GEV) surge da Teoria de
+Valores Extremos, a qual diz que a distribuição de probabilidades do máximo (ou mínimo) de uma série <span class="math inline">\(Y = \max(X_1, X_2,...,X_m)\)</span>, à medida que <span class="math inline">\(m \rightarrow \infty\)</span>, converge para uma das três distribuições de Valores Extremos (EV) possíveis: EVI (distribuição de Gumbel), EVII (Fréchet), ou EVIII (Weibull).</p>
+<p>Essas três distribuições foram unificadas em uma única família, a GEV, com três
+parâmetros – posição (<span class="math inline">\(\xi\)</span>), escala (<span class="math inline">\(\alpha\)</span>) e forma (<span class="math inline">\(\kappa\)</span>) – dada por:</p>
+<p><span class="math display">\[
+F_Y(y) =
+\begin{cases}
+  \exp\bigg\{ -\bigg[ 1 - \kappa\bigg( \frac{y - \xi}{\alpha} \bigg) \bigg]^{1/\kappa} \bigg\}, \quad \kappa \neq 0 \\
+  \exp\bigg[-\exp\bigg( \frac{y - \xi}{\alpha} \bigg)  \bigg], \quad \quad \quad \quad \ \kappa = 0
+\end{cases}
+\]</span></p>
+<p>O parâmetro de forma determina qual das distribuições se ajustará aos
+dados. Quando <span class="math inline">\(\kappa = 0\)</span>, temos a distribuição de Gumbel, também
+chamada dupla exponencial. As outras duas formas são assumidas quando
+<span class="math inline">\(\kappa \neq 0\)</span>. <span class="math inline">\(\kappa &lt; 0\)</span>, resulta na distribuição de Fréchet, com
+cauda pesada à direita e domínio em <span class="math inline">\(y &gt; \xi + \alpha/\kappa\)</span>; enquanto
+que <span class="math inline">\(\kappa &gt; 0\)</span> resulta na distribuição de Weibull, com domínio em
+<span class="math inline">\(y &lt; \xi + \alpha/\kappa\)</span>.</p>
+<h3 id="quantis-da-gev">Quantis da GEV</h3>
+<p>Uma vantagem interessante de se trabalhar com a GEV é a possibilidade de
+estimar seus quantis (<span class="math inline">\(y_p\)</span>) de forma analítica. Considerando uma série
+de máximos <span class="math inline">\(Y\)</span> e que <span class="math inline">\(F_Y\)</span> é igual à probabilidade de não excedência –
+ou seja <span class="math inline">\(p = P(Y \leq y_p) = F_Y(y_p)\)</span>. Com <span class="math inline">\(T\)</span> representando o tempo de
+retorno, igual ao inverso da probabilidade de excedência, a expressão do
+quantil <span class="math inline">\(y_p\)</span> da GEV será:</p>
+<p><span class="math display">\[
+y_p =
+\begin{cases}
+  \xi + \frac{\alpha}{\kappa}\big[ -(-\ln p)^\kappa \big], \quad \kappa \neq 0 \\
+  \xi - \alpha \ln(-\ln p), \quad \quad \quad \! \! \kappa = 0,
+\end{cases}
+\]</span>
+sendo <span class="math inline">\(p = 1 - 1/T\)</span>.</p>
+<p>Logo, a partir de um conjunto de parâmetros estimados (<span class="math inline">\(\hat \xi, \hat \alpha, \hat \kappa\)</span>), a estimação do quantil para um tempo de retorno específico se torna simples,</p>
+<p><span class="math display">\[
+\hat y_p =
+\begin{cases}
+  \hat \xi + \frac{\hat \alpha}{\hat \kappa}\big[ -(-\ln p)^\hat \kappa \big], \quad \kappa \neq 0 \\
+  \hat \xi - \hat \alpha \ln(-\ln p), \quad \quad \quad \! \! \kappa = 0,
+\end{cases}
+\]</span></p>
+<p>.</p>
+<p>No R, podemos criar uma função como a abaixo para calcular os quantis,
+que toma como argumentos um valor (ou vetor) de probabilidade de não
+excedência e um vetor com as estimativas dos parâmetros da GEV:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Quantis para parâmetro de forma diferente de zero</span></span>
+<span><span class='va'>fun.q.gev</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>p</span>,      <span class='co'># probabilidade de não excedência</span></span>
+<span>                      <span class='va'>param</span>   <span class='co'># vetor c/ parâmetros c(xi, alpha, kappa)</span></span>
+<span>                      <span class='op'>)</span><span class='op'>{</span></span>
+<span>  </span>
+<span>  <span class='co'># Extrair os valores do vetor 'param'</span></span>
+<span>  <span class='va'>xi</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>; <span class='va'>alpha</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span>; <span class='va'>kappa</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>]</span></span>
+<span>  </span>
+<span>  <span class='co'># Quantil</span></span>
+<span>  <span class='va'>yp</span> <span class='op'>&lt;-</span> <span class='va'>xi</span> <span class='op'>+</span> <span class='va'>alpha</span><span class='op'>/</span><span class='va'>kappa</span><span class='op'>*</span><span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span><span class='op'>)</span><span class='op'>^</span><span class='va'>kappa</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>yp</span><span class='op'>)</span> <span class='co'># quantil explícito em função dos parâmetros</span></span>
+<span>  <span class='co'># e da probabilidade de não excedência</span></span>
+<span>  </span>
+<span><span class='op'>}</span></span>
+<span></span>
+<span><span class='co'># Quantis para parâmetro de forma igual a zero</span></span>
+<span><span class='va'>fun.q.gu</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>p</span>,     <span class='co'># probabilidade de não excedência</span></span>
+<span>                     <span class='va'>param</span>  <span class='co'># vetor c/ parâmetros c(csi, alpha)</span></span>
+<span>                     <span class='op'>)</span><span class='op'>{</span>                 </span>
+<span>  </span>
+<span>  <span class='co'># Extrair os valores do vetor 'param'</span></span>
+<span>  <span class='va'>xi</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>; <span class='va'>alpha</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span></span>
+<span>  </span>
+<span>  <span class='co'># Quantil</span></span>
+<span>  <span class='va'>yp</span> <span class='op'>&lt;-</span> <span class='va'>xi</span> <span class='op'>-</span> <span class='va'>alpha</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>yp</span><span class='op'>)</span> <span class='co'># quantil explícito em função dos parâmetros</span></span>
+<span>  <span class='co'># e da probabilidade de não excedência</span></span>
+<span>  </span>
+<span><span class='op'>}</span></span></code></pre>
+</div>
+</div>
+<p>As funções <code>fun.q.gev()</code> e <code>fun.q.gu()</code> englobam os dois casos da
+família GEV, a depender do valor de <span class="math inline">\(\kappa\)</span>, determinando o valor do
+quantil <code>yp</code> para uma probabilidade de não excedência <code>p</code> e um conjunto
+de estimativas armazenadas no vetor <code>param</code>. Supondo um conjunto
+arbitrário de estimativas <code>param &lt;- c(100, 20, -0.1)</code> com as quais
+queremos calcular o quantil para 50 anos de tempo de retorno
+<code>p &lt;- 1 - 1/50</code>:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>param0</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>20</span>, <span class='fl'>10</span>, <span class='op'>-</span><span class='fl'>0.1</span><span class='op'>)</span></span>
+<span><span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fl'>1</span> <span class='op'>-</span> <span class='fl'>1</span><span class='op'>/</span><span class='fl'>50</span></span>
+<span><span class='va'>q.gev</span> <span class='op'>&lt;-</span> <span class='fu'>fun.q.gev</span><span class='op'>(</span>p <span class='op'>=</span> <span class='va'>p</span>, param <span class='op'>=</span> <span class='va'>param0</span><span class='op'>)</span>; <span class='va'>q.gev</span></span></code></pre>
+</div>
+<pre><code>[1] 67.72672</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>q.gu</span> <span class='op'>&lt;-</span> <span class='fu'>fun.q.gu</span><span class='op'>(</span>p <span class='op'>=</span> <span class='va'>p</span>, param <span class='op'>=</span> <span class='va'>param0</span><span class='op'>)</span>; <span class='va'>q.gu</span></span></code></pre>
+</div>
+<pre><code>[1] 59.01939</code></pre>
+</div>
+<h3 id="métodos-de-ajuste">Métodos de ajuste</h3>
+<p>Mas, para que esses quantis sejam estimados, que é o que realmente
+queremos, precisamos antes ter em mãos um conjunto de estimativas dos
+parâmetros da distribuição. Isso requer a seleção de um método de estimação adequado. Alguns métdos são normalemente empregados para obter essas estimativas: o método dos momentos-L (L-MOM), o método da máxima verossimilhança, ou sua versão alternativa, denominada de máxima verosimilhança generalizada,
+e métodos Bayesianos. Para este curso, trataremos aqui somente do método da máxima verssimilhança.</p>
+<p>O método da máxima verossimilhança se baseia, como o próprio nome diz, na <strong>função de verossimilhança</strong>. A função de verossimilhança representa a distribuição conjunta de se observar a amostra que se tem em mãos.</p>
+<p>Imagine que tenhamos a seguinte amostra em mãos, <span class="math inline">\(\{y_1, y_2, \ldots,y_n\}\)</span>, em que as variáveis <span class="math inline">\(Y_i\)</span> sejam independentes e possuam a mesma distribuição de probabildades, representada por sua função densidade <span class="math inline">\(f_Y(y|\theta)\)</span>, cujos parâmetros estão dentro do vetor <span class="math inline">\(\theta\)</span>.</p>
+<p>Como as variáveis que fazem parte da amostra possuem a mesma distribuição e são independentes, a distribuição conjunta que representa a amostra é dada pelo produtório abaixo,</p>
+<p><span class="math display">\[
+L(y_1, y_2, \ldots,y_n|\theta) = f_Y(y_1|\theta)\times f_Y(y_2|\theta) \times \ldots \times f_Y(y_n|\theta) = \prod_{i=1}^n f_Y(y_i|\theta)
+\]</span>
+Vale notar que as observações da amostra <span class="math inline">\(\{y_1, y_2, \ldots,y_n\}\)</span> são fixas, de modo que o valor da função verossimilhança depende da distribuição de probabilidades <span class="math inline">\(f_Y(y|\theta)\)</span> e dos valores de seus respectivos parâmetros <span class="math inline">\(\theta\)</span>.</p>
+<p>Se as variáveis <span class="math inline">\(Y_i\)</span> forem discretas, <span class="math inline">\(L(y_1, y_2, \ldots,y_n|\theta)\)</span> representa a probabilidade de se observar a amostra que foi realmente observada, desde que ela realmente tenha sido gerada a partir da distribuição <span class="math inline">\(f_Y(y_i|\theta)\)</span>. Quando essas variáveis são contínuas, que é caso das séries de vazões máximas anuais, o valor da função verossimilhança é apenas proporcional à probabilidade de se observar amostra. Mas essa proporcionalidade, ao invés da igualdade, não impede a conclusão de que um dado conjunto de parêmteros <span class="math inline">\(\theta_1\)</span> pode resultar numa probabilidade maior de observar a amostra que se tem em mãos do que um outro conjunto de parâmetros <span class="math inline">\(\theta_2\)</span>, e é exatamente esse fato que que justifica a lógica do método.</p>
+<p>A lógica do método está em identificar o conjunto de parâmetros de uma dada distribuição previamente selecioanada que maximize a probabilidade de se observar amostra que foi de fato observada. Assume-se que a amostra observada é bastante provável, e foi exatamente por isso que ela foi observada.</p>
+<p>Com essa ideia em mente, fica fácil compreender o porquê que o método da máxima verossimilhança busca encontrar o conjunto de parâmetros da distribuição selecionada que maximiza a função verossimilhança,</p>
+<p><span class="math display">\[
+\hat \theta = \underset{\theta \in \Theta}{arg} \; max\; L(y_1,y_2,\ldots,y_n|\theta)
+\]</span>
+pois deseja-se selecionar os valores de <span class="math inline">\(\theta\)</span> que tornem a amostra a mais provável possível.</p>
+<p>considerarmos que estamos partindo de um conjunto
+<span class="math inline">\(Y = (y_1, y_2,..., y_n)\)</span> de observações independentes e igualmente
+distribuídas, a função de verossimilhança, sendo <span class="math inline">\(Y\)</span> uma variável
+aleatória contínua, será proporcional à função densidade conjunta das
+observações <span class="math inline">\(f_Y(y_1,y_2,...,y_n|\theta)\)</span> – sendo <span class="math inline">\(\theta\)</span> um conjunto
+de 1 ou mais parâmetros da distribuição <span class="math inline">\(f_Y\)</span>. A hipótese de
+independência faz com que possamos considerar que essa densidade
+conjunta seja simplesmente o produtório da função densidade avaliada em
+cada uma das observações de <span class="math inline">\(Y\)</span>, ou seja
+<span class="math inline">\(f_Y(y_1,y_2,...,y_n|\theta) = f_Y(y_1|\theta) \cdot f_Y(y_2|\theta) \cdot ... \cdot f_Y(y_n|\theta)\)</span>,
+que pode ser interpretado como a probabilidade de se ter observado
+determinada amostra. Partindo disso, podemos definir a função de
+verossimilhança como:</p>
+<p><span class="math display">\[
+L(y|\theta) = \prod_{i=1}^n f_Y(y_i|\theta).
+\]</span></p>
+<p>Assim, como o próprio nome diz, o método da máxima verossimilhança
+consiste em maximizar a função de verossimilhança <span class="math inline">\(L(y|\theta)\)</span>, obtendo
+o conjunto de parâmetros <span class="math inline">\(\hat \theta\)</span> que resulta nesse máximo. Esse
+processo de otimização é, em muitos casos, baseado em algum algoritmo de
+gradiente (como Newton-Raphson) e uma transformação que facilita a
+convergência desses algoritmos é tirar o logaritmo da função – sendo
+log uma função monotônica, essa transformação afeta somente o valor do
+máximo, mas não o valor de <span class="math inline">\(\hat \theta\)</span>. Então, para a GEV, podemos
+definir a log-verossimilhança como:</p>
+<p><span class="math display">\[
+\ln[L(y|\xi, \alpha, \kappa)] = - n\ln(\alpha) + \sum_{i=1}^n\bigg[ \bigg(\frac{1}{\kappa} - 1\bigg) \cdot\ln(z_i) - z_i^{1/\kappa} \bigg],
+\]</span>em que <span class="math inline">\(z_i = 1 - \kappa/\alpha \cdot (y_i - \xi)\)</span>.</p>
+<h3 id="ajuste-da-gev-e-estimativa-dos-quantis">Ajuste da GEV e estimativa dos quantis</h3>
+<p>Agora com a teoria fora do caminho, vamos para a prática. Resumindo o
+processo acima devemos ter em mãos:</p>
+<ol type="1">
+<li>Nossa série de vazões máximas anuais, as quais já estão armazeneadas
+no nosso data frame <code>Q_max</code>;</li>
+<li>Nossas estimativas de <span class="math inline">\(\hat \xi\)</span>, <span class="math inline">\(\hat \alpha\)</span> e <span class="math inline">\(\hat \kappa\)</span>
+obtidas utilizando o método da máxima verossimilhança;</li>
+<li>Nossas estimativas de quantis de cheia <span class="math inline">\(\hat Q_p\)</span>, que serão obtidas
+com a expressão de <span class="math inline">\(y_p\)</span> apresentada anteriormente.</li>
+</ol>
+<p>Vamos dividir nossa função de estimação dos parâmetros em duas. A
+primeira função será a nossa função de log-verossimilhança, encarregada
+simplesmente de retornar o valor de <span class="math inline">\(\ln[L(y|\xi, \alpha, \kappa)]\)</span> para
+um conjunto de parâmetros e uma série de máximos anuais, enquanto a
+segunda empregará uma função de otimização para maximizar a primeira.</p>
+<p>Nossa primeira função será bem completa. Vamos englobar as duas formas
+da GEV quando <span class="math inline">\(\kappa \neq 0\)</span> e quando <span class="math inline">\(\kappa = 0\)</span> e, para o primeiro
+caso, testaremos os limites teóricos da função, atribuindo um indicador
+de erro (geralmente um número muito alto que se destaque quando
+analisarmos os resultados) caso alguma observação da série de máximos
+anuais esteja fora do domínio. Adicionalmente, também testamos para
+parâmetros de escala positivos. Esses critérios ajudam a orientar o
+otimizador, estabelecendo limites para os parâmetros possíveis fazendo
+com que ele fuja desses limites.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Estimador de Máxima Verossimilhança - GEV</span></span>
+<span><span class='va'>fun.l.gev</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>param</span>, <span class='co'># vetor c/ os parâmetros, 1. csi 2. alpha, 3. kappa (ou somente 1 e 2)</span></span>
+<span>                      <span class='va'>y</span>       <span class='co'># vetor c/ a série AM observada</span></span>
+<span>                      <span class='op'>)</span><span class='op'>{</span></span>
+<span>  </span>
+<span>  <span class='co'># Tamanho da série</span></span>
+<span>  <span class='va'>n</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='co'># Dependendo do tamanho do vetor, escolher a distribuição</span></span>
+<span>  <span class='va'>n.par</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>param</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='kw'>if</span><span class='op'>(</span><span class='va'>n.par</span> <span class='op'>==</span> <span class='fl'>3</span><span class='op'>)</span><span class='op'>{</span> <span class='co'># GEV completa</span></span>
+<span>    </span>
+<span>    <span class='co'># Extrair parâmetros</span></span>
+<span>    <span class='va'>xi</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>; <span class='va'>alpha</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span>; <span class='va'>kappa</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>]</span></span>
+<span>    </span>
+<span>    <span class='co'># Avaliar kappa e domínio da função</span></span>
+<span>    <span class='kw'>if</span><span class='op'>(</span><span class='va'>kappa</span> <span class='op'>&lt;</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>{</span> <span class='co'># Testar se kappa é negativo (Fréchet)</span></span>
+<span>      </span>
+<span>      <span class='co'># Testar limite inferior</span></span>
+<span>      <span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>min</a></span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span> <span class='op'>&lt;</span> <span class='op'>(</span><span class='va'>xi</span> <span class='op'>+</span> <span class='va'>alpha</span><span class='op'>/</span><span class='va'>kappa</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>        </span>
+<span>        <span class='co'># Marcador de erro</span></span>
+<span>        <span class='va'>ln.L</span> <span class='op'>&lt;-</span> <span class='fl'>1e6</span></span>
+<span>        </span>
+<span>      <span class='op'>}</span> <span class='kw'>else</span><span class='op'>{</span></span>
+<span>        </span>
+<span>        <span class='co'># Se estiver dentro do domínio, calcular a verossimilhança</span></span>
+<span>        <span class='va'>ln.L</span> <span class='op'>&lt;-</span> <span class='op'>-</span><span class='op'>(</span><span class='op'>-</span> <span class='va'>n</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>alpha</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>/</span><span class='va'>kappa</span> <span class='op'>-</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='va'>kappa</span><span class='op'>/</span><span class='va'>alpha</span><span class='op'>*</span><span class='op'>(</span><span class='va'>y</span> <span class='op'>-</span> <span class='va'>xi</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>-</span> <span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='va'>kappa</span><span class='op'>/</span><span class='va'>alpha</span><span class='op'>*</span><span class='op'>(</span><span class='va'>y</span> <span class='op'>-</span> <span class='va'>xi</span><span class='op'>)</span><span class='op'>)</span><span class='op'>^</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>/</span><span class='va'>kappa</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>        </span>
+<span>      <span class='op'>}</span></span>
+<span>      </span>
+<span>    <span class='op'>}</span> <span class='kw'>else</span><span class='op'>{</span> <span class='co'># kappa positivo (Weibull)</span></span>
+<span>      </span>
+<span>      <span class='co'># Testar limite superior</span></span>
+<span>      <span class='kw'>if</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/Extremes.html'>max</a></span><span class='op'>(</span><span class='va'>y</span><span class='op'>)</span> <span class='op'>&gt;</span> <span class='op'>(</span><span class='va'>xi</span> <span class='op'>+</span> <span class='va'>alpha</span><span class='op'>/</span><span class='va'>kappa</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>        </span>
+<span>        <span class='va'>ln.L</span> <span class='op'>&lt;-</span> <span class='fl'>1e6</span></span>
+<span>        </span>
+<span>      <span class='op'>}</span> <span class='kw'>else</span><span class='op'>{</span></span>
+<span>        </span>
+<span>        <span class='va'>ln.L</span> <span class='op'>&lt;-</span> <span class='op'>-</span><span class='op'>(</span><span class='op'>-</span> <span class='va'>n</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>alpha</span><span class='op'>)</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>/</span><span class='va'>kappa</span> <span class='op'>-</span> <span class='fl'>1</span><span class='op'>)</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='va'>kappa</span><span class='op'>/</span><span class='va'>alpha</span><span class='op'>*</span><span class='op'>(</span><span class='va'>y</span> <span class='op'>-</span> <span class='va'>xi</span><span class='op'>)</span><span class='op'>)</span> <span class='op'>-</span> <span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='va'>kappa</span><span class='op'>/</span><span class='va'>alpha</span><span class='op'>*</span><span class='op'>(</span><span class='va'>y</span> <span class='op'>-</span> <span class='va'>xi</span><span class='op'>)</span><span class='op'>)</span><span class='op'>^</span><span class='op'>(</span><span class='fl'>1</span><span class='op'>/</span><span class='va'>kappa</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>        </span>
+<span>      <span class='op'>}</span></span>
+<span>      </span>
+<span>    <span class='op'>}</span></span>
+<span>    </span>
+<span>    <span class='co'># Testar parâmetro de escala (deve ser maior que zero)</span></span>
+<span>    <span class='kw'>if</span><span class='op'>(</span><span class='va'>alpha</span> <span class='op'>&lt;</span> <span class='fl'>0</span><span class='op'>)</span> <span class='va'>ln.L</span> <span class='op'>&lt;-</span> <span class='fl'>1e6</span></span>
+<span>  </span>
+<span>    <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>ln.L</span><span class='op'>)</span></span>
+<span>    </span>
+<span>  <span class='op'>}</span> <span class='kw'>else</span><span class='op'>{</span></span>
+<span>    </span>
+<span>    <span class='co'># Aqui avaliaremos quando kappa = 0 (ou seja, n.par == 2)</span></span>
+<span>    <span class='co'># Extrair parâmetros</span></span>
+<span>    <span class='va'>xi</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>; <span class='va'>alpha</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span></span>
+<span>    </span>
+<span>    <span class='co'># Como a distribuição de Gumbel não possui limites, precisamos avaliar somente</span></span>
+<span>    <span class='co'># se o parâmetro de escala é positivo</span></span>
+<span>    <span class='kw'>if</span><span class='op'>(</span><span class='va'>alpha</span> <span class='op'>&lt;</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>      </span>
+<span>      <span class='va'>ln.L</span> <span class='op'>&lt;-</span> <span class='fl'>1e6</span></span>
+<span>      </span>
+<span>    <span class='op'>}</span> <span class='kw'>else</span><span class='op'>{</span></span>
+<span>      </span>
+<span>      <span class='va'>ln.L</span> <span class='op'>&lt;-</span> <span class='op'>-</span><span class='op'>(</span><span class='op'>-</span><span class='va'>n</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>alpha</span><span class='op'>)</span> <span class='op'>-</span> <span class='fu'><a href='https://rdrr.io/r/base/sum.html'>sum</a></span><span class='op'>(</span><span class='op'>(</span><span class='va'>y</span> <span class='op'>-</span> <span class='va'>xi</span><span class='op'>)</span><span class='op'>/</span><span class='va'>alpha</span> <span class='op'>+</span> <span class='fu'><a href='https://rdrr.io/r/base/Log.html'>exp</a></span><span class='op'>(</span><span class='op'>-</span><span class='op'>(</span><span class='va'>y</span> <span class='op'>-</span> <span class='va'>xi</span><span class='op'>)</span><span class='op'>/</span><span class='va'>alpha</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>      </span>
+<span>    <span class='op'>}</span></span>
+<span>    </span>
+<span>    <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='va'>ln.L</span><span class='op'>)</span></span>
+<span>    </span>
+<span>  <span class='op'>}</span></span>
+<span>    </span>
+<span>  </span>
+<span><span class='op'>}</span></span></code></pre>
+</div>
+</div>
+<p>Algo importante que precisa ser ressaltado é que colocamos o sinal
+negativo na frente da função de verossimilhança. Fizemos isso porque
+grande parte dos algoritmos de otimização trabalham com a minimização de
+uma função, então, no nosso caso, a minimização do negativo de uma
+função será sua maximização. É importante lembrar disso, pois adiante
+precisaremos inverter o sinal do máximo.</p>
+<p>Vamos avaliar a função escrita com os mesmo parâmetros arbitrários que
+definimos anteriormente:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'>fun.l.gev</span><span class='op'>(</span>param <span class='op'>=</span> <span class='va'>param0</span>,</span>
+<span>          y <span class='op'>=</span> <span class='va'>Q_max</span><span class='op'>$</span><span class='va'>maxima</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] 171.6251</code></pre>
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'>fun.l.gev</span><span class='op'>(</span>param <span class='op'>=</span> <span class='va'>param0</span><span class='op'>[</span><span class='op'>-</span><span class='fl'>3</span><span class='op'>]</span>, <span class='co'># removendo o último elemento do vetor</span></span>
+<span>          y <span class='op'>=</span> <span class='va'>Q_max</span><span class='op'>$</span><span class='va'>maxima</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>[1] 169.9711</code></pre>
+</div>
+<p>Para a maximização vamos usar uma função do R base, o <code>optim()</code>. Não
+chegaremos a aplicar a função <code>fun.l.gev()</code> diretamente, mas
+indiretamente. A aplicação função <code>optim()</code> é simples, exigindo os
+seguintes argumentos:</p>
+<ul>
+<li><p><code>par</code>: um vetor com parâmetros que devem ser otimizados (nosso vetor
+<code>param</code>);</p></li>
+<li><p><code>fn</code>: a função que desejamos otimizar (no nosso caso <code>fun.l.gev</code>); e</p></li>
+<li><p><code>method</code>: o método de otimização desejado (por padrão está definodo
+como “Nelder-Mead”).</p></li>
+</ul>
+<p>Adicionalmente, também passamos os outros argumentos necessários para a
+função que definimos em <code>fn</code>. No caso da <code>fun.l.gev()</code>, precisaremos
+passar <code>y</code>. Na Seção <strong>Descrição das incertezas</strong>, discutiremos ainda
+como podemos quantificar as incertezas na estimativa do nosso conjunto
+de parâmetros e nos quantis. A abordagem utiliza a matriz Hessiana do
+processo de otimização (que explicaremos adiante) e, por esse motivo,
+vamos passar para o <code>optim()</code> o argumento <code>hessian = TRUE</code>. Antes de
+escrever uma nova função que já nos devolva o dado da forma que
+queremos, vamos simplesmente analisar o funcionamento do <code>optim()</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>max.l.gev</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/optim.html'>optim</a></span><span class='op'>(</span>par <span class='op'>=</span> <span class='va'>param0</span>,</span>
+<span>                   fn <span class='op'>=</span> <span class='va'>fun.l.gev</span>,</span>
+<span>                   hessian <span class='op'>=</span> <span class='cn'>TRUE</span>,</span>
+<span>                   y <span class='op'>=</span> <span class='va'>Q_max</span><span class='op'>$</span><span class='va'>maxima</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>max.l.gev</span></span></code></pre>
+</div>
+<pre><code>$par
+[1]  9.35415208  4.08245016 -0.09834592
+
+$value
+[1] 127.563
+
+$counts
+function gradient 
+     179       NA 
+
+$convergence
+[1] 0
+
+$message
+NULL
+
+$hessian
+          [,1]      [,2]       [,3]
+[1,]  2.799222 -1.655545  -4.865333
+[2,] -1.655545  4.775300   1.774381
+[3,] -4.865333  1.774381 111.055670</code></pre>
+</div>
+<p>Vemos que a função nos retorna uma lista com um conjunto de objetos que
+podem ser acessados de dentro da lista com <code>$nome_objeto</code> ou
+<code>[["nome_objeto"]]</code>. Dentre os principais (aqueles que realmente estamos
+interessados) estão <code>$par</code>, <code>$value</code> e <code>$hessian</code>, representando o
+conjunto de parâmetros otimizados, o valor do nosso mínimo (que na
+verdade é o negativo do máximo) e a matriz hessiana. Mas os demais
+também são importantes. Se olharmos a documentação do <code>optim()</code>, veremos
+que o objeto <code>$convergence</code> indica alguns possíveis erros que podem ter
+ocorrido durante o processo de otimização. Uma convergência bem sucedida
+apresentará <code>convergence = 0</code>, mas notamos que o nosso
+<code>max.l.gev$convergence</code> foi igual a 0, ou seja,
+o número de iterações não foi suficiente para atingir a convergência.
+Por padrão, o número máximo de iterações para <code>method = "Nelder-Mead"</code> é
+de 500, o que não foi suficiente, mas esse (além de muitos outros
+parâmetros) podem ser alterados passando uma lista para o argumento
+<code>control</code>. Vamos testar então <code>control = list(maxit = 1000)</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>max.l.gev</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/optim.html'>optim</a></span><span class='op'>(</span>par <span class='op'>=</span> <span class='va'>param0</span>,</span>
+<span>                   fn <span class='op'>=</span> <span class='va'>fun.l.gev</span>,</span>
+<span>                   hessian <span class='op'>=</span> <span class='cn'>TRUE</span>,</span>
+<span>                   control <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>maxit <span class='op'>=</span> <span class='fl'>1000</span><span class='op'>)</span>,</span>
+<span>                   y <span class='op'>=</span> <span class='va'>Q_max</span><span class='op'>$</span><span class='va'>maxima</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>max.l.gev</span></span></code></pre>
+</div>
+<pre><code>$par
+[1]  9.35415208  4.08245016 -0.09834592
+
+$value
+[1] 127.563
+
+$counts
+function gradient 
+     179       NA 
+
+$convergence
+[1] 0
+
+$message
+NULL
+
+$hessian
+          [,1]      [,2]       [,3]
+[1,]  2.799222 -1.655545  -4.865333
+[2,] -1.655545  4.775300   1.774381
+[3,] -4.865333  1.774381 111.055670</code></pre>
+</div>
+<p>Perfeito! Definindo um <code>maxit = 1000</code> já foi suficiente para garantir a
+convergência da nossa otimização e agora que temos nosso conjunto final
+de <span class="math inline">\(\hat \xi\)</span>, <span class="math inline">\(\hat \alpha\)</span> e <span class="math inline">\(\hat \kappa\)</span> podemos estimar nossos
+quantis.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Estimar quantis</span></span>
+<span><span class='va'>param</span> <span class='op'>&lt;-</span> <span class='va'>max.l.gev</span><span class='op'>$</span><span class='va'>par</span></span>
+<span><span class='va'>p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span>from <span class='op'>=</span> <span class='fl'>0.01</span>, to <span class='op'>=</span> <span class='fl'>0.99</span>, by <span class='op'>=</span> <span class='fl'>0.01</span><span class='op'>)</span> <span class='co'># quais probabilidades</span></span>
+<span><span class='va'>tr</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>/</span><span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='va'>p</span><span class='op'>)</span>                             <span class='co'># tempos de retorno para cada p</span></span>
+<span><span class='va'>qp</span> <span class='op'>&lt;-</span> <span class='fu'>fun.q.gev</span><span class='op'>(</span>p <span class='op'>=</span> <span class='va'>p</span>, param <span class='op'>=</span> <span class='va'>param</span><span class='op'>)</span>       <span class='co'># estimar quantis</span></span>
+<span></span>
+<span><span class='co'># Organizar dados em um data.frame</span></span>
+<span><span class='va'>df.quantis</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>tr <span class='op'>=</span> <span class='va'>tr</span>,</span>
+<span>                         qp <span class='op'>=</span> <span class='va'>qp</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<p>Podemos dar uma espiada no dataframe que contém os quantis de cheia
+utilizando a função <code>head()</code>,</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>head</a></span><span class='op'>(</span><span class='va'>df.quantis</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>        tr       qp
+1 1.010101 3.565128
+2 1.020408 4.142827
+3 1.030928 4.535558
+4 1.041667 4.845765
+5 1.052632 5.108134
+6 1.063830 5.338968</code></pre>
+</div>
+<p>Podemos perceber que os seis primeiros valores dos quantis estimados não
+são tão interessantes, pois eles estão associados a tempos de
+recorrência muito baixos. Existe uma outra função no função no <code>R</code> que
+permite espiar a parte final do dataframe, ao invés da parte inicial.
+Essa função é chamada de <code>tail()</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='fu'><a href='https://rdrr.io/r/utils/head.html'>tail</a></span><span class='op'>(</span><span class='va'>df.quantis</span>, <span class='fl'>5</span><span class='op'>)</span></span></code></pre>
+</div>
+<pre><code>          tr       qp
+95  20.00000 23.43663
+96  25.00000 24.69917
+97  33.33333 26.36037
+98  50.00000 28.77154
+99 100.00000 33.10225</code></pre>
+</div>
+<p>O número <code>5</code> no código acima serve para especificar quantas linhas eu
+estou interessado em ver.</p>
+<p>Finalizamos esta parte da análise com a plotagem dos quantis de cheias
+estimados com base na distribuição GEV, comparando com as vazões
+observadas na série histórica da estação.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Plotar as vazões observadas</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span>, <span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span>, type <span class='op'>=</span> <span class='st'>"p"</span>, pch <span class='op'>=</span> <span class='fl'>19</span>, cex <span class='op'>=</span> <span class='fl'>1.5</span>, col <span class='op'>=</span> <span class='st'>"blue"</span>,</span>
+<span>     log <span class='op'>=</span> <span class='st'>"x"</span>, main <span class='op'>=</span> <span class='st'>"Curva de frequência de cheias - 60435000"</span>,</span>
+<span>     xlab <span class='op'>=</span> <span class='st'>"Tr [anos]"</span>, ylab <span class='op'>=</span> <span class='st'>"Q [m³/s]"</span>,</span>
+<span>     xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>100</span><span class='op'>)</span>, ylim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Adicionar quantis estimados com a GEV</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/lines.html'>lines</a></span><span class='op'>(</span><span class='va'>df.quantis</span><span class='op'>$</span><span class='va'>tr</span>, <span class='va'>df.quantis</span><span class='op'>$</span><span class='va'>qp</span>,</span>
+<span>      col <span class='op'>=</span> <span class='st'>"red"</span>,</span>
+<span>      lwd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Adicionar linhas de grade horizontais</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>1</span>, at <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>10</span>, <span class='fl'>1</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>100</span> , <span class='fl'>10</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>200</span>, <span class='fl'>1000</span>, <span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span>     tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Adicionar linhas de grade verticais</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>2</span>, tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="frequency_analysis_gev_files/figure-html5/unnamed-chunk-16-1.png" width="624" /></p>
+</div>
+<h2 id="descricao-incertezas">Descrição das incertezas</h2>
+<p>Quando realizamos uma análise de frequência, além da estimativa dos
+quantis de cheia, precisamos ter uma ideia do quão confiantes estamos em
+relação aos valores estimados. Sendo assim, precisamos entender como
+calcular a precisão dessas estimativas.</p>
+<p>Normalmente, a maneira que empregamos para descrever as incertezas nas
+estimativas dos quantis de cheias é por meio de intervalos de confiança.
+Neste nosso exercício aqui, aprenderemos como calcular intervalos de
+confiança associados à distribuição GEV, que é a distribuição que está
+sendo utilizada por nós para construir a curva de frequência.</p>
+<p>Existem diferentes formas de se estimar esses intervalos. Aqui, vamos
+focar no Método Delta. Descrições mais detalhadas podem ser encontradas
+na literatura, como <a href="https://doi.org/10.1007/978-1-4471-3675-0">Coles,
+2001</a>.</p>
+<h3 id="método-delta">Método Delta</h3>
+<p>Supondo o logaritmo de uma função de verossimilhança como a que definido como <span class="math inline">\(F_Y\)</span>, mas com um único parâmetro <span class="math inline">\(\theta\)</span>. Essa função pode ser aproximada por uma curva gaussiana, cujo pico está localizado no estimador de máxima verossimilhança <span class="math inline">\(\hat\theta_0\)</span>. A incerteza (ou a precisão) sobre a estimativa desse parâmetro está relacionada ao grau de curvatura da função de verossimilhança. A o grau de curvatura de uma função é descrito pela derivada segunda dessa função. Em outras palavras:</p>
+<p><span class="math display">\[
+\frac{d^2}{d\theta^2}\ln[L(y|\theta)] \propto \frac{1}{Var[\hat\theta]},
+\]</span>
+ou seja, quanto maior o grau de curvatuura, menor será a variância da estimativa.</p>
+<p>Quando trabalhamos com uma distribuição de <span class="math inline">\(k\)</span>-parâmetros, <span class="math inline">\(\ln[L(\theta)]\)</span> pode ser aproximada por uma normal multivariada, cuja curvatura pode ser descrita por uma matriz quadrada <span class="math inline">\(k \times k\)</span> chamada matriz de informação observada (ou matriz hessiana) $(). Para o nosso caso, com a GEV, <span class="math inline">\(\theta\)</span> é um vetor com três parâmetros, então nossa matriz será uma matriz <span class="math inline">\(3 \times 3\)</span>:</p>
+<p><span class="math display">\[
+I(\xi, \alpha,\kappa) =
+\begin{bmatrix}
+  -\frac{d^2}{d\xi^2}\ln(L) &amp; -\frac{d^2}{d\xi\alpha}\ln(L) &amp; -\frac{d^2}{d\xi\kappa}\ln(L) \\
+  -\frac{d^2}{d\alpha\xi}\ln(L) &amp; -\frac{d^2}{d\alpha^2}\ln(L) &amp; -\frac{d^2}{d\alpha\kappa}\ln(L) \\
+  -\frac{d^2}{d\kappa\xi}\ln(L) &amp; -\frac{d^2}{d\kappa\alpha}\ln(L) &amp; -\frac{d^2}{d\kappa^2}\ln(L) \\
+\end{bmatrix}.
+\]</span></p>
+<h3 id="incerteza-nos-parâmetros">Incerteza nos parâmetros</h3>
+<p>Seguindo a hipótese da normal multivariada, e chamando <span class="math inline">\(I(\theta)^{-1}\)</span> de <span class="math inline">\(\psi_{i,j}\)</span>, podemos afirmar que <span class="math inline">\(\hat\theta_i \sim N(\theta_i, \psi_{i,i})\)</span>, de modo que para um intervalo de confiança estimado de <span class="math inline">\((1 - \alpha)\)</span> para <span class="math inline">\(\theta_i\)</span> – sendo <span class="math inline">\(\alpha\)</span> aqui o nível de significância – será:</p>
+<p><span class="math display">\[
+\hat\theta_i \pm z_{\frac{\alpha}{2}}\sqrt{\psi_{i,i}},
+\]</span>
+em que <span class="math inline">\(z_{\frac{\alpha}{2}}\)</span> é o quantil <span class="math inline">\((1 - \alpha/2)\)</span> da distribuição normal padrão. Ou seja, para estimar os intervalos de confiança dos parâmetros pela matriz hessiana, precisamos somente dos elementos da diagonal principal da nossa matriz <code>max.l.gev$hessian</code> invertida.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>hess</span> <span class='op'>&lt;-</span> <span class='va'>max.l.gev</span><span class='op'>$</span><span class='va'>hessian</span>; <span class='va'>hess</span></span></code></pre>
+</div>
+<pre><code>          [,1]      [,2]       [,3]
+[1,]  2.799222 -1.655545  -4.865333
+[2,] -1.655545  4.775300   1.774381
+[3,] -4.865333  1.774381 111.055670</code></pre>
+</div>
+<p>No R, a inversão de matrizes pode ser feita com a função <code>solve()</code>. Essa inversa também é chamada de matriz de covariância (<span class="math inline">\(V\)</span>).</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>cov</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/solve.html'>solve</a></span><span class='op'>(</span><span class='va'>hess</span><span class='op'>)</span>    <span class='co'># inverter a matriz hessiana</span></span>
+<span><span class='va'>cov.diag</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='va'>cov</span><span class='op'>)</span> <span class='co'># extrair os elementos da diagonal principal</span></span>
+<span><span class='va'>cov.diag</span></span></code></pre>
+</div>
+<pre><code>[1] 0.48505204 0.26424963 0.00977721</code></pre>
+</div>
+<p>Os elementos da diagonal principal da matriz de covariância <code>cov.diag</code> representam a variância estimada de cada um dos parâmetros, portanto, podemos facilmente estimar os limites dos intervalos de confiança para um dado nível de significância.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>nivel.signf</span> <span class='op'>&lt;-</span> <span class='fl'>0.05</span>           <span class='co'># nível de significância</span></span>
+<span><span class='va'>z</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>qnorm</a></span><span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='va'>nivel.signf</span><span class='op'>/</span><span class='fl'>2</span><span class='op'>)</span> <span class='co'># quantil da normal padrão</span></span>
+<span></span>
+<span><span class='co'># Montar data.frame c/ intervalos de confiança</span></span>
+<span><span class='va'>df.ic.param</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>par <span class='op'>=</span> <span class='va'>param</span>,</span>
+<span>                          var <span class='op'>=</span> <span class='va'>cov.diag</span>,</span>
+<span>                          sd <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>cov.diag</span><span class='op'>)</span>,</span>
+<span>                          ic.inf <span class='op'>=</span> <span class='va'>param</span> <span class='op'>-</span> <span class='va'>z</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>cov.diag</span><span class='op'>)</span>,</span>
+<span>                          ic.sup <span class='op'>=</span> <span class='va'>param</span> <span class='op'>+</span> <span class='va'>z</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>cov.diag</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='va'>df.ic.param</span></span></code></pre>
+</div>
+<pre><code>          par        var         sd     ic.inf      ic.sup
+1  9.35415208 0.48505204 0.69645677  7.9891219 10.71918227
+2  4.08245016 0.26424963 0.51405217  3.0749264  5.08997390
+3 -0.09834592 0.00977721 0.09887977 -0.2921467  0.09545488</code></pre>
+</div>
+<h3 id="incerteza-nos-quantis">Incerteza nos quantis</h3>
+<p>A estimação da incerteza dos quantis segue da estimativa da incerteza nos parâmetros, mas o peso que cada parâmetro exerce na incerteza final do quantil não é a mesma. O método delta consiste em estimar a variância de um quantil calculado como sendo:</p>
+<p><span class="math display">\[
+\begin{gather}
+  Var[y_p] = \nabla_{y_p}^T \ V  \ \nabla_{y_p}, \\
+  \nabla_{y_p} =
+  \begin{bmatrix}
+    \frac{\partial y_p}{\partial \xi} \\
+    \frac{\partial y_p}{\partial \alpha} \\
+    \frac{\partial y_p}{\partial \kappa} \\
+  \end{bmatrix},
+\end{gather}
+\]</span>
+sendo <span class="math inline">\(\nabla_{y_p}\)</span> uma matriz de pesos, indicando a importancia que cada parâmetro tem na estimativa do quantil e <span class="math inline">\(\nabla_{y_p}^T\)</span> é a transposta desse vetor.</p>
+<p>O primeiro passo então seria calcular as derivadas parciais que compõem o vetor <span class="math inline">\(\nabla_{y_p}\)</span>. Como temos duas funções possíveis, vamos estruturar uma forma de calculá-las conferindo o comprimendo no nosso vetor de parâmetros partindo do vetor de probabilidades<code>p</code> que definimos quando calculamos os quantis. Para ficar mais fácil, podemos juntar essas etapas em uma única função.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>n.par</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>param</span><span class='op'>)</span></span>
+<span><span class='va'>n.p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span></span>
+<span><span class='va'>var.q</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='va'>n.p</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='kw'>for</span><span class='op'>(</span><span class='va'>prob</span> <span class='kw'>in</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  </span>
+<span>  <span class='co'># Estimar um vetor vetor de pesos (grad.q) p/ cada probabilidade</span></span>
+<span>  <span class='kw'>if</span><span class='op'>(</span><span class='va'>n.par</span> <span class='op'>==</span> <span class='fl'>3</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>    </span>
+<span>    <span class='va'>xi</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>; <span class='va'>alpha</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span>; <span class='va'>kappa</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>]</span></span>
+<span>    <span class='va'>d.xi</span> <span class='op'>&lt;-</span> <span class='fl'>1</span>                                      <span class='co'># dq/dξ</span></span>
+<span>    <span class='va'>d.alpha</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>/</span><span class='va'>kappa</span><span class='op'>*</span><span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>[</span><span class='va'>prob</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>^</span><span class='va'>kappa</span><span class='op'>)</span> <span class='co'># dq/dα</span></span>
+<span>    <span class='va'>aux</span> <span class='op'>&lt;-</span> <span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>[</span><span class='va'>prob</span><span class='op'>]</span><span class='op'>)</span>                           <span class='co'># simplificar dq/dκ</span></span>
+<span>    <span class='va'>d.kappa</span> <span class='op'>&lt;-</span> <span class='op'>-</span><span class='va'>alpha</span><span class='op'>/</span><span class='op'>(</span><span class='va'>kappa</span><span class='op'>^</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>*</span><span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='va'>aux</span><span class='op'>^</span><span class='va'>kappa</span><span class='op'>)</span> <span class='op'>-</span> <span class='va'>alpha</span><span class='op'>/</span><span class='va'>kappa</span><span class='op'>*</span><span class='va'>aux</span><span class='op'>^</span><span class='va'>kappa</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>aux</span><span class='op'>)</span> <span class='co'># dq/dκ</span></span>
+<span>    <span class='va'>grad.q</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>d.xi</span>, <span class='va'>d.alpha</span>, <span class='va'>d.kappa</span><span class='op'>)</span>            <span class='co'># vetor gradiente (pesos)</span></span>
+<span>    </span>
+<span>  <span class='op'>}</span> <span class='kw'>else</span><span class='op'>{</span></span>
+<span>    </span>
+<span>    <span class='va'>xi</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>; <span class='va'>alpha</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span>;</span>
+<span>    <span class='va'>d.xi</span> <span class='op'>&lt;-</span> <span class='fl'>1</span>                        <span class='co'># dq/dξ</span></span>
+<span>    <span class='va'>d.alpha</span> <span class='op'>&lt;-</span> <span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>[</span><span class='va'>prob</span><span class='op'>[</span><span class='op'>]</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># dq/dα</span></span>
+<span>    <span class='va'>grad.q</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>d.xi</span>, <span class='va'>d.alpha</span><span class='op'>)</span>       <span class='co'># vetor gradiente (pesos)</span></span>
+<span>    </span>
+<span>  <span class='op'>}</span></span>
+<span>  </span>
+<span>  <span class='va'>var.q</span><span class='op'>[</span><span class='va'>prob</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='va'>grad.q</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/r/base/matmult.html'>%*%</a></span> <span class='va'>cov</span> <span class='op'><a href='https://rdrr.io/r/base/matmult.html'>%*%</a></span> <span class='va'>grad.q</span></span>
+<span>  </span>
+<span><span class='op'>}</span></span>
+<span></span>
+<span><span class='co'># Com o vetor de variâncias preenchido, podemos calcular os demais</span></span>
+<span><span class='va'>df.quantis</span> <span class='op'>&lt;-</span> <span class='va'>df.quantis</span> <span class='op'><a href='https://magrittr.tidyverse.org/reference/pipe.html'>%&gt;%</a></span> </span>
+<span>  <span class='fu'><a href='https://dplyr.tidyverse.org/reference/mutate.html'>mutate</a></span><span class='op'>(</span>var <span class='op'>=</span> <span class='va'>var.q</span>,</span>
+<span>         sd <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>var.q</span><span class='op'>)</span>,</span>
+<span>         ic.inf <span class='op'>=</span> <span class='va'>qp</span> <span class='op'>-</span> <span class='va'>z</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>var.q</span><span class='op'>)</span>,</span>
+<span>         ic.sup <span class='op'>=</span> <span class='va'>qp</span> <span class='op'>+</span> <span class='va'>z</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>var.q</span><span class='op'>)</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<h3 id="plotagem-final-da-curva-de-frequência">Plotagem final da curva de frequência</h3>
+<p>Podemos terminar nossa figura da curva de frequência de cheias incluindo os intervalos de confiança estimados de 95%:</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='co'># Plotar as vazões observadas</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/plot.default.html'>plot</a></span><span class='op'>(</span><span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>Tr</span>, <span class='va'>Q_max_ord</span><span class='op'>$</span><span class='va'>maxima</span>, type <span class='op'>=</span> <span class='st'>"p"</span>, pch <span class='op'>=</span> <span class='fl'>19</span>, cex <span class='op'>=</span> <span class='fl'>1.5</span>, col <span class='op'>=</span> <span class='st'>"blue"</span>,</span>
+<span>     log <span class='op'>=</span> <span class='st'>"x"</span>, main <span class='op'>=</span> <span class='st'>"Curva de frequência de cheias - 60435000"</span>,</span>
+<span>     xlab <span class='op'>=</span> <span class='st'>"Tr [anos]"</span>, ylab <span class='op'>=</span> <span class='st'>"Q [m³/s]"</span>,</span>
+<span>     xlim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>100</span><span class='op'>)</span>, ylim <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>50</span><span class='op'>)</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Adicionar quantis estimados com a GEV</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/lines.html'>lines</a></span><span class='op'>(</span><span class='va'>df.quantis</span><span class='op'>$</span><span class='va'>tr</span>, <span class='va'>df.quantis</span><span class='op'>$</span><span class='va'>qp</span>,</span>
+<span>      col <span class='op'>=</span> <span class='st'>"red"</span>,</span>
+<span>      lwd <span class='op'>=</span> <span class='fl'>2</span><span class='op'>)</span></span>
+<span></span>
+<span><span class='co'># Adicionar linhas dos intervalos de confiança</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/lines.html'>lines</a></span><span class='op'>(</span><span class='va'>df.quantis</span><span class='op'>$</span><span class='va'>tr</span>, <span class='va'>df.quantis</span><span class='op'>$</span><span class='va'>ic.inf</span>,</span>
+<span>      col <span class='op'>=</span> <span class='st'>"black"</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, lwd <span class='op'>=</span> <span class='fl'>1.2</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/lines.html'>lines</a></span><span class='op'>(</span><span class='va'>df.quantis</span><span class='op'>$</span><span class='va'>tr</span>, <span class='va'>df.quantis</span><span class='op'>$</span><span class='va'>ic.sup</span>,</span>
+<span>      col <span class='op'>=</span> <span class='st'>"black"</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, lwd <span class='op'>=</span> <span class='fl'>1.2</span><span class='op'>)</span></span>
+<span></span>
+<span></span>
+<span><span class='co'># Adicionar linhas de grade horizontais</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>1</span>, at <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>1</span>, <span class='fl'>10</span>, <span class='fl'>1</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>10</span>, <span class='fl'>100</span> , <span class='fl'>10</span><span class='op'>)</span>, <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>200</span>, <span class='fl'>1000</span>, <span class='fl'>100</span><span class='op'>)</span><span class='op'>)</span>, tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span>
+<span><span class='fu'><a href='https://rdrr.io/r/graphics/axis.html'>axis</a></span><span class='op'>(</span><span class='fl'>2</span>, tck <span class='op'>=</span> <span class='fl'>1</span>, lty <span class='op'>=</span> <span class='fl'>2</span>, col <span class='op'>=</span> <span class='st'>"gray"</span><span class='op'>)</span></span></code></pre>
+</div>
+<p><img src="frequency_analysis_gev_files/figure-html5/unnamed-chunk-17-1.png" width="624" /></p>
+</div>
+<p>Vemos que apesar de vazões mais extremas terem ficado fora da curva de quantis estimados pela GEV, os valores ainda estão dentro do intervalo de confiança estimado.</p>
+<h2 id="uma-função-geral">Uma função geral</h2>
+<p>Vamos listar tudo o que fizemos até agora: estimamos as posições de
+plotagem das vazões máximas anuais observadas; ajustamos nossa
+distribuição de interesse a essas vazões e obtivemos um conjunto de
+estimativas para seus parâmetros; definimos percentis para estimar
+nossos quantis; e plotamos uma curva de frequência para comparar a
+performance do nosso ajuste. Veja que fizemos isso em etapas
+individuais.</p>
+<p>Quando trabalhamos somente com uma estação, um procedimento mais manual
+como fizemos acima pode ser parecer mais fácil, mas quando nossa região
+de estudo aumenta e com ela o número de estações para analisarmos, pode
+ser que essa análise como foi feita se torne muito manual e tome mais
+tempo. Muitas vezes vale a pena o esforço para estruturar um código
+completo que englobe todas as etapas da nossa análise em uma única
+função geral. É isso que faremos adiante. <em>Houve uma alteração nos
+dados?</em> Sem problema, basta rodar uma função. <em>Nosso conjunto de análise
+aumentou?</em> Tudo bem, a função é genérica e pode ser aplicada para séries
+diferentes facilmente.</p>
+<p>Vamos começar. Nossa função deve receber como argumentos: <strong>1)</strong> uma vetor com a série de máximos anuais/ <strong>2)</strong> um vetor com parâmetros iniciais para serem otimizados; <strong>3)</strong> um vetor com probabilidades para estimar os quantis.</p>
+<p>Lembrando que já criamos algumas funções anteriormente que usaremos aqui novamente. Uma estratégia interessante para evitar que nossa função principal fique muito carregada e confusa é criar um script adicional e colocar nele todas as funções “auxiliares” e depois simplesmente chamá-las usando a função <code>source()</code> do R. Criaremos, então, um arquivo chamado “frequency_analysis_aux.R” e colaremos nossas funções <code>fun.q.gev</code>, <code>fun.q.gu</code> e <code>fun.l.gev</code>.</p>
+<div class="layout-chunk" data-layout="l-body">
+<div class="sourceCode">
+<pre class="sourceCode r"><code class="sourceCode r"><span><span class='va'>fun.fit.gev</span> <span class='op'>&lt;-</span> <span class='kw'>function</span><span class='op'>(</span><span class='va'>maximos</span>,                <span class='co'># vetor: série de máximos anuais</span></span>
+<span>                        <span class='va'>param</span>,                  <span class='co'># vetor: parâmetros iniciais, length igual a 2 ou 3: 1. posição, 2. escala, 3. forma</span></span>
+<span>                        <span class='va'>probs</span>,                  <span class='co'># vetor: probabilidades p/ estimar os quantis</span></span>
+<span>                        <span class='va'>aux.fun.path</span> <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>getwd</a></span><span class='op'>(</span><span class='op'>)</span>, <span class='co'># caminho do diretório onde se encontra o script c/ funções auxiliares</span></span>
+<span>                        <span class='va'>aux.fun.name</span> <span class='op'>=</span> <span class='st'>"frequency_analysis_gev_aux.R"</span>, <span class='co'># nome do script c/ funções auxiliares</span></span>
+<span>                        <span class='va'>maxit</span> <span class='op'>=</span> <span class='fl'>1000</span>,           <span class='co'># número máximo de iterações 'optim()'</span></span>
+<span>                        <span class='va'>nivel.signf</span> <span class='op'>=</span> <span class='fl'>0.05</span>      <span class='co'># nível de significância (padrão 5%)</span></span>
+<span>                        <span class='op'>)</span><span class='op'>{</span></span>
+<span>  </span>
+<span>  <span class='co'># Checar classe dos parâmetros</span></span>
+<span>  <span class='kw'>if</span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/class.html'>inherits</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>maximos</span>, <span class='va'>param</span>, <span class='va'>probs</span><span class='op'>)</span>, <span class='st'>"numeric"</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>    <span class='kw'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span><span class='op'>(</span><span class='st'>"Parâmetros 'maximos', 'param' e 'probs' devem ser vetores."</span><span class='op'>)</span></span>
+<span>  <span class='op'>}</span></span>
+<span>  </span>
+<span>  <span class='co'># Checar parâmetros</span></span>
+<span>  <span class='va'>n.par</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>param</span><span class='op'>)</span></span>
+<span>  <span class='kw'>if</span><span class='op'>(</span><span class='op'>!</span><span class='op'>(</span><span class='va'>n.par</span> <span class='op'><a href='https://rdrr.io/r/base/match.html'>%in%</a></span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>2</span>,<span class='fl'>3</span><span class='op'>)</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>    <span class='kw'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span><span class='op'>(</span><span class='st'>"Vetor de parâmetros deve ter comprimento:</span></span>
+<span><span class='st'>    -  2 (parâmetro de forma igual a 0, Gumbel) ou;</span></span>
+<span><span class='st'>    -  3 (parâmetro de forma diferente de 0, Frechet e Weibull);</span></span>
+<span><span class='st'>    com parâmetros na ordem: 1. posição, 2. escala e 3. forma."</span><span class='op'>)</span></span>
+<span>  <span class='op'>}</span></span>
+<span>  </span>
+<span>  <span class='co'># Chamar funções no script "frequency_analysis_aux.R"</span></span>
+<span>  <span class='va'>aux.path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='va'>aux.fun.path</span>, <span class='va'>aux.fun.name</span>, sep <span class='op'>=</span> <span class='st'>"/"</span><span class='op'>)</span></span>
+<span>  <span class='kw'>if</span><span class='op'>(</span><span class='op'>!</span><span class='fu'><a href='https://rdrr.io/r/base/files.html'>file.exists</a></span><span class='op'>(</span><span class='va'>aux.path</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>    <span class='kw'><a href='https://rdrr.io/r/base/stop.html'>stop</a></span><span class='op'>(</span><span class='st'>"O arquivo '"</span>, <span class='va'>aux.fun.name</span>, <span class='st'>"' não existe no diretório informado em 'aux.fun.path'."</span><span class='op'>)</span></span>
+<span>  <span class='op'>}</span></span>
+<span>  <span class='kw'><a href='https://rdrr.io/r/base/source.html'>source</a></span><span class='op'>(</span><span class='va'>aux.path</span><span class='op'>)</span> <span class='co'># chamar o script de funções auxiliares</span></span>
+<span>  </span>
+<span>  <span class='co'># Encurtar nome das veriáveis</span></span>
+<span>  <span class='va'>y</span> <span class='op'>&lt;-</span> <span class='va'>maximos</span></span>
+<span>  <span class='va'>par</span> <span class='op'>&lt;-</span> <span class='va'>param</span></span>
+<span>  <span class='va'>p</span> <span class='op'>&lt;-</span> <span class='va'>probs</span></span>
+<span>  </span>
+<span>  <span class='co'># Ajustar a GEV</span></span>
+<span>  <span class='va'>max.l.gev</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/optim.html'>optim</a></span><span class='op'>(</span>par <span class='op'>=</span> <span class='va'>par</span>,</span>
+<span>                     fn <span class='op'>=</span> <span class='va'>fun.l.gev</span>,</span>
+<span>                     hessian <span class='op'>=</span> <span class='cn'>TRUE</span>,</span>
+<span>                     y <span class='op'>=</span> <span class='va'>y</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  <span class='kw'>if</span><span class='op'>(</span><span class='va'>max.l.gev</span><span class='op'>$</span><span class='va'>convergence</span> <span class='op'>!=</span> <span class='fl'>0</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>    <span class='fu'><a href='https://rdrr.io/r/base/message.html'>message</a></span><span class='op'>(</span><span class='st'>"Houve erros na convergência, checar $convergence."</span><span class='op'>)</span></span>
+<span>  <span class='op'>}</span></span>
+<span>  </span>
+<span>  <span class='co'># Extrair resultados do ajuste</span></span>
+<span>  <span class='va'>par</span> <span class='op'>&lt;-</span> <span class='va'>max.l.gev</span><span class='op'>$</span><span class='va'>par</span></span>
+<span>  <span class='va'>hess</span> <span class='op'>&lt;-</span> <span class='va'>max.l.gev</span><span class='op'>$</span><span class='va'>hessian</span></span>
+<span>  </span>
+<span>  <span class='co'># Estimar quantis</span></span>
+<span>  <span class='va'>tr</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>/</span><span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='va'>p</span><span class='op'>)</span> <span class='co'># tempos de recorrência</span></span>
+<span>  <span class='kw'>if</span><span class='op'>(</span><span class='va'>n.par</span> <span class='op'>==</span> <span class='fl'>3</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>    <span class='va'>qp</span> <span class='op'>&lt;-</span> <span class='fu'>fun.q.gev</span><span class='op'>(</span><span class='va'>p</span>, <span class='va'>par</span><span class='op'>)</span></span>
+<span>  <span class='op'>}</span> <span class='kw'>else</span><span class='op'>{</span></span>
+<span>    <span class='va'>qp</span> <span class='op'>&lt;-</span> <span class='fu'>fun.q.gu</span><span class='op'>(</span><span class='va'>p</span>, <span class='va'>par</span><span class='op'>)</span></span>
+<span>  <span class='op'>}</span></span>
+<span>  </span>
+<span>  <span class='co'># Incerteza nos parâmetros</span></span>
+<span>  <span class='va'>cov</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/solve.html'>solve</a></span><span class='op'>(</span><span class='va'>hess</span><span class='op'>)</span>            <span class='co'># matriz de covariância</span></span>
+<span>  <span class='va'>cov.diag</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/diag.html'>diag</a></span><span class='op'>(</span><span class='va'>cov</span><span class='op'>)</span>         <span class='co'># extrair diagonal principal</span></span>
+<span>  <span class='va'>z</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/stats/Normal.html'>qnorm</a></span><span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='va'>nivel.signf</span><span class='op'>/</span><span class='fl'>2</span><span class='op'>)</span> <span class='co'># quantil normal padrão</span></span>
+<span>  <span class='va'>res.par</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>par <span class='op'>=</span> <span class='va'>par</span>,                         <span class='co'># parâmetros</span></span>
+<span>                        var <span class='op'>=</span> <span class='va'>cov.diag</span>,                    <span class='co'># variância parâmetros</span></span>
+<span>                        sd <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>cov.diag</span><span class='op'>)</span>,               <span class='co'># desvio padrão parâmetros</span></span>
+<span>                        ic.inf <span class='op'>=</span> <span class='va'>param</span> <span class='op'>-</span> <span class='va'>z</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>cov.diag</span><span class='op'>)</span>, <span class='co'># limite inferior IC</span></span>
+<span>                        ic.sup <span class='op'>=</span> <span class='va'>param</span> <span class='op'>+</span> <span class='va'>z</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>cov.diag</span><span class='op'>)</span><span class='op'>)</span> <span class='co'># limite superior IC</span></span>
+<span>  </span>
+<span>  <span class='co'># Incerteza nos quantis</span></span>
+<span>  <span class='va'>n.p</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/length.html'>length</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span>      <span class='co'># número de quantis calculados</span></span>
+<span>  <span class='va'>var.q</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/rep.html'>rep</a></span><span class='op'>(</span><span class='cn'>NA</span>, <span class='va'>n.p</span><span class='op'>)</span> <span class='co'># vetor vazio p/ armazenar variâncias</span></span>
+<span>  </span>
+<span>  <span class='kw'>for</span><span class='op'>(</span><span class='va'>prob</span> <span class='kw'>in</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq_along</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>)</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>  </span>
+<span>  <span class='co'># Estimar um vetor vetor de pesos (grad.q) p/ cada probabilidade</span></span>
+<span>  <span class='kw'>if</span><span class='op'>(</span><span class='va'>n.par</span> <span class='op'>==</span> <span class='fl'>3</span><span class='op'>)</span><span class='op'>{</span></span>
+<span>    </span>
+<span>      <span class='va'>xi</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>; <span class='va'>alpha</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span>; <span class='va'>kappa</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>3</span><span class='op'>]</span><span class='op'>]</span> <span class='co'># extrair parâmetros</span></span>
+<span>      <span class='va'>d.xi</span> <span class='op'>&lt;-</span> <span class='fl'>1</span>                                                  <span class='co'># dq/dξ</span></span>
+<span>      <span class='va'>d.alpha</span> <span class='op'>&lt;-</span> <span class='fl'>1</span><span class='op'>/</span><span class='va'>kappa</span><span class='op'>*</span><span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>[</span><span class='va'>prob</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span><span class='op'>^</span><span class='va'>kappa</span><span class='op'>)</span>             <span class='co'># dq/dα</span></span>
+<span>      <span class='va'>aux</span> <span class='op'>&lt;-</span> <span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>[</span><span class='va'>prob</span><span class='op'>]</span><span class='op'>)</span>                                       <span class='co'># simplificart dq/dκ</span></span>
+<span>      <span class='va'>d.kappa</span> <span class='op'>&lt;-</span> <span class='op'>-</span><span class='va'>alpha</span><span class='op'>/</span><span class='op'>(</span><span class='va'>kappa</span><span class='op'>^</span><span class='fl'>2</span><span class='op'>)</span><span class='op'>*</span><span class='op'>(</span><span class='fl'>1</span> <span class='op'>-</span> <span class='va'>aux</span><span class='op'>^</span><span class='va'>kappa</span><span class='op'>)</span> <span class='op'>-</span> <span class='va'>alpha</span><span class='op'>/</span><span class='va'>kappa</span><span class='op'>*</span><span class='va'>aux</span><span class='op'>^</span><span class='va'>kappa</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>aux</span><span class='op'>)</span> <span class='co'># dq/dκ</span></span>
+<span>      <span class='va'>grad.q</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>d.xi</span>, <span class='va'>d.alpha</span>, <span class='va'>d.kappa</span><span class='op'>)</span>                        <span class='co'># vetor gradiente (pesos)</span></span>
+<span>      </span>
+<span>    <span class='op'>}</span> <span class='kw'>else</span><span class='op'>{</span></span>
+<span>      </span>
+<span>      <span class='va'>xi</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>1</span><span class='op'>]</span><span class='op'>]</span>; <span class='va'>alpha</span> <span class='op'>&lt;-</span> <span class='va'>param</span><span class='op'>[[</span><span class='fl'>2</span><span class='op'>]</span><span class='op'>]</span>; <span class='co'># extrair parâmetros</span></span>
+<span>      <span class='va'>d.xi</span> <span class='op'>&lt;-</span> <span class='fl'>1</span>                              <span class='co'># dq/dξ</span></span>
+<span>      <span class='va'>d.alpha</span> <span class='op'>&lt;-</span> <span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='op'>-</span><span class='fu'><a href='https://rdrr.io/r/base/Log.html'>log</a></span><span class='op'>(</span><span class='va'>p</span><span class='op'>[</span><span class='va'>prob</span><span class='op'>]</span><span class='op'>)</span><span class='op'>)</span>         <span class='co'># dq/dα</span></span>
+<span>      <span class='va'>grad.q</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='va'>d.xi</span>, <span class='va'>d.alpha</span><span class='op'>)</span>             <span class='co'># vetor gradiente (pesos)</span></span>
+<span>      </span>
+<span>    <span class='op'>}</span></span>
+<span>    </span>
+<span>    <span class='va'>var.q</span><span class='op'>[</span><span class='va'>prob</span><span class='op'>]</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/t.html'>t</a></span><span class='op'>(</span><span class='va'>grad.q</span><span class='op'>)</span> <span class='op'><a href='https://rdrr.io/r/base/matmult.html'>%*%</a></span> <span class='va'>cov</span> <span class='op'><a href='https://rdrr.io/r/base/matmult.html'>%*%</a></span> <span class='va'>grad.q</span></span>
+<span>  </span>
+<span>  <span class='op'>}</span></span>
+<span>  </span>
+<span>  <span class='va'>res.quantis</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span><span class='op'>(</span>tr <span class='op'>=</span> <span class='va'>tr</span>,</span>
+<span>                            qp <span class='op'>=</span> <span class='va'>qp</span>,</span>
+<span>                            var <span class='op'>=</span> <span class='va'>var.q</span>,</span>
+<span>                            sd <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>var.q</span><span class='op'>)</span>,</span>
+<span>                            ic.inf <span class='op'>=</span> <span class='va'>qp</span> <span class='op'>-</span> <span class='va'>z</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>var.q</span><span class='op'>)</span>,</span>
+<span>                            ic.sup <span class='op'>=</span> <span class='va'>qp</span> <span class='op'>+</span> <span class='va'>z</span><span class='op'>*</span><span class='fu'><a href='https://rdrr.io/r/base/MathFun.html'>sqrt</a></span><span class='op'>(</span><span class='va'>var.q</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  </span>
+<span>  </span>
+<span>  <span class='co'># Organizar resultados</span></span>
+<span>  <span class='kw'><a href='https://rdrr.io/r/base/function.html'>return</a></span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span><span class='st'>"parametros"</span> <span class='op'>=</span> <span class='va'>par</span>,</span>
+<span>              <span class='st'>"res.par"</span> <span class='op'>=</span> <span class='va'>res.par</span>,</span>
+<span>              <span class='st'>"res.quantis"</span> <span class='op'>=</span> <span class='va'>res.quantis</span><span class='op'>)</span><span class='op'>)</span></span>
+<span>  </span>
+<span><span class='op'>}</span></span>
+<span></span>
+<span><span class='va'>teste</span> <span class='op'>&lt;-</span> <span class='fu'>fun.fit.gev</span><span class='op'>(</span>maximos <span class='op'>=</span> <span class='va'>Q_max</span><span class='op'>$</span><span class='va'>maxima</span>,</span>
+<span>                     param <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>20</span>, <span class='fl'>10</span>, <span class='op'>-</span><span class='fl'>0.2</span><span class='op'>)</span>,</span>
+<span>                     probs <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/seq.html'>seq</a></span><span class='op'>(</span><span class='fl'>0.01</span>, <span class='fl'>0.99</span>, <span class='fl'>0.01</span><span class='op'>)</span>,</span>
+<span>                     aux.fun.path <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/getwd.html'>getwd</a></span><span class='op'>(</span><span class='op'>)</span>,</span>
+<span>                     aux.fun.name <span class='op'>=</span> <span class='st'>"frequency_analysis_gev_aux.R"</span>,</span>
+<span>                     maxit <span class='op'>=</span> <span class='fl'>1000</span>,</span>
+<span>                     nivel.signf <span class='op'>=</span> <span class='fl'>0.05</span><span class='op'>)</span></span></code></pre>
+</div>
+</div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r distill-force-highlighting-css"><code class="sourceCode r"></code></pre></div>
+<!--radix_placeholder_article_footer-->
+<!--/radix_placeholder_article_footer-->
+</div>
+
+<div class="d-appendix">
+</div>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+<!--radix_placeholder_site_after_body-->
+<!--/radix_placeholder_site_after_body-->
+<!--radix_placeholder_appendices-->
+<div class="appendix-bottom">
+<h3 id="updates-and-corrections">Corrections</h3>
+<p>If you see mistakes or want to suggest changes, please <a href="https://github.com/DirceuReis/Mini_Curso_UnB_SemUniv_AnaliseHidro_R/issues/new">create an issue</a> on the source repository.</p>
+<h3 id="reuse">Reuse</h3>
+<p>Text and figures are licensed under Creative Commons Attribution <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Source code is available at <a href="https://github.com/DirceuReis/Mini_Curso_UnB_SemUniv_AnaliseHidro_R">https://github.com/DirceuReis/Mini_Curso_UnB_SemUniv_AnaliseHidro_R</a>, unless otherwise noted. The figures that have been reused from other sources don't fall under this license and can be recognized by a note in their caption: "Figure from ...".</p>
+</div>
+<!--/radix_placeholder_appendices-->
+<!--radix_placeholder_navigation_after_body-->
+<!--/radix_placeholder_navigation_after_body-->
+
+</body>
+
+</html>
