@@ -591,33 +591,8 @@ $$
 $$
 pois deseja-se selecionar os valores de $\theta$ que tornem a amostra a mais provável possível.
 
-considerarmos que estamos partindo de um conjunto
-$Y = (y_1, y_2,..., y_n)$ de observações independentes e igualmente
-distribuídas, a função de verossimilhança, sendo $Y$ uma variável
-aleatória contínua, será proporcional à função densidade conjunta das
-observações $f_Y(y_1,y_2,...,y_n|\theta)$ -- sendo $\theta$ um conjunto
-de 1 ou mais parâmetros da distribuição $f_Y$. A hipótese de
-independência faz com que possamos considerar que essa densidade
-conjunta seja simplesmente o produtório da função densidade avaliada em
-cada uma das observações de $Y$, ou seja
-$f_Y(y_1,y_2,...,y_n|\theta) = f_Y(y_1|\theta) \cdot f_Y(y_2|\theta) \cdot ... \cdot f_Y(y_n|\theta)$,
-que pode ser interpretado como a probabilidade de se ter observado
-determinada amostra. Partindo disso, podemos definir a função de
-verossimilhança como:
-
-$$
-L(y|\theta) = \prod_{i=1}^n f_Y(y_i|\theta).
-$$
-
-Assim, como o próprio nome diz, o método da máxima verossimilhança
-consiste em maximizar a função de verossimilhança $L(y|\theta)$, obtendo
-o conjunto de parâmetros $\hat \theta$ que resulta nesse máximo. Esse
-processo de otimização é, em muitos casos, baseado em algum algoritmo de
-gradiente (como Newton-Raphson) e uma transformação que facilita a
-convergência desses algoritmos é tirar o logaritmo da função -- sendo
-log uma função monotônica, essa transformação afeta somente o valor do
-máximo, mas não o valor de $\hat \theta$. Então, para a GEV, podemos
-definir a log-verossimilhança como:
+Esse processo de maximização é, em muitos casos, realizado por meio do uso de baseado em algum algoritmo baseado no gradiente da função (como Newton-Raphson), e uma transformação que facilita a
+convergência desses algoritmos é tirar o logaritmo da função -- sendo log uma função monotônica, essa transformação afeta somente o valor do máximo, mas não o valor de $\hat \theta$. Então, para a GEV, podemos definir a log-verossimilhança como:
 
 $$
 \ln[L(y|\xi, \alpha, \kappa)] = - n\ln(\alpha) + \sum_{i=1}^n\bigg[ \bigg(\frac{1}{\kappa} - 1\bigg) \cdot\ln(z_i) - z_i^{1/\kappa} \bigg],

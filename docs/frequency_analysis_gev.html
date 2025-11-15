@@ -2770,31 +2770,8 @@ Vale notar que as observações da amostra <span class="math inline">\(\{y_1, y_
 \hat \theta = \underset{\theta \in \Theta}{arg} \; max\; L(y_1,y_2,\ldots,y_n|\theta)
 \]</span>
 pois deseja-se selecionar os valores de <span class="math inline">\(\theta\)</span> que tornem a amostra a mais provável possível.</p>
-<p>considerarmos que estamos partindo de um conjunto
-<span class="math inline">\(Y = (y_1, y_2,..., y_n)\)</span> de observações independentes e igualmente
-distribuídas, a função de verossimilhança, sendo <span class="math inline">\(Y\)</span> uma variável
-aleatória contínua, será proporcional à função densidade conjunta das
-observações <span class="math inline">\(f_Y(y_1,y_2,...,y_n|\theta)\)</span> – sendo <span class="math inline">\(\theta\)</span> um conjunto
-de 1 ou mais parâmetros da distribuição <span class="math inline">\(f_Y\)</span>. A hipótese de
-independência faz com que possamos considerar que essa densidade
-conjunta seja simplesmente o produtório da função densidade avaliada em
-cada uma das observações de <span class="math inline">\(Y\)</span>, ou seja
-<span class="math inline">\(f_Y(y_1,y_2,...,y_n|\theta) = f_Y(y_1|\theta) \cdot f_Y(y_2|\theta) \cdot ... \cdot f_Y(y_n|\theta)\)</span>,
-que pode ser interpretado como a probabilidade de se ter observado
-determinada amostra. Partindo disso, podemos definir a função de
-verossimilhança como:</p>
-<p><span class="math display">\[
-L(y|\theta) = \prod_{i=1}^n f_Y(y_i|\theta).
-\]</span></p>
-<p>Assim, como o próprio nome diz, o método da máxima verossimilhança
-consiste em maximizar a função de verossimilhança <span class="math inline">\(L(y|\theta)\)</span>, obtendo
-o conjunto de parâmetros <span class="math inline">\(\hat \theta\)</span> que resulta nesse máximo. Esse
-processo de otimização é, em muitos casos, baseado em algum algoritmo de
-gradiente (como Newton-Raphson) e uma transformação que facilita a
-convergência desses algoritmos é tirar o logaritmo da função – sendo
-log uma função monotônica, essa transformação afeta somente o valor do
-máximo, mas não o valor de <span class="math inline">\(\hat \theta\)</span>. Então, para a GEV, podemos
-definir a log-verossimilhança como:</p>
+<p>Esse processo de maximização é, em muitos casos, realizado por meio do uso de baseado em algum algoritmo baseado no gradiente da função (como Newton-Raphson), e uma transformação que facilita a
+convergência desses algoritmos é tirar o logaritmo da função – sendo log uma função monotônica, essa transformação afeta somente o valor do máximo, mas não o valor de <span class="math inline">\(\hat \theta\)</span>. Então, para a GEV, podemos definir a log-verossimilhança como:</p>
 <p><span class="math display">\[
 \ln[L(y|\xi, \alpha, \kappa)] = - n\ln(\alpha) + \sum_{i=1}^n\bigg[ \bigg(\frac{1}{\kappa} - 1\bigg) \cdot\ln(z_i) - z_i^{1/\kappa} \bigg],
 \]</span>em que <span class="math inline">\(z_i = 1 - \kappa/\alpha \cdot (y_i - \xi)\)</span>.</p>
