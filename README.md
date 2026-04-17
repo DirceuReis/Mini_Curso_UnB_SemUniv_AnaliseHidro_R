@@ -1,4 +1,5 @@
-# Análise hidrológica com R: primeiros passos
+# Análise hidrológica com R: primeiros passos 
+https://doi.org/10.5281/zenodo.19629703
 
 Este é um curso introdutório sobre como usar a linguagem R para realizar análise hidrológica. O curso será dado na Semana Universitária da Universidade de Brasília em 2022.
 
